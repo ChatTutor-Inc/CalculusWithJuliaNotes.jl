@@ -1,0 +1,1849 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>44&nbsp; Center of Mass – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../integrals/volumes_slice.html" rel="next">
+<link href="../integrals/area_between_curves.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../integrals.html">Integrals</a></li><li class="breadcrumb-item"><a href="../integrals/center_of_mass.html"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#center-of-mass-of-figures" id="toc-center-of-mass-of-figures" class="nav-link active" data-scroll-target="#center-of-mass-of-figures"><span class="header-section-number">44.1</span> Center of mass of figures</a>
+  <ul class="collapse">
+  <li><a href="#the-y-direction." id="toc-the-y-direction." class="nav-link" data-scroll-target="#the-y-direction."><span class="header-section-number">44.1.1</span> The <span class="math inline">\(y\)</span> direction.</a></li>
+  </ul></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">44.2</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/integrals/center_of_mass.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../integrals.html">Integrals</a></li><li class="breadcrumb-item"><a href="../integrals/center_of_mass.html"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses these add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+plotly()
+using Roots
+using QuadGK
+using SymPy
+</code></pre>
+<hr>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+imgfile = "figures/seesaw.png"
+caption = L"""
+
+A silhouette of two children on a seesaw. The seesaw can be balanced
+only if the distance from the central point for each child reflects
+their relative weights, or masses, through the formula $d_1m_1 = d_2
+m_2$. This means if the two children weigh the same the balance will
+tip in favor of the child farther away, and if both are the same
+distance, the balance will tip in favor of the heavier.
+"""
+# ImageFile(:integrals, imgfile, caption)
+nothing</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./figures/seesaw.png" class="img-fluid figure-img"></p>
+<figcaption>A silhouette of two children on a seesaw. The seesaw can be balanced only if the distance from the central point for each child reflects their relative weights, or masses, through the formula <span class="math inline">\(d_1m_1 = d_2
+m_2\)</span>. This means if the two children weigh the same the balance will tip in favor of the child farther away, and if both are the same distance, the balance will tip in favor of the heavier.</figcaption>
+</figure>
+</div>
+<p>The game of seesaw is one where children earn an early appreciation for the effects of distance and relative weight. For children with equal weights, the seesaw will balance if they sit an equal distance from the center (on opposite sides, of course). However, with unequal weights that isn’t the case. If one child weighs twice as much, the other must sit twice as far.</p>
+<p>The key relationship is that <span class="math inline">\(d_1 m_1 = d_2 m_2\)</span>. This come from physics, where the moment about a point is defined by the mass times the distance. This balance relationship says the overall moment balances out. When this is the case, then the <em>center of mass</em> is at the fulcrum point, so there is no impetus to move.</p>
+<p>The <a href="http://en.wikipedia.org/wiki/Center_of_mass">center</a> of mass is an old concept that often allows a possibly complicated relationship involving weights to be reduced to a single point. The seesaw is an example: if the center of mass is at the fulcrum the seesaw can balance.</p>
+<p>In general, we use position of the mass, rather than use distance from some fixed fulcrum. With this, the center of mass for a finite set of point masses distributed on the real line, is defined by:</p>
+<p><span class="math display">\[
+\bar{\text{cm}} = \frac{m_1 x_1 + m_2 x_2 + \cdots + m_n x_n}{m_1 + m_2 + \cdots + m_n}.
+\]</span></p>
+<p>Writing <span class="math inline">\(w_i = m_i / (m_1 + m_2 + \cdots + m_n)\)</span>, we get the center of mass is just a weighted sum: <span class="math inline">\(w_1 x_1 + \cdots + w_n x_n\)</span>, where the <span class="math inline">\(w_i\)</span> are the relative weights.</p>
+<p>With some rearrangement, we can see that the center of mass satisfies the equation:</p>
+<p><span class="math display">\[
+w_1 \cdot (x_1 - \bar{\text{cm}}) + w_2 \cdot (x_2 - \bar{\text{cm}}) + \cdots + w_n \cdot (x_n - \bar{\text{cm}}) = 0.
+\]</span></p>
+<p>The center of mass is a balance of the weighted signed distances. This property of the center of mass being a balancing point makes it of intrinsic interest and can be - in the case of sufficient symmetry - easy to find.</p>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>A set of weights sits on a dumbbell rack. They are spaced 1 foot apart starting with the 5, then the 10-, 15-, 25-, and 35-pound weights. Where is the center of mass?</p>
+<p>We begin by letting <span class="math inline">\(m_1=5\)</span>, <span class="math inline">\(m_2=10\)</span>, <span class="math inline">\(m_3=15\)</span>, <span class="math inline">\(m_4=25\)</span> and <span class="math inline">\(m_5=35\)</span>. Our positions will be labeled <span class="math inline">\(x_i = i-1\)</span>, so the five-pound weight is at position <span class="math inline">\(0\)</span> and the <span class="math inline">\(35\)</span>-pound one at <span class="math inline">\(4\)</span>. The center of mass is then given by:</p>
+<p><span class="math display">\[
+\frac{5\cdot 0 + 10\cdot 1 + 15 \cdot 2 + 25 \cdot 3 + 35\cdot 4}{5 + 10 + 15 + 25 + 35} = \frac{255}{90} = 2.833
+\]</span></p>
+<p>If the <span class="math inline">\(25\)</span>-pound weight is removed, how does the center of mass shift?</p>
+<p>We could add the terms again, or just reduce from our sum:</p>
+<p><span class="math display">\[
+\frac{255 - 25\cdot 3}{90 - 25} = \frac{180}{65} = 2.769...
+\]</span></p>
+<p>The center of mass shifts slightly, but since the removed weight was already close to the center of mass, the movement wasn’t much.</p>
+</section>
+<section id="center-of-mass-of-figures" class="level2" data-number="44.1">
+<h2 data-number="44.1" class="anchored" data-anchor-id="center-of-mass-of-figures"><span class="header-section-number">44.1</span> Center of mass of figures</h2>
+<p>Consider now a more general problem, the center of mass of a solid figure. We will restrict our attention to figures that can be represented by functions in the <span class="math inline">\(x-y\)</span> plane which are two dimensional. For example, consider the region in the plane bounded by the <span class="math inline">\(x\)</span> axis and the function <span class="math inline">\(1 - \lvert x \rvert\)</span>. This is triangle with vertices <span class="math inline">\((-1,0)\)</span>, <span class="math inline">\((0,1)\)</span>, and <span class="math inline">\((1,0)\)</span>.</p>
+<p>This graph shows that the figure is symmetric:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = 1 - abs(x)
+a, b = -1.5, 1.5
+plot(f, a, b)
+plot!(zero, a, b)</code></pre>
+<p>As the center of mass should be a balancing value, we would guess intuitively that the center of mass in the <span class="math inline">\(x\)</span> direction will be <span class="math inline">\(x=0\)</span>.</p>
+<p>But what should the center of mass formula be?</p>
+<p>As with many formulas that will end up involving a derived integral, we start with a sum approximation. If the region is described as the area under the graph of <span class="math inline">\(f(x)\)</span> between <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>, then we can form a Riemann sum approximation, that is a choice of <span class="math inline">\(a = x_0 &lt; x_1 &lt; x_2 \cdots &lt; x_n = b\)</span> and points <span class="math inline">\(c_1\)</span>, <span class="math inline">\(\dots\)</span>, <span class="math inline">\(c_n\)</span>. If all the rectangles are made up of a material of uniform density, say <span class="math inline">\(\rho\)</span>, then the mass of each rectangle will be the area times <span class="math inline">\(\rho\)</span>, or <span class="math inline">\(\rho f(c_i) \cdot (x_i - x_{i-1})\)</span>, for <span class="math inline">\(i = 1, \dots , n\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+n = 21
+f(x) = 1 - abs(x)
+a, b = -1.5, 1.5
+
+xs = range(-1, stop=1, length=n)
+cs = (xs[1:(end-1)] + xs[2:end]) / 2
+
+p = plot(legend=false);
+
+for i in 1:(n-1)
+   xi, xi1 = xs[i], xs[i+1]
+   plot!(p, [xi, xi1, xi1, xi], [0,0,1,1]*f(cs[i]), linetype=:polygon, color=:red);
+end
+
+for i in 1:(n-1)
+  ci = cs[i]
+  scatter!(p, [ci], [.1], markersize=12*f(cs[i]), color=:orange);
+end
+plot!(p, [-1,1], [0,0])
+
+p</code></pre>
+<p>The figure shows the approximating rectangles and circles representing their masses for <span class="math inline">\(n=20\)</span>.</p>
+<p>Generalizing from this figure shows the center of mass for such an approximation will be:</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\frac{\rho f(c_1) (x_1 - x_0) \cdot x_1 + \rho f(c_2) (x_2 - x_1) \cdot x_1 + \cdots + \rho f(c_n) (x_n- x_{n-1}) \cdot x_{n-1}}{\rho f(c_1) (x_1 - x_0)  + \rho f(c_2) (x_2 - x_1)  + \cdots + \rho f(c_n) (x_n- x_{n-1})} \\
+&amp;=\\
+&amp;\quad\frac{f(c_1) (x_1 - x_0) \cdot x_1 + f(c_2) (x_2 - x_1) \cdot x_1 + \cdots + f(c_n) (x_n- x_{n-1}) \cdot x_{n-1}}{f(c_1) (x_1 - x_0)  + f(c_2) (x_2 - x_1)  + \cdots + f(c_n) (x_n- x_{n-1})}.
+\end{align*}\]</span></p>
+<p>But the top part is an approximation to the integral <span class="math inline">\(\int_a^b x f(x) dx\)</span> and the bottom part the integral <span class="math inline">\(\int_a^b f(x) dx\)</span>. The ratio of these defines the center of mass.</p>
+<blockquote class="blockquote">
+<p><strong>Center of Mass</strong>: The center of mass (in the <span class="math inline">\(x\)</span> direction) of a region in the <span class="math inline">\(x-y\)</span> plane described by the area under a (positive) function <span class="math inline">\(f(x)\)</span> between <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> is given by</p>
+<p><span class="math inline">\(\text{Center of mass} = \text{cm}_x = \frac{\int_a^b xf(x) dx}{\int_a^b f(x) dx}.\)</span></p>
+<p>For regions described by a more complicated set of equations, the center of mass is found from the same formula where <span class="math inline">\(f(x)\)</span> is the total height in the <span class="math inline">\(x\)</span> direction for a given <span class="math inline">\(x\)</span>.</p>
+</blockquote>
+<p>For the triangular shape, we have by the fact that <span class="math inline">\(f(x) = 1 - \lvert x \rvert\)</span> is an even function that <span class="math inline">\(xf(x)\)</span> will be odd, so the integral around <span class="math inline">\(-1,1\)</span> will be <span class="math inline">\(0\)</span>. So the center of mass formula applied to this problem agrees with our expectation.</p>
+<section id="example-1" class="level5">
+<h5 class="anchored" data-anchor-id="example-1">Example</h5>
+<p>What about the center of mass of the triangle formed by the line <span class="math inline">\(x=-1\)</span>, the <span class="math inline">\(x\)</span> axis and <span class="math inline">\((1-x)/2\)</span>? This too is defined between <span class="math inline">\(a=-1\)</span> and <span class="math inline">\(b=1\)</span>, but the center of mass will be negative, as a graph shows more mass to the left of <span class="math inline">\(0\)</span> than the right:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = (1-x)/2
+plot(f, -1, 1)
+plot!(zero, -1, 1)</code></pre>
+<p>The formulas give:</p>
+<p><span class="math display">\[
+\int_{-1}^1 xf(x) dx = \int_{-1}^1 x\cdot (1-x)/2 = (\frac{x^2}{4} - \frac{x^3}{6})\big|_{-1}^1 = -\frac{1}{3}.
+\]</span></p>
+<p>The bottom integral is just the area (or total mass if the <span class="math inline">\(\rho\)</span> were not canceled) and by geometry is <span class="math inline">\(1/2 (1)(2) = 1\)</span>. So <span class="math inline">\(\text{cm}_x = -1/3\)</span>.</p>
+</section>
+<section id="example-2" class="level5">
+<h5 class="anchored" data-anchor-id="example-2">Example</h5>
+<p>Find the center of mass formed by the intersection of the parabolas <span class="math inline">\(y=1 - x^2\)</span> and <span class="math inline">\(y=(x-1)^2 - 2\)</span>.</p>
+<p>The center of mass (in the <span class="math inline">\(x\)</span> direction) can be seen to be close to <span class="math inline">\(x=1/2\)</span>:</p>
+<pre class="{julia}"><code>f1(x) = 1 - x^2
+f2(x) = (x-1)^2 -2
+plot(f1, -3, 3)
+plot!(f2, -3, 3)</code></pre>
+<p>To find it, we need to find the intersection points, then integrate. We do so numerically.</p>
+<pre class="{julia}"><code>#| hold: true
+h(x) = f1(x) - f2(x)
+a,b = find_zeros(h, -3, 3)
+top, err = quadgk(x -&gt; x * h(x), a, b)
+bottom, err = quadgk(h, a, b)
+cm = top / bottom</code></pre>
+<p>Our guess from the diagram proves correct.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>It proves convenient to use the <code>-&gt;</code> notation for an anonymous function above, as our function <code>h</code> is not what is being integrated all the time, but some simple modification. If this isn’t palatable, a new function could be defined and passed along to <code>quadgk</code>.</p>
+</div>
+</div>
+</section>
+<section id="example-3" class="level5">
+<h5 class="anchored" data-anchor-id="example-3">Example</h5>
+<p>Consider a region bounded by a probability density function. (These functions are non-negative, and integrate to <span class="math inline">\(1\)</span>.) The center of mass formula simplifies to <span class="math inline">\(\int xf(x) dx\)</span>, as the denominator will be <span class="math inline">\(1\)</span>, and the answer is called the <em>mean</em>, and often denoted by the Greek letter <span class="math inline">\(\mu\)</span>.</p>
+<p>For the probability density <span class="math inline">\(f(x) = e^{-x}\)</span> for <span class="math inline">\(x\geq 0\)</span> and <span class="math inline">\(0\)</span> otherwise, find the mean.</p>
+<p>We need to compute <span class="math inline">\(\int_{-\infty}^\infty xf(x) dx\)</span>, but in this case since <span class="math inline">\(f\)</span> is <span class="math inline">\(0\)</span> to the left of the origin, we just have:</p>
+<p><span class="math display">\[
+\mu = \int_0^\infty x e^{-x} dx = -(1+x) \cdot e^{-x} \big|_0^\infty = 1
+\]</span></p>
+<p>For fun, we compare this to the median, which is the value <span class="math inline">\(M\)</span> so that the total area is split in half. That is, the following formula is satisfied: <span class="math inline">\(\int_0^M f(x) dx = 1/2\)</span>. To compute, we have:</p>
+<p><span class="math display">\[
+\int_0^M e^{-x} dx = -e^{-x} \big|_0^M = 1 - e^{-M}.
+\]</span></p>
+<p>Solving <span class="math inline">\(1/2 = 1 - e^{-M}\)</span> gives <span class="math inline">\(M=\log(2) = 0.69...\)</span>, The median is to the left of the mean in this example.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In this example, we used an infinite region, so the idea of “balancing” may be a bit unrealistic, nonetheless, this intuitive interpretation is still a good one to keep this in mind. The point of comparing to the median is that the balancing point is to the right of where the area splits in half. Basically, the center of mass follows in the direction of the area far to the right of the median, as this area is skewed in that direction.</p>
+</div>
+</div>
+</section>
+<section id="example-4" class="level5">
+<h5 class="anchored" data-anchor-id="example-4">Example</h5>
+<p>A figure is formed by transformations of the function <span class="math inline">\(\phi(u) = e^{2(k-1)} - e^{2(k-u)}\)</span>, for some fixed <span class="math inline">\(k\)</span>, as follows:</p>
+<pre class="{julia}"><code>k = 3
+phi(u) = exp(2(k-1)) - exp(2(k-u))
+f(u) = max(0, phi(u))
+g(u) = min(f(u+1), f(k))
+
+plot(f, 0, k, legend=false)
+plot!(g, 0, k)
+plot!(zero, 0, k)</code></pre>
+<p>(This is basically the graph of <span class="math inline">\(\phi(u)\)</span> and the graph of its shifted value <span class="math inline">\(\phi(u+1)\)</span>, only truncated on the top and bottom.)</p>
+<p>The center of mass of this figure is found with:</p>
+<pre class="{julia}"><code>h(x) = g(x) - f(x)
+top, _ = quadgk(x -&gt; x*h(x), 0, k)
+bottom, _ = quadgk(h, 0, k)
+top/bottom</code></pre>
+<p>This figure has constant slices of length <span class="math inline">\(1\)</span> for fixed values of <span class="math inline">\(y\)</span>. If we were to approximate the values with blocks of height <span class="math inline">\(1\)</span>, then the center of mass would be to the left of <span class="math inline">\(1\)</span> - for any <span class="math inline">\(k\)</span>, but the top most block would have an overhang to the right of <span class="math inline">\(1\)</span> - out to a value of <span class="math inline">\(k\)</span>. That is, this figure should balance:</p>
+<pre class="{julia}"><code>#| echo: false
+u(i) = 1/2*(2k - log(exp(2(k-1)) - i))
+p = plot(legend=false);
+for i in 0:floor(phi(k))
+  x = u(i)
+  plot!(p, [x,x,x-1,x-1], [f(x),f(x)+1, f(x)+1, f(x)], linetype=:polygon, color=:orange);
+end
+xs = range(0, stop=exp(1), length=50)
+plot!(p, f, 0, e, linewidth=5);
+plot!(p, g, 0, 3, linewidth=5)
+p</code></pre>
+<p>See this <a href="https://math.dartmouth.edu/~pw/papers/maxover.pdf">paper</a> and its references for some background on this example and its extensions.</p>
+</section>
+<section id="the-y-direction." class="level3" data-number="44.1.1">
+<h3 data-number="44.1.1" class="anchored" data-anchor-id="the-y-direction."><span class="header-section-number">44.1.1</span> The <span class="math inline">\(y\)</span> direction.</h3>
+<p>We can talk about the center of mass in the <span class="math inline">\(y\)</span> direction too. The approximating picture uses horizontal rectangles - not vertical ones - and if we describe them by <span class="math inline">\(f(y)\)</span>, then the corresponding formulas would be</p>
+<blockquote class="blockquote">
+<p><span class="math inline">\(\text{center of mass} = \text{cm}_y = \frac{\int_a^b y f(y) dy}{\int_a^b f(y) dy}.\)</span></p>
+</blockquote>
+<p>For example, consider, again, the triangle bounded by the line <span class="math inline">\(x=-1\)</span>, the <span class="math inline">\(x\)</span> axis, and the line <span class="math inline">\(y=(1-x)/2\)</span>. In terms of describing this in <span class="math inline">\(y\)</span>, the function <span class="math inline">\(f(y)=2 -2y\)</span> gives the total length of the horizontal slice (which comes from solving <span class="math inline">\(y=(1-x)/2\)</span>for <span class="math inline">\(x\)</span>, the general method to find an inverse function, and subtracting <span class="math inline">\(-1\)</span>) and the interval is <span class="math inline">\(y=0\)</span> to <span class="math inline">\(y=1\)</span>. Thus our center of mass in the <span class="math inline">\(y\)</span> direction will be</p>
+<p><span class="math display">\[
+\text{cm}_y = \frac{\int_0^1 y (2 - 2y) dy}{\int_0^1 (2 - 2y) dy} = \frac{(2y^2/2 - 2y^3/3)\big|_0^1}{1} = \frac{1}{3}.
+\]</span></p>
+<p>Here the center of mass is below <span class="math inline">\(1/2\)</span> as the bulk of the area is. (The bottom area is just <span class="math inline">\(1\)</span>, as known from the area of a triangle.)</p>
+<p>As seen, the computation of the center of mass in the <span class="math inline">\(y\)</span> direction has an identical formula, though may be more involved if an inverse function must be computed.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+An alternative formula
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>An alternative formula, which is easily derived once double integrals are introduced, to find the center of mass in the <span class="math inline">\(y\)</span> direction is</p>
+<p><span class="math display">\[
+\text{cm}_y = \frac{\int_a^b \frac{1}{2}(f(x)^2 - g(x)^2) dx}{\int_a^b (f(x) -g(x)) dx}.
+\]</span></p>
+</div>
+</div>
+<section id="example-5" class="level5">
+<h5 class="anchored" data-anchor-id="example-5">Example</h5>
+<p>More generally, consider a right triangle with vertices <span class="math inline">\((0,0)\)</span>, <span class="math inline">\((0,a)\)</span>, and <span class="math inline">\((b,0)\)</span>. The center of mass of this can be computed with the help of the equation for the line that forms the hypotenuse: <span class="math inline">\(x/b + y/a = 1\)</span>. We find the center of mass symbolically in the <span class="math inline">\(y\)</span> variable by solving for <span class="math inline">\(x\)</span> in terms of <span class="math inline">\(y\)</span>, then integrating from <span class="math inline">\(0\)</span> to <span class="math inline">\(a\)</span>:</p>
+<pre class="{julia}"><code>@syms a b x y
+eqn = x/b + y/a - 1
+fy = solve(eqn, x)[1]
+integrate(y*fy, (y, 0, a)) / integrate(fy, (y, 0, a))</code></pre>
+<p>The answer involves <span class="math inline">\(a\)</span> linearly, but not <span class="math inline">\(b\)</span>. If we find the center of mass in <span class="math inline">\(x\)</span>, we <em>could</em> do something similar:</p>
+<pre class="{julia}"><code>fx = solve(eqn, y)[1]
+integrate(x*fx, (x, 0, b)) / integrate(fx, (x, 0, b))</code></pre>
+<p>But really, we should have just noted that simply by switching the labels <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> in the diagram we could have discovered this formula.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <a href="http://en.wikipedia.org/wiki/Centroid">centroid</a> of a region in the plane is just <span class="math inline">\((\text{cm}_x, \text{cm}_y)\)</span>. This last fact says the centroid of the right triangle is just <span class="math inline">\((b/3, a/3)\)</span>. The centroid can be found by other geometric means. The link shows the plumb line method. For triangles, the centroid is also the intersection point of the medians, the lines that connect a vertex with its opposite midpoint.</p>
+</div>
+</div>
+</section>
+<section id="example-6" class="level5">
+<h5 class="anchored" data-anchor-id="example-6">Example</h5>
+<p>Compute the <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> values of the center of mass of the half circle described by the area below the function <span class="math inline">\(f(x) = \sqrt{1 - x^2}\)</span> and above the <span class="math inline">\(x\)</span>-axis.</p>
+<p>A plot shows the value of cm<span class="math inline">\(_x\)</span> will be <span class="math inline">\(0\)</span> by symmetry:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = sqrt(1 - x^2)
+plot(f, -1, 1)</code></pre>
+<p>(<span class="math inline">\(f(x)\)</span> is even, so <span class="math inline">\(xf(x)\)</span> will be odd.)</p>
+<p>However, the value for cm<span class="math inline">\(_y\)</span> will - like the last problem - be around <span class="math inline">\(1/3\)</span>. The exact value is compute using slices in the <span class="math inline">\(y\)</span> direction. Solving for <span class="math inline">\(x\)</span> in <span class="math inline">\(y=\sqrt{1-x^2}\)</span>, or <span class="math inline">\(x = \pm \sqrt{1-y^2}\)</span>, if <span class="math inline">\(f(y) = 2\sqrt{1 - y^2}\)</span>. The value is then:</p>
+<p><span class="math display">\[
+\text{cm}_y = \frac{\int_{0}^1 y 2 \sqrt{1 - y^2}dy}{\int_{0}^1 2\sqrt{1-y^2}} =
+\frac{-2(1-y^2)^{3/2}/3\big|_0^1}{\pi/2} = \frac{4}{3\pi}.
+\]</span></p>
+<p>The top calculation is done by <span class="math inline">\(u\)</span>-substitution, the bottom by using the area formula for a half circle, <span class="math inline">\(\pi r^2/2\)</span>.</p>
+</section>
+<section id="example-7" class="level5">
+<h5 class="anchored" data-anchor-id="example-7">Example</h5>
+<p>A disc of radius <span class="math inline">\(2\)</span> is centered at the origin, as a disc of radius <span class="math inline">\(1\)</span> is bored out between <span class="math inline">\(y=0\)</span> and <span class="math inline">\(y=1\)</span>. Find the resulting center of mass.</p>
+<p>A picture shows that this could be complicated, especially for <span class="math inline">\(y &gt; 0\)</span>, as we need to describe the length of the red lines below for <span class="math inline">\(-2 &lt; y &lt; 2\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+a,b = 0, 2pi
+ts = range(a, stop=b, length=50)
+p = plot(t -&gt; 2cos(t), t-&gt;2sin(t), a, b, legend=false, aspect_ratio=:equal);
+plot!(p, cos.(ts), 1 .+ sin.(ts), linetype=:polygon, color=:red);
+plot!(p, [-sqrt(3), sqrt(3)], [-1,-1], color=:orange);
+plot!(p, [-sqrt(3), -1],      [1,1],   color=:orange);
+plot!(p, [sqrt(3), 1],        [1,1],   color=:orange);
+p
+</code></pre>
+<p>We can see that cm<span class="math inline">\(_x = 0\)</span>, by symmetry, but to compute cm<span class="math inline">\(_y\)</span> we need to find <span class="math inline">\(f(y)\)</span>, which will depend on the value of <span class="math inline">\(y\)</span> between <span class="math inline">\(-2\)</span> and <span class="math inline">\(2\)</span>. The outer circle is <span class="math inline">\(x^2 + y^2 = 4\)</span>, the inner circle <span class="math inline">\(x^2 + (y-1)^2 = 1\)</span>. When <span class="math inline">\(y &lt; 0\)</span>, <span class="math inline">\(f(y)\)</span> is the distance across the outer circle or, <span class="math inline">\(2\sqrt{4 - y^2}\)</span>. When <span class="math inline">\(y \geq 0\)</span>, <span class="math inline">\(f(y)\)</span> is <em>twice</em> the distance from the bigger circle to the smaller, of <span class="math inline">\(2(\sqrt{4 - y^2} - \sqrt{1 - (y-1)^2})\)</span>.</p>
+<p>We use this to compute:</p>
+<pre class="{julia}"><code>#| hold: true
+f(y) = y &lt; 0 ? 2*sqrt(4 - y^2) : 2* (sqrt(4 - y^2)- sqrt(1 - (y-1)^2))
+top, _ = quadgk( y -&gt; y * f(y), -2, 2)
+bottom, _ = quadgk( f, -2, 2)
+top/bottom</code></pre>
+<p>The nice answer of <span class="math inline">\(-1/3\)</span> makes us think there may be a different way to visualize this. Were we to rearrange the top integral, we could write it as <span class="math inline">\(\int_{-2}^2 y 2 \sqrt{4 -y^2}dy - \int_0^2 2y\sqrt{1 - (y-1)^2}dy\)</span>. Call this <span class="math inline">\(A - B\)</span>. The left term, <span class="math inline">\(A\)</span>, is part of the center of mass formula for the big circle (which is this value divided by <span class="math inline">\(M=4\pi\)</span>), and the right term, <span class="math inline">\(B\)</span>, is part of the center of mass formula for the (drilled out) smaller circle (which is this value divided by <span class="math inline">\(m=\pi\)</span>. These values are weighted according to <span class="math inline">\((AM - Bm)/(M-m)\)</span>. In this case <span class="math inline">\(A=0\)</span>, <span class="math inline">\(B=1\)</span> and <span class="math inline">\(M=4m\)</span>, so the answer is <span class="math inline">\(-1/3\)</span>.</p>
+</section>
+</section>
+</section>
+<section id="questions" class="level2" data-number="44.2">
+<h2 data-number="44.2" class="anchored" data-anchor-id="questions"><span class="header-section-number">44.2</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>Find the center of mass in the <span class="math inline">\(x\)</span> variable for the region bounded by parabola <span class="math inline">\(x=4 - y^2\)</span> and the <span class="math inline">\(y\)</span> axis.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = sqrt(4 - x)
+a, b = 0, 4
+top, _ = quadgk(x -&gt; x*f(x), a,b)
+bottom, _ = quadgk(f, a,b)
+val = top/bottom
+numericq(val)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>Find the center of mass in the <span class="math inline">\(x\)</span> variable of the region in the first and fourth quadrants bounded by the ellipse <span class="math inline">\((x/2)^2 + (y/3)^2 = 1\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = 3 * sqrt(1 - (x/2)^2)
+a, b= 0, 2
+
+top, _ = quadgk(x -&gt; x*f(x), a,b)
+bottom, _ = quadgk(f, a,b)
+val = top/bottom
+numericq(val)</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>Find the center of mass of the region in the first quadrant bounded by the function <span class="math inline">\(f(x) = x^3(1-x)^4\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = x^3 * (1-x)^4
+a, b= 0, 1
+
+top, _ = quadgk(x -&gt; x*f(x), a,b)
+bottom, _ = quadgk(f, a,b)
+val = top/bottom
+numericq(val)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>Let <span class="math inline">\(k\)</span> and <span class="math inline">\(\lambda\)</span> be parameters in <span class="math inline">\((0, \infty)\)</span>. The <a href="http://en.wikipedia.org/wiki/Weibull_distribution">Weibull</a> density is a probability density on <span class="math inline">\([0, \infty)\)</span> (meaning it is <span class="math inline">\(0\)</span> when <span class="math inline">\(x &lt; 0\)</span> satisfying:</p>
+<p><span class="math display">\[
+f(x) = \frac{k}{\lambda}\left(\frac{x}{\lambda}\right)^{k-1} \exp(-(\frac{x}{\lambda})^k)
+\]</span></p>
+<p>For <span class="math inline">\(k=2\)</span> and <span class="math inline">\(\lambda = 2\)</span>, compute the mean. (The center of mass, assuming the total area is <span class="math inline">\(1\)</span>.)</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+k, lambda = 2, 2
+f(x) = (k/lambda) * (x/lambda)^(k-1) * exp(-(x/lambda)^k)
+a, b = 0, Inf
+
+top, _ = quadgk(x -&gt; x*f(x), a,b)
+bottom, _ = quadgk(f, a,b)
+val = top/bottom
+numericq(val)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>The <a href="http://en.wikipedia.org/wiki/Logistic_distribution">logistic</a> density depends on two parameters <span class="math inline">\(m\)</span> and <span class="math inline">\(s\)</span> and is given by:</p>
+<p><span class="math display">\[
+f(x) = \frac{1}{4s} \text{sech}(\frac{x-\mu}{2s})^2, \quad -\infty &lt; x &lt; \infty.
+\]</span></p>
+<p>(Where <span class="math inline">\(\text{sech}\)</span> is the hyperbolic secant, implemented in <code>julia</code> through <code>sech</code>.)</p>
+<p>For <span class="math inline">\(\mu=2\)</span> and <span class="math inline">\(s=4\)</span> compute the mean, or center of mass, of this density.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+m, s = 2, 4
+f(x) = 1/(4s) * sech((x-m)/2s)^2
+a,b = -Inf, Inf
+
+top, _ = quadgk(x -&gt; x*f(x), a,b)
+bottom, _ = quadgk(f, a,b)
+val = top/bottom
+numericq(val)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>A region is formed by intersecting the area bounded by the circle <span class="math inline">\(x^2 + y^2 = 1\)</span> that lies above the line <span class="math inline">\(y=3/4\)</span>. Find the center of mass in the <span class="math inline">\(y\)</span> direction (that of the <span class="math inline">\(x\)</span> direction is <span class="math inline">\(0\)</span> by symmetry).</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(y) = 2*sqrt(1 - y^2)
+a, b = 3/4, 1
+
+
+top, _ = quadgk(x -&gt; x*f(x), a,b)
+bottom, _ = quadgk(f, a,b)
+val = top/bottom
+numericq(val)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>Find the center of mass in the <span class="math inline">\(y\)</span> direction of the area bounded by the cosine curve and the <span class="math inline">\(x\)</span> axis between <span class="math inline">\(-\pi/2\)</span> and <span class="math inline">\(\pi/2\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(y) = 2*acos(y)
+a, b= 0, 1
+
+top, _ = quadgk(x -&gt; x*f(x), a,b)
+bottom, _ = quadgk(f, a,b)
+val = top/bottom
+numericq(val)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>A penny, nickel, dime and quarter are stacked so that their right most edges align and are centered so that the center of mass in the <span class="math inline">\(y\)</span> direction is <span class="math inline">\(0\)</span>. Find the center of mass in the <span class="math inline">\(x\)</span> direction.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+ds = [0.75, 0.835, 0.705, 0.955]
+rs = ds/2
+xs = rs[4] .- rs
+ts = range(0,stop=2pi, length=50)
+p = plot(legend=false, aspect_ratio=:equal);
+for i in 1:4
+  plot!(p, xs[i] .+ rs[i]*cos.(ts), rs[i]*sin.(ts));
+end
+
+p</code></pre>
+<p>You will need some specifications, such as these from the <a href="http://www.usmint.gov/about_the_mint/?action=coin_specifications">US Mint</a></p>
+<pre data-eval="false"><code>         diameter(in)   weight(gms)
+penny     0.750           2.500
+nickel    0.835           5.000
+dime      0.705           2.268
+quarter   0.955           5.670
+</code></pre>
+<p>(Hint: Though this could be done with integration, it is easier to treat each coin as a single point (its centroid) with the given mass and then apply the formula for sums.)</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+ds = [0.75, 0.835, 0.705, 0.955]
+ms = [2.5, 5, 2.268, 5.670]
+rs = ds/2
+xs = rs[4] .- rs
+val = sum(ms .* xs) / sum(ms)
+numericq(val)</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../integrals/area_between_curves.html" class="pagination-link" aria-label="Area between two curves">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../integrals/volumes_slice.html" class="pagination-link" aria-label="Volumes by slicing">
+        <span class="nav-page-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/integrals/center_of_mass.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

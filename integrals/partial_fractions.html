@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>40&nbsp; Partial Fractions – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../integrals/improper_integrals.html" rel="next">
+<link href="../integrals/integration_by_parts.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../integrals.html">Integrals</a></li><li class="breadcrumb-item"><a href="../integrals/partial_fractions.html"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#partial-fraction-decomposition" id="toc-partial-fraction-decomposition" class="nav-link active" data-scroll-target="#partial-fraction-decomposition"><span class="header-section-number">40.1</span> Partial fraction decomposition</a>
+  <ul class="collapse">
+  <li><a href="#sketch-of-proof" id="toc-sketch-of-proof" class="nav-link" data-scroll-target="#sketch-of-proof"><span class="header-section-number">40.1.1</span> Sketch of proof</a></li>
+  </ul></li>
+  <li><a href="#integrating-the-terms-in-a-partial-fraction-decomposition" id="toc-integrating-the-terms-in-a-partial-fraction-decomposition" class="nav-link" data-scroll-target="#integrating-the-terms-in-a-partial-fraction-decomposition"><span class="header-section-number">40.2</span> Integrating the terms in a partial fraction decomposition</a>
+  <ul class="collapse">
+  <li><a href="#linear-factors" id="toc-linear-factors" class="nav-link" data-scroll-target="#linear-factors"><span class="header-section-number">40.2.1</span> Linear factors</a></li>
+  <li><a href="#quadratic-factors" id="toc-quadratic-factors" class="nav-link" data-scroll-target="#quadratic-factors"><span class="header-section-number">40.2.2</span> Quadratic factors</a></li>
+  </ul></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">40.3</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/integrals/partial_fractions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../integrals.html">Integrals</a></li><li class="breadcrumb-item"><a href="../integrals/partial_fractions.html"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<pre class="{julia}"><code>using CalculusWithJulia
+using SymPy</code></pre>
+<hr>
+<p>Integration is facilitated when an antiderivative for <span class="math inline">\(f\)</span> can be found, as then definite integrals can be evaluated through the fundamental theorem of calculus.</p>
+<p>However, despite differentiation being an algorithmic procedure, integration is not. There are “tricks” to try, such as substitution and integration by parts. These work in some cases. However, there are classes of functions for which algorithms exist. For example, the <code>SymPy</code> <code>integrate</code> function mostly implements an algorithm that decides if an elementary function has an antiderivative. The <a href="http://en.wikipedia.org/wiki/Elementary_function">elementary</a> functions include exponentials, their inverses (logarithms), trigonometric functions, their inverses, and powers, including <span class="math inline">\(n\)</span>th roots. Not every elementary function will have an antiderivative comprised of (finite) combinations of elementary functions. The typical example is <span class="math inline">\(e^{x^2}\)</span>, which has no simple antiderivative, despite its ubiquitousness.</p>
+<p>There are classes of functions where an (elementary) antiderivative can always be found. Polynomials provide a case. More surprisingly, so do their ratios, <em>rational functions</em>.</p>
+<section id="partial-fraction-decomposition" class="level2" data-number="40.1">
+<h2 data-number="40.1" class="anchored" data-anchor-id="partial-fraction-decomposition"><span class="header-section-number">40.1</span> Partial fraction decomposition</h2>
+<p>Let <span class="math inline">\(f(x) = p(x)/q(x)\)</span>, where <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> are polynomial functions with real coefficients. Further, we assume without comment that <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> have no common factors. (If they did, we can divide them out, an act which has no effect on the integrability of <span class="math inline">\(f(x)\)</span>.</p>
+<p>The function <span class="math inline">\(q(x)\)</span> will factor over the real numbers. The fundamental theorem of algebra can be applied to say that <span class="math inline">\(q(x)=q_1(x)^{n_1} \cdots q_k(x)^{n_k}\)</span> where <span class="math inline">\(q_i(x)\)</span> is a linear or quadratic polynomial and <span class="math inline">\(n_k\)</span> a positive integer.</p>
+<blockquote class="blockquote">
+<p><strong>Partial Fraction Decomposition</strong>: There are unique polynomials <span class="math inline">\(a_{ij}\)</span> with degree <span class="math inline">\(a_{ij} &lt;\)</span> degree <span class="math inline">\(q_i\)</span> such that</p>
+<p><span class="math display">\[
+\frac{p(x)}{q(x)} = a(x) + \sum_{i=1}^k \sum_{j=1}^{n_i} \frac{a_{ij}(x)}{q_i(x)^j}.
+\]</span></p>
+</blockquote>
+<p>The method is attributed to John Bernoulli, one of the prolific Bernoulli brothers who put a stamp on several areas of math. This Bernoulli was a mentor to Euler.</p>
+<p>This basically says that each factor <span class="math inline">\(q_i(x)^{n_i}\)</span> contributes a term like:</p>
+<p><span class="math display">\[
+\frac{a_{i1}(x)}{q_i(x)^1} + \frac{a_{i2}(x)}{q_i(x)^2} + \cdots + \frac{a_{in_i}(x)}{q_i(x)^{n_i}},
+\]</span></p>
+<p>where each <span class="math inline">\(a_{ij}(x)\)</span> has degree less than the degree of <span class="math inline">\(q_i(x)\)</span>.</p>
+<p>The value of this decomposition is that the terms <span class="math inline">\(a_{ij}(x)/q_i(x)^j\)</span> each have an antiderivative, and so the sum of them will also have an antiderivative.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Many calculus texts will give some examples for finding a partial fraction decomposition. We push that work off to <code>SymPy</code>, as for all but the easiest cases - a few are in the problems - it can be a bit tedious.</p>
+</div>
+</div>
+<p>In <code>SymPy</code>, the <code>apart</code> function will find the partial fraction decomposition when a factorization is available. For example, here we see <span class="math inline">\(n_i\)</span> terms for each power of <span class="math inline">\(q_i\)</span></p>
+<pre class="{julia}"><code>@syms a::real b::real c::real A::real B::real x::real</code></pre>
+<pre class="{julia}"><code>apart((x-2)*(x-3) / (x*(x-1)^2*(x^2 + 2)^3))</code></pre>
+<section id="sketch-of-proof" class="level3" data-number="40.1.1">
+<h3 data-number="40.1.1" class="anchored" data-anchor-id="sketch-of-proof"><span class="header-section-number">40.1.1</span> Sketch of proof</h3>
+<p>A standard proof uses two facts of number systems: the division algorithm and a representation of the greatest common divisor in terms of sums, extended to polynomials. Our sketch shows how these are used.</p>
+<p>Take one of the factors of the denominators, and consider this representation of the rational function <span class="math inline">\(P(x)/(q(x)^k Q(x))\)</span> where there are no common factors to any of the three polynomials.</p>
+<p>Since <span class="math inline">\(q(x)\)</span> and <span class="math inline">\(Q(x)\)</span> share no factors, <a href="http://tinyurl.com/kd6prns">Bezout’s</a> identity says there exists polynomials <span class="math inline">\(a(x)\)</span> and <span class="math inline">\(b(x)\)</span> with:</p>
+<p><span class="math display">\[
+a(x) Q(x) + b(x) q(x) = 1.
+\]</span></p>
+<p>Then dividing by <span class="math inline">\(q(x)^kQ(x)\)</span> gives the decomposition</p>
+<p><span class="math display">\[
+\frac{1}{q(x)^k Q(x)} = \frac{a(x)}{q(x)^k} + \frac{b(x)}{q(x)^{k-1}Q(x)}.
+\]</span></p>
+<p>So we get by multiplying the <span class="math inline">\(P(x)\)</span>:</p>
+<p><span class="math display">\[
+\frac{P(x)}{q(x)^k Q(x)} = \frac{A(x)}{q(x)^k} + \frac{B(x)}{q(x)^{k-1}Q(x)}.
+\]</span></p>
+<p>This may look more complicated, but what it does is peel off one term (The first) and leave something which is smaller, in this case by a factor of <span class="math inline">\(q(x)\)</span>. This process can be repeated pulling off a power of a factor at a time until nothing is left to do.</p>
+<p>What remains is to establish that we can take <span class="math inline">\(A(x) = a(x)\cdot P(x)\)</span> with a degree less than that of <span class="math inline">\(q(x)\)</span>.</p>
+<p>In Proposition 3.8 of <a href="http://www.m-hikari.com/imf/imf-2012/29-32-2012/cookIMF29-32-2012.pdf">Bradley</a> and Cook we can see how. Recall the division algorithm, for example, says there are <span class="math inline">\(q_k\)</span> and <span class="math inline">\(r_k\)</span> with <span class="math inline">\(A=q\cdot q_k + r_k\)</span> where the degree of <span class="math inline">\(r_k\)</span> is less than that of <span class="math inline">\(q\)</span>, which is linear or quadratic. This is repeatedly applied below:</p>
+<p><span class="math display">\[\begin{align*}
+\frac{A}{q^k} &amp;= \frac{q\cdot q_k + r_k}{q^k}\\
+&amp;= \frac{r_k}{q^k} + \frac{q_k}{q^{k-1}}\\
+&amp;= \frac{r_k}{q^k} + \frac{q \cdot q_{k-1} + r_{k-1}}{q^{k-1}}\\
+&amp;= \frac{r_k}{q^k} + \frac{r_{k-1}}{q^{k-1}} + \frac{q_{k-1}}{q^{k-2}}\\
+&amp;= \frac{r_k}{q^k} + \frac{r_{k-1}}{q^{k-1}} + \frac{q\cdot q_{k-2} + r_{k-2}}{q^{k-2}}\\
+&amp;= \cdots\\
+&amp;= \frac{r_k}{q^k} + \frac{r_{k-1}}{q^{k-1}} + \cdots + q_1.
+\end{align*}\]</span></p>
+<p>So the term <span class="math inline">\(A(x)/q(x)^k\)</span> can be expressed in terms of a sum where the numerators or each term have degree less than <span class="math inline">\(q(x)\)</span>, as expected by the statement of the theorem.</p>
+</section>
+</section>
+<section id="integrating-the-terms-in-a-partial-fraction-decomposition" class="level2" data-number="40.2">
+<h2 data-number="40.2" class="anchored" data-anchor-id="integrating-the-terms-in-a-partial-fraction-decomposition"><span class="header-section-number">40.2</span> Integrating the terms in a partial fraction decomposition</h2>
+<p>We discuss, by example, how each type of possible term in a partial fraction decomposition has an antiderivative. Hence, rational functions will <em>always</em> have an antiderivative that can be computed.</p>
+<section id="linear-factors" class="level3" data-number="40.2.1">
+<h3 data-number="40.2.1" class="anchored" data-anchor-id="linear-factors"><span class="header-section-number">40.2.1</span> Linear factors</h3>
+<p>For <span class="math inline">\(j=1\)</span>, if <span class="math inline">\(q_i\)</span> is linear, then <span class="math inline">\(a_{ij}/q_i^j\)</span> must look like a constant over a linear term, or something like:</p>
+<pre class="{julia}"><code>p = a/(x-c)</code></pre>
+<p>This has a logarithmic antiderivative:</p>
+<pre class="{julia}"><code>integrate(p, x)</code></pre>
+<p>For <span class="math inline">\(j &gt; 1\)</span>, we have powers.</p>
+<pre class="{julia}"><code>@syms j::positive
+integrate(a/(x-c)^j, x)</code></pre>
+</section>
+<section id="quadratic-factors" class="level3" data-number="40.2.2">
+<h3 data-number="40.2.2" class="anchored" data-anchor-id="quadratic-factors"><span class="header-section-number">40.2.2</span> Quadratic factors</h3>
+<p>When <span class="math inline">\(q_i\)</span> is quadratic, it looks like <span class="math inline">\(ax^2 + bx + c\)</span>. Then <span class="math inline">\(a_{ij}\)</span> can be a constant or a linear polynomial. The latter can be written as <span class="math inline">\(Ax + B\)</span>.</p>
+<p>The integral of the following general form is presented below:</p>
+<p><span class="math display">\[
+\frac{Ax +B }{(ax^2  + bx + c)^j},
+\]</span></p>
+<p>With <code>SymPy</code>, we consider a few cases of the following form, which results from a shift of <code>x</code></p>
+<p><span class="math display">\[
+\frac{Ax + B}{((ax)^2 \pm 1)^j}
+\]</span></p>
+<p>This can be done by finding a <span class="math inline">\(d\)</span> so that <span class="math inline">\(a(x-d)^2 + b(x-d) + c = dx^2 + e = e((\sqrt{d/e}x)^2 \pm 1)\)</span>.</p>
+<p>The integrals of the type <span class="math inline">\(Ax/((ax)^2 \pm 1)\)</span> can completed by <span class="math inline">\(u\)</span>-substitution, with <span class="math inline">\(u=(ax)^2 \pm 1\)</span>.</p>
+<p>For example,</p>
+<pre class="{julia}"><code>integrate(A*x/((a*x)^2 + 1)^4, x)</code></pre>
+<p>The integrals of the type <span class="math inline">\(B/((ax)^2\pm 1)\)</span> are completed by trigonometric substitution and various reduction formulas. They can get involved, but are tractable. For example:</p>
+<pre class="{julia}"><code>integrate(B/((a*x)^2 + 1)^4, x)</code></pre>
+<p>and</p>
+<pre class="{julia}"><code>integrate(B/((a*x)^2 - 1)^4, x)</code></pre>
+<hr>
+<p>In <a href="http://www-sop.inria.fr/cafe/Manuel.Bronstein/publications/issac98.pdf">Bronstein</a> this characterization can be found - “This method, which dates back to Newton, Leibniz and Bernoulli, should not be used in practice, yet it remains the method found in most calculus texts and is often taught. Its major drawback is the factorization of the denominator of the integrand over the real or complex numbers.” We can also find the following formulas which formalize the above exploratory calculations (<span class="math inline">\(j&gt;1\)</span> and <span class="math inline">\(b^2 - 4c &lt; 0\)</span> below):</p>
+<p><span class="math display">\[\begin{align*}
+\int \frac{A}{(x-a)^j} &amp;= \frac{A}{1-j}\frac{1}{(x-a)^{j-1}}\\
+\int \frac{A}{x-a}     &amp;= A\log(x-a)\\
+\int \frac{Bx+C}{x^2 + bx + c}     &amp;= \frac{B}{2} \log(x^2 + bx + c) + \frac{2C-bB}{\sqrt{4c-b^2}}\cdot \arctan\left(\frac{2x+b}{\sqrt{4c-b^2}}\right)\\
+\int \frac{Bx+C}{(x^2 + bx + c)^j} &amp;= \frac{B' x + C'}{(x^2 + bx + c)^{j-1}} + \int \frac{C''}{(x^2 + bx + c)^{j-1}}
+\end{align*}\]</span></p>
+<p>The first returns a rational function; the second yields a logarithm term; the third yields a logarithm and an arctangent term; while the last, which has explicit constants available, provides a reduction that can be recursively applied;</p>
+<p>That is integrating <span class="math inline">\(f(x)/g(x)\)</span>, a rational function, will yield an output that looks like the following, where the functions are polynomials:</p>
+<p><span class="math display">\[
+\int f(x)/g(x) = P(x) + \frac{C(x)}{D{x}} + \sum v_i \log(V_i(x)) + \sum w_j \arctan(W_j(x))
+\]</span></p>
+<p>(Bronstein also sketches the modern method which is to use a Hermite reduction to express <span class="math inline">\(\int (f/g) dx = p/q + \int (g/h) dx\)</span>, where <span class="math inline">\(h\)</span> is square free (the “<code>j</code>” are all <span class="math inline">\(1\)</span>). The latter can be written over the complex numbers as logarithmic terms of the form <span class="math inline">\(\log(x-a)\)</span>, the “<code>a</code>s”found following a method due to Trager and Lazard, and Rioboo, which is mentioned in the SymPy documentation as the method used.)</p>
+<section id="examples" class="level4">
+<h4 class="anchored" data-anchor-id="examples">Examples</h4>
+<p>Find an antiderivative for <span class="math inline">\(1/(x\cdot(x^2+1)^2)\)</span>.</p>
+<p>We have a partial fraction decomposition is:</p>
+<pre class="{julia}"><code>q = (x * (x^2 + 1)^2)
+apart(1/q)</code></pre>
+<p>We see three terms. The first and second will be done by <span class="math inline">\(u\)</span>-substitution, the third by a logarithm:</p>
+<pre class="{julia}"><code>integrate(1/q, x)</code></pre>
+<hr>
+<p>Find an antiderivative of <span class="math inline">\(1/(x^2 - 2x-3)\)</span>.</p>
+<p>We again just let <code>SymPy</code> do the work. A partial fraction decomposition is given by:</p>
+<pre class="{julia}"><code>q =  (x^2 - 2x - 3)
+apart(1/q)</code></pre>
+<p>We see what should yield two logarithmic terms:</p>
+<pre class="{julia}"><code>integrate(1/q, x)</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>SymPy</code> will find <span class="math inline">\(\log(x)\)</span> as an antiderivative for <span class="math inline">\(1/x\)</span>, but more generally, <span class="math inline">\(\log(\lvert x\rvert)\)</span> is one.</p>
+</div>
+</div>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>The answers found can become quite involved. <a href="https://arxiv.org/pdf/1712.01752.pdf">Corless</a>, Moir, Maza, and Xie use this example which at first glance seems tame enough:</p>
+<pre class="{julia}"><code>ex = (x^2 - 1) / (x^4 + 5x^2 + 7)</code></pre>
+<p>But the integral is something best suited to a computer algebra system:</p>
+<pre class="{julia}"><code>integrate(ex, x)</code></pre>
+</section>
+</section>
+</section>
+</section>
+<section id="questions" class="level2" data-number="40.3">
+<h2 data-number="40.3" class="anchored" data-anchor-id="questions"><span class="header-section-number">40.3</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>The partial fraction decomposition of <span class="math inline">\(1/(x(x-1))\)</span> must be of the form <span class="math inline">\(A/x + B/(x-1)\)</span>.</p>
+<p>What is <span class="math inline">\(A\)</span>? (Use <code>SymPy</code> or just put the sum over a common denominator and solve for <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>.)</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = -1
+numericq(val)</code></pre>
+<p>What is <span class="math inline">\(B\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = 1
+numericq(val)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>The following gives the partial fraction decomposition for a rational expression:</p>
+<p><span class="math display">\[
+\frac{3x+5}{(1-2x)^2} = \frac{A}{1-2x} + \frac{B}{(1-2x)^2}.
+\]</span></p>
+<p>Find <span class="math inline">\(A\)</span> (being careful with the sign):</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(-3/2)</code></pre>
+<p>Find <span class="math inline">\(B\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(13/2)</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>The following specifies the general partial fraction decomposition for a rational expression:</p>
+<p><span class="math display">\[
+\frac{1}{(x+1)(x-1)^2} = \frac{A}{x+1} + \frac{B}{x-1} + \frac{C}{(x-1)^2}.
+\]</span></p>
+<p>Find <span class="math inline">\(A\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(1/4)</code></pre>
+<p>Find <span class="math inline">\(B\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(-1/4)</code></pre>
+<p>Find <span class="math inline">\(C\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(1/2)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>Compute the following exactly:</p>
+<p><span class="math display">\[
+\int_0^1 \frac{(x-2)(x-3)}{(x-4)^2\cdot(x-5)} dx
+\]</span></p>
+<p>Is <span class="math inline">\(-6\log(5) - 5\log(3) - 1/6 + 11\log(4)\)</span> the answer?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq("yes")</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>In the assumptions for the partial fraction decomposition is the fact that <span class="math inline">\(p(x)\)</span> and <span class="math inline">\(q(x)\)</span> share no common factors. Suppose, this isn’t the case and in fact we have:</p>
+<p><span class="math display">\[
+\frac{p(x)}{q(x)} = \frac{(x-c)^m s(x)}{(x-c)^n t(x)}.
+\]</span></p>
+<p>Here <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span> are polynomials such that <span class="math inline">\(s(c)\)</span> and <span class="math inline">\(t(c)\)</span> are non-zero.</p>
+<p>If <span class="math inline">\(m &gt; n\)</span>, then why can we cancel out the <span class="math inline">\((x-c)^n\)</span> and not have a concern?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"`SymPy` allows it.",
+L"The value $c$ is a removable singularity, so the integral will be identical.",
+L"The resulting function has an identical domain and is equivalent for all $x$."
+]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>If <span class="math inline">\(m = n\)</span>, then why can we cancel out the <span class="math inline">\((x-c)^n\)</span> and not have a concern?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"`SymPy` allows it.",
+L"The value $c$ is a removable singularity, so the integral will be identical.",
+L"The resulting function has an identical domain and is equivalent for all $x$."
+]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>If <span class="math inline">\(m &lt; n\)</span>, then why can we cancel out the <span class="math inline">\((x-c)^n\)</span> and not have a concern?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"`SymPy` allows it.",
+L"The value $c$ is a removable singularity, so the integral will be identical.",
+L"The resulting function has an identical domain and is equivalent for all $x$."
+]
+answ = 3
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>The partial fraction decomposition, as presented, factors the denominator polynomial into linear and quadratic factors over the real numbers. Alternatively, factoring over the complex numbers is possible, resulting in terms like:</p>
+<p><span class="math display">\[
+\frac{a + ib}{x - (\alpha + i \beta)} + \frac{a - ib}{x - (\alpha - i \beta)}
+\]</span></p>
+<p>How to see that these give rise to real answers on integration is the point of this question.</p>
+<p>Breaking the terms up over <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> we have:</p>
+<p><span class="math display">\[\begin{align*}
+I &amp;= \frac{a}{x - (\alpha + i \beta)} + \frac{a}{x - (\alpha - i \beta)} \\
+II &amp;= i\frac{b}{x - (\alpha + i \beta)} - i\frac{b}{x - (\alpha - i \beta)}
+\end{align*}\]</span></p>
+<p>Integrating <span class="math inline">\(I\)</span> leads to two logarithmic terms, which are combined to give:</p>
+<p><span class="math display">\[
+\int I dx = a\cdot \log((x-(\alpha+i\beta)) \cdot (x - (\alpha-i\beta)))
+\]</span></p>
+<p>This involves no complex numbers, as:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["The complex numbers are complex conjugates, so the term in the logarithm will simply be ``x - 2\\alpha x + \\alpha^2 + \\beta^2``",
+           "The ``\\beta`` are ``0``, as the polynomials in question are real"]
+radioq(choices, 1)</code></pre>
+<p>The term <span class="math inline">\(II\)</span> benefits from this computation (attributed to Rioboo by <a href="https://arxiv.org/pdf/1712.01752.pdf">Corless et. al</a>)</p>
+<p><span class="math display">\[
+\frac{d}{dx} i \log(\frac{X+iY}{X-iY}) = 2\frac{d}{dx}\arctan(\frac{X}{Y})
+\]</span></p>
+<p>Applying this with <span class="math inline">\(X=x - \alpha\)</span> and <span class="math inline">\(Y=-\beta\)</span> shows that <span class="math inline">\(\int II dx\)</span> will be</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``-2b\\arctan((x - \\alpha)/(\\beta))``",
+           "``2b\\sec^2(-(x-\\alpha)/(-\\beta))``"]
+radioq(choices, 1)</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../integrals/integration_by_parts.html" class="pagination-link" aria-label="Integration By Parts">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../integrals/improper_integrals.html" class="pagination-link" aria-label="Improper Integrals">
+        <span class="nav-page-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/integrals/partial_fractions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

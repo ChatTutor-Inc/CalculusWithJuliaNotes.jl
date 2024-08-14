@@ -1,0 +1,2177 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>21&nbsp; Implications of continuity – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../derivatives.html" rel="next">
+<link href="../limits/continuity.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../limits.html">Limits</a></li><li class="breadcrumb-item"><a href="../limits/intermediate_value_theorem.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#intermediate-value-theorem" id="toc-intermediate-value-theorem" class="nav-link active" data-scroll-target="#intermediate-value-theorem"><span class="header-section-number">21.1</span> Intermediate Value Theorem</a>
+  <ul class="collapse">
+  <li><a href="#bolzano-and-the-bisection-method" id="toc-bolzano-and-the-bisection-method" class="nav-link" data-scroll-target="#bolzano-and-the-bisection-method"><span class="header-section-number">21.1.1</span> Bolzano and the bisection method</a></li>
+  <li><a href="#the-find_zero-function." id="toc-the-find_zero-function." class="nav-link" data-scroll-target="#the-find_zero-function."><span class="header-section-number">21.1.2</span> The <code>find_zero</code> function.</a></li>
+  <li><a href="#the-find_zeros-function" id="toc-the-find_zeros-function" class="nav-link" data-scroll-target="#the-find_zeros-function"><span class="header-section-number">21.1.3</span> The <code>find_zeros</code> function</a></li>
+  <li><a href="#an-alternate-interface-to-find_zero" id="toc-an-alternate-interface-to-find_zero" class="nav-link" data-scroll-target="#an-alternate-interface-to-find_zero"><span class="header-section-number">21.1.4</span> An alternate interface to <code>find_zero</code></a></li>
+  </ul></li>
+  <li><a href="#extreme-value-theorem" id="toc-extreme-value-theorem" class="nav-link" data-scroll-target="#extreme-value-theorem"><span class="header-section-number">21.2</span> Extreme value theorem</a></li>
+  <li><a href="#continuity-and-closed-and-open-sets" id="toc-continuity-and-closed-and-open-sets" class="nav-link" data-scroll-target="#continuity-and-closed-and-open-sets"><span class="header-section-number">21.3</span> Continuity and closed and open sets</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">21.4</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/limits/intermediate_value_theorem.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../limits.html">Limits</a></li><li class="breadcrumb-item"><a href="../limits/intermediate_value_theorem.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses these add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+plotly()
+using Roots
+using SymPy</code></pre>
+<hr>
+<p>Continuity for functions is a valued property which carries implications. In this section we discuss two: the intermediate value theorem and the extreme value theorem. These two theorems speak to some fundamental applications of calculus: finding zeros of a function and finding extrema of a function.</p>
+<section id="intermediate-value-theorem" class="level2" data-number="21.1">
+<h2 data-number="21.1" class="anchored" data-anchor-id="intermediate-value-theorem"><span class="header-section-number">21.1</span> Intermediate Value Theorem</h2>
+<blockquote class="blockquote">
+<p>The <em>intermediate value theorem</em>: If <span class="math inline">\(f\)</span> is continuous on <span class="math inline">\([a,b]\)</span> with, say, <span class="math inline">\(f(a) &lt; f(b)\)</span>, then for any <span class="math inline">\(y\)</span> with <span class="math inline">\(f(a) \leq y \leq f(b)\)</span> there exists a <span class="math inline">\(c\)</span> in <span class="math inline">\([a,b]\)</span> with <span class="math inline">\(f(c) = y\)</span>.</p>
+</blockquote>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+### {{{IVT}}}
+gr()
+function IVT_graph(n)
+    f(x) = sin(pi*x) + 9x/10
+    a,b = [0,3]
+
+    xs = range(a,stop=b, length=50)
+
+
+    ## cheat -- pick an x, then find a y
+    Δ = .2
+    x = range(a + Δ, stop=b - Δ, length=6)[n]
+    y = f(x)
+
+    plt = plot(f, a, b, legend=false, size=fig_size)
+    plot!(plt, [0,x,x], [f(x),f(x),0], color=:orange, linewidth=3)
+
+    plt
+
+end
+
+n = 6
+anim = @animate for i=1:n
+    IVT_graph(i)
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+
+
+caption = L"""
+
+Illustration of intermediate value theorem. The theorem implies that any randomly chosen $y$
+value between $f(a)$ and $f(b)$ will have  at least one $x$ in $[a,b]$
+with $f(x)=y$.
+
+"""
+
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<p>In the early years of calculus, the intermediate value theorem was intricately connected with the definition of continuity, now it is a consequence.</p>
+<p>The basic proof starts with a set of points in <span class="math inline">\([a,b]\)</span>: <span class="math inline">\(C = \{x \text{ in } [a,b] \text{ with } f(x) \leq y\}\)</span>. The set is not empty (as <span class="math inline">\(a\)</span> is in <span class="math inline">\(C\)</span>) so it <em>must</em> have a largest value, call it <span class="math inline">\(c\)</span> (this might seem obvious, but it requires the completeness property of the real numbers). By continuity of <span class="math inline">\(f\)</span>, it can be shown that <span class="math inline">\(\lim_{x \rightarrow c-} f(x) = f(c) \leq y\)</span> and <span class="math inline">\(\lim_{y \rightarrow c+}f(x) =f(c) \geq y\)</span>, which forces <span class="math inline">\(f(c) = y\)</span>.</p>
+<section id="bolzano-and-the-bisection-method" class="level3" data-number="21.1.1">
+<h3 data-number="21.1.1" class="anchored" data-anchor-id="bolzano-and-the-bisection-method"><span class="header-section-number">21.1.1</span> Bolzano and the bisection method</h3>
+<p>Suppose we have a continuous function <span class="math inline">\(f(x)\)</span> on <span class="math inline">\([a,b]\)</span> with <span class="math inline">\(f(a) &lt; 0\)</span> and <span class="math inline">\(f(b) &gt; 0\)</span>. Then as <span class="math inline">\(f(a) &lt; 0 &lt; f(b)\)</span>, the intermediate value theorem guarantees the existence of a <span class="math inline">\(c\)</span> in <span class="math inline">\([a,b]\)</span> with <span class="math inline">\(f(c) = 0\)</span>. This was a special case of the intermediate value theorem proved by Bolzano first. Such <span class="math inline">\(c\)</span> are called <em>zeros</em> of the function <span class="math inline">\(f\)</span>.</p>
+<p>We use this fact when building a “sign chart” of a polynomial function. Between any two consecutive real zeros the polynomial can not change sign. (Why?) So a “test point” can be used to determine the sign of the function over an entire interval.</p>
+<p>The <code>sign_chart</code> function from <code>CalculusWithJulia</code> uses this to indicate where an <em>assumed</em> continuous function changes sign:</p>
+<pre class="{julia}"><code>f(x) = sin(x + x^2) + x/2
+sign_chart(f, -3, 3)</code></pre>
+<p>The intermediate value theorem can find the sign of the function <em>between</em> adjacent zeros, but how are the zeros identified?</p>
+<p>Here, we use the Bolzano theorem to give an algorithm - the <em>bisection method</em> - to locate a value <span class="math inline">\(c\)</span> in <span class="math inline">\([a,b]\)</span> with <span class="math inline">\(f(c) = 0\)</span> under the assumptions: * <span class="math inline">\(f\)</span> is continuous on <span class="math inline">\([a,b]\)</span> * <span class="math inline">\(f\)</span> changes sign between <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>. (In particular, when <span class="math inline">\(f(a)\)</span> and <span class="math inline">\(f(b)\)</span> have different signs.)</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Between
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The bisection method is used to find a zero, <span class="math inline">\(c\)</span>, of <span class="math inline">\(f(x)\)</span> <em>between</em> two values, <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>. The method is guaranteed to work under assumptions, the most important being the continuous function having different signs at <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>.</p>
+</div>
+</div>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+## {{{bisection_graph}}}
+gr()
+function bisecting_graph(n)
+    f(x) = x^2 - 2
+    a,b = [0,2]
+
+    err = 2.0^(1-n)
+    title = "b - a = $err"
+    xs = range(a, stop=b, length=100)
+    plt = plot(f, a, b, legend=false, size=fig_size, title=title)
+
+    if n &gt;= 1
+        for i in 1:n
+            c = (a+b)/2
+            if f(a) * f(c) &lt; 0
+                a,b=a,c
+            else
+                a,b=c,b
+            end
+        end
+    end
+    plot!(plt, [a,b],[0,0], color=:orange, linewidth=3)
+    scatter!(plt, [a,b], [f(a), f(b)], color=:orange, markersize=5, markershape=:circle)
+
+    plt
+
+end
+
+
+n = 9
+anim = @animate for i=1:n
+    bisecting_graph(i-1)
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+
+
+caption = L"""
+
+Illustration of the bisection method to find a zero of a function. At
+each step the interval has $f(a)$ and $f(b)$ having opposite signs so
+that the intermediate value theorem guaratees a zero.
+
+"""
+
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<p>Call <span class="math inline">\([a,b]\)</span> a <em>bracketing</em> interval if <span class="math inline">\(f(a)\)</span> and <span class="math inline">\(f(b)\)</span> have different signs. We remark that having different signs can be expressed mathematically as <span class="math inline">\(f(a) \cdot f(b) &lt; 0\)</span>.</p>
+<p>We can narrow down where a zero is in <span class="math inline">\([a,b]\)</span> by following this recipe:</p>
+<ul>
+<li>Pick a midpoint of the interval, for concreteness <span class="math inline">\(c = (a+b)/2\)</span>.</li>
+<li>If <span class="math inline">\(f(c) = 0\)</span> we are done, having found a zero in <span class="math inline">\([a,b]\)</span>.</li>
+<li>Otherwise it must be that either <span class="math inline">\(f(a)\cdot f(c) &lt; 0\)</span> or <span class="math inline">\(f(c) \cdot f(b) &lt; 0\)</span>. If <span class="math inline">\(f(a) \cdot f(c) &lt; 0\)</span>, then let <span class="math inline">\(b=c\)</span> and repeat the above. Otherwise, let <span class="math inline">\(a=c\)</span> and repeat the above.</li>
+</ul>
+<p>At each step the bracketing interval is narrowed – indeed split in half as defined – or a zero is found.</p>
+<p>For the real numbers this algorithm never stops unless a zero is found. A “limiting” process is used to say that if it doesn’t stop, it will converge to some value.</p>
+<p>However, using floating point numbers leads to differences from the real-number situation. In this case, due to the ultimate granularity of the approximation of floating point values to the real numbers, the bracketing interval eventually can’t be subdivided, that is no <span class="math inline">\(c\)</span> is found over the floating point numbers with <span class="math inline">\(a &lt; c &lt; b\)</span>. So there is a natural stopping criteria: stop when there is an exact zero, when the bracketing interval gets too small to subdivide, or when the interval is as small as desired.</p>
+<p>We can write a relatively simple program to implement this algorithm:</p>
+<pre class="{julia}"><code>function simple_bisection(f, a, b)
+  if f(a) == 0 return(a) end
+  if f(b) == 0 return(b) end
+  if f(a) * f(b) &gt; 0 error("[a,b] is not a bracketing interval") end
+
+  tol = 1e-14  # small number (but should depend on size of a, b)
+  c = a/2 + b/2
+
+  while abs(b-a) &gt; tol
+    if f(c) == 0 return(c) end
+
+    if f(a) * f(c) &lt; 0
+       a, b = a, c
+    else
+       a, b = c, b
+    end
+
+    c = a/2 + b/2
+
+  end
+  c
+end</code></pre>
+<p>This function uses a <code>while</code> loop to repeat the process of subdividing <span class="math inline">\([a,b]\)</span>. A <code>while</code> loop will repeat until the condition is no longer <code>true</code>. The above will stop for reasonably sized floating point values (within <span class="math inline">\((-100, 100)\)</span>, say), but, as written, ignores the fact that the gap between floating point values depends on their magnitude.</p>
+<p>The value <span class="math inline">\(c\)</span> returned <em>need not</em> be an exact zero. Let’s see:</p>
+<pre class="{julia}"><code>c = simple_bisection(sin, 3, 4)</code></pre>
+<p>This value of <span class="math inline">\(c\)</span> is a floating-point approximation to <span class="math inline">\(\pi\)</span>, but is not <em>quite</em> a zero:</p>
+<pre class="{julia}"><code>sin(c)</code></pre>
+<p>(Even <code>1pi</code> itself is not a “zero” due to floating point issues.)</p>
+</section>
+<section id="the-find_zero-function." class="level3" data-number="21.1.2">
+<h3 data-number="21.1.2" class="anchored" data-anchor-id="the-find_zero-function."><span class="header-section-number">21.1.2</span> The <code>find_zero</code> function.</h3>
+<p>The <code>Roots</code> package has a function <code>find_zero</code> that implements the bisection method when called as <code>find_zero(f, (a,b))</code> where <span class="math inline">\([a,b]\)</span> is a bracket. Its use is similar to <code>simple_bisection</code> above. This package is loaded when <code>CalculusWithJulia</code> is. We illlustrate the usage of <code>find_zero</code> in the following:</p>
+<pre class="{julia}"><code>xstar = find_zero(sin, (3, 4))</code></pre>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Notice, the call <code>find_zero(sin, (3, 4))</code> again fits the template <code>action(function, args...)</code> that we see repeatedly. The <code>find_zero</code> function can also be called through <code>fzero</code>. The use of <code>(3, 4)</code> to specify the interval is not necessary. For example <code>[3,4]</code> would work equally as well. (Anything where <code>extrema</code> is defined works.)</p>
+</div>
+</div>
+<p>This function utilizes some facts about floating point values to guarantee that the answer will be an <em>exact</em> zero or a value where there is a sign change between the next bigger floating point or the next smaller, which means the sign at the next and previous floating point values is different:</p>
+<pre class="{julia}"><code>sin(xstar), sign(sin(prevfloat(xstar))), sign(sin(nextfloat(xstar)))</code></pre>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>The polynomial <span class="math inline">\(p(x) = x^5 - x + 1\)</span> has a zero between <span class="math inline">\(-2\)</span> and <span class="math inline">\(-1\)</span>. Find it.</p>
+<pre class="{julia}"><code>p(x) = x^5 - x + 1
+c₀ = find_zero(p, (-2, -1))
+(c₀, p(c₀))</code></pre>
+<p>We see, as before, that <span class="math inline">\(p(c)\)</span> is not quite <span class="math inline">\(0\)</span>. But it can be easily checked that <code>p</code> is positive at the next floating point number, while <code>p</code> is seen to be negative at the returned value:</p>
+<pre class="{julia}"><code>p(c₀), sign(p(prevfloat(c₀))), sign(p(nextfloat(c₀)))</code></pre>
+</section>
+<section id="example-1" class="level5">
+<h5 class="anchored" data-anchor-id="example-1">Example</h5>
+<p>The function <span class="math inline">\(q(x) = e^x - x^4\)</span> has a zero between <span class="math inline">\(5\)</span> and <span class="math inline">\(10\)</span>, as this graph shows:</p>
+<pre class="{julia}"><code>q(x) = exp(x) - x^4
+plot(q, 5, 10)</code></pre>
+<p>Find the zero numerically. The plot shows <span class="math inline">\(q(5) &lt; 0 &lt; q(10)\)</span>, so <span class="math inline">\([5,10]\)</span> is a bracket. We thus have:</p>
+<pre class="{julia}"><code>find_zero(q, (5, 10))</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Between need not be near
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Later, we will see more efficient algorithms to find a zero <em>near</em> a given guess. The bisection method finds a zero <em>between</em> two values of a bracketing interval. This interval need not be small. Indeed in many cases it can be infinite. For this particular problem, any interval like <code>(2,N)</code> will work as long as <code>N</code> is bigger than the zero and small enough that <code>q(N)</code> is finite <em>or</em> infinite <em>but</em> not <code>NaN</code>. (Basically, <code>q</code> must evaluate to a number with a sign. Here, the value of <code>q(Inf)</code> is <code>NaN</code> as it evaluates to the indeterminate <code>Inf - Inf</code>. But <code>q</code> is still not <code>NaN</code> for quite large numbers, such as <code>1e77</code>, as <code>x^4</code> can as big as <code>1e308</code> – technically <code>floatmax(Float64)</code> – and be finite.)</p>
+</div>
+</div>
+</section>
+<section id="example-2" class="level5">
+<h5 class="anchored" data-anchor-id="example-2">Example</h5>
+<p>Find all real zeros of <span class="math inline">\(f(x) = x^3 -x + 1\)</span> using the bisection method.</p>
+<p>We show next that symbolic values can be used with <code>find_zero</code>, should that be useful.</p>
+<p>First, we produce a plot to identify a bracketing interval</p>
+<pre class="{julia}"><code>@syms x
+plot(x^3 - x + 1, -3, 3)</code></pre>
+<p>It appears (and a plot over <span class="math inline">\([0,1]\)</span> verifies) that there is one zero between <span class="math inline">\(-2\)</span> and <span class="math inline">\(-1\)</span>. It is found with:</p>
+<pre class="{julia}"><code>find_zero(x^3 - x + 1, (-2,  -1))</code></pre>
+</section>
+<section id="example-3" class="level5">
+<h5 class="anchored" data-anchor-id="example-3">Example</h5>
+<p>The equation <span class="math inline">\(\cos(x) = x\)</span> has just one solution, as can be seen in this plot:</p>
+<pre class="{julia}"><code>f(x) = cos(x)
+g(x) = x
+plot(f, -pi, pi)
+plot!(g)</code></pre>
+<p>Find it.</p>
+<p>We see from the graph that it is clearly between <span class="math inline">\(0\)</span> and <span class="math inline">\(2\)</span>, so all we need is a function. (We have two.) The trick is to observe that solving <span class="math inline">\(f(x) = g(x)\)</span> is the same problem as solving for <span class="math inline">\(x\)</span> where <span class="math inline">\(f(x) - g(x) = 0\)</span>. So we define the difference and use that:</p>
+<pre class="{julia}"><code>h(x) = f(x) - g(x)
+find_zero(h, (0, 2))</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Solving <code>f(x) = g(x)</code> and <code>f(x) = c</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The above shows a means to translate a given problem into one that can be solved with <code>find_zero</code>. Basically to solve either when a function is a non-zero constant or when a function is equal to some other function, the difference between the two sides is formed and turned into a function, called <code>h</code> above.</p>
+<p>If using symbolic expressions, as below, then an equation (formed by <code>~</code>) can be passed to <code>find_zero</code>:</p>
+<pre class="{julia}"><code>@syms x
+solve(cos(x) ~ x, (0, 2))</code></pre>
+</div>
+</div>
+</section>
+<section id="example-inverse-functions" class="level5">
+<h5 class="anchored" data-anchor-id="example-inverse-functions">Example: Inverse functions</h5>
+<p>If <span class="math inline">\(f(x)\)</span> is <em>monotonic</em> and <em>continuous</em> over an interval <span class="math inline">\([a,b]\)</span> then it has an <em>inverse function</em>. That is for any <span class="math inline">\(y\)</span> between <span class="math inline">\(f(a)\)</span> and <span class="math inline">\(f(b)\)</span> we can find an <span class="math inline">\(x\)</span> satisfying <span class="math inline">\(y = f(x)\)</span> with <span class="math inline">\(a \leq x \leq b\)</span>. This is due, of course, to both the intermediate value theorem (which guarantees an <span class="math inline">\(x\)</span>) and monotonicity (which guarantees just one <span class="math inline">\(x\)</span>).</p>
+<p>To see how we can <em>numerically</em> find an inverse function using <code>find_zero</code>, we have this function:</p>
+<pre class="{julia}"><code>function inverse_function(f, a, b, args...; kwargs...)
+    fa, fb = f(a), f(b)
+    m, M = fa &lt; fb ? (fa, fb) : (fb, fa)
+    y -&gt; begin
+        @assert m ≤ y ≤ M
+        find_zero(x -&gt;f(x) - y, (a,b), args...; kwargs...)
+    end
+end</code></pre>
+<p>The check on <code>fa &lt; fb</code> is due to the possibility that <span class="math inline">\(f\)</span> is increasing (in which case <code>fa &lt; fb</code>) or decreasing (in which case <code>fa &gt; fb</code>).</p>
+<p>To see this used, we consider the monotonic function <span class="math inline">\(f(x) = x - \sin(x)\)</span> over <span class="math inline">\([0, 5\pi]\)</span>. To graph, we have:</p>
+<pre class="{julia}"><code>f(x) = x - sin(x)
+a, b = 0, 5pi
+plot(inverse_function(f, a, b), f(a), f(b); aspect_ratio=:equal)</code></pre>
+<p>(We plot over the range <span class="math inline">\([f(a), f(b)]\)</span> here, as we can guess <span class="math inline">\(f(x)\)</span> is <em>increasing</em>.)</p>
+</section>
+<section id="example-4" class="level5">
+<h5 class="anchored" data-anchor-id="example-4">Example</h5>
+<p>We wish to compare two trash collection plans</p>
+<ul>
+<li>Plan 1: You pay <span class="math inline">\(47.49\)</span> plus <span class="math inline">\(0.77\)</span> per bag.</li>
+<li>Plan 2: You pay <span class="math inline">\(30.00\)</span> plus <span class="math inline">\(2.00\)</span> per bag.</li>
+</ul>
+<p>There are some cases where plan 1 is cheaper and some where plan 2 is. Categorize them.</p>
+<p>Both plans are <em>linear models</em> and may be written in <em>slope-intercept</em> form:</p>
+<pre class="{julia}"><code>plan1(x) = 47.49 + 0.77x
+plan2(x) = 30.00 + 2.00x</code></pre>
+<p>Assuming this is a realistic problem and an average American household might produce <span class="math inline">\(10\)</span>-<span class="math inline">\(20\)</span> bags of trash a month (yes, that seems too much!) we plot in that range:</p>
+<pre class="{julia}"><code>plot(plan1, 10, 20)
+plot!(plan2)</code></pre>
+<p>We can see the intersection point is around <span class="math inline">\(14\)</span> and that if a family generates between <span class="math inline">\(0\)</span>-<span class="math inline">\(14\)</span> bags of trash per month that plan <span class="math inline">\(2\)</span> would be cheaper.</p>
+<p>Let’s get a numeric value. We first, form an auxiliary function returning the difference:</p>
+<pre class="{julia}"><code>h(x) = plan1(x) - plan2(x)
+find_zero(h, (10, 20))</code></pre>
+</section>
+<section id="example-the-flight-of-an-arrow" class="level5">
+<h5 class="anchored" data-anchor-id="example-the-flight-of-an-arrow">Example, the flight of an arrow</h5>
+<p>The flight of an arrow can be modeled using various functions, depending on assumptions. Suppose an arrow is launched in the air from a height of <span class="math inline">\(0\)</span> feet above the ground at an angle of <span class="math inline">\(\theta = \pi/4\)</span>. With a suitable choice for the initial velocity, a model without wind resistance for the height of the arrow at a distance <span class="math inline">\(x\)</span> units away may be:</p>
+<p><span class="math display">\[
+j(x) = \tan(\theta) x - (1/2) \cdot g(\frac{x}{v_0 \cos\theta})^2.
+\]</span></p>
+<p>In <code>julia</code> we have, taking <span class="math inline">\(v_0=200\)</span>:</p>
+<pre class="{julia}"><code>j(x; theta=pi/4, g=32, v0=200) = tan(theta)*x - (1/2)*g*(x/(v0*cos(theta)))^2</code></pre>
+<p>With a velocity-dependent wind resistance given by <span class="math inline">\(\gamma\)</span>, again with some units, a similar equation can be constructed. It takes a different form:</p>
+<p><span class="math display">\[
+d(x) = (\frac{g}{\gamma v_0 \cos(\theta)} + \tan(\theta)) \cdot x  +
+      \frac{g}{\gamma^2}\log(\frac{v_0\cos(\theta) - \gamma x}{v_0\cos(\theta)})
+\]</span></p>
+<p>Again, <span class="math inline">\(v_0\)</span> is the initial velocity and is taken to be <span class="math inline">\(200\)</span> and <span class="math inline">\(\gamma\)</span> a resistance, which we take to be <span class="math inline">\(1\)</span>. With this, we have the following <code>julia</code> definition (with a slight reworking of <span class="math inline">\(\gamma\)</span>):</p>
+<pre class="{julia}"><code>function d(x; theta=pi/4, g=32, v0=200, gamma=1)
+     a = gamma * v0 * cos(theta)
+     (g/a + tan(theta)) * x + g/gamma^2 * log((a-gamma^2 * x)/a)
+end</code></pre>
+<p>For each model, we wish to find the value of <span class="math inline">\(x\)</span> after launching where the height is modeled to be <span class="math inline">\(0\)</span>. That is how far will the arrow travel before touching the ground?</p>
+<p>For the model without wind resistance, we can graph the function easily enough. Let’s guess the distance is no more than <span class="math inline">\(500\)</span> feet:</p>
+<pre class="{julia}"><code>plot(j, 0, 500)</code></pre>
+<p>Well, we haven’t even seen the peak yet. Better to do a little spade work first. This is a quadratic function, so we can use <code>roots</code> from <code>SymPy</code> to find the roots:</p>
+<pre class="{julia}"><code>roots(j(x))</code></pre>
+<p>We see that <span class="math inline">\(1250\)</span> is the largest root. So we plot over this domain to visualize the flight:</p>
+<pre class="{julia}"><code>plot(j, 0, 1250)</code></pre>
+<p>As for the model with wind resistance, a quick plot over the same interval, <span class="math inline">\([0, 1250]\)</span> yields:</p>
+<pre class="{julia}"><code>plot(d, 0, 1250)</code></pre>
+<p>This graph eventually goes negative and then stops. This is due to the asymptote in model when <code>(a - gamma^2*x)/a</code> is zero. To plot the trajectory until it returns to <span class="math inline">\(0\)</span>, we need to identify the value of the zero. This model is non-linear and we don’t have the simplicity of using <code>roots</code> to find out the answer, so we solve for when <span class="math inline">\(a-\gamma^2 x\)</span> is <span class="math inline">\(0\)</span>:</p>
+<pre class="{julia}"><code>gamma = 1
+a = 200 * cos(pi/4)
+b = a/gamma^2</code></pre>
+<p>Note that the function is infinite at <code>b</code>:</p>
+<pre class="{julia}"><code>d(b)</code></pre>
+<p>From the graph, we can see the zero is around <code>b</code>. As <code>d(b)</code> is <code>-Inf</code> we can use the bracket <code>(b/2, b)</code></p>
+<pre class="{julia}"><code>x1 = find_zero(d, (b/2, b))</code></pre>
+<p>The answer is approximately <span class="math inline">\(140.7\)</span></p>
+<p>(The bisection method only needs to know the sign of the function. Other bracketing methods would have issues with an endpoint with an infinite function value. To use them, some value between the zero and <code>b</code> would needed.)</p>
+<p>Finally, we plot both graphs at once to see that it was a very windy day indeed.</p>
+<pre class="{julia}"><code>plot(j, 0, 1250, label="no wind")
+plot!(d, 0, x1, label="windy day")</code></pre>
+</section>
+<section id="example-bisection-and-non-continuity" class="level5">
+<h5 class="anchored" data-anchor-id="example-bisection-and-non-continuity">Example: bisection and non-continuity</h5>
+<p>The Bolzano theorem assumes a continuous function <span class="math inline">\(f\)</span>, and when applicable, yields an algorithm to find a guaranteed zero.</p>
+<p>However, the algorithm itself does not know that the function is continuous or not, only that the function changes sign. As such, it can produce useful answers that are not “zeros” when applied to discontinuous functions.</p>
+<p>In general a function over floating point values could be considered as a large table of mappings: each of the <span class="math inline">\(2^{64}\)</span> floating point values gets assigned a value. This is a discrete mapping, there is nothing the computer sees related to continuity.</p>
+<blockquote class="blockquote">
+<p>The concept of continuity, if needed, must be verified by the user of the algorithm.</p>
+</blockquote>
+<p>We have remarked on this discreteness when plotting rational functions or functions with vertical asymptotes. The default algorithms just connect points with lines. The user must manage the discontinuity (by assigning some values <code>NaN</code>, say); the algorithms used may not.</p>
+<p>In this particular case, the bisection algorithm can still be fruitful even when the function is not continuous, as the algorithm will yield information about crossing values of <span class="math inline">\(0\)</span>, possibly at discontinuities. But the user of the algorithm must be aware that the answers are only guaranteed to be zeros of the function if the function is continuous and the algorithm did not check for that assumption.</p>
+<p>As an example, let <span class="math inline">\(f(x) = 1/x\)</span>. Clearly the interval <span class="math inline">\([-1,1]\)</span> is a “bracketing” interval as <span class="math inline">\(f(x)\)</span> changes sign between <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>. What does the algorithm yield:</p>
+<pre class="{julia}"><code>fᵢ(x) = 1/x
+x0 = find_zero(fᵢ, (-1, 1))</code></pre>
+<p>The function is not defined at the answer, but we do have the fact that just to the left of the answer (<code>prevfloat</code>) and just to the right of the answer (<code>nextfloat</code>) the function changes sign:</p>
+<pre class="{julia}"><code>sign(fᵢ(prevfloat(x0))), sign(fᵢ(nextfloat(x0)))</code></pre>
+<p>So, the “bisection method” applied here finds a point where the function crosses <span class="math inline">\(0\)</span>, either by continuity or by jumping over the <span class="math inline">\(0\)</span>. (A <code>jump</code> discontinuity at <span class="math inline">\(x=c\)</span> is defined by the left and right limits of <span class="math inline">\(f\)</span> at <span class="math inline">\(c\)</span> existing but being unequal. The algorithm can find <span class="math inline">\(c\)</span> when this type of function jumps over <span class="math inline">\(0\)</span>.)</p>
+</section>
+<section id="using-parameterized-functions-fxp-with-find_zero" class="level4">
+<h4 class="anchored" data-anchor-id="using-parameterized-functions-fxp-with-find_zero">Using parameterized functions (<code>f(x,p)</code>) with <code>find_zero</code></h4>
+<p>Geometry will tell us that <span class="math inline">\(\cos(x) - x/p\)</span> for <em>one</em> <span class="math inline">\(x\)</span> in <span class="math inline">\([0, \pi/2]\)</span> whenever <span class="math inline">\(p&gt;0\)</span>. We could set up finding this value for a given <span class="math inline">\(p\)</span> by making <span class="math inline">\(p\)</span> part of the function definition, but as an illustration of passing parameters, we leave <code>p</code> as a parameter (in this case, as a second value with default of <span class="math inline">\(1\)</span>):</p>
+<pre class="{julia}"><code>#| hold: true
+f(x, p=1) = cos(x) - x/p
+I = (0, pi/2)
+find_zero(f, I), find_zero(f, I, p=2)</code></pre>
+<p>The second number is the solution when <code>p=2</code>.</p>
+<p>The above used a <em>keyword</em> argument to pass in the parameter, but using a positional argument (the last one) allows for broadcasting:</p>
+<pre class="{julia}"><code>find_zero.(f, Ref(I), 1:5) # solutions for p=1,2,3,4,5</code></pre>
+<p>(The use of <code>Ref</code> above prevents broadcasting over the specified bracketing interval.)</p>
+</section>
+</section>
+<section id="the-find_zeros-function" class="level3" data-number="21.1.3">
+<h3 data-number="21.1.3" class="anchored" data-anchor-id="the-find_zeros-function"><span class="header-section-number">21.1.3</span> The <code>find_zeros</code> function</h3>
+<p>The bisection method suggests a naive means to search for all zeros within an interval <span class="math inline">\((a, b)\)</span>: split the interval into many small intervals and for each that is a bracketing interval find a zero. This simple description has three flaws: it might miss values where the function doesn’t actually cross the <span class="math inline">\(x\)</span> axis; it might miss values where the function just dips to the other side; and it might miss multiple values in the same small interval.</p>
+<p>Still, with some engineering, this can be a useful approach, save the caveats. This idea is implemented in the <code>find_zeros</code> function of the <code>Roots</code> package. The function is called via <code>find_zeros(f, (a, b))</code> but here the interval <span class="math inline">\([a,b]\)</span> is not necessarily a bracketing interval.</p>
+<p>To see, we have:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = cos(10*pi*x)
+find_zeros(f, (0, 1))</code></pre>
+<p>Or for a polynomial:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = x^5 - x^4 + x^3 - x^2 + 1
+find_zeros(f, (-10, 10))</code></pre>
+<p>(The choice of <span class="math inline">\(-10\)</span> and <span class="math inline">\(10\)</span> was arbitrary. Cauchy’s method could be used to be more systematic.)</p>
+<section id="example-solving-fx-gx" class="level5">
+<h5 class="anchored" data-anchor-id="example-solving-fx-gx">Example: Solving f(x) = g(x)</h5>
+<p>Use <code>find_zeros</code> to find when <span class="math inline">\(e^x = x^5\)</span> in the interval <span class="math inline">\([-20, 20]\)</span>. Verify the answers.</p>
+<p>To proceed with <code>find_zeros</code>, we define <span class="math inline">\(f(x) = e^x - x^5\)</span>, as <span class="math inline">\(f(x) = 0\)</span> precisely when <span class="math inline">\(e^x = x^5\)</span>. The zeros are then found with:</p>
+<pre class="{julia}"><code>f(x) = exp(x) - x^5
+zs = find_zeros(f, (-20,20))</code></pre>
+<p>The output of <code>find_zeros</code> is a vector of values. To check that each value is an approximate zero can be done with the “.” (broadcast) syntax:</p>
+<pre class="{julia}"><code>f.(zs)</code></pre>
+<p>(For a continuous function this should be the case that the values returned by <code>find_zeros</code> are approximate zeros. Bear in mind that if <span class="math inline">\(f\)</span> is not continuous the algorithm might find jumping points that are not zeros and may not even be in the domain of the function.)</p>
+</section>
+</section>
+<section id="an-alternate-interface-to-find_zero" class="level3" data-number="21.1.4">
+<h3 data-number="21.1.4" class="anchored" data-anchor-id="an-alternate-interface-to-find_zero"><span class="header-section-number">21.1.4</span> An alternate interface to <code>find_zero</code></h3>
+<p>The <code>find_zero</code> function in the <code>Roots</code> package is an interface to one of several methods. For now we focus on the <em>bracketing</em> methods, later we will see others. Bracketing methods, among others, include <code>Roots.Bisection()</code>, the basic bisection method though with a different sense of “middle” than <span class="math inline">\((a+b)/2\)</span> and used by default above; <code>Roots.A42()</code>, which will typically converge much faster than simple bisection; <code>Roots.Brent()</code> for the classic method of Brent, and <code>FalsePosition()</code> for a family of <em>regula falsi</em> methods. These can all be used by specifying the method in a call to <code>find_zero</code>.</p>
+<p>Alternatively, <code>Roots</code> implements the <code>CommonSolve</code> interface popularized by its use in the <code>DifferentialEquations.jl</code> ecosystem, a wildly successful area for <code>Julia</code>. The basic setup involves two steps: setup a “problem;” solve the problem.</p>
+<p>To set up a problem we call <code>ZeroProblem</code> with the function and an initial interval, as in:</p>
+<pre class="{julia}"><code>f(x) = x^5 - x - 1
+prob = ZeroProblem(f, (1,2))</code></pre>
+<p>Then we can “solve” this problem with <code>solve</code>. For example:</p>
+<pre class="{julia}"><code>solve(prob), solve(prob, Roots.Brent()), solve(prob, Roots.A42())</code></pre>
+<p>Though the answers are identical, the methods employed were not. The first call, with an unspecified method, defaults to bisection.</p>
+</section>
+</section>
+<section id="extreme-value-theorem" class="level2" data-number="21.2">
+<h2 data-number="21.2" class="anchored" data-anchor-id="extreme-value-theorem"><span class="header-section-number">21.2</span> Extreme value theorem</h2>
+<p>The Extreme Value Theorem is another consequence of continuity.</p>
+<p>To discuss the extreme value theorem, we define an <em>absolute maximum</em>.</p>
+<blockquote class="blockquote">
+<p>The absolute maximum of <span class="math inline">\(f(x)\)</span> over an interval <span class="math inline">\(I\)</span>, when it exists, is the value <span class="math inline">\(f(c)\)</span>, <span class="math inline">\(c\)</span> in <span class="math inline">\(I\)</span>, where <span class="math inline">\(f(x) \leq f(c)\)</span> for any <span class="math inline">\(x\)</span> in <span class="math inline">\(I\)</span>.</p>
+<p>Similarly, an <em>absolute minimum</em> of <span class="math inline">\(f(x)\)</span> over an interval <span class="math inline">\(I\)</span> can be defined, when it exists, by a value <span class="math inline">\(f(c)\)</span> where <span class="math inline">\(c\)</span> is in <span class="math inline">\(I\)</span> <em>and</em> <span class="math inline">\(f(c) \leq f(x)\)</span> for any <span class="math inline">\(x\)</span> in <span class="math inline">\(I\)</span>.</p>
+</blockquote>
+<p>Related but different is the concept of a relative of <em>local extrema</em>:</p>
+<blockquote class="blockquote">
+<p>A local maxima for <span class="math inline">\(f\)</span> is a value <span class="math inline">\(f(c)\)</span> where <span class="math inline">\(c\)</span> is in <strong>some</strong> <em>open</em> interval <span class="math inline">\(I=(a,b)\)</span>, <span class="math inline">\(I\)</span> in the domain of <span class="math inline">\(f\)</span>, and <span class="math inline">\(f(c)\)</span> is an absolute maxima for <span class="math inline">\(f\)</span> over <span class="math inline">\(I\)</span>. Similarly, an local minima for <span class="math inline">\(f\)</span> is a value <span class="math inline">\(f(c)\)</span> where <span class="math inline">\(c\)</span> is in <strong>some</strong> <em>open</em> interval <span class="math inline">\(I=(a,b)\)</span>, <span class="math inline">\(I\)</span> in the domain of <span class="math inline">\(f\)</span>, and <span class="math inline">\(f(x)\)</span> is an absolute minima for <span class="math inline">\(f\)</span> over <span class="math inline">\(I\)</span>.</p>
+</blockquote>
+<p>The term <em>local extrema</em> is used to describe either a local maximum or local minimum.</p>
+<p>The key point, is the extrema are values in the <em>range</em> that are realized by some value in the <em>domain</em> (possibly more than one.)</p>
+<p>This chart of the <a href="http://hardrock100.com/">Hardrock 100</a> illustrates the two concepts.</p>
+<pre class="{julia}"><code>#| echo: false
+###{{{hardrock_profile}}}
+imgfile = "figures/hardrock-100.png"
+caption = """
+Elevation profile of the  Hardrock 100 ultramarathon. Treating the elevation profile as a function, the absolute maximum is just about 14,000 feet and the absolute minimum about 7600 feet. These are of interest to the runner for different reasons. Also of interest would be each local maxima and local minima - the peaks and valleys of the graph - and the total elevation climbed - the latter so important/unforgettable its value makes it into the chart's title.
+"""
+
+# ImageFile(:limits, imgfile, caption)
+nothing</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://hardrock100.com"><img src="figures/hardrock-100.png" class="img-fluid figure-img" alt="Elevation profile of the Hardrock 100 ultramarathon. Treating the elevation profile as a function, the absolute maximum is just about 14,000 feet and the absolute minimum about 7600 feet. These are of interest to the runner for different reasons. Also of interest would be each local maxima and local minima - the peaks and valleys of the graph - and the total elevation climbed - the latter so important/unforgettable its value makes it into the chart’s title."></a></p>
+<figcaption>Elevation profile of the Hardrock 100 ultramarathon. Treating the elevation profile as a function, the absolute maximum is just about 14,000 feet and the absolute minimum about 7600 feet. These are of interest to the runner for different reasons. Also of interest would be each local maxima and local minima - the peaks and valleys of the graph - and the total elevation climbed - the latter so important/unforgettable its value makes it into the chart’s title.</figcaption>
+</figure>
+</div>
+<p>The extreme value theorem discusses an assumption that ensures absolute maximum and absolute minimum values exist.</p>
+<blockquote class="blockquote">
+<p>The <em>extreme value theorem</em>: If <span class="math inline">\(f(x)\)</span> is continuous over a closed interval <span class="math inline">\([a,b]\)</span> then <span class="math inline">\(f\)</span> has an absolute maximum and an absolute minimum over <span class="math inline">\([a,b]\)</span>.</p>
+</blockquote>
+<p>(By continuous over <span class="math inline">\([a,b]\)</span> we mean continuous on <span class="math inline">\((a,b)\)</span> and right continuous at <span class="math inline">\(a\)</span> and left continuous at <span class="math inline">\(b\)</span>.)</p>
+<p>The assumption that <span class="math inline">\([a,b]\)</span> includes its endpoints (it is closed) is crucial to make a guarantee. There are functions which are continuous on open intervals for which this result is not true. For example, <span class="math inline">\(f(x) = 1/x\)</span> on <span class="math inline">\((0,1)\)</span>. This function will have no smallest value or largest value, as defined above.</p>
+<p>The extreme value theorem is an important theoretical tool for investigating maxima and minima of functions.</p>
+<section id="example-5" class="level5">
+<h5 class="anchored" data-anchor-id="example-5">Example</h5>
+<p>The function <span class="math inline">\(f(x) = \sqrt{1-x^2}\)</span> is continuous on the interval <span class="math inline">\([-1,1]\)</span> (in the sense above). It then has an absolute maximum, we can see to be <span class="math inline">\(1\)</span> occurring at an interior point <span class="math inline">\(0\)</span>. The absolute minimum is <span class="math inline">\(0\)</span>, it occurs at each endpoint.</p>
+</section>
+<section id="example-6" class="level5">
+<h5 class="anchored" data-anchor-id="example-6">Example</h5>
+<p>The function <span class="math inline">\(f(x) = x \cdot e^{-x}\)</span> on the closed interval <span class="math inline">\([0, 5]\)</span> is continuous. Hence it has an absolute maximum, which a graph shows to be <span class="math inline">\(0.4\)</span>. It has an absolute minimum, clearly the value <span class="math inline">\(0\)</span> occurring at the endpoint.</p>
+<pre class="{julia}"><code>#| hold: true
+plot(x -&gt; x * exp(-x), 0, 5)</code></pre>
+</section>
+<section id="example-7" class="level5">
+<h5 class="anchored" data-anchor-id="example-7">Example</h5>
+<p>The tangent function does not have a <em>guarantee</em> of an absolute maximum or an minimum over <span class="math inline">\((-\pi/2, \pi/2),\)</span> as it is not <em>continuous</em> at the endpoints. In fact, it doesn’t have either extrema - it has vertical asymptotes at each endpoint of this interval.</p>
+</section>
+<section id="example-8" class="level5">
+<h5 class="anchored" data-anchor-id="example-8">Example</h5>
+<p>The function <span class="math inline">\(f(x) = x^{2/3}\)</span> over the interval <span class="math inline">\([-2,2]\)</span> has cusp at <span class="math inline">\(0\)</span>. However, it is continuous on this closed interval, so must have an absolute maximum and absolute minimum. They can be seen from the graph to occur at the endpoints and the cusp at <span class="math inline">\(x=0\)</span>, respectively:</p>
+<pre class="{julia}"><code>#| hold: true
+plot(x -&gt; (x^2)^(1/3), -2, 2)</code></pre>
+<p>(The use of just <code>x^(2/3)</code> in the above would fail, can you guess why?)</p>
+</section>
+<section id="example-9" class="level5">
+<h5 class="anchored" data-anchor-id="example-9">Example</h5>
+<p>A New York Times <a href="https://www.nytimes.com/2016/07/30/world/europe/norway-considers-a-birthday-gift-for-finland-the-peak-of-an-arctic-mountain.html">article</a> discusses an idea of Norway moving its border some 490 feet north and 650 feet east in order to have the peak of Mount Halti be the highest point in Finland, as currently it would be on the boundary. Mathematically this hints at a higher dimensional version of the extreme value theorem.</p>
+</section>
+</section>
+<section id="continuity-and-closed-and-open-sets" class="level2" data-number="21.3">
+<h2 data-number="21.3" class="anchored" data-anchor-id="continuity-and-closed-and-open-sets"><span class="header-section-number">21.3</span> Continuity and closed and open sets</h2>
+<p>We comment on two implications of continuity that can be generalized to more general settings.</p>
+<p>The two intervals <span class="math inline">\((a,b)\)</span> and <span class="math inline">\([a,b]\)</span> differ as the latter includes the endpoints. The extreme value theorem shows this distinction can make a big difference in what can be said regarding <em>images</em> of such interval.</p>
+<p>In particular, if <span class="math inline">\(f\)</span> is continuous and <span class="math inline">\(I = [a,b]\)</span> with <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> finite (<span class="math inline">\(I\)</span> is <em>closed</em> and bounded) then the <em>image</em> of <span class="math inline">\(I\)</span> sometimes denoted <span class="math inline">\(f(I) = \{y: y=f(x) \text{ for } x \in I\}\)</span> has the property that it will be an interval and will include its endpoints (also closed and bounded).</p>
+<p>That <span class="math inline">\(f(I)\)</span> is an interval is a consequence of the intermediate value theorem. That <span class="math inline">\(f(I)\)</span> contains its endpoints is the extreme value theorem.</p>
+<p>On the real line, sets that are closed and bounded are “compact,” a term that generalizes to other settings.</p>
+<blockquote class="blockquote">
+<p>Continuity implies that the <em>image</em> of a compact set is compact.</p>
+</blockquote>
+<p>Now let <span class="math inline">\((c,d)\)</span> be an <em>open</em> interval in the range of <span class="math inline">\(f\)</span>. An open interval is an open set. On the real line, an open set is one where each point in the set, <span class="math inline">\(a\)</span>, has some <span class="math inline">\(\delta\)</span> such that if <span class="math inline">\(|b-a| &lt; \delta\)</span> then <span class="math inline">\(b\)</span> is also in the set.</p>
+<blockquote class="blockquote">
+<p>Continuity implies that the <em>preimage</em> of an open set is an open set.</p>
+</blockquote>
+<p>The <em>preimage</em> of an open set, <span class="math inline">\(I\)</span>, is <span class="math inline">\(\{a: f(a) \in I\}\)</span>. (All <span class="math inline">\(a\)</span> with an image in <span class="math inline">\(I\)</span>.) Taking some pair <span class="math inline">\((a,y)\)</span> with <span class="math inline">\(y\)</span> in <span class="math inline">\(I\)</span> and <span class="math inline">\(a\)</span> in the preimage as <span class="math inline">\(f(a)=y\)</span>. Let <span class="math inline">\(\epsilon\)</span> be such that <span class="math inline">\(|x-y| &lt; \epsilon\)</span> implies <span class="math inline">\(x\)</span> is in <span class="math inline">\(I\)</span>. Then as <span class="math inline">\(f\)</span> is continuous at <span class="math inline">\(a\)</span>, given <span class="math inline">\(\epsilon\)</span> there is a <span class="math inline">\(\delta\)</span> such that <span class="math inline">\(|b-a| &lt;\delta\)</span> implies <span class="math inline">\(|f(b) - f(a)| &lt; \epsilon\)</span> or <span class="math inline">\(|f(b)-y| &lt; \epsilon\)</span> which means that <span class="math inline">\(f(b)\)</span> is in the <span class="math inline">\(I\)</span> so <span class="math inline">\(b\)</span> is in the preimage, implying the preimage is an open set.</p>
+</section>
+<section id="questions" class="level2" data-number="21.4">
+<h2 data-number="21.4" class="anchored" data-anchor-id="questions"><span class="header-section-number">21.4</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>Consider the following plot</p>
+<pre class="{julia}"><code>plot(airy, -5, 5; xticks=-5:5)</code></pre>
+<p>There is a guaranteed zero between:</p>
+<pre class="{julia}"><code>#| echo: false
+choices = ["``-4`` and ``-3``",
+           "``-3`` and ``-2``",
+           "``-2`` and ``-1``",
+           "``-1`` and ``-0``"]
+answer = 2
+radioq(choices, answer; keep_order=true)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>Consider the following plot</p>
+<pre class="{julia}"><code>plot(erf, -5, 5; xticks=-5:5)</code></pre>
+<p>There is a guaranteed zero to <code>erf(x) = 0.5</code> between</p>
+<pre class="{julia}"><code>#| echo: false
+choices = ["``-1`` and ``0``",
+           "``0`` and ``1``",
+           "``1`` and ``2``"]
+answer = 2
+radioq(choices, answer; keep_order=true)</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>The hyperbolic tangent has a domain of all real numbers and a range between <span class="math inline">\(-1\)</span> and <span class="math inline">\(1\)</span>. It is a strictly increasing function.</p>
+<p>Is the interval <span class="math inline">\((-\infty, \infty)\)</span> a <em>bracketing</em> interval for the function <code>f(x) = tanh(x) - 1/2</code>?</p>
+<pre class="{julia}"><code>#| echo: false
+choices = ["Technically no, as you can't evaluate the function at these points without using a limit; but practically yes. As the hyperbolic tangent function is monotonic and increases from ``-1`` to ``1`` in that interval, it must cross the line ``y=1/2``.",
+           "No, the function has a jump"]
+answer = 1
+radioq(choices, answer; keep_order=true)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>There is negative zero in the interval <span class="math inline">\([-10, 0]\)</span> for the function <span class="math inline">\(f(x) = e^x - x^4\)</span>. Find its value numerically:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = exp(x) - x^4
+val = find_zero(f, (-10, 0));
+numericq(val, 1e-3)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>There is zero in the interval <span class="math inline">\([0, 5]\)</span> for the function <span class="math inline">\(f(x) = e^x - x^4\)</span>. Find its value numerically:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = exp(x) - x^4
+val = find_zero(f, (0, 5));
+numericq(val, 1e-3)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>Let <span class="math inline">\(f(x) = x^2 - 10 \cdot x \cdot \log(x)\)</span>. This function has two zeros on the positive <span class="math inline">\(x\)</span> axis. You are asked to find the largest (graph and bracket…).</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+b = 10
+f(x) =  x^2 - b * x * log(x)
+val = find_zero(f, (10, 500))
+numericq(val, 1e-3)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>The <code>airyai</code> function has infinitely many negative roots, as the function oscillates when <span class="math inline">\(x &lt; 0\)</span> and <em>no</em> positive roots. Find the <em>second largest root</em> using the graph to bracket the answer, and then solve.</p>
+<pre class="{julia}"><code>plot(airyai, -10, 10)   # `airyai` loaded in `SpecialFunctions` by `CalculusWithJulia`</code></pre>
+<p>The second largest root is:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = find_zero(airyai, (-5,  -4));
+numericq(val, 1e-3)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>(From <a href="http://ocw.mit.edu/ans7870/resources/Strang/Edited/Calculus/Calculus.pdf">Strang</a>, p.&nbsp;37)</p>
+<p>Certainly <span class="math inline">\(x^3\)</span> equals <span class="math inline">\(3^x\)</span> at <span class="math inline">\(x=3\)</span>. Find the largest value for which <span class="math inline">\(x^3 = 3^x\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = maximum(find_zeros(x -&gt; x^3 - 3^x, (0, 20)))
+numericq(val)</code></pre>
+<p>Compare <span class="math inline">\(x^2\)</span> and <span class="math inline">\(2^x\)</span>. They meet at <span class="math inline">\(2\)</span>, where do the meet again?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["Only before 2", "Only after 2", "Before and after 2"]
+answ = 3
+radioq(choices, answ)</code></pre>
+<p>Just by graphing, find a number in <span class="math inline">\(b\)</span> with <span class="math inline">\(2 &lt; b &lt; 3\)</span> where for values less than <span class="math inline">\(b\)</span> there is a zero beyond <span class="math inline">\(b\)</span> of <span class="math inline">\(b^x - x^b\)</span> and for values more than <span class="math inline">\(b\)</span> there isn’t.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices=[
+"``b \\approx 2.2``",
+"``b \\approx 2.5``",
+"``b \\approx 2.7``",
+"``b \\approx 2.9``"]
+answ = 4
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-what-goes-up-must-come-down" class="level6">
+<h6 class="anchored" data-anchor-id="question-what-goes-up-must-come-down">Question: What goes up must come down…</h6>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+### {{{cannonball_img}}}
+figure= "figures/cannonball.jpg"
+caption = """
+Trajectories of potential cannonball fires with air-resistance included. (http://ej.iop.org/images/0143-0807/33/1/149/Full/ejp405251f1_online.jpg)
+"""
+# ImageFile(:limits, figure, caption)
+nothing</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./figures/cannonball.jpg" class="img-fluid figure-img"></p>
+<figcaption>Trajectories of potential cannonball fires with air-resistance included. (http://ej.iop.org/images/0143-0807/33/1/149/Full/ejp405251f1_online.jpg)</figcaption>
+</figure>
+</div>
+<p>In 1638, according to Amir D. <a href="http://books.google.com/books?id=kvGt2OlUnQ4C&amp;pg=PA28&amp;lpg=PA28&amp;dq=mersenne+cannon+ball+tests&amp;source=bl&amp;ots=wEUd7e0jFk&amp;sig=LpFuPoUvODzJdaoug4CJsIGZZHw&amp;hl=en&amp;sa=X&amp;ei=KUGcU6OAKJCfyASnioCoBA&amp;ved=0CCEQ6AEwAA#v=onepage&amp;q=mersenne%20cannon%20ball%20tests&amp;f=false">Aczel</a>, an experiment was performed in the French Countryside. A monk, Marin Mersenne, launched a cannonball straight up into the air in an attempt to help Descartes prove facts about the rotation of the earth. Though the experiment was not successful, Mersenne later observed that the time for the cannonball to go up was greater than the time to come down. <a href="http://www.maa.org/publications/periodicals/american-mathematical-monthly/american-mathematical-monthly-contents-junejuly-2014">“Vertical Projection in a Resisting Medium: Reflections on Observations of Mersenne”.</a></p>
+<p>This isn’t the case for simple ballistic motion where the time to go up is equal to the time to come down. We can “prove” this numerically. For simple ballistic motion:</p>
+<p><span class="math display">\[
+f(t) = -\frac{1}{2} \cdot 32 t^2 + v_0t.
+\]</span></p>
+<p>The time to go up and down are found by the two zeros of this function. The peak time is related to a zero of a function given by <code>f'</code>, which for now we’ll take as a mystery operation, but later will be known as the derivative. (The notation assumes <code>CalculusWithJulia</code> has been loaded.)</p>
+<p>Let <span class="math inline">\(v_0= 390\)</span>. The three times in question can be found from the zeros of <code>f</code> and <code>f'</code>. What are they?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``(0.0, 12.1875, 24.375)``",
+    "``(-4.9731, 0.0, 4.9731)``",
+    "``(0.0, 625.0, 1250.0)``"]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-what-goes-up-must-come-down-again" class="level6">
+<h6 class="anchored" data-anchor-id="question-what-goes-up-must-come-down-again">Question What goes up must come down… (again)</h6>
+<p>For simple ballistic motion you find that the time to go up is the time to come down. For motion within a resistant medium, such as air, this isn’t the case. Suppose a model for the height as a function of time is given by</p>
+<p><span class="math display">\[
+h(t) = (\frac{g}{\gamma^2} + \frac{v_0}{\gamma})(1 - e^{-\gamma t}) - \frac{gt}{\gamma}
+\]</span></p>
+<p>(<a href="http://www.researchgate.net/publication/230963032_On_the_trajectories_of_projectiles_depicted_in_early_ballistic_woodcuts">From “On the trajectories of projectiles depicted in early ballistic Woodcuts”</a>)</p>
+<p>Here <span class="math inline">\(g=32\)</span>, again we take <span class="math inline">\(v_0=390\)</span>, and <span class="math inline">\(\gamma\)</span> is a drag coefficient that we will take to be <span class="math inline">\(1\)</span>. This is valid when <span class="math inline">\(h(t) \geq 0\)</span>. In <code>Julia</code>, rather than hard-code the parameter values, for added flexibility we can pass them in as keyword arguments:</p>
+<pre class="{julia}"><code>h(t; g=32, v0=390, gamma=1) = (g/gamma^2 + v0/gamma)*(1 - exp(-gamma*t)) - g*t/gamma</code></pre>
+<p>Now find the three times: <span class="math inline">\(t_0\)</span>, the starting time; <span class="math inline">\(t_a\)</span>, the time at the apex of the flight; and <span class="math inline">\(t_f\)</span>, the time the object returns to the ground.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+t0 = 0.0
+tf = find_zero(h, (10, 20))
+ta = find_zero(D(h), (t0, tf))
+choices = ["``(0, 13.187, 30.0)``",
+    "``(0, 32.0, 390.0)``",
+    "``(0, 2.579, 13.187)``"]
+answ = 3
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-8" class="level6">
+<h6 class="anchored" data-anchor-id="question-8">Question</h6>
+<p>Part of the proof of the intermediate value theorem rests on knowing what the limit is of <span class="math inline">\(f(x)\)</span> when <span class="math inline">\(f(x) &gt; y\)</span> for all <span class="math inline">\(x\)</span>. What can we say about <span class="math inline">\(L\)</span> supposing <span class="math inline">\(L = \lim_{x \rightarrow c+}f(x)\)</span> under this assumption on <span class="math inline">\(f\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [L"It must be that $L &gt; y$ as each $f(x)$ is.",
+L"It must be that $L \geq y$",
+L"It can happen that $L &lt; y$, $L=y$, or $L&gt;y$"]
+answ = 2
+radioq(choices, 2, keep_order=true)</code></pre>
+</section>
+<section id="question-9" class="level6">
+<h6 class="anchored" data-anchor-id="question-9">Question</h6>
+<p>The extreme value theorem has two assumptions: a continuous function and a <em>closed</em> interval. Which of the following examples fails to satisfy the consequence of the extreme value theorem because the interval is not closed? (The consequence - the existence of an absolute maximum and minimum - can happen even if the theorem does not apply.)</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``f(x) = \\sin(x),~ I=(-2\\pi, 2\\pi)``",
+"``f(x) = \\sin(x),~ I=(-\\pi, \\pi)``",
+"``f(x) = \\sin(x),~ I=(-\\pi/2, \\pi/2)``",
+"None of the above"]
+answ = 3
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-10" class="level6">
+<h6 class="anchored" data-anchor-id="question-10">Question</h6>
+<p>The extreme value theorem has two assumptions: a continuous function and a <em>closed</em> interval. Which of the following examples fails to satisfy the consequence of the extreme value theorem because the function is not continuous?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``f(x) = 1/x,~ I=[1,2]``",
+"``f(x) = 1/x,~ I=[-2, -1]``",
+"``f(x) = 1/x,~ I=[-1, 1]``",
+"none of the above"]
+answ = 3
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-11" class="level6">
+<h6 class="anchored" data-anchor-id="question-11">Question</h6>
+<p>The extreme value theorem has two assumptions: a continuous function and a <em>closed</em> interval. Which of the following examples fails to satisfy the consequence of the extreme value theorem because the function is not continuous?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``f(x) = \\text{sign}(x),~  I=[-1, 1]``",
+"``f(x) = 1/x,~      I=[-4, -1]``",
+"``f(x) = \\text{floor}(x),~ I=[-1/2, 1/2]``",
+"none of the above"]
+answ = 4
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-12" class="level6">
+<h6 class="anchored" data-anchor-id="question-12">Question</h6>
+<p>The function <span class="math inline">\(f(x) = x^3 - x\)</span> is continuous over the interval <span class="math inline">\(I=[-2,2]\)</span>. Find a value <span class="math inline">\(c\)</span> for which <span class="math inline">\(M=f(c)\)</span> is an absolute maximum over <span class="math inline">\(I\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = 2
+numericq(val)</code></pre>
+</section>
+<section id="question-13" class="level6">
+<h6 class="anchored" data-anchor-id="question-13">Question</h6>
+<p>The function <span class="math inline">\(f(x) = x^3 - x\)</span> is continuous over the interval <span class="math inline">\(I=[-1,1]\)</span>. Find a value <span class="math inline">\(c\)</span> for which <span class="math inline">\(M=f(c)\)</span> is an absolute maximum over <span class="math inline">\(I\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = -sqrt(3)/3
+numericq(val)</code></pre>
+</section>
+<section id="question-14" class="level6">
+<h6 class="anchored" data-anchor-id="question-14">Question</h6>
+<p>Consider the continuous function <span class="math inline">\(f(x) = \sin(x)\)</span> over the closed interval <span class="math inline">\(I=[0, 10\pi]\)</span>. Which of these is true?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"There is no value $c$ for which $f(c)$ is an absolute maximum over $I$.",
+L"There is just one value of $c$ for which $f(c)$ is an absolute maximum over $I$.",
+L"There are many values of $c$ for which $f(c)$ is an absolute maximum over $I$."
+]
+answ = 3
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-15" class="level6">
+<h6 class="anchored" data-anchor-id="question-15">Question</h6>
+<p>Consider the continuous function <span class="math inline">\(f(x) = \sin(x)\)</span> over the closed interval <span class="math inline">\(I=[0, 10\pi]\)</span>. Which of these is true?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"There is no value $M$ for which $M=f(c)$, $c$ in $I$ for which $M$ is an absolute maximum over $I$.",
+L"There is just one value $M$ for which $M=f(c)$, $c$ in $I$ for which $M$ is an absolute maximum over $I$.",
+L"There are many values $M$ for which $M=f(c)$, $c$ in $I$ for which $M$ is an absolute maximum over $I$."
+]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-16" class="level6">
+<h6 class="anchored" data-anchor-id="question-16">Question</h6>
+<p>The extreme value theorem says that on a closed interval a continuous function has an extreme value <span class="math inline">\(M=f(c)\)</span> for some <span class="math inline">\(c\)</span>. Does it also say that <span class="math inline">\(c\)</span> is unique? Which of these examples might help you answer this?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``f(x) = \\sin(x),\\quad I=[-\\pi/2, \\pi/2]``",
+"``f(x) = \\sin(x),\\quad I=[0, 2\\pi]``",
+"``f(x) = \\sin(x),\\quad I=[-2\\pi, 2\\pi]``"]
+answ = 3
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-17" class="level6">
+<h6 class="anchored" data-anchor-id="question-17">Question</h6>
+<p>The zeros of the equation <span class="math inline">\(\cos(x) \cdot \cosh(x) = 1\)</span> are related to vibrations of rods. Using <code>find_zeros</code>, what is the largest zero in the interval <span class="math inline">\([0, 6\pi]\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = maximum(find_zeros(x -&gt; cos(x) * cosh(x) - 1, (0, 6pi)))
+numericq(val)</code></pre>
+</section>
+<section id="question-18" class="level6">
+<h6 class="anchored" data-anchor-id="question-18">Question</h6>
+<p>A parametric equation is specified by a parameterization <span class="math inline">\((f(t), g(t)), a \leq t \leq b\)</span>. The parameterization will be continuous if and only if each function is continuous.</p>
+<p>Suppose <span class="math inline">\(k_x\)</span> and <span class="math inline">\(k_y\)</span> are positive integers and <span class="math inline">\(a, b\)</span> are positive numbers, will the <a href="https://en.wikipedia.org/wiki/Parametric_equation#Lissajous_Curve">Lissajous</a> curve given by <span class="math inline">\((a\cos(k_x t), b\sin(k_y t))\)</span> be continuous?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(true)</code></pre>
+<p>Here is a sample graph for <span class="math inline">\(a=1, b=2, k_x=3, k_y=4\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+a,b = 1, 2
+k_x, k_y = 3, 4
+plot(t -&gt; a * cos(k_x *t), t-&gt; b * sin(k_y * t), 0, 4pi)</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../limits/continuity.html" class="pagination-link" aria-label="Continuity">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../derivatives.html" class="pagination-link" aria-label="Derivatives">
+        <span class="nav-page-text">Derivatives</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/limits/intermediate_value_theorem.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

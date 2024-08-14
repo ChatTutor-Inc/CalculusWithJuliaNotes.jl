@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>47&nbsp; Surface Area – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../integrals/twelve-qs.html" rel="next">
+<link href="../integrals/arc_length.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../integrals.html">Integrals</a></li><li class="breadcrumb-item"><a href="../integrals/surface_area.html"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#surfaces-of-revolution" id="toc-surfaces-of-revolution" class="nav-link active" data-scroll-target="#surfaces-of-revolution"><span class="header-section-number">47.1</span> Surfaces of revolution</a>
+  <ul class="collapse">
+  <li><a href="#plotting-surfaces-of-revolution" id="toc-plotting-surfaces-of-revolution" class="nav-link" data-scroll-target="#plotting-surfaces-of-revolution"><span class="header-section-number">47.1.1</span> Plotting surfaces of revolution</a></li>
+  </ul></li>
+  <li><a href="#the-first-theorem-of-pappus" id="toc-the-first-theorem-of-pappus" class="nav-link" data-scroll-target="#the-first-theorem-of-pappus"><span class="header-section-number">47.2</span> The first Theorem of Pappus</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">47.3</span> Questions</a></li>
+  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix"><span class="header-section-number">48</span> Appendix</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/integrals/surface_area.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../integrals.html">Integrals</a></li><li class="breadcrumb-item"><a href="../integrals/surface_area.html"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses these add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+plotly()
+using SymPy
+using QuadGK</code></pre>
+<hr>
+<section id="surfaces-of-revolution" class="level2" data-number="47.1">
+<h2 data-number="47.1" class="anchored" data-anchor-id="surfaces-of-revolution"><span class="header-section-number">47.1</span> Surfaces of revolution</h2>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+imgfile = "figures/gehry-hendrix.jpg"
+caption = """
+
+The exterior of the Jimi Hendrix Museum in Seattle has the signature
+style of its architect Frank Gehry. The surface is comprised of
+patches. A general method to find the amount of material to cover the
+surface - the surface area - might be to add up the area of *each* of the
+patches. However, in this section we will see for surfaces of
+revolution, there is an easier way. (Photo credit to
+[firepanjewellery](http://firepanjewellery.com/).)
+"""
+
+# ImageFile(:integrals, imgfile, caption)
+nothing</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./figures/gehry-hendrix.jpg" class="img-fluid figure-img"></p>
+<figcaption>The exterior of the Jimi Hendrix Museum in Seattle has the signature style of its architect Frank Gehry. The surface is comprised of patches. A general method to find the amount of material to cover the surface - the surface area - might be to add up the area of <em>each</em> of the patches. However, in this section we will see for surfaces of revolution, there is an easier way. (Photo credit to <a href="http://firepanjewellery.com/">firepanjewellery</a>.)</figcaption>
+</figure>
+</div>
+<blockquote class="blockquote">
+<p>The surface area generated by rotating the graph of <span class="math inline">\(f(x)\)</span> between <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> about the <span class="math inline">\(x\)</span>-axis is given by the integral</p>
+<p><span class="math display">\[
+\int_a^b 2\pi f(x) \cdot \sqrt{1 + f'(x)^2} dx.
+\]</span></p>
+<p>If the curve is parameterized by <span class="math inline">\((g(t), f(t))\)</span> between <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> then the surface area is</p>
+<p><span class="math display">\[
+\int_a^b 2\pi f(t) \cdot \sqrt{g'(t)^2 + f'(t)^2} dx.
+\]</span></p>
+<p>These formulas do not add in the surface area of either of the ends.</p>
+</blockquote>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+F₀(u,v) = [u, u*cos(v), u*sin(v)] # a cone
+us = range(0, 1, length=25)
+vs = range(0, 2pi, length=25)
+ws = unzip(F₀.(us, vs')) # make square
+surface(ws..., legend=false)
+plot!([-0.5,1.5], [0,0],[0,0])</code></pre>
+<p>The above figure shows a cone (the line <span class="math inline">\(y=x\)</span>) presented as a surface of revolution about the <span class="math inline">\(x\)</span>-axis.</p>
+<p>To see why this formula is as it is, we look at the parameterized case, the first one being a special instance with <span class="math inline">\(g(t) =t\)</span>.</p>
+<p>Let a partition of <span class="math inline">\([a,b]\)</span> be given by <span class="math inline">\(a = t_0 &lt; t_1 &lt; t_2 &lt; \cdots &lt; t_n =b\)</span>. This breaks the curve into a collection of line segments. Consider the line segment connecting <span class="math inline">\((g(t_{i-1}), f(t_{i-1}))\)</span> to <span class="math inline">\((g(t_i), f(t_i))\)</span>. Rotating this around the <span class="math inline">\(x\)</span> axis will generate something approximating a disc, but in reality will be the frustum of a cone. What will be the surface area?</p>
+<p>Consider a right-circular cone parameterized by an angle <span class="math inline">\(\theta\)</span> and the largest radius <span class="math inline">\(r\)</span> (so that the height satisfies <span class="math inline">\(r/h=\tan(\theta)\)</span>). If this cone were made of paper, cut up a side, and laid out flat, it would form a sector of a circle, whose area would be <span class="math inline">\(R^2\gamma/2\)</span> where <span class="math inline">\(R\)</span> is the radius of the circle (also the side length of our cone), and <span class="math inline">\(\gamma\)</span> an angle that we can figure out from <span class="math inline">\(r\)</span> and <span class="math inline">\(\theta\)</span>. To do this, we note that the arc length of the circle’s edge is <span class="math inline">\(R\gamma\)</span> and also the circumference of the bottom of the cone so <span class="math inline">\(R\gamma = 2\pi r\)</span>. With all this, we can solve to get <span class="math inline">\(A = \pi r^2/\sin(\theta)\)</span>. But we have a frustum of a cone with radii <span class="math inline">\(r_0\)</span> and <span class="math inline">\(r_1\)</span>, so the surface area is a difference: <span class="math inline">\(A = \pi (r_1^2 - r_0^2) /\sin(\theta)\)</span>.</p>
+<p>Relating this to our values in terms of <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span>, we have <span class="math inline">\(r_1=f(t_i)\)</span>, <span class="math inline">\(r_0 = f(t_{i-1})\)</span>, and <span class="math inline">\(\sin(\theta) = \Delta f / \sqrt{(\Delta g)^2 + (\Delta f)^2}\)</span>, where <span class="math inline">\(\Delta f = f(t_i) - f(t_{i-1})\)</span> and similarly for <span class="math inline">\(\Delta g\)</span>.</p>
+<p>Putting this altogether we get that the surface area generarated by rotating the line segment around the <span class="math inline">\(x\)</span> axis is</p>
+<p><span class="math display">\[
+\text{sa}_i = \pi (f(t_i)^2 - f(t_{i-1})^2) \cdot \sqrt{(\Delta g)^2 + (\Delta f)^2} / \Delta f =
+\pi (f(t_i) + f(t_{i-1})) \cdot \sqrt{(\Delta g)^2 + (\Delta f)^2}.
+\]</span></p>
+<p>(This is <span class="math inline">\(2 \pi\)</span> times the average radius times the slant height.)</p>
+<p>As was done in the derivation of the formula for arc length, these pieces are multiplied both top and bottom by <span class="math inline">\(\Delta t = t_{i} - t_{i-1}\)</span>. Carrying the bottom inside the square root and noting that by the mean value theorem <span class="math inline">\(\Delta g/\Delta t = g'(\xi)\)</span> and <span class="math inline">\(\Delta f/\Delta t = f'(\psi)\)</span> for some <span class="math inline">\(\xi\)</span> and <span class="math inline">\(\psi\)</span> in <span class="math inline">\([t_{i-1}, t_i]\)</span>, this becomes:</p>
+<p><span class="math display">\[
+\text{sa}_i = \pi (f(t_i) + f(t_{i-1})) \cdot \sqrt{(g'(\xi))^2 + (f'(\psi))^2} \cdot (t_i - t_{i-1}).
+\]</span></p>
+<p>Adding these up, <span class="math inline">\(\text{sa}_1 + \text{sa}_2 + \cdots + \text{sa}_n\)</span>, we get a Riemann sum approximation to the integral</p>
+<p><span class="math display">\[
+\text{SA} = \int_a^b 2\pi f(t) \sqrt{g'(t)^2 + f'(t)^2} dt.
+\]</span></p>
+<p>If we assume integrability of the integrand, then as our partition size goes to zero, this approximate surface area converges to the value given by the limit. (As with arc length, this needs a technical adjustment to the Riemann integral theorem as here we are evaluating the integrand function at four points (<span class="math inline">\(t_i\)</span>, <span class="math inline">\(t_{i-1}\)</span>, <span class="math inline">\(\xi\)</span> and <span class="math inline">\(\psi\)</span>) and not just at some <span class="math inline">\(c_i\)</span>. An figure appears at the end.</p>
+<section id="examples" class="level4">
+<h4 class="anchored" data-anchor-id="examples">Examples</h4>
+<p>Lets see that the surface area of an open cone follows from this formula, even though we just saw how to get this value.</p>
+<p>A cone can be envisioned as rotating the function <span class="math inline">\(f(x) = x\tan(\theta)\)</span> between <span class="math inline">\(0\)</span> and <span class="math inline">\(h\)</span> around the <span class="math inline">\(x\)</span> axis. This integral yields the surface area:</p>
+<p><span class="math display">\[\begin{align*}
+\int_0^h 2\pi f(x) \sqrt{1 + f'(x)^2}dx
+&amp;= \int_0^h 2\pi x \tan(\theta) \sqrt{1 + \tan(\theta)^2}dx   \\
+&amp;= (2\pi\tan(\theta)\sqrt{1 + \tan(\theta)^2}) x^2/2 \big|_0^h \\
+&amp;= \pi \tan(\theta) \sec(\theta) h^2                          \\
+&amp;= \pi r^2 / \sin(\theta).
+\end{align*}\]</span></p>
+<p>(There are many ways to express this, we used <span class="math inline">\(r\)</span> and <span class="math inline">\(\theta\)</span> to match the work above. If the cone is parameterized by a height <span class="math inline">\(h\)</span> and radius <span class="math inline">\(r\)</span>, then the surface area of the sides is <span class="math inline">\(\pi r\sqrt{h^2 + r^2}\)</span>. If the base is included, there is an additional <span class="math inline">\(\pi r^2\)</span> term.)</p>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>Let the graph of <span class="math inline">\(f(x) = x^2\)</span> from <span class="math inline">\(x=0\)</span> to <span class="math inline">\(x=1\)</span> be rotated around the <span class="math inline">\(x\)</span> axis. What is the resulting surface area generated?</p>
+<p><span class="math display">\[
+\text{SA} = \int_a^b 2\pi f(x) \sqrt{1 + f'(x)^2}dx = \int_0^1 2\pi x^2 \sqrt{1 + (2x)^2} dx.
+\]</span></p>
+<p>This integral is done by a trig substitution, but gets involved. We let <code>SymPy</code> do it:</p>
+<pre class="{julia}"><code>@syms x
+F = integrate(2 * PI * x^2 * sqrt(1 + (2x)^2), x)</code></pre>
+<p>We show <code>F</code>, only to demonstrate that indeed the integral is a bit involved. The actual surface area follows from a <em>definite</em> integral, which we get through the fundamental theorem of calculus:</p>
+<pre class="{julia}"><code>F(1) - F(0)</code></pre>
+</section>
+</section>
+<section id="plotting-surfaces-of-revolution" class="level3" data-number="47.1.1">
+<h3 data-number="47.1.1" class="anchored" data-anchor-id="plotting-surfaces-of-revolution"><span class="header-section-number">47.1.1</span> Plotting surfaces of revolution</h3>
+<p>The commands to plot a surface of revolution will be described more clearly later; for now we present them as simply a pattern to be followed in case plots are desired. Suppose the curve in the <span class="math inline">\(x-y\)</span> plane is given parametrically by <span class="math inline">\((g(u), f(u))\)</span> for <span class="math inline">\(a \leq u \leq b\)</span>.</p>
+<p>To be concrete, we parameterize the circle centered at <span class="math inline">\((6,0)\)</span> with radius <span class="math inline">\(2\)</span> by:</p>
+<pre class="{julia}"><code>g(u) = 6 + 2sin(u)
+f(u) = 2cos(u)
+a, b = 0, 2pi</code></pre>
+<p>The plot of this curve is:</p>
+<pre class="{julia}"><code>#| hold: true
+us = range(a, b, length=100)
+plot(g.(us), f.(us), xlims=(-0.5, 9), aspect_ratio=:equal, legend=false)
+plot!([0,0],[-3,3], color=:red, linewidth=5)    # y axis emphasis
+plot!([3,9], [0,0], color=:green, linewidth=5)  # x axis emphasis</code></pre>
+<p>Though parametric plots have a convenience constructor, <code>plot(g, f, a, b)</code>, we constructed the points with <code>Julia</code>’s broadcasting notation, as we will need to do for a surface of revolution. The <code>xlims</code> are adjusted to show the <span class="math inline">\(y\)</span> axis, which is emphasized with a layered line. The line is drawn by specifying two points, <span class="math inline">\((x_0, y_0)\)</span> and <span class="math inline">\((x_1, y_1)\)</span> in the form <code>[x0,x1]</code> and <code>[y0,y1]</code>.</p>
+<p>Now, to rotate this about the <span class="math inline">\(y\)</span> axis, creating a surface plot, we have the following pattern:</p>
+<pre class="{julia}"><code>S(u,v) = [g(u)*cos(v), g(u)*sin(v), f(u)]
+us = range(a, b, length=100)
+vs = range(0, 2pi, length=100)
+ws = unzip(S.(us, vs'))   # reorganize data
+surface(ws..., zlims=(-6,6), legend=false)
+plot!([0,0], [0,0], [-3,3], color=:red, linewidth=5) # y axis emphasis</code></pre>
+<p>The <code>unzip</code> function is not part of base <code>Julia</code>, rather part of <code>CalculusWithJulia</code>. This function rearranges data into a form consumable by the plotting methods like <code>surface</code>. In this case, the result of <code>S.(us,vs')</code> is a grid (matrix) of points, the result of <code>unzip</code> is three grids of values, one for the <span class="math inline">\(x\)</span> values, one for the <span class="math inline">\(y\)</span> values, and one for the <span class="math inline">\(z\)</span> values. A manual adjustment to the <code>zlims</code> is used, as <code>aspect_ratio</code> does not have an effect with the <code>plotly()</code> backend and errors on 3d graphics with <code>pyplot()</code>.</p>
+<p>To rotate this about the <span class="math inline">\(x\)</span> axis, we have this pattern:</p>
+<pre class="{julia}"><code>#| hold: true
+S(u,v) = [g(u), f(u)*cos(v), f(u)*sin(v)]
+us = range(a, b, length=100)
+vs = range(0, 2pi, length=100)
+ws = unzip(S.(us,vs'))
+surface(ws..., legend=false)
+plot!([3,9], [0,0],[0,0], color=:green, linewidth=5) # x axis emphasis</code></pre>
+<p>The above pattern covers the case of rotating the graph of a function <span class="math inline">\(f(x)\)</span> of <span class="math inline">\(a,b\)</span> by taking <span class="math inline">\(g(t)=t\)</span>.</p>
+<section id="example-1" class="level5">
+<h5 class="anchored" data-anchor-id="example-1">Example</h5>
+<p>Rotate the graph of <span class="math inline">\(x^x\)</span> from <span class="math inline">\(0\)</span> to <span class="math inline">\(3/2\)</span> around the <span class="math inline">\(x\)</span> axis. What is the surface area generated?</p>
+<p>We work numerically for this one, as no antiderivative is forthcoming. Recall, the accompanying <code>CalculusWithJulia</code> package defines <code>f'</code> to return the automatic derivative through the <code>ForwardDiff</code> package.</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = x^x
+a, b = 0, 3/2
+val, _ = quadgk(x -&gt; 2pi * f(x) * sqrt(1 + f'(x)^2), a, b)
+val</code></pre>
+<p>(The function is not defined at <span class="math inline">\(x=0\)</span> mathematically, but is on the computer to be <span class="math inline">\(1\)</span>, the limiting value. Even were this not the case, the <code>quadgk</code> function doesn’t evaluate the function at the points <code>a</code> and <code>b</code> that are specified.)</p>
+<pre class="{julia}"><code>#| hold: true
+g(u) = u
+f(u) = u^u
+S(u,v) = [g(u), f(u)*cos(v), f(u)*sin(v)]
+us = range(0, 3/2, length=100)
+vs = range(0, pi, length=100)  # not 2pi (to see inside)
+ws = unzip(S.(us,vs'))
+surface(ws..., alpha=0.75)</code></pre>
+<p>We compare this answer to that of the frustum of a cone with radii <span class="math inline">\(1\)</span> and <span class="math inline">\((3/2)^2\)</span>, formed by rotating the line segment connecting <span class="math inline">\((0,f(0))\)</span> with <span class="math inline">\((3/2,f(3/2))\)</span>. From looking at the graph of the surface, these values should be comparable. The surface area of the cone part is <span class="math inline">\(\pi (r_1^2 + r_0^2) / \sin(\theta) = \pi (r_1 + r_0) \cdot \sqrt{(\Delta h)^2 + (r_1-r_0)^2}\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = x^x
+r0, r1 = f(0), f(3/2)
+pi * (r1 + r0) * sqrt((3/2)^2 + (r1-r0)^2)</code></pre>
+</section>
+<section id="example-2" class="level5">
+<h5 class="anchored" data-anchor-id="example-2">Example</h5>
+<p>What is the surface area generated by Gabriel’s Horn, the solid formed by rotating <span class="math inline">\(1/x\)</span> for <span class="math inline">\(x \geq 1\)</span> around the <span class="math inline">\(x\)</span> axis?</p>
+<p><span class="math display">\[
+\text{SA} = \int_a^b 2\pi f(x) \sqrt{1 + f'(x)^2}dx =
+\lim_{M \rightarrow \infty} \int_1^M 2\pi \frac{1}{x} \sqrt{1 + (-1/x^2)^2} dx.
+\]</span></p>
+<p>We do this with <code>SymPy</code>:</p>
+<pre class="{julia}"><code>@syms M
+ex = integrate(2PI * (1/x) * sqrt(1 + (-1/x)^2), (x, 1, M))</code></pre>
+<p>The limit as <span class="math inline">\(M\)</span> gets large is of interest. The only term that might get out of hand is <code>asinh(M)</code>. We check its limit:</p>
+<pre class="{julia}"><code>limit(asinh(M), M =&gt; oo)</code></pre>
+<p>So indeed it does. There is nothing to balance this out, so the integral will be infinite, as this shows:</p>
+<pre class="{julia}"><code>limit(ex, M =&gt; oo)</code></pre>
+<p>This figure would have infinite surface, were it possible to actually construct an infinitely long solid. (But it has been shown to have <em>finite</em> volume.)</p>
+</section>
+<section id="example-3" class="level5">
+<h5 class="anchored" data-anchor-id="example-3">Example</h5>
+<p>The curve described parametrically by <span class="math inline">\(g(t) = 2(1 + \cos(t))\cos(t)\)</span> and <span class="math inline">\(f(t) = 2(1 + \cos(t))\sin(t)\)</span> from <span class="math inline">\(0\)</span> to <span class="math inline">\(\pi\)</span> is rotated about the <span class="math inline">\(x\)</span> axis. Find the resulting surface area.</p>
+<p>The graph shows half a heart, the resulting area will resemble an apple.</p>
+<pre class="{julia}"><code>#| hold: true
+g(t) = 2(1 + cos(t)) * cos(t)
+f(t) = 2(1 + cos(t)) * sin(t)
+plot(g, f, 0, 1pi)</code></pre>
+<p>The integrand simplifies to <span class="math inline">\(8\sqrt{2}\pi \sin(t) (1 + \cos(t))^{3/2}\)</span>. This lends itself to <span class="math inline">\(u\)</span>-substitution with <span class="math inline">\(u=\cos(t)\)</span>.</p>
+<p><span class="math display">\[\begin{align*}
+\int_0^\pi 8\sqrt{2}\pi \sin(t) (1 + \cos(t))^{3/2}
+&amp;= 8\sqrt{2}\pi \int_1^{-1} (1 + u)^{3/2} (-1) du\\
+&amp;= 8\sqrt{2}\pi (2/5) (1+u)^{5/2} \big|_{-1}^1\\
+&amp;= 8\sqrt{2}\pi (2/5) 2^{5/2} = \frac{2^7 \pi}{5}.
+\end{align*}\]</span></p>
+</section>
+</section>
+</section>
+<section id="the-first-theorem-of-pappus" class="level2" data-number="47.2">
+<h2 data-number="47.2" class="anchored" data-anchor-id="the-first-theorem-of-pappus"><span class="header-section-number">47.2</span> The first Theorem of Pappus</h2>
+<p>The <a href="http://tinyurl.com/le3lvb9">first</a> theorem of Pappus provides a simpler means to compute the surface area if the distance the centroid is from the axis (<span class="math inline">\(\rho\)</span>) and the arc length of the curve (<span class="math inline">\(L\)</span>) are both known. In that case, the surface area satisfies:</p>
+<p><span class="math display">\[
+\text{SA} = 2 \pi \rho L
+\]</span></p>
+<p>That is, the surface area is simply the circumference of the circle traced out by the centroid of the curve times the length of the curve - the distances rotated are collapsed to that of just the centroid.</p>
+<section id="example-4" class="level5">
+<h5 class="anchored" data-anchor-id="example-4">Example</h5>
+<p>The surface area of of an open cone can be computed, as the arc length is <span class="math inline">\(\sqrt{h^2 + r^2}\)</span> and the centroid of the line is a distance <span class="math inline">\(r/2\)</span> from the axis. This gives SA<span class="math inline">\(=2\pi (r/2) \sqrt{h^2 + r^2} = \pi r \sqrt{h^2 + r^2}\)</span>.</p>
+</section>
+<section id="example-5" class="level5">
+<h5 class="anchored" data-anchor-id="example-5">Example</h5>
+<p>We can get the surface area of a torus from this formula.</p>
+<p>The torus is found by rotating the curve <span class="math inline">\((x-b)^2 + y^2 = a^2\)</span> about the <span class="math inline">\(y\)</span> axis. The centroid is <span class="math inline">\(b\)</span>, the arc length <span class="math inline">\(2\pi a\)</span>, so the surface area is <span class="math inline">\(2\pi (b) (2\pi a) = 4\pi^2 a b\)</span>.</p>
+<p>A torus with <span class="math inline">\(a=2\)</span> and <span class="math inline">\(b=6\)</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+a,b = 2, 6
+F₀(u,v) = [a*(cos(u) + b)*cos(v), a*(cos(u) + b)*sin(v), a*sin(u)]
+us = vs = range(0, 2pi, length=35)
+ws = unzip(F₀.(us, vs'))
+surface(ws..., legend=false, zlims=(-12,12))</code></pre>
+</section>
+<section id="example-6" class="level5">
+<h5 class="anchored" data-anchor-id="example-6">Example</h5>
+<p>The surface area of sphere will be SA<span class="math inline">\(=2\pi \rho (\pi r) = 2 \pi^2 r \cdot \rho\)</span>. What is <span class="math inline">\(\rho\)</span>? The centroid of an arc formula can be derived in a manner similar to that of the centroid of a region. The formulas are:</p>
+<p><span class="math display">\[\begin{align*}
+\text{cm}_x &amp;= \frac{1}{L} \int_a^b g(t) \sqrt{g'(t)^2 + f'(t)^2} dt\\
+\text{cm}_y &amp;= \frac{1}{L} \int_a^b f(t) \sqrt{g'(t)^2 + f'(t)^2} dt.
+\end{align*}\]</span></p>
+<p>Here, <span class="math inline">\(L\)</span> is the arc length of the curve.</p>
+<p>For the sphere parameterized by <span class="math inline">\(g(t) = r \cos(t)\)</span>, <span class="math inline">\(f(t) = r\sin(t)\)</span>, we get that these become</p>
+<p><span class="math display">\[
+\text{cm}_x = \frac{1}{L}\int_0^\pi r\cos(t) \sqrt{r^2(\sin(t)^2 + \cos(t)^2)} dt =  \frac{1}{L}r^2 \int_0^\pi \cos(t) = 0.
+\]</span></p>
+<p><span class="math display">\[
+\text{cm}_y =  \frac{1}{L}\int_0^\pi r\sin(t) \sqrt{r^2(\sin(t)^2 + \cos(t)^2)} dt =  \frac{1}{L}r^2 \int_0^\pi \sin(t) = \frac{1}{\pi r} r^2 \cdot 2 = \frac{2r}{\pi}.
+\]</span></p>
+<p>Combining this, we see that the surface area of a sphere is <span class="math inline">\(2 \pi^2 r (2r/\pi) = 4\pi r^2\)</span>, by Pappus’ Theorem.</p>
+</section>
+</section>
+<section id="questions" class="level2" data-number="47.3">
+<h2 data-number="47.3" class="anchored" data-anchor-id="questions"><span class="header-section-number">47.3</span> Questions</h2>
+<section id="questions-1" class="level5">
+<h5 class="anchored" data-anchor-id="questions-1">Questions</h5>
+<p>The graph of <span class="math inline">\(f(x) = \sin(x)\)</span> from <span class="math inline">\(0\)</span> to <span class="math inline">\(\pi\)</span> is rotated around the <span class="math inline">\(x\)</span> axis. After a <span class="math inline">\(u\)</span>-substitution, what integral would give the surface area generated?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``-\\int_1^{-1} 2\\pi \\sqrt{1 + u^2} du``",
+"``-\\int_1^{_1} 2\\pi u \\sqrt{1 + u^2} du``",
+"``-\\int_1^{_1} 2\\pi u^2 \\sqrt{1 + u} du``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>Though the integral can be computed by hand, give a numeric value.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = sin(x)
+a, b = 0, pi
+val, _ = quadgk(x -&gt; 2pi* f(x) * sqrt(1 + f'(x)^2), a, b)
+numericq(val)</code></pre>
+</section>
+<section id="questions-2" class="level5">
+<h5 class="anchored" data-anchor-id="questions-2">Questions</h5>
+<p>The graph of <span class="math inline">\(f(x) = \sqrt{x}\)</span> from <span class="math inline">\(0\)</span> to <span class="math inline">\(4\)</span> is rotated around the <span class="math inline">\(x\)</span> axis. Numerically find the surface area generated?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = sqrt(x)
+a, b = 0, 4
+val, _ = quadgk(x -&gt; 2pi* f(x) * sqrt(1 + f'(x)^2), a, b)
+numericq(val)</code></pre>
+</section>
+<section id="questions-3" class="level5">
+<h5 class="anchored" data-anchor-id="questions-3">Questions</h5>
+<p>Find the surface area generated by revolving the graph of the function <span class="math inline">\(f(x) = x^3/9\)</span> from <span class="math inline">\(x=0\)</span> to <span class="math inline">\(x=2\)</span> around the <span class="math inline">\(x\)</span> axis. This can be done by hand or numerically.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = x^3/9
+a, b = 0, 2
+val, _ = quadgk(x -&gt; 2pi* f(x) * sqrt(1 + f'(x)^2), a, b)
+numericq(val)</code></pre>
+</section>
+<section id="questions-4" class="level5">
+<h5 class="anchored" data-anchor-id="questions-4">Questions</h5>
+<p>(From Stewart.) If a loaf of bread is in the form of a sphere of radius <span class="math inline">\(1\)</span>, the amount of crust for a slice depends on the width, but not where in the loaf it is sliced.</p>
+<p>That is this integral with <span class="math inline">\(f(x) = \sqrt{1 - x^2}\)</span> and <span class="math inline">\(u, u+h\)</span> in <span class="math inline">\([-1,1]\)</span> does not depend on <span class="math inline">\(u\)</span>:</p>
+<p><span class="math display">\[
+A = \int_u^{u+h} 2\pi f(x) \sqrt{1 + f'(x)^2} dx.
+\]</span></p>
+<p>If we let <span class="math inline">\(f(x) = y\)</span> then <span class="math inline">\(f'(x) = -x/y\)</span>. With this, what does the integral above come down to after cancellations:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``\\int_u^{u+h} 2\\pi dx``",
+"``\\int_u^{u_h} 2\\pi y dx``",
+"``\\int_u^{u_h} 2\\pi x dx``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="questions-5" class="level5">
+<h5 class="anchored" data-anchor-id="questions-5">Questions</h5>
+<p>Find the surface area of the dome of sphere generated by rotating the the curve generated by <span class="math inline">\(g(t) = \cos(t)\)</span> and <span class="math inline">\(f(t) = \sin(t)\)</span> for <span class="math inline">\(t\)</span> in <span class="math inline">\(0\)</span> to <span class="math inline">\(\pi/6\)</span>.</p>
+<p>Numerically find the value.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+g(t) = cos(t)
+f(t) = sin(t)
+a, b = 0, pi/6
+val, _ = quadgk(t -&gt; 2pi* f(t) * sqrt(g'(t)^2 + f'(t)^2), a, b)
+numericq(val)</code></pre>
+</section>
+<section id="questions-6" class="level5">
+<h5 class="anchored" data-anchor-id="questions-6">Questions</h5>
+<p>The <a href="http://www-history.mcs.st-and.ac.uk/Curves/Astroid.html">astroid</a> is parameterized by <span class="math inline">\(g(t) = a\cos(t)^3\)</span> and <span class="math inline">\(f(t) = a \sin(t)^3\)</span>. Let <span class="math inline">\(a=1\)</span> and rotate the curve from <span class="math inline">\(t=0\)</span> to <span class="math inline">\(t=\pi\)</span> around the <span class="math inline">\(x\)</span> axis. What is the surface area generated?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+g(t) = cos(t)^3
+f(t) = sin(t)^3
+a, b = 0, pi
+val, _ = quadgk(t -&gt; 2pi* f(t) * sqrt(g'(t)^2 + f'(t)^2), a, b)
+numericq(val)</code></pre>
+</section>
+<section id="questions-7" class="level5">
+<h5 class="anchored" data-anchor-id="questions-7">Questions</h5>
+<p>For the curve parameterized by <span class="math inline">\(g(t) = a\cos(t)^5\)</span> and <span class="math inline">\(f(t) = a \sin(t)^5\)</span>. Let <span class="math inline">\(a=1\)</span> and rotate the curve from <span class="math inline">\(t=0\)</span> to <span class="math inline">\(t=\pi\)</span> around the <span class="math inline">\(x\)</span> axis. Numerically find the surface area generated?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+g(t) = cos(t)^5
+f(t) = sin(t)^5
+a, b = 0, pi
+val, _ = quadgk(t -&gt; 2pi* f(t) * sqrt(g'(t)^2 + f'(t)^2), a, b)
+numericq(val)</code></pre>
+</section>
+</section>
+<section id="appendix" class="level1" data-number="48">
+<h1 data-number="48"><span class="header-section-number">48</span> Appendix</h1>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+gr()
+## For **some reason** having this in the natural place messes up the plots.
+## {{{approximate_surface_area}}}
+
+xs,ys = range(-1, stop=1, length=50), range(-1, stop=1, length=50)
+f(x,y)= 2 - (x^2 + y^2)
+
+dr = [1/2, 3/4]
+df = [f(dr[1],0), f(dr[2],0)]
+
+function sa_approx_graph(i)
+    p = plot(xs, ys, f, st=[:surface], legend=false)
+    for theta in range(0, stop=i/10*2pi, length=10*i )
+        path3d!(p,sin(theta)*dr, cos(theta)*dr, df)
+    end
+    p
+end
+n = 10
+
+anim = @animate for i=1:n
+    sa_approx_graph(i)
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+
+
+caption = L"""
+
+Surface of revolution of $f(x) = 2 - x^2$ about the $y$ axis. The lines segments are the images of rotating the secant line connecting $(1/2, f(1/2))$ and $(3/4, f(3/4))$. These trace out the frustum of a cone which approximates the corresponding surface area of the surface of revolution. In the limit, this approximation becomes exact and a formula for the surface area of surfaces of revolution can be used to compute the value.
+
+"""
+
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../integrals/arc_length.html" class="pagination-link" aria-label="Arc length">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../integrals/twelve-qs.html" class="pagination-link" aria-label="A dozen minima for a parabola">
+        <span class="nav-page-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/integrals/surface_area.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

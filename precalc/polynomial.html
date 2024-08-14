@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>11&nbsp; Polynomials – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../precalc/polynomial_roots.html" rel="next">
+<link href="../precalc/inversefunctions.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../precalc.html">Precalculus Concepts</a></li><li class="breadcrumb-item"><a href="../precalc/polynomial.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#linear-polynomials" id="toc-linear-polynomials" class="nav-link active" data-scroll-target="#linear-polynomials"><span class="header-section-number">11.1</span> Linear polynomials</a></li>
+  <li><a href="#symbolic-math-in-julia" id="toc-symbolic-math-in-julia" class="nav-link" data-scroll-target="#symbolic-math-in-julia"><span class="header-section-number">11.2</span> Symbolic math in Julia</a></li>
+  <li><a href="#substitution-subs-replace" id="toc-substitution-subs-replace" class="nav-link" data-scroll-target="#substitution-subs-replace"><span class="header-section-number">11.3</span> Substitution: subs, replace</a>
+  <ul class="collapse">
+  <li><a href="#conversion-of-symbolic-numbers-to-julia-numbers" id="toc-conversion-of-symbolic-numbers-to-julia-numbers" class="nav-link" data-scroll-target="#conversion-of-symbolic-numbers-to-julia-numbers"><span class="header-section-number">11.3.1</span> Conversion of symbolic numbers to Julia numbers</a></li>
+  <li><a href="#converting-symbolic-expressions-into-julia-functions" id="toc-converting-symbolic-expressions-into-julia-functions" class="nav-link" data-scroll-target="#converting-symbolic-expressions-into-julia-functions"><span class="header-section-number">11.3.2</span> Converting symbolic expressions into Julia functions</a></li>
+  </ul></li>
+  <li><a href="#graphical-properties-of-polynomials" id="toc-graphical-properties-of-polynomials" class="nav-link" data-scroll-target="#graphical-properties-of-polynomials"><span class="header-section-number">11.4</span> Graphical properties of polynomials</a>
+  <ul class="collapse">
+  <li><a href="#leading-term-dominates" id="toc-leading-term-dominates" class="nav-link" data-scroll-target="#leading-term-dominates"><span class="header-section-number">11.4.1</span> Leading term dominates</a></li>
+  </ul></li>
+  <li><a href="#factoring-polynomials" id="toc-factoring-polynomials" class="nav-link" data-scroll-target="#factoring-polynomials"><span class="header-section-number">11.5</span> Factoring polynomials</a>
+  <ul class="collapse">
+  <li><a href="#polynomial-functions-and-polynomials." id="toc-polynomial-functions-and-polynomials." class="nav-link" data-scroll-target="#polynomial-functions-and-polynomials."><span class="header-section-number">11.5.1</span> Polynomial functions and polynomials.</a></li>
+  </ul></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">11.6</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/precalc/polynomial.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../precalc.html">Precalculus Concepts</a></li><li class="breadcrumb-item"><a href="../precalc/polynomial.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>In this section we use the following add-on packages:</p>
+<pre class="{julia}"><code>using SymPy
+using Plots
+plotly()</code></pre>
+<pre class="{julia}"><code>#| echo: false
+#| results: "hidden"
+using CalculusWithJulia
+nothing</code></pre>
+<hr>
+<p>Polynomials are a particular class of expressions that are simple enough to have many properties that can be analyzed. In particular, the key concepts of calculus: limits, continuity, derivatives, and integrals are all relatively trivial for polynomial functions. However, polynomials are flexible enough that they can be used to approximate a wide variety of functions. Indeed, though we don’t pursue this, we mention that <code>Julia</code>’s <code>ApproxFun</code> package exploits this to great advantage.</p>
+<p>Here we discuss some vocabulary and basic facts related to polynomials and show how the add-on <code>SymPy</code> package can be used to model polynomial expressions within <code>SymPy</code>. <code>SymPy</code> provides a Computer Algebra System (CAS) for <code>Julia</code>. In this case, by leveraging a mature <code>Python</code> package <a href="https://www.sympy.org/">SymPy</a>. Later we will discuss the <code>Polynomials</code> package for polynomials.</p>
+<p>For our purposes, a <em>monomial</em> is simply a non-negative integer power of <span class="math inline">\(x\)</span> (or some other indeterminate symbol) possibly multiplied by a scalar constant. For example, <span class="math inline">\(5x^4\)</span> is a monomial, as are constants, such as <span class="math inline">\(-2=-2x^0\)</span> and the symbol itself, as <span class="math inline">\(x = x^1\)</span>. In general, one may consider restrictions on where the constants can come from, and consider more than one symbol, but we won’t pursue this here, restricting ourselves to the case of a single variable and real coefficients.</p>
+<p>A <em>polynomial</em> is a sum of monomials. After combining terms with same powers, a non-zero polynomial may be written uniquely as:</p>
+<p><span class="math display">\[
+a_n x^n + a_{n-1}x^{n-1} + \cdots a_1 x + a_0, \quad a_n \neq 0
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+##{{{ different_poly_graph }}}
+
+gr()
+anim = @animate for m in  2:2:10
+    fn = x -&gt; x^m
+    plot(fn, -1, 1, size = fig_size, legend=false, title="graph of x^{$m}", xlims=(-1,1), ylims=(-.1,1))
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+caption = "Polynomials of varying even degrees over ``[-1,1]``."
+
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<p>The numbers <span class="math inline">\(a_0, a_1, \dots, a_n\)</span> are the <strong>coefficients</strong> of the polynomial in the standard basis. With the identifications that <span class="math inline">\(x=x^1\)</span> and <span class="math inline">\(1 = x^0\)</span>, the monomials above have their power match their coefficient’s index, e.g., <span class="math inline">\(a_ix^i\)</span>. Outside of the coefficient <span class="math inline">\(a_n\)</span>, the other coefficients may be negative, positive, <em>or</em> <span class="math inline">\(0\)</span>. Except for the zero polynomial, the largest power <span class="math inline">\(n\)</span> is called the <a href="https://en.wikipedia.org/wiki/Degree_of_a_polynomial">degree</a>. The degree of the <a href="http://tinyurl.com/he6eg6s">zero</a> polynomial is typically not defined or defined to be <span class="math inline">\(-1\)</span>, so as to make certain statements easier to express. The term <span class="math inline">\(a_n\)</span> is called the <strong>leading coefficient</strong>. When the leading coefficient is <span class="math inline">\(1\)</span>, the polynomial is called a <strong>monic polynomial</strong>. The monomial <span class="math inline">\(a_n x^n\)</span> is the <strong>leading term</strong>.</p>
+<p>For example, the polynomial <span class="math inline">\(-16x^2 - 32x + 100\)</span> has degree <span class="math inline">\(2\)</span>, leading coefficient <span class="math inline">\(-16\)</span> and leading term <span class="math inline">\(-16x^2\)</span>. It is not monic, as the leading coefficient is not <span class="math inline">\(1\)</span>.</p>
+<p>Lower degree polynomials have special names: a degree <span class="math inline">\(0\)</span> polynomial (<span class="math inline">\(a_0\)</span>) is a non-zero constant, a degree <span class="math inline">\(1\)</span> polynomial (<span class="math inline">\(a_0+a_1x\)</span>) is called linear, a degree <span class="math inline">\(2\)</span> polynomial is quadratic, and a degree <span class="math inline">\(3\)</span> polynomial is called cubic.</p>
+<section id="linear-polynomials" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="linear-polynomials"><span class="header-section-number">11.1</span> Linear polynomials</h2>
+<p>A special place is reserved for polynomials with degree <span class="math inline">\(1\)</span>. These are linear, as their graphs are straight lines. The general form,</p>
+<p><span class="math display">\[
+a_1 x + a_0, \quad a_1 \neq 0,
+\]</span></p>
+<p>is often written as <span class="math inline">\(mx + b\)</span>, which is the <strong>slope-intercept</strong> form. The slope of a line determines how steeply it rises. The value of <span class="math inline">\(m\)</span> can be found from two points through the well-known formula:</p>
+<p><span class="math display">\[
+m = \frac{y_1 - y_0}{x_1 - x_0} = \frac{\text{rise}}{\text{run}}
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+### {{{ lines_m_graph }}}
+gr()
+anim = @animate for m in  [-5, -2, -1, 1, 2, 5, 10, 20]
+    fn = x -&gt; m * x
+    plot(fn, -1, 1, size = fig_size, legend=false, title="m = $m", xlims=(-1,1), ylims=(-20, 20))
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+caption = "Graphs of y = mx for different values of m"
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<p>The intercept, <span class="math inline">\(b\)</span>, comes from the fact that when <span class="math inline">\(x=0\)</span> the expression is <span class="math inline">\(b\)</span>. That is the graph of the function <span class="math inline">\(f(x) = mx + b\)</span> will have <span class="math inline">\((0,b)\)</span> as a point on it.</p>
+<p>More generally, we have the <strong>point-slope</strong> form of a line, written as a polynomial through</p>
+<p><span class="math display">\[
+y_0 + m \cdot (x - x_0).
+\]</span></p>
+<p>The slope is <span class="math inline">\(m\)</span> and the point <span class="math inline">\((x_0, y_0)\)</span>. Again, the line graphing this as a function of <span class="math inline">\(x\)</span> would have the point <span class="math inline">\((x_0,y_0)\)</span> on it and have slope <span class="math inline">\(m\)</span>. This form is more useful in calculus, as the information we have convenient is more likely to be related to a specific value of <span class="math inline">\(x\)</span>, not the special value <span class="math inline">\(x=0\)</span>.</p>
+<p>Thinking in terms of transformations, this looks like the function <span class="math inline">\(f(x) = x\)</span> (whose graph is a line with slope <span class="math inline">\(1\)</span>) stretched in the <span class="math inline">\(y\)</span> direction by a factor of <span class="math inline">\(m\)</span> then shifted right by <span class="math inline">\(x_0\)</span> units, and then shifted up by <span class="math inline">\(y_0\)</span> units. When <span class="math inline">\(m&gt;1\)</span>, this means the line grows faster. When <span class="math inline">\(m&lt; 0\)</span>, the line <span class="math inline">\(f(x)=x\)</span> is flipped through the <span class="math inline">\(x\)</span>-axis so would head downwards, not upwards like <span class="math inline">\(f(x) = x\)</span>.</p>
+</section>
+<section id="symbolic-math-in-julia" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="symbolic-math-in-julia"><span class="header-section-number">11.2</span> Symbolic math in Julia</h2>
+<p>The indeterminate value <code>x</code> (or some other symbol) in a polynomial, is like a variable in a function and unlike a variable in <code>Julia</code>. Variables in <code>Julia</code> are identifiers, just a means to look up a specific, already determined, value. Rather, the symbol <code>x</code> is not yet determined, it is essentially a place holder for a future value. Although we have seen that <code>Julia</code> makes it very easy to work with mathematical functions, it is not the case that base <code>Julia</code> makes working with expressions of algebraic symbols easy. This makes sense, <code>Julia</code> is primarily designed for technical computing, where numeric approaches rule the day. However, symbolic math can be used from within <code>Julia</code> through add-on packages.</p>
+<p>Symbolic math programs include well-known ones like the commercial programs Mathematica and Maple. Mathematica powers the popular <a href="www.wolframalpha.com">WolframAlpha</a> website, which turns “natural” language into the specifics of a programming language. The open-source <a href="https://www.sagemath.org/">Sage</a> project is an alternative to these two commercial giants. It includes a wide-range of open-source math projects available within its umbrella framework. (<code>Julia</code> can even be run from within the free service <a href="https://cloud.sagemath.com/projects">cloud.sagemath.com</a>.) A more focused project for symbolic math, is the <a href="www.sympy.org">SymPy</a> Python library. SymPy is also used within Sage. However, SymPy provides a self-contained library that can be used standalone within a Python session.</p>
+<p>The <a href="https://github.com/JuliaSymbolics/Symbolics.jl">Symbolics</a> package for <code>Julia</code> provides a “fast and modern CAS for fast and modern language.” It is described further in <a href="../alternatives/symbolics.html">Symbolics.jl</a>.</p>
+<p>As <code>SymPy</code> has some features not yet implemented in <code>Symbolics</code>, we use that here. The <code>PyCall</code> and <code>PythonCall</code> packages are available to glue <code>Julia</code> to Python in a seamless manner. These allow the <code>Julia</code> package <code>SymPy</code> to provide functionality from SymPy within <code>Julia</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When <code>SymPy</code> is installed through the package manager, the underlying <code>Python</code> libraries will also be installed.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <a href="../alternatives/symbolics"><code>Symbolics</code></a> package is a rapidly developing <code>Julia</code>-only package that provides symbolic math options.</p>
+</div>
+</div>
+<hr>
+<p>To use <code>SymPy</code>, we create symbolic objects to be our indeterminate symbols. The <code>symbols</code> function does this. However, we will use the more convenient <code>@syms</code> macro front end for <code>symbols</code>.</p>
+<pre class="{julia}"><code>@syms a, b, c, x::real, zs[1:10]</code></pre>
+<p>The above shows that multiple symbols can be defined at once. The annotation <code>x::real</code> instructs <code>SymPy</code> to assume the <code>x</code> is real, as otherwise it assumes it is possibly complex. There are many other <a href="http://docs.sympy.org/dev/modules/core.html#module-sympy.core.assumptions">assumptions</a> that can be made. The <code>@syms</code> macro documentation lists them. The <code>zs[1:10]</code> tensor notation creates a container with <span class="math inline">\(10\)</span> different symbols. The <em>macro</em> <code>@syms</code> does not need assignment, as the variable(s) are created behind the scenes by the macro.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Macros in <code>Julia</code> are just transformations of the syntax into other syntax. The <code>@</code> indicates they behave differently than regular function calls.</p>
+</div>
+</div>
+<p>The <code>SymPy</code> package does three basic things:</p>
+<ul>
+<li>It imports some of the functionality provided by <code>SymPy</code>, including the ability to create symbolic variables.</li>
+<li>It overloads many <code>Julia</code> functions to work seamlessly with symbolic expressions. This makes working with polynomials quite natural.</li>
+<li>It gives access to a wide range of SymPy’s functionality through the <code>sympy</code> object.</li>
+</ul>
+<p>To illustrate, using the just defined <code>x</code>, here is how we can create the polynomial <span class="math inline">\(-16x^2 + 100\)</span>:</p>
+<pre class="{julia}"><code>p = -16x^2 + 100</code></pre>
+<p>That is, the expression is created just as you would create it within a function body. But here the result is still a symbolic object. We have assigned this expression to a variable <code>p</code>, and have not defined it as a function <code>p(x)</code>. Mentally keeping the distinction between symbolic expressions and functions is very important.</p>
+<p>The <code>typeof</code> function shows that <code>p</code> is of a symbolic type (<code>Sym</code>):</p>
+<pre class="{julia}"><code>typeof(p)</code></pre>
+<p>We can mix and match symbolic objects. This command creates an arbitrary quadratic polynomial:</p>
+<pre class="{julia}"><code>quad = a*x^2 + b*x + c</code></pre>
+<p>Again, this is entered in a manner nearly identical to how we see such expressions typeset (<span class="math inline">\(ax^2 + bx+c\)</span>), though we must remember to explicitly place the multiplication operator, as the symbols are not numeric literals.</p>
+<p>We can apply many of <code>Julia</code>’s mathematical functions and the result will still be symbolic:</p>
+<pre class="{julia}"><code>sin(a*(x - b*pi) + c)</code></pre>
+<p>Another example, might be the following combination:</p>
+<pre class="{julia}"><code>quad + quad^2 - quad^3</code></pre>
+<p>One way to create symbolic expressions is simply to call a <code>Julia</code> function with symbolic arguments. The first line in the next example defines a function, the second evaluates it at the symbols <code>x</code>, <code>a</code>, and <code>b</code> resulting in a symbolic expression <code>ex</code>:</p>
+<pre class="{julia}"><code>f(x, m, b) = m*x + b
+ex = f(x, a, b)</code></pre>
+</section>
+<section id="substitution-subs-replace" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="substitution-subs-replace"><span class="header-section-number">11.3</span> Substitution: subs, replace</h2>
+<p>Algebraically working with symbolic expressions is straightforward. A different symbolic task is substitution. For example, replacing each instance of <code>x</code> in a polynomial, with, say, <code>(x-1)^2</code>. Substitution requires three things to be specified: an expression to work on, a variable to substitute, and a value to substitute in.</p>
+<p>SymPy provides its <code>subs</code> function for this. This function is available in <code>Julia</code>, but it is easier to use notation reminiscent of function evaluation.</p>
+<p>To illustrate, to do the task above for the polynomial <span class="math inline">\(-16x^2 + 100\)</span> we could have:</p>
+<pre class="{julia}"><code>p(x =&gt; (x-1)^2)</code></pre>
+<p>This “call” notation takes pairs (designated by <code>a=&gt;b</code>) where the left-hand side is the variable to substitute for, and the right-hand side the new value. The value to substitute can depend on the variable, as illustrated; be a different variable; or be a numeric value, such as <span class="math inline">\(2\)</span>:</p>
+<pre class="{julia}"><code>y = p(x=&gt;2)</code></pre>
+<p>The result will always be of a symbolic type, even if the answer is just a number:</p>
+<pre class="{julia}"><code>typeof(y)</code></pre>
+<p>If there is just one free variable in an expression, the pair notation can be dropped:</p>
+<pre class="{julia}"><code>p(4) # substitutes x=&gt;4</code></pre>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>Suppose we have the polynomial <span class="math inline">\(p = ax^2 + bx +c\)</span>. What would it look like if we shifted right by <span class="math inline">\(E\)</span> units and up by <span class="math inline">\(F\)</span> units?</p>
+<pre class="{julia}"><code>@syms E F
+p₂ = a*x^2 + b*x + c
+p₂(x =&gt; x-E) + F</code></pre>
+<p>And expanded this becomes:</p>
+<pre class="{julia}"><code>expand(p₂(x =&gt; x-E) + F)</code></pre>
+</section>
+<section id="conversion-of-symbolic-numbers-to-julia-numbers" class="level3" data-number="11.3.1">
+<h3 data-number="11.3.1" class="anchored" data-anchor-id="conversion-of-symbolic-numbers-to-julia-numbers"><span class="header-section-number">11.3.1</span> Conversion of symbolic numbers to Julia numbers</h3>
+<p>In the above, we substituted <code>2</code> in for <code>x</code> to get <code>y</code>:</p>
+<pre class="{julia}"><code>#| hold: true
+p = -16x^2 + 100
+y = p(2)</code></pre>
+<p>The value, <span class="math inline">\(36\)</span> is still symbolic, but clearly an integer. If we are just looking at the output, we can easily translate from the symbolic value to an integer, as they print similarly. However the conversion to an integer, or another type of number, does not happen automatically. If a number is needed to pass along to another <code>Julia</code> function, it may need to be converted. In general, conversions between different types are handled through various methods of <code>convert</code>. However, with <code>SymPy</code>, the <code>N</code> function will attempt to do the conversion for you:</p>
+<pre class="{julia}"><code>#| hold: true
+p = -16x^2 + 100
+N(p(2))</code></pre>
+<p>Where <code>convert(T,x)</code> requires a specification of the type to convert <code>x</code> to, <code>N</code> attempts to match the data type used by SymPy to store the number. As such, the output type of <code>N</code> may vary (rational, a BigFloat, a float, etc.) For getting more digits of accuracy, a precision can be passed to <code>N</code>. The following command will take the symbolic value for <span class="math inline">\(\pi\)</span>, <code>PI</code>, and produce about <span class="math inline">\(60\)</span> digits worth as a <code>BigFloat</code> value:</p>
+<pre class="{julia}"><code>N(PI, 60)</code></pre>
+<p>Conversion by <code>N</code> will fail if the value to be converted contains free symbols, as would be expected.</p>
+</section>
+<section id="converting-symbolic-expressions-into-julia-functions" class="level3" data-number="11.3.2">
+<h3 data-number="11.3.2" class="anchored" data-anchor-id="converting-symbolic-expressions-into-julia-functions"><span class="header-section-number">11.3.2</span> Converting symbolic expressions into Julia functions</h3>
+<p>Evaluating a symbolic expression and returning a numeric value can be done by composing the two just discussed concepts. For example:</p>
+<pre class="{julia}"><code>p = 200 - 16x^2
+N(p(2))</code></pre>
+<p>This approach is direct, but can be slow <em>if</em> many such evaluations were needed (such as with a plot). An alternative is to turn the symbolic expression into a <code>Julia</code> function and then evaluate that as usual.</p>
+<p>The <code>lambdify</code> function turns a symbolic expression into a <code>Julia</code> function</p>
+<pre class="{julia}"><code>#| hold: true
+pp = lambdify(p)
+pp(2)</code></pre>
+<p>The <code>lambdify</code> function uses the name of the similar <code>SymPy</code> function which is named after Pythons convention of calling anoynmous function “lambdas.” The use above is straightforward. Only slightly more complicated is the use when there are multiple symbolic values. For example:</p>
+<pre class="{julia}"><code>#| hold: true
+p = a*x^2 + b
+pp = lambdify(p)
+pp(1,2,3)</code></pre>
+<p>This evaluation matches <code>a</code> with <code>1</code>, <code>b</code> with<code>2</code>, and <code>x</code> with <code>3</code> as that is the order returned by the function call <code>free_symbols(p)</code>. To adjust that, a second <code>vars</code> argument can be given:</p>
+<pre class="{julia}"><code>#| hold: true
+pp = lambdify(p, (x,a,b))
+pp(1,2,3) # computes 2*1^2 + 3</code></pre>
+</section>
+</section>
+<section id="graphical-properties-of-polynomials" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="graphical-properties-of-polynomials"><span class="header-section-number">11.4</span> Graphical properties of polynomials</h2>
+<p>Consider the graph of the polynomial <code>x^5 - x + 1</code>:</p>
+<pre class="{julia}"><code>plot(x^5 - x + 1, -3/2, 3/2)</code></pre>
+<p>(Plotting symbolic expressions with <code>Plots</code> is similar to plotting a function, in that the expression is passed in as the first argument. The expression must have only one free variable, as above, or an error will occur. This happens, as there is a <code>Plots</code> “recipe” for <code>SymPy</code> defined.)</p>
+<p>This graph illustrates the key features of polynomial graphs:</p>
+<ul>
+<li>there may be values for <code>x</code> where the graph crosses the <span class="math inline">\(x\)</span> axis (real roots of the polynomial);</li>
+<li>there may be peaks and valleys (local maxima and local minima)</li>
+<li>except for constant polynomials, the ultimate behaviour for large values of <span class="math inline">\(\lvert x\rvert\)</span> is either both sides of the graph going to positive infinity, or negative infinity, or as in this graph one to the positive infinity and one to negative infinity. In particular, there is no <em>horizontal asymptote</em>.</li>
+</ul>
+<p>To investigate this last point, let’s consider the case of the monomial <span class="math inline">\(x^n\)</span>. When <span class="math inline">\(n\)</span> is even, the following animation shows that larger values of <span class="math inline">\(n\)</span> have greater growth once outside of <span class="math inline">\([-1,1]\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+### {{{ poly_growth_graph }}}
+gr()
+anim = @animate for m in  0:2:12
+    fn = x -&gt; x^m
+    plot(fn, -1.2, 1.2, size = fig_size, legend=false, xlims=(-1.2, 1.2), ylims=(0, 1.2^12), title="x^{$m} over [-1.2, 1.2]")
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+caption = L"Demonstration that $x^{10}$ grows faster than $x^8$, ... and $x^2$  grows faster than $x^0$ (which is constant)."
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<p>Of course, this is expected, as, for example, <span class="math inline">\(2^2 &lt; 2^4 &lt; 2^6 &lt; \cdots\)</span>. The general shape of these terms is similar - <span class="math inline">\(U\)</span> shaped, and larger powers dominate the smaller powers as <span class="math inline">\(\lvert x\rvert\)</span> gets big.</p>
+<p>For odd powers of <span class="math inline">\(n\)</span>, the graph of the monomial <span class="math inline">\(x^n\)</span> is no longer <span class="math inline">\(U\)</span> shaped, but rather constantly increasing. This graph of <span class="math inline">\(x^5\)</span> is typical:</p>
+<pre class="{julia}"><code>plot(x^5, -2, 2)</code></pre>
+<p>Again, for larger powers the shape is similar, but the growth is faster.</p>
+<section id="leading-term-dominates" class="level3" data-number="11.4.1">
+<h3 data-number="11.4.1" class="anchored" data-anchor-id="leading-term-dominates"><span class="header-section-number">11.4.1</span> Leading term dominates</h3>
+<p>To see the roots and/or the peaks and valleys of a polynomial requires a judicious choice of viewing window, as ultimately the leading term will dominate the graph. The following animation of the graph of <span class="math inline">\((x-5)(x-3)(x-2)(x-1)\)</span> illustrates. Subsequent images show a widening of the plot window until the graph appears U-shaped.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+### {{{ leading_term_graph }}}
+gr()
+anim = @animate for n in 1:6
+    m = [1, .5, -1, -5, -20, -25]
+    M = [2, 4,    5, 10, 25, 30]
+    fn = x -&gt; (x-1)*(x-2)*(x-3)*(x-5)
+
+    plt = plot(fn, m[n], M[n], size=fig_size, legend=false, linewidth=2, title ="Graph of on ($(m[n]), $(M[n]))")
+    if n &gt; 1
+        plot!(plt, fn, m[n-1], M[n-1], color=:red, linewidth=4)
+    end
+end
+
+caption = "The previous graph is highlighted in red. Ultimately the leading term (\$x^4\$ here) dominates the graph."
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps=1)
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<p>The leading term in the animation is <span class="math inline">\(x^4\)</span>, of even degree, so the graphic is U-shaped, were the leading term of odd degree the left and right sides would each head off to different signs of infinity.</p>
+<p>To illustrate analytically why the leading term dominates, consider the polynomial <span class="math inline">\(2x^5 - x + 1\)</span> and then factor out the largest power, <span class="math inline">\(x^5\)</span>, leaving a product:</p>
+<p><span class="math display">\[
+x^5 \cdot (2 - \frac{1}{x^4} + \frac{1}{x^5}).
+\]</span></p>
+<p>For large <span class="math inline">\(\lvert x\rvert\)</span>, the last two terms in the product on the right get close to <span class="math inline">\(0\)</span>, so this expression is <em>basically</em> just <span class="math inline">\(2x^5\)</span> - the leading term.</p>
+<hr>
+<p>The following graphic illustrates the <span class="math inline">\(4\)</span> basic <em>overall</em> shapes that can result when plotting a polynomials as <span class="math inline">\(x\)</span> grows without bound:</p>
+<pre class="{julia}"><code>#| echo: false
+plot(; layout=4)
+plot!(x -&gt; x^4,  -3,3, legend=false, xticks=false, yticks=false, subplot=1, title="n = even, aₙ &gt; 0")
+plot!(x -&gt; x^5,  -3,3, legend=false, xticks=false, yticks=false, subplot=2, title="n = odd, aₙ &gt; 0")
+plot!(x -&gt; -x^4, -3,3, legend=false, xticks=false, yticks=false, subplot=3, title="n = even, aₙ &lt; 0")
+plot!(x -&gt; -x^5, -3,3, legend=false, xticks=false, yticks=false, subplot=4, title="n = odd, aₙ &lt; 0")</code></pre>
+<section id="example-1" class="level5">
+<h5 class="anchored" data-anchor-id="example-1">Example</h5>
+<p>This graphic shows some of the above:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://m.youtube.com/watch?v=OFzqDatEvCo"><img src="https://img.youtube.com/vi/OFzqDatEvCo/3.jpg" class="img-fluid figure-img" alt="you tube"></a></p>
+<figcaption>you tube</figcaption>
+</figure>
+</div>
+</section>
+<section id="example-2" class="level5">
+<h5 class="anchored" data-anchor-id="example-2">Example</h5>
+<p>Suppose <span class="math inline">\(p = a_n x^n + \cdots + a_1 x + a_0\)</span> with <span class="math inline">\(a_n &gt; 0\)</span>. Then by the above, eventually for large <span class="math inline">\(x &gt; 0\)</span> we have <span class="math inline">\(p &gt; 0\)</span>, as that is the behaviour of <span class="math inline">\(a_n x^n\)</span>. Were <span class="math inline">\(a_n &lt; 0\)</span>, then eventually for large <span class="math inline">\(x&gt;0\)</span>, <span class="math inline">\(p &lt; 0\)</span>.</p>
+<p>Now consider the related polynomial, <span class="math inline">\(q\)</span>, where we multiply <span class="math inline">\(p\)</span> by <span class="math inline">\(x^n\)</span> and substitute in <span class="math inline">\(1/x\)</span> for <span class="math inline">\(x\)</span>. This is the “reversed” polynomial, as we see in this illustration for <span class="math inline">\(n=2\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+p = a*x^2 + b*x + c
+n = 2    # the degree of p
+q = expand(x^n * p(x =&gt; 1/x))</code></pre>
+<p>In particular, from the reversal, the behavior of <span class="math inline">\(q\)</span> for large <span class="math inline">\(x\)</span> depends on the sign of <span class="math inline">\(a_0\)</span>. As well, due to the <span class="math inline">\(1/x\)</span>, the behaviour of <span class="math inline">\(q\)</span> for large <span class="math inline">\(x&gt;0\)</span> is the same as the behaviour of <span class="math inline">\(p\)</span> for small <em>positive</em> <span class="math inline">\(x\)</span>. In particular if <span class="math inline">\(a_n &gt; 0\)</span> but <span class="math inline">\(a_0 &lt; 0\)</span>, then <code>p</code> is eventually positive and <code>q</code> is eventually negative.</p>
+<p>That is, if <span class="math inline">\(p\)</span> has <span class="math inline">\(a_n &gt; 0\)</span> but <span class="math inline">\(a_0 &lt; 0\)</span> then the graph of <span class="math inline">\(p\)</span> must cross the <span class="math inline">\(x\)</span> axis.</p>
+<p>This observation is the start of Descartes’ rule of <a href="http://sepwww.stanford.edu/oldsep/stew/descartes.pdf">signs</a>, which counts the change of signs of the coefficients in <code>p</code> to say something about how many possible crossings there are of the <span class="math inline">\(x\)</span> axis by the graph of the polynomial <span class="math inline">\(p\)</span>.</p>
+</section>
+</section>
+</section>
+<section id="factoring-polynomials" class="level2" data-number="11.5">
+<h2 data-number="11.5" class="anchored" data-anchor-id="factoring-polynomials"><span class="header-section-number">11.5</span> Factoring polynomials</h2>
+<p>Among numerous others, there are two common ways of representing a non-zero polynomial:</p>
+<ul>
+<li>expanded form, as in <span class="math inline">\(a_n x^n + a_{n-1}x^{n-1} + \cdots a_1 x + a_0, a_n \neq 0\)</span>; or</li>
+<li>factored form, as in <span class="math inline">\(a\cdot(x-r_1)\cdot(x-r_2)\cdots(x-r_n), a \neq 0\)</span>.</li>
+</ul>
+<p>The latter writes <span class="math inline">\(p\)</span> as a product of linear factors, though this is only possible in general if we consider complex roots. With real roots only, then the factors are either linear or quadratic, as will be discussed later.</p>
+<p>There are values to each representation. One value of the expanded form is that polynomial addition and scalar multiplication is much easier than in factored form. For example, adding polynomials just requires matching up the monomials of similar powers. For the factored form, polynomial multiplication is much easier than expanded form. For the factored form it is easy to read off <em>roots</em> of the polynomial (values of <span class="math inline">\(x\)</span> where <span class="math inline">\(p\)</span> is <span class="math inline">\(0\)</span>), as a product is <span class="math inline">\(0\)</span> only if a term is <span class="math inline">\(0\)</span>, so any zero must be a zero of a factor. Factored form has other technical advantages. For example, the polynomial <span class="math inline">\((x-1)^{1000}\)</span> can be compactly represented using the factored form, but would require <span class="math inline">\(1001\)</span> coefficients to store in expanded form. (As well, due to floating point differences, the two would evaluate quite differently as one would require over a <span class="math inline">\(1000\)</span> operations to compute, the other just two.)</p>
+<p>Translating from factored form to expanded form can be done by carefully following the distributive law of multiplication. For example, with some care it can be shown that:</p>
+<p><span class="math display">\[
+(x-1) \cdot (x-2) \cdot (x-3) = x^3  - 6x^2 +11x - 6.
+\]</span></p>
+<p>The <code>SymPy</code> function <code>expand</code> will perform these algebraic manipulations without fuss:</p>
+<pre class="{julia}"><code>expand((x-1)*(x-2)*(x-3))</code></pre>
+<p>Factoring a polynomial is several weeks worth of lessons, as there is no one-size-fits-all algorithm to follow. There are some tricks that are taught: for example factoring differences of perfect squares, completing the square, the rational root theorem, <span class="math inline">\(\dots\)</span>. But in general the solution is not automated. The <code>SymPy</code> function <code>factor</code> will find all rational factors (terms like <span class="math inline">\((qx-p)\)</span>), but will leave terms that do not have rational factors alone. For example:</p>
+<pre class="{julia}"><code>factor(x^3 - 6x^2 + 11x -6)</code></pre>
+<p>Or</p>
+<pre class="{julia}"><code>factor(x^5 - 5x^4 + 8x^3 - 8x^2 + 7x - 3)</code></pre>
+<p>But will not factor things that are not hard to see:</p>
+<pre class="{julia}"><code>factor(x^2 - 2)</code></pre>
+<p>The factoring <span class="math inline">\((x-\sqrt{2})\cdot(x + \sqrt{2})\)</span> is not found, as <span class="math inline">\(\sqrt{2}\)</span> is not rational.</p>
+<p>(For those, it may be possible to solve to get the roots, which can then be used to produce the factored form.)</p>
+<section id="polynomial-functions-and-polynomials." class="level3" data-number="11.5.1">
+<h3 data-number="11.5.1" class="anchored" data-anchor-id="polynomial-functions-and-polynomials."><span class="header-section-number">11.5.1</span> Polynomial functions and polynomials.</h3>
+<p>Our definition of a polynomial is in terms of algebraic expressions which are easily represented by <code>SymPy</code> objects, but not objects from base <code>Julia</code>. (Later we discuss the <code>Polynomials</code> package for representing polynomials. There is also the <code>AbstractAlbegra</code> package for a more algebraic treatment of polynomials.)</p>
+<p>However, <em>polynomial functions</em> are easily represented by <code>Julia</code>, for example,</p>
+<pre class="{julia}"><code>f(x) = -16x^2 + 100</code></pre>
+<p>The distinction is subtle, the expression is turned into a function just by adding the <code>f(x) =</code> preface. But to <code>Julia</code> there is a big distinction. The function form never does any computation until after a value of <span class="math inline">\(x\)</span> is passed to it. Whereas symbolic expressions can be manipulated quite freely before any numeric values are specified.</p>
+<p>It is easy to create a symbolic expression from a function - just evaluate the function on a symbolic value:</p>
+<pre class="{julia}"><code>f(x)</code></pre>
+<p>This is easy - but can also be confusing. The function object is <code>f</code>, the expression is <code>f(x)</code> - the function evaluated on a symbolic object. Moreover, as seen, the symbolic expression can be evaluated using the same syntax as a function call:</p>
+<pre class="{julia}"><code>p = f(x)
+p(2)</code></pre>
+<p>For many uses, the distinction is unnecessary to make, as the many functions will work with any callable expression. One such is <code>plot</code> – either <code>plot(f, a, b)</code> or <code>plot(f(x),a, b)</code> will produce the same plot using the <code>Plots</code> package.</p>
+</section>
+</section>
+<section id="questions" class="level2" data-number="11.6">
+<h2 data-number="11.6" class="anchored" data-anchor-id="questions"><span class="header-section-number">11.6</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>Let <span class="math inline">\(p\)</span> be the polynomial <span class="math inline">\(3x^2 - 2x + 5\)</span>.</p>
+<p>What is the degree of <span class="math inline">\(p\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(2)</code></pre>
+<p>What is the leading coefficient of <span class="math inline">\(p\)</span>?</p>
+<pre class="{julia}"><code>#| echo: false
+numericq(3)</code></pre>
+<p>The graph of <span class="math inline">\(p\)</span> would have what <span class="math inline">\(y\)</span>-intercept?</p>
+<pre class="{julia}"><code>#| echo: false
+numericq(5)</code></pre>
+<p>Is <span class="math inline">\(p\)</span> a monic polynomial?</p>
+<pre class="{julia}"><code>#| echo: false
+booleanq(false, labels=["Yes", "No"])</code></pre>
+<p>Is <span class="math inline">\(p\)</span> a quadratic polynomial?</p>
+<pre class="{julia}"><code>#| echo: false
+booleanq(true, labels=["Yes", "No"])</code></pre>
+<p>The graph of <span class="math inline">\(p\)</span> would be <span class="math inline">\(U\)</span>-shaped?</p>
+<pre class="{julia}"><code>#| echo: false
+booleanq(true, labels=["Yes", "No"])</code></pre>
+<p>What is the leading term of <span class="math inline">\(p\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``3``", "``3x^2``", "``-2x``", "``5``"]
+answ = 2
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>Let <span class="math inline">\(p = x^3 - 2x^2 +3x - 4\)</span>.</p>
+<p>What is <span class="math inline">\(a_2\)</span>, using the standard numbering of coefficient?</p>
+<pre class="{julia}"><code>#| echo: false
+numericq(-2)</code></pre>
+<p>What is <span class="math inline">\(a_n\)</span>?</p>
+<pre class="{julia}"><code>#| echo: false
+numericq(1)</code></pre>
+<p>What is <span class="math inline">\(a_0\)</span>?</p>
+<pre class="{julia}"><code>#| echo: false
+numericq(-4)</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>The linear polynomial <span class="math inline">\(p = 2x + 3\)</span> is written in which form:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["point-slope form", "slope-intercept form", "general form"]
+answ = 2
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>The polynomial <code>p</code> is defined in <code>Julia</code> as follows:</p>
+<pre class="{julia}"><code>#| hold: true
+#| eval: false
+@syms x
+p = -16x^2 + 64</code></pre>
+<p>What command will return the value of the polynomial when <span class="math inline">\(x=2\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [q"p*2", q"p[2]", q"p_2", q"p(x=&gt;2)"]
+answ = 4
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>In the large, the graph of <span class="math inline">\(p=x^{101} - x + 1\)</span> will</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"Be $U$-shaped, opening upward",
+L"Be $U$-shaped, opening downward",
+L"Overall, go upwards from $-\infty$ to $+\infty$",
+L"Overall, go downwards from $+\infty$ to $-\infty$"]
+answ = 3
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>In the large, the graph of <span class="math inline">\(p=x^{102} - x^{101} + x + 1\)</span> will</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"Be $U$-shaped, opening upward",
+L"Be $U$-shaped, opening downward",
+L"Overall, go upwards from $-\infty$ to $+\infty$",
+L"Overall, go downwards from $+\infty$ to $-\infty$"]
+answ = 1
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>In the large, the graph of <span class="math inline">\(p=-x^{10} + x^9 + x^8 + x^7 + x^6\)</span> will</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"Be $U$-shaped, opening upward",
+L"Be $U$-shaped, opening downward",
+L"Overall, go upwards from $-\infty$ to $+\infty$",
+L"Overall, go downwards from $+\infty$ to $-\infty$"]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>Use <code>SymPy</code> to factor the polynomial <span class="math inline">\(x^{11} - x\)</span>. How many factors are found?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+@syms x
+ex = x^11 - x
+nf = length(factor(ex).args)
+numericq(nf)</code></pre>
+</section>
+<section id="question-8" class="level6">
+<h6 class="anchored" data-anchor-id="question-8">Question</h6>
+<p>Use <code>SymPy</code> to factor the polynomial <span class="math inline">\(x^{12} - 1\)</span>. How many factors are found?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+@syms x
+ex = x^12 - 1
+nf = length(factor(ex).args)
+numericq(nf)</code></pre>
+</section>
+<section id="question-9" class="level6">
+<h6 class="anchored" data-anchor-id="question-9">Question</h6>
+<p>What is the monic polynomial with roots <span class="math inline">\(x=-1\)</span>, <span class="math inline">\(x=0\)</span>, and <span class="math inline">\(x=2\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [q"x^3 - 3x^2  + 2x",
+q"x^3 - x^2 - 2x",
+q"x^3 + x^2 - 2x",
+q"x^3 + x^2 + 2x"]
+answ = 2
+radioq(choices, 2)</code></pre>
+</section>
+<section id="question-10" class="level6">
+<h6 class="anchored" data-anchor-id="question-10">Question</h6>
+<p>Use <code>expand</code> to expand the expression <code>((x-h)^3 - x^3) / h</code> where <code>x</code> and <code>h</code> are symbolic constants. What is the value:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+q"-h^2 + 3hx  - 3x^2",
+q"h^3 + 3h^2x + 3hx^2 + x^3 -x^3/h",
+q"x^3 - x^3/h",
+q"0"]
+answ = 1
+radioq(choices, answ)</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../precalc/inversefunctions.html" class="pagination-link" aria-label="The Inverse of a Function">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../precalc/polynomial_roots.html" class="pagination-link" aria-label="Roots of a polynomial">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/precalc/polynomial.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

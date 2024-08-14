@@ -1,0 +1,1899 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>34&nbsp; Related rates – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../derivatives/taylor_series_polynomials.html" rel="next">
+<link href="../derivatives/implicit_differentiation.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../derivatives.html">Derivatives</a></li><li class="breadcrumb-item"><a href="../derivatives/related_rates.html"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#questions" id="toc-questions" class="nav-link active" data-scroll-target="#questions"><span class="header-section-number">34.1</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/derivatives/related_rates.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../derivatives.html">Derivatives</a></li><li class="breadcrumb-item"><a href="../derivatives/related_rates.html"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses these add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+plotly()
+using Roots
+using SymPy</code></pre>
+<hr>
+<p>Related rates problems involve two (or more) unknown quantities that are related through an equation. As the two variables depend on each other, also so do their rates - change with respect to some variable which is often time, though exactly how remains to be discovered. Hence the name “related rates.”</p>
+<section id="examples" class="level4">
+<h4 class="anchored" data-anchor-id="examples">Examples</h4>
+<p>The following is a typical “book” problem:</p>
+<blockquote class="blockquote">
+<p>A screen saver displays the outline of a <span class="math inline">\(3\)</span> cm by <span class="math inline">\(2\)</span> cm rectangle and then expands the rectangle in such a way that the <span class="math inline">\(2\)</span> cm side is expanding at the rate of <span class="math inline">\(4\)</span> cm/sec and the proportions of the rectangle never change. How fast is the area of the rectangle increasing when its dimensions are <span class="math inline">\(12\)</span> cm by <span class="math inline">\(8\)</span> cm? <a href="http://oregonstate.edu/instruct/mth251/cq/Stage9/Practice/ratesProblems.html">Source.</a></p>
+</blockquote>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+### {{{growing_rects}}}
+## Secant line approaches tangent line...
+gr()
+function growing_rects_graph(n)
+    w = (t) -&gt; 2 + 4t
+    h = (t) -&gt; 3/2 * w(t)
+    t = n - 1
+
+    w_2 = w(t)/2
+    h_2 = h(t)/2
+
+    w_n = w(5)/2
+    h_n = h(5)/2
+
+    plt = plot(w_2 * [-1, -1, 1, 1, -1], h_2 * [-1, 1, 1, -1, -1], xlim=(-17,17), ylim=(-17,17),
+               legend=false, size=fig_size)
+    annotate!(plt, [(-1.5, 1, "Area = $(round(Int, 4*w_2*h_2))")])
+    plt
+
+
+end
+caption = L"""
+
+As $t$ increases, the size of the rectangle grows. The ratio of width to height is fixed. If we know the rate of change in time for the width ($dw/dt$) and the height ($dh/dt$) can we tell the rate of change of *area* with respect to time ($dA/dt$)?
+
+"""
+n=6
+
+anim = @animate for i=1:n
+    growing_rects_graph(i)
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<p>Here we know <span class="math inline">\(A = w \cdot h\)</span> and we know some things about how <span class="math inline">\(w\)</span> and <span class="math inline">\(h\)</span> are related <em>and</em> about the rate of how both <span class="math inline">\(w\)</span> and <span class="math inline">\(h\)</span> grow in time <span class="math inline">\(t\)</span>. That means that we could express this growth in terms of some functions <span class="math inline">\(w(t)\)</span> and <span class="math inline">\(h(t)\)</span>, then we can figure out that the area - as a function of <span class="math inline">\(t\)</span> - will be expressed as:</p>
+<p><span class="math display">\[
+A(t) = w(t) \cdot h(t).
+\]</span></p>
+<p>We would get by the product rule that the <em>rate of change</em> of area with respect to time, <span class="math inline">\(A'(t)\)</span> is just:</p>
+<p><span class="math display">\[
+A'(t) = w'(t) h(t) + w(t) h'(t).
+\]</span></p>
+<p>As an aside, it is fairly conventional to suppress the <span class="math inline">\((t)\)</span> part of the notation <span class="math inline">\(A=wh\)</span> and to use the Leibniz notation for derivatives:</p>
+<p><span class="math display">\[
+\frac{dA}{dt} = \frac{dw}{dt} h + w \frac{dh}{dt}.
+\]</span></p>
+<p>This relationship is true for all <span class="math inline">\(t\)</span>, but the problem discusses a certain value of <span class="math inline">\(t\)</span> - when <span class="math inline">\(w(t)=8\)</span> and <span class="math inline">\(h(t) = 12\)</span>. At this same value of <span class="math inline">\(t\)</span>, we have <span class="math inline">\(w'(t) = 4\)</span> and so <span class="math inline">\(h'(t) = 6\)</span>. Substituting these 4 values into the 4 unknowns in the formula for <span class="math inline">\(A'(t)\)</span> gives:</p>
+<p><span class="math display">\[
+A'(t) = 4 \cdot 12 + 8 \cdot 6 = 96.
+\]</span></p>
+<p>Summarizing, from the relationship between <span class="math inline">\(A\)</span>, <span class="math inline">\(w\)</span> and <span class="math inline">\(t\)</span>, there is a relationship between their rates of growth with respect to <span class="math inline">\(t\)</span>, a time variable. Using this and known values, we can compute. In this case, <span class="math inline">\(A'\)</span> at the specific <span class="math inline">\(t\)</span>.</p>
+<p>We could also have done this differently. We would recognize the following:</p>
+<ul>
+<li>The area of a rectangle is just:</li>
+</ul>
+<pre class="{julia}"><code>A(w,h) = w * h</code></pre>
+<ul>
+<li>The width - expanding at a rate of <span class="math inline">\(4t\)</span> from a starting value of <span class="math inline">\(2\)</span> - must satisfy:</li>
+</ul>
+<pre class="{julia}"><code>w(t) = 2 + 4*t</code></pre>
+<ul>
+<li>The height is a constant proportion of the width:</li>
+</ul>
+<pre class="{julia}"><code>h(t) = 3/2 * w(t)</code></pre>
+<p>This means again that area depends on <span class="math inline">\(t\)</span> through this formula:</p>
+<pre class="{julia}"><code>A(t) = A(w(t), h(t))</code></pre>
+<p>This is why the rates of change are related: as <span class="math inline">\(w\)</span> and <span class="math inline">\(h\)</span> change in time, the functional relationship with <span class="math inline">\(A\)</span> means <span class="math inline">\(A\)</span> also changes in time.</p>
+<p>Now to answer the question, when the width is 8, we must have that <span class="math inline">\(t\)</span> is:</p>
+<pre class="{julia}"><code>tstar = find_zero(x -&gt; w(x) - 8, [0, 4])  # or solve by hand to get 3/2</code></pre>
+<p>The question is to find the rate the area is increasing at the given time <span class="math inline">\(t\)</span>, which is <span class="math inline">\(A'(t)\)</span> or <span class="math inline">\(dA/dt\)</span>. We get this by performing the differentiation, then substituting in the value.</p>
+<p>Here we do so with the aid of <code>Julia</code>, though this problem could readily be done “by hand.”</p>
+<p>We have expressed <span class="math inline">\(A\)</span> as a function of <span class="math inline">\(t\)</span> by composition, so can differentiate that:</p>
+<pre class="{julia}"><code>A'(tstar)</code></pre>
+<hr>
+<p>Now what? Why is <span class="math inline">\(96\)</span> of any interest? It is if the value at a specific time is needed. But in general, a better question might be to understand if there is some pattern to the numbers in the figure, these being <span class="math inline">\(6, 54, 150, 294, 486, 726\)</span>. Their differences are the <em>average</em> rate of change:</p>
+<pre class="{julia}"><code>xs = [6, 54, 150, 294, 486, 726]
+ds = diff(xs)</code></pre>
+<p>Those seem to be increasing by a fixed amount each time, which we can see by one more application of <code>diff</code>:</p>
+<pre class="{julia}"><code>diff(ds)</code></pre>
+<p>How can this relationship be summarized? Well, let’s go back to what we know, though this time using symbolic math:</p>
+<pre class="{julia}"><code>@syms t
+diff(A(t), t)</code></pre>
+<p>This should be clear: the rate of change, <span class="math inline">\(dA/dt\)</span>, is increasing linearly, hence the second derivative, <span class="math inline">\(d^2A/dt^2\)</span> would be constant, just as we saw for the average rate of change.</p>
+<p>So, for this problem, a constant rate of change in width and height leads to a linear rate of change in area, put otherwise, linear growth in both width and height leads to quadratic growth in area.</p>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>A ladder, with length <span class="math inline">\(l\)</span>, is leaning against a wall. We parameterize this problem so that the top of the ladder is at <span class="math inline">\((0,h)\)</span> and the bottom at <span class="math inline">\((b, 0)\)</span>. Then <span class="math inline">\(l^2 = h^2 + b^2\)</span> is a constant.</p>
+<p>If the ladder starts to slip away at the base, but remains in contact with the wall, express the rate of change of <span class="math inline">\(h\)</span> with respect to <span class="math inline">\(t\)</span> in terms of <span class="math inline">\(db/dt\)</span>.</p>
+<p>We have from implicitly differentiating in <span class="math inline">\(t\)</span> the equation <span class="math inline">\(l^2 = h^2 + b^2\)</span>, noting that <span class="math inline">\(l\)</span> is a constant, that:</p>
+<p><span class="math display">\[
+0 = 2h \frac{dh}{dt} + 2b \frac{db}{dt}.
+\]</span></p>
+<p>Solving, yields:</p>
+<p><span class="math display">\[
+\frac{dh}{dt} = -\frac{b}{h} \cdot \frac{db}{dt}.
+\]</span></p>
+<ul>
+<li>If when <span class="math inline">\(l = 12\)</span> it is known that <span class="math inline">\(db/dt = 2\)</span> when <span class="math inline">\(b=4\)</span>, find <span class="math inline">\(dh/dt\)</span>.</li>
+</ul>
+<p>We just need to find <span class="math inline">\(h\)</span> for this value of <span class="math inline">\(b\)</span>, as the other two quantities in the last equation are known.</p>
+<p>But <span class="math inline">\(h = \sqrt{l^2 - b^2}\)</span>, so the answer is:</p>
+<pre class="{julia}"><code>length, bottom, dbdt = 12, 4, 2
+height = sqrt(length^2 - bottom^2)
+-bottom/height * dbdt</code></pre>
+<ul>
+<li>What happens to the rate as <span class="math inline">\(b\)</span> goes to <span class="math inline">\(l\)</span>?</li>
+</ul>
+<p>As <span class="math inline">\(b\)</span> goes to <span class="math inline">\(l\)</span>, <span class="math inline">\(h\)</span> goes to <span class="math inline">\(0\)</span>, so <span class="math inline">\(b/h\)</span> blows up. Unless <span class="math inline">\(db/dt\)</span> goes to <span class="math inline">\(0\)</span>, the expression will become <span class="math inline">\(-\infty\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Often, this problem is presented with <span class="math inline">\(db/dt\)</span> having a constant rate. In this case, the ladder problem defies physics, as <span class="math inline">\(dh/dt\)</span> eventually is faster than the speed of light as <span class="math inline">\(h \rightarrow 0+\)</span>. In practice, were <span class="math inline">\(db/dt\)</span> kept at a constant, the ladder would necessarily come away from the wall. The trajectory would follow that of a tractrix were there no gravity to account for.</p>
+</div>
+</div>
+</section>
+<section id="example-1" class="level5">
+<h5 class="anchored" data-anchor-id="example-1">Example</h5>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+caption = "A man and woman walk towards the light."
+
+imgfile = "figures/long-shadow-noir.png"
+ImageFile(:derivatives, imgfile, caption)</code></pre>
+<p>Shadows are a staple of film noir. In the photo, suppose a man and a woman walk towards a street light. As they approach the light the length of their shadow changes.</p>
+<p>Suppose, we focus on the <span class="math inline">\(5\)</span> foot tall woman. Her shadow comes from a streetlight <span class="math inline">\(12\)</span> feet high. She is walking at <span class="math inline">\(3\)</span> feet per second towards the light. What is the rate of change of her shadow?</p>
+<p>The setup for this problem involves drawing a right triangle with height <span class="math inline">\(12\)</span> and base given by the distance <span class="math inline">\(x\)</span> from the light the woman is <em>plus</em> the length <span class="math inline">\(l\)</span> of the shadow. There is a similar triangle formed by the woman’s height with length <span class="math inline">\(l\)</span>. Equating the ratios of the sided gives:</p>
+<p><span class="math display">\[
+\frac{5}{l} = \frac{12}{x + l}
+\]</span></p>
+<p>As we need to take derivatives, we work with the reciprocal relationship:</p>
+<p><span class="math display">\[
+\frac{l}{5} = \frac{x + l}{12}
+\]</span></p>
+<p>Differentiating in <span class="math inline">\(t\)</span> gives:</p>
+<p><span class="math display">\[
+\frac{l'}{5} = \frac{x' + l'}{12}
+\]</span></p>
+<p>Or</p>
+<p><span class="math display">\[
+l' \cdot (\frac{1}{5} - \frac{1}{12}) =  \frac{x'}{12}
+\]</span></p>
+<p>Solving for <span class="math inline">\(l'\)</span> gives an answer in terms of <span class="math inline">\(x'\)</span> the rate the woman is walking. In this description <span class="math inline">\(x\)</span> is getting shorter, so <span class="math inline">\(x'\)</span> would be <span class="math inline">\(-3\)</span> feet per second and the shadow length would be decreasing at a rate proportional to the walking speed.</p>
+</section>
+<section id="example-2" class="level5">
+<h5 class="anchored" data-anchor-id="example-2">Example</h5>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+p = plot(; axis=nothing, border=:none, legend=false, aspect_ratio=:equal)
+scatter!(p, [0],[50], color=:yellow, markersize=50)
+plot!(p, [0, 50], [0,0], linestyle=:dash)
+plot!(p, [0,50], [50,0], linestyle=:dot)
+plot!(p, [25,25],[25,0], linewidth=5, color=:black)
+plot!(p, [25,50], [0,0], linewidth=2, color=:black)</code></pre>
+<p>The sun is setting at the rate of <span class="math inline">\(1/20\)</span> radian/min, and appears to be dropping perpendicular to the horizon, as depicted in the figure. How fast is the shadow of a <span class="math inline">\(25\)</span> meter wall lengthening at the moment when the shadow is <span class="math inline">\(25\)</span> meters long?</p>
+<p>Let the shadow length be labeled <span class="math inline">\(x\)</span>, as it appears on the <span class="math inline">\(x\)</span> axis above. Then we have by right-angle trigonometry:</p>
+<p><span class="math display">\[
+\tan(\theta) = \frac{25}{x}
+\]</span></p>
+<p>of <span class="math inline">\(x\tan(\theta) = 25\)</span>.</p>
+<p>As <span class="math inline">\(t\)</span> evolves, we know <span class="math inline">\(d\theta/dt\)</span> but what is <span class="math inline">\(dx/dt\)</span>? Using implicit differentiation yields:</p>
+<p><span class="math display">\[
+\frac{dx}{dt} \cdot \tan(\theta) + x \cdot (\sec^2(\theta)\cdot \frac{d\theta}{dt}) = 0
+\]</span></p>
+<p>Substituting known values and identifying <span class="math inline">\(\theta=\pi/4\)</span> when the shadow length, <span class="math inline">\(x\)</span>, is <span class="math inline">\(25\)</span> gives:</p>
+<p><span class="math display">\[
+\frac{dx}{dt} \cdot \tan(\pi/4) + 25 \cdot(4/2) \cdot \frac{-1}{20} = 0
+\]</span></p>
+<p>This can be solved for the unknown: <span class="math inline">\(dx/dt = 50/20\)</span>.</p>
+</section>
+<section id="example-3" class="level5">
+<h5 class="anchored" data-anchor-id="example-3">Example</h5>
+<p>A batter hits a ball toward third base at <span class="math inline">\(75\)</span> ft/sec and runs toward first base at a rate of <span class="math inline">\(24\)</span> ft/sec.&nbsp;At what rate does the distance between the ball and the batter change when <span class="math inline">\(2\)</span> seconds have passed?</p>
+<p>We will answer this with <code>SymPy</code>. First we create some symbols for the movement of the ball towards third base, <code>b(t)</code>, the runner toward first base, <code>r(t)</code>, and the two velocities. We use symbolic functions for the movements, as we will be differentiating them in time:</p>
+<pre class="{julia}"><code>@syms b() r() v_b v_r
+d = sqrt(b(t)^2 + r(t)^2)</code></pre>
+<p>The distance formula applies to give <span class="math inline">\(d\)</span>. As the ball and runner are moving in a perpendicular direction, the formula is easy to apply.</p>
+<p>We can differentiate <code>d</code> in terms of <code>t</code> and in process we also find the derivatives of <code>b</code> and <code>r</code>:</p>
+<pre class="{julia}"><code>db, dr = diff(b(t),t), diff(r(t),t) # b(t), r(t) -- symbolic functions
+dd = diff(d,t)                      # d -- not d(t) -- an expression</code></pre>
+<p>The slight difference in the commands is due to <code>b</code> and <code>r</code> being symbolic functions, whereas <code>d</code> is a symbolic expression. Now we begin substituting. First, from the problem <code>db</code> is just the velocity in the ball’s direction, or <code>v_b</code>. Similarly for <code>v_r</code>:</p>
+<pre class="{julia}"><code>ddt = subs(dd, db =&gt; v_b, dr =&gt; v_r)</code></pre>
+<p>Now, we can substitute in for <code>b(t)</code>, as it is <code>v_b*t</code>, etc.:</p>
+<pre class="{julia}"><code>ddt₁ = subs(ddt, b(t) =&gt; v_b * t, r(t) =&gt; v_r * t)</code></pre>
+<p>This finds the rate of change of time for any <code>t</code> with symbolic values of the velocities. (And shows how the answer doesn’t actually depend on <span class="math inline">\(t\)</span>.) The problem’s answer comes from a last substitution:</p>
+<pre class="{julia}"><code>ddt₁(t =&gt; 2, v_b =&gt; 75, v_r =&gt; 24)</code></pre>
+<p>Were this done by “hand,” it would be better to work with distance squared to avoid the expansion of complexity from the square root. That is, using implicit differentiation:</p>
+<p><span class="math display">\[
+\begin{align*}
+d^2 &amp;= b^2 + r^2\\
+2d\cdot d' &amp;= 2b\cdot b' + 2r\cdot r'\\
+d' &amp;= (b\cdot b' + r \cdot r')/d\\
+d' &amp;= (tb'\cdot b' + tr' \cdot r')/d\\
+d' &amp;= \left((b')^2 + (r')^2\right) \cdot \frac{t}{d}.
+\end{align*}
+\]</span></p>
+</section>
+<section id="example-4" class="level5">
+<h5 class="anchored" data-anchor-id="example-4">Example</h5>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+###{{{baseball_been_berry_good}}}
+## Secant line approaches tangent line...
+gr()
+function baseball_been_berry_good_graph(n)
+
+    v0 = 15
+    x = (t) -&gt; 50t
+    y = (t) -&gt; v0*t - 5 * t^2
+
+
+    ns = range(.25, stop=3, length=8)
+
+    t = ns[n]
+    ts = range(0, stop=t, length=50)
+    xs = map(x, ts)
+    ys = map(y, ts)
+
+    degrees = atand(y(t)/(100-x(t)))
+    degrees = degrees &lt; 0 ? 180 + degrees : degrees
+
+    plt = plot(xs, ys, legend=false, size=fig_size, xlim=(0,150), ylim=(0,15))
+    plot!(plt, [x(t), 100], [y(t), 0.0], color=:orange)
+    annotate!(plt, [(55, 4,"θ = $(round(Int, degrees)) degrees"),
+                    (x(t), y(t), "($(round(Int, x(t))), $(round(Int, y(t))))")])
+
+end
+caption = L"""
+
+The flight of the ball as being tracked by a stationary outfielder.  This ball will go over the head of the player. What can the player tell from the quantity $d\theta/dt$?
+
+"""
+n = 8
+
+
+anim = @animate for i=1:n
+    baseball_been_berry_good_graph(i)
+end
+
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<p>A baseball player stands <span class="math inline">\(100\)</span> meters from home base. A batter hits the ball directly at the player so that the distance from home plate is <span class="math inline">\(x(t)\)</span> and the height is <span class="math inline">\(y(t)\)</span>.</p>
+<p>The player tracks the flight of the ball in terms of the angle <span class="math inline">\(\theta\)</span> made between the ball and the player. This will satisfy:</p>
+<p><span class="math display">\[
+\tan(\theta) = \frac{y(t)}{100 - x(t)}.
+\]</span></p>
+<p>What is the rate of change of <span class="math inline">\(\theta\)</span> with respect to <span class="math inline">\(t\)</span> in terms of that of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>?</p>
+<p>We have by the chain rule and quotient rule:</p>
+<p><span class="math display">\[
+\sec^2(\theta) \theta'(t) = \frac{y'(t) \cdot (100 - x(t)) - y(t) \cdot (-x'(t))}{(100 - x(t))^2}.
+\]</span></p>
+<p>If we have <span class="math inline">\(x(t) = 50t\)</span> and <span class="math inline">\(y(t)=v_{0y} t - 5 t^2\)</span> when is the rate of change of the angle happening most quickly?</p>
+<p>The formula for <span class="math inline">\(\theta'(t)\)</span> is</p>
+<p><span class="math display">\[
+\theta'(t) = \cos^2(\theta) \cdot \frac{y'(t) \cdot (100 - x(t)) - y(t) \cdot (-x'(t))}{(100 - x(t))^2}.
+\]</span></p>
+<p>This question requires us to differentiate <em>again</em> in <span class="math inline">\(t\)</span>. Since we have fairly explicit function for <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, we will use <code>SymPy</code> to do this.</p>
+<pre class="{julia}"><code>@syms theta()
+
+v0 = 5
+x(t) = 50t
+y(t) = v0*t - 5 * t^2
+eqn = tan(theta(t)) - y(t) / (100 - x(t))</code></pre>
+<pre class="{julia}"><code>thetap = diff(theta(t),t)
+dtheta = solve(diff(eqn, t), thetap)[1]</code></pre>
+<p>We could proceed directly by evaluating:</p>
+<pre class="{julia}"><code>d2theta = diff(dtheta, t)(thetap =&gt; dtheta)</code></pre>
+<p>That is not so tractable, however.</p>
+<p>It helps to simplify <span class="math inline">\(\cos^2(\theta(t))\)</span> using basic right-triangle trigonometry. Recall, <span class="math inline">\(\theta\)</span> comes from a right triangle with height <span class="math inline">\(y(t)\)</span> and length <span class="math inline">\((100 - x(t))\)</span>. The cosine of this angle will be <span class="math inline">\(100 - x(t)\)</span> divided by the length of the hypotenuse. So we can substitute:</p>
+<pre class="{julia}"><code>dtheta₁ = dtheta(cos(theta(t))^2 =&gt; (100 -x(t))^2/(y(t)^2 + (100-x(t))^2))</code></pre>
+<p>Plotting reveals some interesting things. For <span class="math inline">\(v_{0y} &lt; 10\)</span> we have graphs that look like:</p>
+<pre class="{julia}"><code>plot(dtheta₁, 0, v0/5)</code></pre>
+<p>The ball will drop in front of the player, and the change in <span class="math inline">\(d\theta/dt\)</span> is monotonic.</p>
+<p>But let’s rerun the code with <span class="math inline">\(v_{0y} &gt; 10\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+v0 = 15
+x(t) = 50t
+y(t) = v0*t - 5 * t^2
+eqn = tan(theta(t)) - y(t) / (100 - x(t))
+thetap = diff(theta(t),t)
+dtheta = solve(diff(eqn, t), thetap)[1]
+dtheta₁ = subs(dtheta, cos(theta(t))^2, (100 - x(t))^2/(y(t)^2 + (100 - x(t))^2))
+plot(dtheta₁, 0, v0/5)</code></pre>
+<p>In the second case we have a different shape. The graph is not monotonic, and before the peak there is an inflection point. Without thinking too hard, we can see that the greatest change in the angle is when it is just above the head (<span class="math inline">\(t=2\)</span> has <span class="math inline">\(x(t)=100\)</span>).</p>
+<p>That these two graphs differ so, means that the player may be able to read if the ball is going to go over his or her head by paying attention to how the ball is being tracked.</p>
+</section>
+<section id="example-5" class="level5">
+<h5 class="anchored" data-anchor-id="example-5">Example</h5>
+<p>Hipster pour-over coffee is made with a conical coffee filter. The cone is actually a <a href="http://en.wikipedia.org/wiki/Frustum">frustum</a> of a cone with small diameter, say <span class="math inline">\(r_0\)</span>, chopped off. We will parameterize our cone by a value <span class="math inline">\(h \geq 0\)</span> on the <span class="math inline">\(y\)</span> axis and an angle <span class="math inline">\(\theta\)</span> formed by a side and the <span class="math inline">\(y\)</span> axis. Then the coffee filter is the part of the cone between some <span class="math inline">\(h_0\)</span> (related <span class="math inline">\(r_0=h_0 \tan(\theta)\)</span>) and <span class="math inline">\(h\)</span>.</p>
+<p>The volume of a cone of height <span class="math inline">\(h\)</span> is <span class="math inline">\(V(h) = \pi/3 h \cdot R^2\)</span>. From the geometry, <span class="math inline">\(R = h\tan(\theta)\)</span>. The volume of the filter then is:</p>
+<p><span class="math display">\[
+V = V(h) - V(h_0).
+\]</span></p>
+<p>What is <span class="math inline">\(dV/dh\)</span> in terms of <span class="math inline">\(dR/dh\)</span>?</p>
+<p>Differentiating implicitly gives:</p>
+<p><span class="math display">\[
+\frac{dV}{dh} = \frac{\pi}{3} ( R(h)^2 + h \cdot 2 R \frac{dR}{dh}).
+\]</span></p>
+<p>We see that it depends on <span class="math inline">\(R\)</span> and the change in <span class="math inline">\(R\)</span> with respect to <span class="math inline">\(h\)</span>. However, we visualize <span class="math inline">\(h\)</span> - the height - so it is better to re-express. Clearly, <span class="math inline">\(dR/dh = \tan\theta\)</span> and using <span class="math inline">\(R(h) = h \tan(\theta)\)</span> we get:</p>
+<p><span class="math display">\[
+\frac{dV}{dh} = \pi h^2 \tan^2(\theta).
+\]</span></p>
+<p>The rate of change goes down as <span class="math inline">\(h\)</span> gets smaller (<span class="math inline">\(h \geq h_0\)</span>) and gets bigger for bigger <span class="math inline">\(\theta\)</span>.</p>
+<p>How do the quantities vary in time?</p>
+<p>For an incompressible fluid, by balancing the volume leaving with how it leaves we will have <span class="math inline">\(dh/dt\)</span> is the ratio of the cross-sectional area at bottom over that at the height of the fluid <span class="math inline">\((\pi \cdot (h_0\tan(\theta))^2) / (\pi \cdot ((h\tan\theta))^2)\)</span> times the outward velocity of the fluid.</p>
+<p>That is <span class="math inline">\(dh/dt = (h_0/h)^2 \cdot v\)</span>. Which makes sense - larger openings (<span class="math inline">\(h_0\)</span>) mean more fluid lost per unit time so the height change follows, higher levels (<span class="math inline">\(h\)</span>) means the change in height is slower, as the cross-sections have more volume.</p>
+<p>By <a href="http://en.wikipedia.org/wiki/Torricelli's_law">Torricelli’s</a> law, the out velocity follows the law <span class="math inline">\(v = \sqrt{2g(h-h_0)}\)</span>. This gives:</p>
+<p><span class="math display">\[
+\frac{dh}{dt} = \frac{h_0^2}{h^2} \cdot v = \frac{h_0^2}{h^2} \sqrt{2g(h-h_0)}.
+\]</span></p>
+<p>If <span class="math inline">\(h &gt;&gt; h_0\)</span>, then <span class="math inline">\(\sqrt{h-h_0} = \sqrt{h}\sqrt{(1 - h_0/h)} \approx \sqrt{h}(1 - (1/2)(h_0/h)) \approx \sqrt{h}\)</span>. So the rate of change of height in time is like <span class="math inline">\(1/h^{3/2}\)</span>.</p>
+<p>Now, by the chain rule, we have then the rate of change of volume with respect to time, <span class="math inline">\(dV/dt\)</span>, is:</p>
+<p><span class="math display">\[
+\begin{align*}
+\frac{dV}{dt} &amp;=
+\frac{dV}{dh} \cdot \frac{dh}{dt}\\
+&amp;= \pi h^2 \tan^2(\theta) \cdot \frac{h_0^2}{h^2} \sqrt{2g(h-h_0)}  \\
+&amp;= \pi \sqrt{2g} \cdot (r_0)^2 \cdot \sqrt{h-h_0} \\
+&amp;\approx \pi \sqrt{2g} \cdot r_0^2 \cdot \sqrt{h}.
+\end{align*}
+\]</span></p>
+<p>This rate depends on the square of the size of the opening (<span class="math inline">\(r_0^2\)</span>) and the square root of the height (<span class="math inline">\(h\)</span>), but not the angle of the cone.</p>
+</section>
+</section>
+<section id="questions" class="level2" data-number="34.1">
+<h2 data-number="34.1" class="anchored" data-anchor-id="questions"><span class="header-section-number">34.1</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>Supply and demand. Suppose demand for product <span class="math inline">\(XYZ\)</span> is <span class="math inline">\(d(x)\)</span> and supply is <span class="math inline">\(s(x)\)</span>. The excess demand is <span class="math inline">\(d(x) - s(x)\)</span>. Suppose this is positive. How does this influence price? Guess the “law” of economics that applies:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"The rate of change of price will be ``0``",
+"The rate of change of price will increase",
+"The rate of change of price will be positive and will depend on the rate of change of excess demand."
+]
+answ = 3
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>(Theoretically, when demand exceeds supply, prices increase.)</p>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>Which makes more sense from an economic viewpoint?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"If the rate of change of unemployment is negative, the rate of change of wages will be negative.",
+"If the rate of change of unemployment is negative, the rate of change of wages will be positive."
+]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>(Colloquially, “the rate of change of unemployment is negative” means the unemployment rate is going down, so there are fewer workers available to fill new jobs.)</p>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>In chemistry there is a fundamental relationship between pressure (<span class="math inline">\(P\)</span>), temperature (<span class="math inline">\(T)\)</span> and volume (<span class="math inline">\(V\)</span>) given by <span class="math inline">\(PV=cT\)</span> where <span class="math inline">\(c\)</span> is a constant. Which of the following would be true with respect to time?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"The rate of change of pressure is always increasing by $c$",
+"If volume is constant, the rate of change of pressure is proportional to the temperature",
+"If volume is constant, the rate of change of pressure is proportional to the rate of change of temperature",
+"If pressure is held constant, the rate of change of pressure is proportional to the rate of change of temperature"]
+answ = 3
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>A pebble is thrown into a lake causing ripples to form expanding circles. Suppose one of the circles expands at a rate of <span class="math inline">\(1\)</span> foot per second and the radius of the circle is <span class="math inline">\(10\)</span> feet, what is the rate of change of the area enclosed by the circle?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+# a = pi*r^2
+# da/dt = pi * 2r * drdt
+r = 10; drdt = 1
+val = pi * 2r * drdt
+numericq(val, units=L"feet^2/second")</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>A pizza maker tosses some dough in the air. The dough is formed in a circle with radius <span class="math inline">\(10\)</span>. As it rotates, its area increases at a rate of <span class="math inline">\(1\)</span> inch<span class="math inline">\(^2\)</span> per second. What is the rate of change of the radius?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+# a = pi*r^2
+# da/dt = pi * 2r * drdt
+r = 10; dadt = 1
+val =  dadt /( pi * 2r)
+numericq(val, units="inches/second")</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>An FBI agent with a powerful spyglass is located in a boat anchored 400 meters offshore. A gangster under surveillance is driving along the shore. Assume the shoreline is straight and that the gangster is 1 km from the point on the shore nearest to the boat. If the spyglasses must rotate at a rate of <span class="math inline">\(\pi/4\)</span> radians per minute to track the gangster, how fast is the gangster moving? (In kilometers per minute.) <a href="http://oregonstate.edu/instruct/mth251/cq/Stage9/Practice/ratesProblems.html">Source.</a></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+## tan(theta) = x/y
+## sec^2(theta) dtheta/dt = 1/y dx/dt (y is constant)
+## dxdt = y sec^2(theta) dtheta/dt
+dthetadt = pi/4
+y0 = .4; x0 = 1.0
+theta = atan(x0/y0)
+val = y0 * sec(theta)^2 * dthetadt
+numericq(val, units="kilometers/minute")</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>A flood lamp is installed on the ground 200 feet from a vertical wall. A six foot tall man is walking towards the wall at the rate of 4 feet per second. How fast is the tip of his shadow moving down the wall when he is 50 feet from the wall? <a href="http://oregonstate.edu/instruct/mth251/cq/Stage9/Practice/ratesProblems.html">Source.</a> (As the question is written the answer should be positive.)</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+## y/200 = 6/x
+## dydt = 200 * 6 * -1/x^2 dxdt
+x0 = 200 - 50
+dxdt = 4
+val = 200 * 6 * (1/x0^2) * dxdt
+numericq(val, units="feet/second")</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>Consider the hyperbola <span class="math inline">\(y = 1/x\)</span> and think of it as a slide. A particle slides along the hyperbola so that its x-coordinate is increasing at a rate of <span class="math inline">\(f(x)\)</span> units/sec.&nbsp;If its <span class="math inline">\(y\)</span>-coordinate is decreasing at a constant rate of <span class="math inline">\(1\)</span> unit/sec, what is <span class="math inline">\(f(x)\)</span>? <a href="http://oregonstate.edu/instruct/mth251/cq/Stage9/Practice/ratesProblems.html">Source.</a></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``f(x) = 1/x``",
+"``f(x) = x^0``",
+"``f(x) = x``",
+"``f(x) = x^2``"
+]
+answ = 4
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-8" class="level6">
+<h6 class="anchored" data-anchor-id="question-8">Question</h6>
+<p>A balloon is in the shape of a sphere, fortunately, as this gives a known formula, <span class="math inline">\(V=4/3 \pi r^3\)</span>, for the volume. If the balloon is being filled with a rate of change of volume per unit time is <span class="math inline">\(2\)</span> and the radius is <span class="math inline">\(3\)</span>, what is rate of change of radius per unit time?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+r, dVdt = 3, 2
+drdt = dVdt / (4 * pi * r^2)
+numericq(drdt, units="units per unit time")</code></pre>
+</section>
+<section id="question-9" class="level6">
+<h6 class="anchored" data-anchor-id="question-9">Question</h6>
+<p>Consider the curve <span class="math inline">\(f(x) = x^2 - \log(x)\)</span>. For a given <span class="math inline">\(x\)</span>, the tangent line intersects the <span class="math inline">\(y\)</span> axis. Where?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``y = 1 - x^2 - \\log(x)``",
+"``y = 1 - x^2``",
+"``y = 1 - \\log(x)``",
+"``y = x(2x - 1/x)``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>If <span class="math inline">\(dx/dt = -1\)</span>, what is <span class="math inline">\(dy/dt\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``dy/dt = 2x + 1/x``",
+"``dy/dt = 1 - x^2 - \\log(x)``",
+"``dy/dt = -2x - 1/x``",
+"``dy/dt = 1``"
+]
+answ=1
+radioq(choices, answ)</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../derivatives/implicit_differentiation.html" class="pagination-link" aria-label="Implicit Differentiation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../derivatives/taylor_series_polynomials.html" class="pagination-link" aria-label="Taylor Polynomials and other Approximating Polynomials">
+        <span class="nav-page-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/derivatives/related_rates.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

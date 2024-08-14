@@ -1,0 +1,2407 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>22&nbsp; Derivatives – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../derivatives/numeric_derivatives.html" rel="next">
+<link href="../derivatives.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../derivatives.html">Derivatives</a></li><li class="breadcrumb-item"><a href="../derivatives/derivatives.html"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#the-slope-of-the-secant-line" id="toc-the-slope-of-the-secant-line" class="nav-link active" data-scroll-target="#the-slope-of-the-secant-line"><span class="header-section-number">22.1</span> The slope of the secant line</a></li>
+  <li><a href="#the-slope-of-the-tangent-line" id="toc-the-slope-of-the-tangent-line" class="nav-link" data-scroll-target="#the-slope-of-the-tangent-line"><span class="header-section-number">22.2</span> The slope of the tangent line</a></li>
+  <li><a href="#the-derivative" id="toc-the-derivative" class="nav-link" data-scroll-target="#the-derivative"><span class="header-section-number">22.3</span> The derivative</a>
+  <ul class="collapse">
+  <li><a href="#some-basic-derivatives" id="toc-some-basic-derivatives" class="nav-link" data-scroll-target="#some-basic-derivatives"><span class="header-section-number">22.3.1</span> Some basic derivatives</a></li>
+  </ul></li>
+  <li><a href="#rules-of-derivatives" id="toc-rules-of-derivatives" class="nav-link" data-scroll-target="#rules-of-derivatives"><span class="header-section-number">22.4</span> Rules of derivatives</a>
+  <ul class="collapse">
+  <li><a href="#power-rule" id="toc-power-rule" class="nav-link" data-scroll-target="#power-rule"><span class="header-section-number">22.4.1</span> Power rule</a></li>
+  <li><a href="#sum-rule" id="toc-sum-rule" class="nav-link" data-scroll-target="#sum-rule"><span class="header-section-number">22.4.2</span> Sum rule</a></li>
+  <li><a href="#product-rule" id="toc-product-rule" class="nav-link" data-scroll-target="#product-rule"><span class="header-section-number">22.4.3</span> Product rule</a></li>
+  <li><a href="#quotient-rule" id="toc-quotient-rule" class="nav-link" data-scroll-target="#quotient-rule"><span class="header-section-number">22.4.4</span> Quotient rule</a></li>
+  <li><a href="#chain-rule" id="toc-chain-rule" class="nav-link" data-scroll-target="#chain-rule"><span class="header-section-number">22.4.5</span> Chain rule</a></li>
+  </ul></li>
+  <li><a href="#higher-order-derivatives" id="toc-higher-order-derivatives" class="nav-link" data-scroll-target="#higher-order-derivatives"><span class="header-section-number">22.5</span> Higher-order derivatives</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">22.6</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/derivatives/derivatives.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../derivatives.html">Derivatives</a></li><li class="breadcrumb-item"><a href="../derivatives/derivatives.html"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses these add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+plotly()
+using SymPy</code></pre>
+<pre class="{julia}"><code>#| echo: false
+#| results: "hidden"
+using DataFrames
+nothing</code></pre>
+<hr>
+<p>Before defining the derivative of a function, let’s begin with two motivating examples.</p>
+<section id="example-driving" class="level5">
+<h5 class="anchored" data-anchor-id="example-driving">Example: Driving</h5>
+<p>Imagine motoring along down highway <span class="math inline">\(61\)</span> leaving Minnesota on the way to New Orleans; though lost in listening to music, still mindful of the speedometer and odometer, both prominently placed on the dashboard of the car.</p>
+<p>The speedometer reads <span class="math inline">\(60\)</span> miles per hour, what is the odometer doing? Besides recording total distance traveled, it is incrementing dutifully every hour by <span class="math inline">\(60\)</span> miles. Why? Well, the well-known formula relating distance, time and rate of travel is</p>
+<p><span class="math display">\[
+\text{distance} = \text{ rate } \times \text{ time.}
+\]</span></p>
+<p>If the rate is a constant <span class="math inline">\(60\)</span> miles/hour, then in one hour the distance traveled is <span class="math inline">\(60\)</span> miles.</p>
+<p>Of course, the odometer isn’t just incrementing once per hour, it is incrementing once every <span class="math inline">\(1/10\)</span>th of a mile. How much time does that take? Well, we would need to solve <span class="math inline">\(1/10=60 \cdot t\)</span> which means <span class="math inline">\(t=1/600\)</span> hours, better known as once every <span class="math inline">\(6\)</span> seconds.</p>
+<p>Using some mathematical notation, would give <span class="math inline">\(x(t) = v\cdot t\)</span>, where <span class="math inline">\(x\)</span> is position at time <span class="math inline">\(t\)</span>, <span class="math inline">\(v\)</span> is the <em>constant</em> velocity and <span class="math inline">\(t\)</span> the time traveled in hours. A simple graph of the first three hours of travel would show:</p>
+<pre class="{julia}"><code>#| hold: true
+position(t) = 60 * t
+plot(position, 0, 3)</code></pre>
+<p>Oh no, we hit traffic. In the next <span class="math inline">\(30\)</span> minutes we only traveled <span class="math inline">\(15\)</span> miles. We were so busy looking out for traffic, the speedometer was not checked. What would the average speed have been? Though in the <span class="math inline">\(30\)</span> minutes of stop-and-go traffic, the displayed speed may have varied, the <em>average speed</em> would simply be the change in distance over the change in time, or <span class="math inline">\(\Delta x / \Delta t\)</span>. That is</p>
+<pre class="{julia}"><code>15/(1/2)</code></pre>
+<p>Now suppose that after <span class="math inline">\(6\)</span> hours of travel the GPS in the car gives us a readout of distance traveled as a function of time. The graph looks like this:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+function position(t)
+    t &lt;= 3   ? 60*t :
+    t &lt;= 3.5 ? position(3) + 30*(t-3) :
+    t &lt;= 4   ? position(3.5) + 75 * (t-3.5) :
+    t &lt;= 4.5 ? position(4) : position(4.5) + 60*(t-4.5)
+end
+plot(position, 0, 6)</code></pre>
+<p>We can see with some effort that the slope is steady for the first three hours, is slightly less between <span class="math inline">\(3\)</span> and <span class="math inline">\(3.5\)</span> hours, then is a bit steeper for the next half hour. After that, it is flat for the about half an hour, then the slope continues on with same value as in the first <span class="math inline">\(3\)</span> hours. What does that say about our speed during our trip?</p>
+<p>Based on the graph, what was the average speed over the first three hours? Well, we traveled <span class="math inline">\(180\)</span> miles, and took <span class="math inline">\(3\)</span> hours:</p>
+<pre class="{julia}"><code>180/3</code></pre>
+<p>What about the next half hour? Squinting shows the amount traveled was <span class="math inline">\(15\)</span> miles (<span class="math inline">\(195 - 180\)</span>) and it took <span class="math inline">\(1/2\)</span> an hour:</p>
+<pre class="{julia}"><code>15/(1/2)</code></pre>
+<p>And the half hour after that? The average speed is found from the distance traveled, <span class="math inline">\(37.5\)</span> miles, divided by the time, <span class="math inline">\(1/2\)</span> hour:</p>
+<pre class="{julia}"><code>37.5 / (1/2)</code></pre>
+<p>Okay, so there was some speeding involved.</p>
+<p>The next half hour the car did not move. What was the average speed? Well the change in position was <span class="math inline">\(0\)</span>, but the time was <span class="math inline">\(1/2\)</span> hour, so the average was <span class="math inline">\(0\)</span>.</p>
+<p>Perhaps a graph of the speed is a bit more clear. We can do this based on the above:</p>
+<pre class="{julia}"><code>function speed(t)
+    0 &lt; t &lt;= 3  ? 60  :
+        t &lt;= 3.5 ? 30 :
+        t &lt;= 4   ? 75 :
+        t &lt;= 4.5 ? 0  : 60
+end
+plot(speed, 0, 6)</code></pre>
+<p>The jumps, as discussed before, are artifacts of the graphing algorithm. What is interesting, is we could have derived the graph of <code>speed</code> from that of <code>x</code> by just finding the slopes of the line segments, and we could have derived the graph of <code>x</code> from that of <code>speed</code>, just using the simple formula relating distance, rate, and time.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We were pretty loose with some key terms. There is a distinction between “speed” and “velocity”, this being the speed is the absolute value of velocity. Velocity incorporates a direction as well as a magnitude. Similarly, distance traveled and change in position are not the same thing when there is back tracking involved. The total distance traveled is computed with the speed, the change in position is computed with the velocity. When there is no change of sign, it is a bit more natural, perhaps, to use the language of speed and distance.</p>
+</div>
+</div>
+</section>
+<section id="example-galileos-ball-and-ramp-experiment" class="level5">
+<h5 class="anchored" data-anchor-id="example-galileos-ball-and-ramp-experiment">Example: Galileo’s ball and ramp experiment</h5>
+<p>One of history’s most famous experiments was performed by <a href="http://en.wikipedia.org/wiki/History_of_experiments">Galileo</a> where he rolled balls down inclined ramps, making note of distance traveled with respect to time. As Galileo had no ultra-accurate measuring device, he needed to slow movement down by controlling the angle of the ramp. With this, he could measure units of distance per units of time. (Click through to <em>Galileo and Perspective</em> <a href="http://www.mcm.edu/academic/galileo/ars/arshtml/mathofmotion1.html">Dauben</a>.)</p>
+<p>Suppose that no matter what the incline was, Galileo observed that in units of the distance traveled in the first second that the distance traveled between subsequent seconds was <span class="math inline">\(3\)</span> times, then <span class="math inline">\(5\)</span> times, then <span class="math inline">\(7\)</span> times, … This table summarizes.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+ts = [0,1,2,3,4,5]
+dxs = [0,1,3, 5, 7, 9]
+ds = [0,1,4,9,16,25]
+d = DataFrame(t=ts, delta=dxs, distance=ds)
+table(d)</code></pre>
+<p>A graph of distance versus time could be found by interpolating between the measured points:</p>
+<pre class="{julia}"><code>ts = [0,1,2,3,4, 5]
+xs = [0,1,4,9,16,25]
+plot(ts, xs)</code></pre>
+<p>The graph looks almost quadratic. What would the following questions have yielded?</p>
+<ul>
+<li>What is the average speed between <span class="math inline">\(0\)</span> and <span class="math inline">\(3\)</span>?</li>
+</ul>
+<pre class="{julia}"><code>(9-0) / (3-0)  # (xs[4] - xs[1]) / (ts[4] - ts[1])</code></pre>
+<ul>
+<li>What is the average speed between <span class="math inline">\(2\)</span> and <span class="math inline">\(3\)</span>?</li>
+</ul>
+<pre class="{julia}"><code>(9-4) / (3-2)  # (xs[4] - xs[3]) / (ts[4] - ts[3])</code></pre>
+<p>From the graph, we can tell that the slope of the line connecting <span class="math inline">\((2,4)\)</span> and <span class="math inline">\((3,9)\)</span> will be greater than that connecting <span class="math inline">\((0,0)\)</span> and <span class="math inline">\((3,9)\)</span>. In fact, given the shape of the graph (concave up), the line connecting <span class="math inline">\((0,0)\)</span> with any point will have a slope less than or equal to any of the line segments.</p>
+<p>The average speed between <span class="math inline">\(k\)</span> and <span class="math inline">\(k+1\)</span> for this graph is:</p>
+<pre class="{julia}"><code>xs[2]-xs[1], xs[3] - xs[2], xs[4] - xs[3], xs[5] - xs[4]</code></pre>
+<p>We see it increments by <span class="math inline">\(2\)</span>. The acceleration is the rate of change of speed. We see the rate of change of speed is constant, as the speed increments by <span class="math inline">\(2\)</span> each time unit.</p>
+<p>Based on this - and given Galileo’s insight - it appears the acceleration for a falling body subject to gravity will be <strong>constant</strong> and the position as a function of time will be quadratic.</p>
+</section>
+<section id="the-slope-of-the-secant-line" class="level2" data-number="22.1">
+<h2 data-number="22.1" class="anchored" data-anchor-id="the-slope-of-the-secant-line"><span class="header-section-number">22.1</span> The slope of the secant line</h2>
+<p>In the above examples, we see that the average speed is computed using the slope formula. This can be generalized for any univariate function <span class="math inline">\(f(x)\)</span>:</p>
+<blockquote class="blockquote">
+<p>The average rate of change between <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> is <span class="math inline">\((f(b) - f(a)) / (b - a)\)</span>. It is typical to express this as <span class="math inline">\(\Delta y/ \Delta x\)</span>, where <span class="math inline">\(\Delta\)</span> means “change”.</p>
+</blockquote>
+<p>Geometrically, this is the slope of the line connecting the points <span class="math inline">\((a, f(a))\)</span> and <span class="math inline">\((b, f(b))\)</span>. This line is called a <a href="http://en.wikipedia.org/wiki/Secant_line">secant</a> line, which is just a line intersecting two specified points on a curve.</p>
+<p>Rather than parameterize this problem using <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>, we let <span class="math inline">\(c\)</span> and <span class="math inline">\(c+h\)</span> represent the two values for <span class="math inline">\(x\)</span>, then the secant-line-slope formula becomes</p>
+<p><span class="math display">\[
+m = \frac{f(c+h) - f(c)}{h}.
+\]</span></p>
+</section>
+<section id="the-slope-of-the-tangent-line" class="level2" data-number="22.2">
+<h2 data-number="22.2" class="anchored" data-anchor-id="the-slope-of-the-tangent-line"><span class="header-section-number">22.2</span> The slope of the tangent line</h2>
+<p>The slope of the secant line represents the average rate of change over a given period, <span class="math inline">\(h\)</span>. What if this rate is so variable, that it makes sense to take smaller and smaller periods <span class="math inline">\(h\)</span>? In fact, what if <span class="math inline">\(h\)</span> goes to <span class="math inline">\(0\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+gr()
+function secant_line_tangent_line_graph(n)
+    f(x) = sin(x)
+    c = pi/3
+    h = 2.0^(-n) * pi/4
+    m = (f(c+h) - f(c))/h
+
+    xs = range(0, stop=pi, length=50)
+    plt = plot(f, 0, pi, legend=false, size=fig_size)
+    plot!(plt, xs, f(c) .+ cos(c)*(xs .- c), color=:orange)
+    plot!(plt, xs, f(c) .+ m*(xs .- c), color=:black)
+    scatter!(plt, [c,c+h], [f(c), f(c+h)], color=:orange, markersize=5)
+
+    plot!(plt, [c, c+h, c+h], [f(c), f(c), f(c+h)], color=:gray30)
+    annotate!(plt, [(c+h/2, f(c), text("h", :top)), (c + h + .05, (f(c) + f(c + h))/2, text("f(c+h) - f(c)", :left))])
+
+    plt
+end
+caption = L"""
+
+The slope of each secant line represents the *average* rate of change between $c$ and $c+h$. As $h$ goes towards $0$, we recover the slope of the tangent line, which represents the *instantatneous* rate of change.
+
+"""
+
+
+
+n = 5
+anim = @animate for i=0:n
+    secant_line_tangent_line_graph(i)
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<p>The graphic suggests that the slopes of the secant line converge to the slope of a “tangent” line. That is, for a given <span class="math inline">\(c\)</span>, this limit exists:</p>
+<p><span class="math display">\[
+\lim_{h \rightarrow 0} \frac{f(c+h) - f(c)}{h}.
+\]</span></p>
+<p>We will define the tangent line at <span class="math inline">\((c, f(c))\)</span> to be the line through the point with the slope from the limit above - provided that limit exists. Informally, the tangent line is the line through the point that best approximates the function.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+gr()
+function line_approx_fn_graph(n)
+    f(x) = sin(x)
+    c = pi/3
+    h = round(2.0^(-n) * pi/2, digits=2)
+    m = cos(c)
+
+    Delta = max(f(c) - f(c-h), f(min(c+h, pi/2)) - f(c))
+
+    p = plot(f, c-h, c+h, legend=false, xlims=(c-h,c+h), ylims=(f(c)-Delta,f(c)+Delta ))
+    plot!(p, x -&gt; f(c) + m*(x-c))
+    scatter!(p, [c], [f(c)])
+    p
+end
+caption = L"""
+
+The tangent line is the best linear approximation to the function at the point $(c, f(c))$. As the viewing window zooms in on $(c,f(c))$ we
+    can see how the graph and its tangent line get more similar.
+
+"""
+
+n = 6
+anim = @animate for i=1:n
+    line_approx_fn_graph(i)
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<p>The tangent line is not just a line that intersects the graph in one point, nor does it need only intersect the line in just one point.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This last point was certainly not obvious at first. <a href="http://www.maa.org/sites/default/files/0746834234133.di020795.02p0640b.pdf">Barrow</a>, who had Newton as a pupil, and was the first to sketch a proof of part of the Fundamental Theorem of Calculus, understood a tangent line to be a line that intersects a curve at only one point.</p>
+</div>
+</div>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>What is the slope of the tangent line to <span class="math inline">\(f(x) = \sin(x)\)</span> at <span class="math inline">\(c=0\)</span>?</p>
+<p>We need to compute the limit <span class="math inline">\((\sin(c+h) - \sin(c))/h\)</span> which is the limit as <span class="math inline">\(h\)</span> goes to <span class="math inline">\(0\)</span> of <span class="math inline">\(\sin(h)/h.\)</span> We know this to be <span class="math inline">\(1.\)</span></p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = sin(x)
+c = 0
+tl(x) = f(c) + 1 * (x - c)
+plot(f, -pi/2, pi/2)
+plot!(tl, -pi/2, pi/2)</code></pre>
+</section>
+</section>
+<section id="the-derivative" class="level2" data-number="22.3">
+<h2 data-number="22.3" class="anchored" data-anchor-id="the-derivative"><span class="header-section-number">22.3</span> The derivative</h2>
+<p>The limit of the slope of the secant line gives an operation: for each <span class="math inline">\(c\)</span> in the domain of <span class="math inline">\(f\)</span> there is a number (the slope of the tangent line) or it does not exist. That is, there is a derived function from <span class="math inline">\(f\)</span>. Call this function the <em>derivative</em> of <span class="math inline">\(f\)</span>.</p>
+<p>There are many notations for the derivative, mostly we use the “prime” notation:</p>
+<p><span class="math display">\[
+f'(x) = \lim_{h \rightarrow 0} \frac{f(x+h) - f(x)}{h}.
+\]</span></p>
+<p>The limit above is identical, only it uses <span class="math inline">\(x\)</span> instead of <span class="math inline">\(c\)</span> to emphasize that we are thinking of a function now, and not just a value at a point.</p>
+<p>The derivative is related to a function, but at times it is more convenient to write only the expression defining the rule of the function. In that case, we use this notation for the derivative <span class="math inline">\([\text{expression}]'\)</span>.</p>
+<section id="some-basic-derivatives" class="level3" data-number="22.3.1">
+<h3 data-number="22.3.1" class="anchored" data-anchor-id="some-basic-derivatives"><span class="header-section-number">22.3.1</span> Some basic derivatives</h3>
+<ul>
+<li><strong>The power rule</strong>. What is the derivative of the monomial <span class="math inline">\(f(x) = x^n\)</span>? We need to look at <span class="math inline">\((x+h)^n - x^n\)</span> for positive, integer-value <span class="math inline">\(n\)</span>. Let’s look at a case, <span class="math inline">\(n=5\)</span></li>
+</ul>
+<pre class="{julia}"><code>@syms x::real h::real
+n = 5
+ex = expand((x+h)^n - x^n)</code></pre>
+<p>All terms have an <code>h</code> in them, so we cancel it out:</p>
+<pre class="{julia}"><code>cancel(ex/h, h)</code></pre>
+<p>We see the lone term <code>5x^4</code> without an <span class="math inline">\(h\)</span>, so as we let <span class="math inline">\(h\)</span> go to <span class="math inline">\(0\)</span>, this will be the limit. That is, <span class="math inline">\(f'(x) = 5x^4\)</span>.</p>
+<p>For integer-valued, positive, <span class="math inline">\(n\)</span>, the binomial theorem gives an expansion <span class="math inline">\((x+h)^n = x^n + nx^{n-1}\cdot h^1 + n\cdot(n-1)x^{n-2}\cdot h^2 + \cdots\)</span>. Subtracting <span class="math inline">\(x^n\)</span> then dividing by <span class="math inline">\(h\)</span> leaves just the term <span class="math inline">\(nx^{n-1}\)</span> without a power of <span class="math inline">\(h\)</span>, so the limit, in general, is just this term. That is:</p>
+<p><span class="math display">\[
+[x^n]' = nx^{n-1}.
+\]</span></p>
+<p>It isn’t a special case, but when <span class="math inline">\(n=0\)</span>, we also have the above formula applies, as <span class="math inline">\(x^0\)</span> is the constant <span class="math inline">\(1\)</span>, and all constant functions will have a derivative of <span class="math inline">\(0\)</span> at all <span class="math inline">\(x\)</span>. We will see that in general, the power rule applies for any <span class="math inline">\(n\)</span> where <span class="math inline">\(x^n\)</span> is defined.</p>
+<ul>
+<li>What is the derivative of <span class="math inline">\(f(x) = \sin(x)\)</span>? We know that <span class="math inline">\(f'(0)= 1\)</span> by the earlier example with <span class="math inline">\((\sin(0+h)-\sin(0))/h = \sin(h)/h\)</span>, here we solve in general.</li>
+</ul>
+<p>We need to consider the difference <span class="math inline">\(\sin(x+h) - \sin(x)\)</span>:</p>
+<pre class="{julia}"><code>sympy.expand_trig(sin(x+h) - sin(x))  # expand_trig is not exposed in `SymPy`</code></pre>
+<p>That used the formula <span class="math inline">\(\sin(x+h) = \sin(x)\cos(h) + \sin(h)\cos(x)\)</span>.</p>
+<p>We could then rearrange the secant line slope formula to become:</p>
+<p><span class="math display">\[
+\cos(x) \cdot \frac{\sin(h)}{h} + \sin(x) \cdot \frac{\cos(h) - 1}{h}
+\]</span></p>
+<p>and take a limit. If the answer isn’t clear, we can let <code>SymPy</code> do this work:</p>
+<pre class="{julia}"><code>limit((sin(x+h) - sin(x))/ h, h =&gt; 0)</code></pre>
+<p>From the formula <span class="math inline">\([\sin(x)]' = \cos(x)\)</span> we can easily get the <em>slope</em> of the tangent line to <span class="math inline">\(f(x) = \sin(x)\)</span> at <span class="math inline">\(x=0\)</span> by simply evaluating <span class="math inline">\(\cos(0) = 1\)</span>.</p>
+<ul>
+<li>Let’s see what the derivative of <span class="math inline">\(\ln(x) = \log(x)\)</span> is (using base <span class="math inline">\(e\)</span> for <span class="math inline">\(\log\)</span> unless otherwise indicated). We have</li>
+</ul>
+<p><span class="math display">\[
+\frac{\log(x+h) - \log(x)}{h} = \frac{1}{h}\log(\frac{x+h}{x}) = \log((1+h/x)^{1/h}).
+\]</span></p>
+<p>As noted earlier, Cauchy saw the limit as <span class="math inline">\(u\)</span> goes to <span class="math inline">\(0\)</span> of <span class="math inline">\(f(u) = (1 + u)^{1/u}\)</span> is <span class="math inline">\(e\)</span>. Re-expressing the above we can get <span class="math inline">\(1/h \cdot \log(f(h/x))\)</span>. The limit as <span class="math inline">\(h\)</span> goes to <span class="math inline">\(0\)</span> of this is found from the composition rules for limits: as <span class="math inline">\(\lim_{h \rightarrow 0} f(h/x) = e^{1/x}\)</span>, and since <span class="math inline">\(\log(x)\)</span> is continuous at <span class="math inline">\(e^{1/x}\)</span> we get this expression has a limit of <span class="math inline">\(1/x\)</span>.</p>
+<p>We verify through:</p>
+<pre class="{julia}"><code>limit((log(x+h) - log(x))/h, h =&gt; 0)</code></pre>
+<ul>
+<li>The derivative of <span class="math inline">\(f(x) = e^x\)</span> can also be done from a limit. We have</li>
+</ul>
+<p><span class="math display">\[
+\frac{e^{x+h} - e^x}{h} = \frac{e^x \cdot(e^h -1)}{h}.
+\]</span></p>
+<p>Earlier, we saw that <span class="math inline">\(\lim_{h \rightarrow 0}(e^h - 1)/h = 1\)</span>. With this, we get <span class="math inline">\([e^x]' = e^x\)</span>, that is it is a function satisfying <span class="math inline">\(f'=f\)</span>.</p>
+<hr>
+<p>There are several different <a href="http://en.wikipedia.org/wiki/Notation_for_differentiation">notations</a> for derivatives. Some are historical, some just add flexibility. We use the prime notation of Lagrange: <span class="math inline">\(f'(x)\)</span>, <span class="math inline">\(u'\)</span> and <span class="math inline">\([\text{expr}]'\)</span>, where the first emphasizes that the derivative is a function with a value at <span class="math inline">\(x\)</span>, the second emphasizes the derivative operates on functions, the last emphasizes that we are taking the derivative of some expression.</p>
+<p>There are many other notations:</p>
+<ul>
+<li>The Leibniz notation uses the infinitesimals: <span class="math inline">\(dy/dx\)</span> to relate to <span class="math inline">\(\Delta y/\Delta x\)</span>. This notation is very common, and especially useful when more than one variable is involved. <code>SymPy</code> uses Leibniz notation in some of its output, expressing somethings such as:</li>
+</ul>
+<p><span class="math display">\[
+f'(x) = \frac{d}{d\xi}(f(\xi)) \big|_{\xi=x}.
+\]</span></p>
+<p>The notation - <span class="math inline">\(\big|\)</span> - on the right-hand side separates the tasks of finding the derivative and evaluating the derivative at a specific value.</p>
+<ul>
+<li>Euler used <code>D</code> for the operator <code>D(f)</code>. This was initially used by <a href="http://jeff560.tripod.com/calculus.html">Argobast</a>. The notation <code>D(f)(c)</code> would be needed to evaluate the derivative at a point.</li>
+<li>Newton used a “dot” above the variable, <span class="math inline">\(\dot{x}(t)\)</span>, which is still widely used in physics to indicate a derivative in time. This indicates first taking the derivative and then plugging in <span class="math inline">\(t\)</span>.</li>
+<li>The notation <span class="math inline">\([expr]'(c)\)</span> or <span class="math inline">\([expr]'\big|_{x=c}\)</span>would similarly mean, take the derivative of the expression and <strong>then</strong> evaluate at <span class="math inline">\(c\)</span>.</li>
+</ul>
+</section>
+</section>
+<section id="rules-of-derivatives" class="level2" data-number="22.4">
+<h2 data-number="22.4" class="anchored" data-anchor-id="rules-of-derivatives"><span class="header-section-number">22.4</span> Rules of derivatives</h2>
+<p>We could proceed in a similar manner – using limits to find other derivatives, but let’s not. If we have a function <span class="math inline">\(f(x) = x^5 \sin(x)\)</span>, it would be nice to leverage our previous work on the derivatives of <span class="math inline">\(f(x) =x^5\)</span> and <span class="math inline">\(g(x) = \sin(x)\)</span>, rather than derive an answer from scratch.</p>
+<p>As with limits and continuity, it proves very useful to consider rules that make the process of finding derivatives of combinations of functions a matter of combining derivatives of the individual functions in some manner.</p>
+<p>We already have one such rule:</p>
+<section id="power-rule" class="level3" data-number="22.4.1">
+<h3 data-number="22.4.1" class="anchored" data-anchor-id="power-rule"><span class="header-section-number">22.4.1</span> Power rule</h3>
+<p>We have seen for integer <span class="math inline">\(n \geq 0\)</span> the formula:</p>
+<p><span class="math display">\[
+[x^n]' = n x^{n-1}.
+\]</span></p>
+<p>This will be shown true for all real exponents.</p>
+</section>
+<section id="sum-rule" class="level3" data-number="22.4.2">
+<h3 data-number="22.4.2" class="anchored" data-anchor-id="sum-rule"><span class="header-section-number">22.4.2</span> Sum rule</h3>
+<p>Let’s consider <span class="math inline">\(k(x) = a\cdot f(x) + b\cdot g(x)\)</span>, what is its derivative? That is, in terms of <span class="math inline">\(f\)</span>, <span class="math inline">\(g\)</span> and their derivatives, can we express <span class="math inline">\(k'(x)\)</span>?</p>
+<p>We can rearrange <span class="math inline">\((k(x+h) - k(x))\)</span> as follows:</p>
+<p><span class="math display">\[
+\begin{align*}
+(a\cdot f(x+h) + b\cdot g(x+h)) - (a\cdot f(x) + b \cdot g(x)) &amp;=\\
+\quad a\cdot (f(x+h) - f(x)) + b \cdot (g(x+h) - g(x)).         &amp;
+\end{align*}
+\]</span></p>
+<p>Dividing by <span class="math inline">\(h\)</span>, we see that this becomes</p>
+<p><span class="math display">\[
+a\cdot \frac{f(x+h) - f(x)}{h} + b \cdot \frac{g(x+h) - g(x)}{h} \rightarrow a\cdot f'(x) + b\cdot g'(x).
+\]</span></p>
+<p>That is <span class="math inline">\([a\cdot f(x) + b \cdot g(x)]' = a\cdot f'(x) + b\cdot g'(x)\)</span>.</p>
+<p>This holds two rules: the derivative of a constant times a function is the constant times the derivative of the function; and the derivative of a sum of functions is the sum of the derivative of the functions.</p>
+<p>This example shows a useful template:</p>
+<p><span class="math display">\[\begin{align*}
+[2x^2 - \frac{x}{3} + 3e^x]' &amp; = 2[\square]' - \frac{[\square]'}{3} + 3[\square]'\\
+&amp;= 2[x^2]' - \frac{[x]'}{3} + 3[e^x]'\\
+&amp;= 2(2x) - \frac{1}{3} + 3e^x\\
+&amp;= 4x - \frac{1}{3} + 3e^x
+\end{align*}\]</span></p>
+</section>
+<section id="product-rule" class="level3" data-number="22.4.3">
+<h3 data-number="22.4.3" class="anchored" data-anchor-id="product-rule"><span class="header-section-number">22.4.3</span> Product rule</h3>
+<p>Other rules can be similarly derived. <code>SymPy</code> can give us them as well. Here we define two symbolic functions <code>u</code> and <code>v</code> and let <code>SymPy</code> derive a formula for the derivative of a product of functions:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms u() v()
+f(x) = u(x) * v(x)
+limit((f(x+h) - f(x))/h, h =&gt; 0)</code></pre>
+<p>The output uses the Leibniz notation to represent that the derivative of <span class="math inline">\(u(x) \cdot v(x)\)</span> is the <span class="math inline">\(u\)</span> times the derivative of <span class="math inline">\(v\)</span> evaluated at <span class="math inline">\(x\)</span> plus <span class="math inline">\(v\)</span> times the derivative of <span class="math inline">\(u\)</span> evaluated at <span class="math inline">\(x\)</span>. A common shorthand is <span class="math inline">\([uv]' = u'v + uv'\)</span>.</p>
+<p>This example shows a useful template for the product rule:</p>
+<p><span class="math display">\[\begin{align*}
+[(x^2+1)\cdot e^x]' &amp;= [\square]' \cdot (\square) + (\square) \cdot [\square]'\\
+&amp;= [x^2 + 1]' \cdot (e^x) + (x^2+1) \cdot [e^x]'\\
+&amp;= (2x)\cdot e^x + (x^2+1)\cdot e^x
+\end{align*}\]</span></p>
+</section>
+<section id="quotient-rule" class="level3" data-number="22.4.4">
+<h3 data-number="22.4.4" class="anchored" data-anchor-id="quotient-rule"><span class="header-section-number">22.4.4</span> Quotient rule</h3>
+<p>The derivative of <span class="math inline">\(f(x) = u(x)/v(x)\)</span> - a ratio of functions - can be similarly computed. The result will be <span class="math inline">\([u/v]' = (u'v - uv')/v^2\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms u() v()
+f(x) = u(x) / v(x)
+limit((f(x+h) - f(x))/h, h =&gt; 0)</code></pre>
+<p>This example shows a useful template for the quotient rule:</p>
+<p><span class="math display">\[\begin{align*}
+[\frac{x^2+1}{e^x}]' &amp;= \frac{[\square]' \cdot (\square) - (\square) \cdot [\square]'}{(\square)^2}\\
+&amp;= \frac{[x^2 + 1]' \cdot (e^x) - (x^2+1) \cdot [e^x]'}{(e^x)^2}\\
+&amp;= \frac{(2x)\cdot e^x - (x^2+1)\cdot e^x}{e^{2x}}
+\end{align*}\]</span></p>
+<section id="examples" class="level5">
+<h5 class="anchored" data-anchor-id="examples">Examples</h5>
+<p>Compute the derivative of <span class="math inline">\(f(x) = (1 + \sin(x)) + (1 + x^2)\)</span>.</p>
+<p>As written we can identify <span class="math inline">\(f(x) = u(x) + v(x)\)</span> with <span class="math inline">\(u=(1 + \sin(x))\)</span>, <span class="math inline">\(v=(1 + x^2)\)</span>. The sum rule immediately applies to give:</p>
+<p><span class="math display">\[
+f'(x) = (\cos(x)) + (2x).
+\]</span></p>
+<hr>
+<p>Compute the derivative of <span class="math inline">\(f(x) = (1 + \sin(x)) \cdot (1 + x^2)\)</span>.</p>
+<p>The same <span class="math inline">\(u\)</span> and <span class="math inline">\(v\)</span> my be identified. The product rule readily applies to yield:</p>
+<p><span class="math display">\[
+f'(x) = u'v + uv' = \cos(x) \cdot (1 + x^2) + (1 + \sin(x)) \cdot (2x).
+\]</span></p>
+<hr>
+<p>Compute the derivative of <span class="math inline">\(f(x) = (1 + \sin(x)) / (1 + x^2)\)</span>.</p>
+<p>The same <span class="math inline">\(u\)</span> and <span class="math inline">\(v\)</span> my be identified. The quotient rule readily applies to yield:</p>
+<p><span class="math display">\[
+f'(x) = \frac{u'v - uv'}{v^2} = \frac{\cos(x) \cdot (1 + x^2) - (1 + \sin(x)) \cdot (2x)}{(1+x^2)^2}.
+\]</span></p>
+<hr>
+<p>Compute the derivative of <span class="math inline">\(f(x) = (x-1) \cdot (x-2)\)</span>.</p>
+<p>This can be done using the product rule <em>or</em> by expanding the polynomial and using the power and sum rule. As this polynomial is easy to expand, we do both and compare:</p>
+<p><span class="math display">\[
+[(x-1)(x-2)]' = [x^2 - 3x + 2]' = 2x -3.
+\]</span></p>
+<p>Whereas the product rule gives:</p>
+<p><span class="math display">\[
+[(x-1)(x-2)]' = 1\cdot (x-2) + (x-1)\cdot 1 = 2x - 3.
+\]</span></p>
+<hr>
+<p>Find the derivative of <span class="math inline">\(f(x) = (x-1)(x-2)(x-3)(x-4)(x-5)\)</span>.</p>
+<p>We could expand this, as above, but without computer assistance the potential for error is high. Instead we will use the product rule on the product of <span class="math inline">\(5\)</span> terms.</p>
+<p>Let’s first treat the case of <span class="math inline">\(3\)</span> products:</p>
+<p><span class="math display">\[
+\begin{align*}
+[u\cdot v\cdot w]' &amp;=[ u \cdot (vw)]'\\
+&amp;= u' (vw) + u [vw]'\\
+&amp;= u'(vw) + u[v' w + v w'] \\
+&amp;=u' vw + u v' w + uvw'.
+\end{align*}
+\]</span></p>
+<p>This pattern generalizes, clearly, to:</p>
+<p><span class="math display">\[
+[f_1\cdot f_2 \cdots f_n]' = f_1' f_2 \cdots f_n + f_1 \cdot f_2' \cdot f_3 \cdots f_n + \dots +
+f_1 \cdots f_{n-1} \cdot f_n'.
+\]</span></p>
+<p>There are <span class="math inline">\(n\)</span> terms, each where one of the <span class="math inline">\(f_i\)</span>s have a derivative. Were we to multiply top and bottom by <span class="math inline">\(f_i\)</span>, we would get each term looks like: <span class="math inline">\(f \cdot f_i'/f_i\)</span>.</p>
+<p>With this, we can proceed. Each term <span class="math inline">\(x-i\)</span> has derivative <span class="math inline">\(1\)</span>, so the answer to <span class="math inline">\(f'(x)\)</span>, with <span class="math inline">\(f\)</span> as above, is</p>
+<p><span class="math display">\[\begin{align*}
+f'(x) &amp;= f(x)/(x-1) + f(x)/(x-2) + f(x)/(x-3)\\
+      &amp;+ f(x)/(x-4) + f(x)/(x-5),
+\end{align*}\]</span></p>
+<p>That is</p>
+<p><span class="math display">\[\begin{align*}
+f'(x) &amp;= (x-2)(x-3)(x-4)(x-5) + (x-1)(x-3)(x-4)(x-5)\\
+      &amp;+ (x-1)(x-2)(x-4)(x-5) + (x-1)(x-2)(x-3)(x-5) \\
+      &amp;+ (x-1)(x-2)(x-3)(x-4).
+\end{align*}\]</span></p>
+<hr>
+<p>Find the derivative of <span class="math inline">\(x\sin(x)\)</span> evaluated at <span class="math inline">\(\pi\)</span>.</p>
+<p><span class="math display">\[
+[x\sin(x)]'\big|_{x=\pi} = (1\sin(x) + x\cos(x))\big|_{x=\pi} = (\sin(\pi) + \pi \cdot \cos(\pi)) = -\pi.
+\]</span></p>
+</section>
+</section>
+<section id="chain-rule" class="level3" data-number="22.4.5">
+<h3 data-number="22.4.5" class="anchored" data-anchor-id="chain-rule"><span class="header-section-number">22.4.5</span> Chain rule</h3>
+<p>Finally, the derivative of a composition of functions can be computed using pieces of each function. This gives a rule called the <em>chain rule</em>. Before deriving, let’s give a slight motivation through an example.</p>
+<p>Consider the output of a factory for some widget. It depends on two steps: an initial manufacturing step and a finishing step. The number of employees is important in how much is initially manufactured. Suppose <span class="math inline">\(x\)</span> is the number of employees and <span class="math inline">\(g(x)\)</span> is the amount initially manufactured. Adding more employees increases the amount made by the made-up rule <span class="math inline">\(g(x) = \sqrt{x}\)</span>. The finishing step depends on how much is made by the employees. If <span class="math inline">\(y\)</span> is the amount made, then <span class="math inline">\(f(y)\)</span> is the number of widgets finished. Suppose for some reason that <span class="math inline">\(f(y) = y^2.\)</span></p>
+<p>How many widgets are made as a function of employees? The composition <span class="math inline">\(u(x) = f(g(x))\)</span> would provide that. Changes in the initial manufacturing step lead to changes in how much is initially made; changes in the initial amount made leads to changes in the finished products. Each change contributes to the overall change.</p>
+<p>What is the effect of adding employees on the rate of output of widgets? In this specific case we know the answer, as <span class="math inline">\((f \circ g)(x) = x\)</span>, so the answer is just the rate is <span class="math inline">\(1\)</span>.</p>
+<p>In general, we want to express <span class="math inline">\(\Delta f / \Delta x\)</span> in a form so that we can take a limit.</p>
+<p>But what do we know? We know <span class="math inline">\(\Delta g / \Delta x\)</span> and <span class="math inline">\(\Delta f/\Delta y\)</span>. Using <span class="math inline">\(y=g(x)\)</span>, this suggests that we might have luck with the right side of this equation:</p>
+<p><span class="math display">\[
+\frac{\Delta f}{\Delta x} = \frac{\Delta f}{\Delta y} \cdot \frac{\Delta y}{\Delta x}.
+\]</span></p>
+<p>Interpreting this, we get the <em>average</em> rate of change in the composition can be thought of as a product: The <em>average</em> rate of change of the initial step (<span class="math inline">\(\Delta y/ \Delta x\)</span>) times the <em>average</em> rate of the change of the second step evaluated not at <span class="math inline">\(x\)</span>, but at <span class="math inline">\(y\)</span>, <span class="math inline">\(\Delta f/ \Delta y\)</span>.</p>
+<p>Re-expressing using derivative notation with <span class="math inline">\(h\)</span> would be:</p>
+<p><span class="math display">\[
+\frac{f(g(x+h)) - f(g(x))}{h} = \frac{f(g(x+h)) - f(g(x))}{g(x+h) - g(x)} \cdot \frac{g(x+h) - g(x)}{h}.
+\]</span></p>
+<p>The left hand side will converge to the derivative of <span class="math inline">\(u(x)\)</span> or <span class="math inline">\([f(g(x))]'\)</span>.</p>
+<p>The right most part of the right side would have a limit <span class="math inline">\(g'(x)\)</span>, were we to let <span class="math inline">\(h\)</span> go to <span class="math inline">\(0\)</span>.</p>
+<p>It isn’t obvious, but the left part of the right side has the limit <span class="math inline">\(f'(g(x))\)</span>. This would be clear if <em>only</em> <span class="math inline">\(g(x+h) = g(x) + h\)</span>, for then the expression would be exactly the limit expression with <span class="math inline">\(c=g(x)\)</span>. But, alas, except to some hopeful students and some special cases, it is definitely not the case in general that <span class="math inline">\(g(x+h) = g(x) + h\)</span> - that right parentheses actually means something. However, it is <em>nearly</em> the case that <span class="math inline">\(g(x+h) = g(x) + kh\)</span> for some <span class="math inline">\(k\)</span> and this can be used to formulate a proof (one of the two detailed <a href="http://en.wikipedia.org/wiki/Chain_rule#Proofs">here</a> and <a href="http://kruel.co/math/chainrule.pdf">here</a>).</p>
+<p>Combined, we would end up with:</p>
+<blockquote class="blockquote">
+<p><em>The chain rule</em>: <span class="math inline">\([f(g(x))]' = f'(g(x)) \cdot g'(x)\)</span>. That is the derivative of the outer function evaluated at the inner function times the derivative of the inner function.</p>
+</blockquote>
+<p>To see that this works in our specific case, we assume the general power rule that <span class="math inline">\([x^n]' = n x^{n-1}\)</span> to get:</p>
+<p><span class="math display">\[\begin{align*}
+f(x) &amp;= x^2 &amp; g(x) &amp;= \sqrt{x}\\
+f'(\square) &amp;= 2(\square) &amp; g'(x) &amp;= \frac{1}{2}x^{-1/2}
+\end{align*}\]</span></p>
+<p>We use <span class="math inline">\(\square\)</span> for the argument of <code>f'</code> to emphasize that <span class="math inline">\(g(x)\)</span> is the needed value, not just <span class="math inline">\(x\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+[(\sqrt{x})^2]' &amp;= [f(g(x)]'\\
+&amp;= f'(g(x)) \cdot g'(x) \\
+&amp;= 2(\sqrt{x}) \cdot \frac{1}{2}x^{-1/2}\\
+&amp;= \frac{2\sqrt{x}}{2\sqrt{x}}\\
+&amp;=1
+\end{align*}\]</span></p>
+<p>This is the same as the derivative of <span class="math inline">\(x\)</span> found by first evaluating the composition. For this problem, the chain rule is not necessary, but typically it is a needed rule to fully differentiate a function.</p>
+<section id="examples-1" class="level5">
+<h5 class="anchored" data-anchor-id="examples-1">Examples</h5>
+<p>Find the derivative of <span class="math inline">\(f(x) = \sqrt{1 - x^2}\)</span>. We identify the composition of <span class="math inline">\(\sqrt{x}\)</span> and <span class="math inline">\((1-x^2)\)</span>. We set the functions and their derivatives into a pattern to emphasize the pieces in the chain-rule formula:</p>
+<p><span class="math display">\[\begin{align*}
+f(x) &amp;=\sqrt{x} = x^{1/2}  &amp; g(x) &amp;= 1 - x^2     \\
+f'(\square) &amp;=(1/2)(\square)^{-1/2}  &amp; g'(x) &amp;= -2x
+\end{align*}\]</span></p>
+<p>Then:</p>
+<p><span class="math display">\[
+[f(g(x))]' = (1/2)(1-x^2)^{-1/2} \cdot (-2x).
+\]</span></p>
+<hr>
+<p>Find the derivative of <span class="math inline">\(\log(2 + \sin(x))\)</span>. This is a composition <span class="math inline">\(\log(x)\)</span> – with derivative <span class="math inline">\(1/x\)</span> and <span class="math inline">\(2 + \sin(x)\)</span> – with derivative <span class="math inline">\(\cos(x)\)</span>. We get <span class="math inline">\((1/(2 + \sin(x))) \cos(x)\)</span>.</p>
+<p>In general,</p>
+<p><span class="math display">\[
+[\log(f(x))]' = \frac{f'(x)}{f(x)}.
+\]</span></p>
+<hr>
+<p>Find the derivative of <span class="math inline">\(e^{f(x)}\)</span>. The inner function has derivative <span class="math inline">\(f'(x)\)</span>, the outer function has derivative <span class="math inline">\(e^x\)</span> (the same as the outer function itself). We get for a derivative</p>
+<p><span class="math display">\[
+[e^{f(x)}]' = e^{f(x)} \cdot f'(x).
+\]</span></p>
+<p>This is a useful rule to remember for expressions involving exponentials.</p>
+<hr>
+<p>Find the derivative of <span class="math inline">\(\sin(x)\cos(2x)\)</span> at <span class="math inline">\(x=\pi\)</span>.</p>
+<p><span class="math display">\[\begin{align*}
+[\sin(x)\cos(2x)]'\big|_{x=\pi} &amp;=(\cos(x)\cos(2x) + \sin(x)(-\sin(2x)\cdot 2))\big|_{x=\pi} \\
+&amp; =((-1)(1) + (0)(-0)(2)) = -1.
+\end{align*}\]</span></p>
+</section>
+<section id="proof-of-the-chain-rule" class="level5">
+<h5 class="anchored" data-anchor-id="proof-of-the-chain-rule">Proof of the Chain Rule</h5>
+<p>A function is <em>differentiable</em> at <span class="math inline">\(a\)</span> if the following limit exists <span class="math inline">\(\lim_{h \rightarrow 0}(f(a+h)-f(a))/h\)</span>. This is reexpressed as: <span class="math inline">\(f(a+h) - f(a) - f'(a)h = \epsilon_f(h) h\)</span> where as <span class="math inline">\(h\rightarrow 0\)</span>, <span class="math inline">\(\epsilon_f(h) \rightarrow 0\)</span>.</p>
+<p>With that in mind, we have:</p>
+<p><span class="math display">\[
+g(a+h) = g(a) + g'(a)h + \epsilon_g(h) h = g(a) + h',
+\]</span></p>
+<p>Where <span class="math inline">\(h' = (g'(a) + \epsilon_g(h))h \rightarrow 0\)</span> as <span class="math inline">\(h \rightarrow 0\)</span> will be used to simplify the following:</p>
+<p><span class="math display">\[\begin{align*}
+f(g(a+h)) - f(g(a)) &amp;=
+f(g(a) + g'(a)h + \epsilon_g(h)h) - f(g(a)) \\
+&amp;= f(g(a)) + f'(g(a)) (g'(a)h + \epsilon_g(h)h) + \epsilon_f(h')(h') - f(g(a))\\
+&amp;= f'(g(a)) g'(a)h  + f'(g(a))(\epsilon_g(h)h) + \epsilon_f(h')(h').
+\end{align*}\]</span></p>
+<p>Rearranging:</p>
+<p><span class="math display">\[\begin{align*}
+f(g(a+h)) &amp;- f(g(a)) - f'(g(a)) g'(a) h\\
+&amp;= f'(g(a))\epsilon_g(h)h + \epsilon_f(h')(h')\\
+&amp;=(f'(g(a)) \epsilon_g(h)  + \epsilon_f(h') (g'(a) + \epsilon_g(h)))h \\
+&amp;=\epsilon(h)h,
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(\epsilon(h)\)</span> combines the above terms which go to zero as <span class="math inline">\(h\rightarrow 0\)</span> into one. This is the alternative definition of the derivative, showing <span class="math inline">\((f\circ g)'(a) = f'(g(a)) g'(a)\)</span> when <span class="math inline">\(g\)</span> is differentiable at <span class="math inline">\(a\)</span> and <span class="math inline">\(f\)</span> is differentiable at <span class="math inline">\(g(a)\)</span>.</p>
+</section>
+<section id="the-chain-rule" class="level5">
+<h5 class="anchored" data-anchor-id="the-chain-rule">The “chain” rule</h5>
+<p>The chain rule name could also be simply the “composition rule,” as that is the operation the rule works for. However, in practice, there are usually <em>multiple</em> compositions, and the “chain” rule is used to chain together the different pieces. To get a sense, consider a triple composition <span class="math inline">\(u(v(w(x)))\)</span>. This will have derivative:</p>
+<p><span class="math display">\[\begin{align*}
+[u(v(w(x)))]' &amp;= u'(v(w(x))) \cdot [v(w(x))]' \\
+&amp;=  u'(v(w(x))) \cdot v'(w(x)) \cdot w'(x)
+\end{align*}\]</span></p>
+<p>The answer can be viewed as a repeated peeling off of the outer function, a view with immediate application to many compositions. To see that in action with an expression, consider this derivative problem, shown in steps:</p>
+<p><span class="math display">\[\begin{align*}
+[\sin(e^{\cos(x^2-x)})]'
+&amp;= \cos(e^{\cos(x^2-x)}) \cdot [e^{\cos(x^2-x)}]'\\
+&amp;= \cos(e^{\cos(x^2-x)}) \cdot e^{\cos(x^2-x)} \cdot [\cos(x^2-x)]'\\
+&amp;= \cos(e^{\cos(x^2-x)}) \cdot e^{\cos(x^2-x)} \cdot (-\sin(x^2-x)) \cdot [x^2-x]'\\
+&amp;= \cos(e^{\cos(x^2-x)}) \cdot e^{\cos(x^2-x)} \cdot (-\sin(x^2-x)) \cdot (2x-1)\\
+\end{align*}\]</span></p>
+</section>
+<section id="more-examples-of-differentiation" class="level5">
+<h5 class="anchored" data-anchor-id="more-examples-of-differentiation">More examples of differentiation</h5>
+<p>Find the derivative of <span class="math inline">\(x^5 \cdot \sin(x)\)</span>.</p>
+<p>This is a product of functions, using <span class="math inline">\([u\cdot v]' = u'v + uv'\)</span> we get:</p>
+<p><span class="math display">\[
+5x^4 \cdot \sin(x) + x^5 \cdot \cos(x)
+\]</span></p>
+<hr>
+<p>Find the derivative of <span class="math inline">\(x^5 / \sin(x)\)</span>.</p>
+<p>This is a quotient of functions. Using <span class="math inline">\([u/v]' = (u'v - uv')/v^2\)</span> we get</p>
+<p><span class="math display">\[
+(5x^4 \cdot \sin(x) - x^5 \cdot \cos(x)) / (\sin(x))^2.
+\]</span></p>
+<hr>
+<p>Find the derivative of <span class="math inline">\(\sin(x^5)\)</span>. This is a composition of functions <span class="math inline">\(u(v(x))\)</span> with <span class="math inline">\(v(x) = x^5\)</span>. The chain rule says find the derivative of <span class="math inline">\(u\)</span> (<span class="math inline">\(\cos(x)\)</span>) and evaluate at <span class="math inline">\(v(x)\)</span> (<span class="math inline">\(\cos(x^5)\)</span>) then multiply by the derivative of <span class="math inline">\(v\)</span>:</p>
+<p><span class="math display">\[
+\cos(x^5) \cdot 5x^4.
+\]</span></p>
+<hr>
+<p>Similarly, but differently, find the derivative of <span class="math inline">\(\sin(x)^5\)</span>. Now <span class="math inline">\(v(x) = \sin(x)\)</span>, so the derivative of <span class="math inline">\(u(x)\)</span> (<span class="math inline">\(5x^4\)</span>) evaluated at <span class="math inline">\(v(x)\)</span> is <span class="math inline">\(5(\sin(x))^4\)</span> so multiplying by <span class="math inline">\(v'\)</span> gives:</p>
+<p><span class="math display">\[
+5(\sin(x))^4 \cdot \cos(x)
+\]</span></p>
+<hr>
+<p>We can verify these with <code>SymPy</code>. Rather than take a limit, we will use <code>SymPy</code>’s <code>diff</code> function to compute derivatives.</p>
+<pre class="{julia}"><code>diff(x^5 * sin(x))</code></pre>
+<pre class="{julia}"><code>diff(x^5/sin(x))</code></pre>
+<pre class="{julia}"><code>diff(sin(x^5))</code></pre>
+<p>and finally,</p>
+<pre class="{julia}"><code>diff(sin(x)^5)</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <code>diff</code> function can be called as <code>diff(ex)</code> when there is just one free variable, as in the above examples; as <code>diff(ex, var)</code> when there are parameters in the expression.</p>
+</div>
+</div>
+<hr>
+<p>The general product rule: For any <span class="math inline">\(n\)</span> - not just integer values - we can re-express <span class="math inline">\(x^n\)</span> using <span class="math inline">\(e\)</span>: <span class="math inline">\(x^n = e^{n \log(x)}\)</span>. Now the chain rule can be applied:</p>
+<p><span class="math display">\[
+[x^n]' = [e^{n\log(x)}]' = e^{n\log(x)} \cdot (n \frac{1}{x}) = n x^n \cdot \frac{1}{x} = n x^{n-1}.
+\]</span></p>
+<hr>
+<p>Find the derivative of <span class="math inline">\(f(x) = x^3 (1-x)^2\)</span> using either the power rule or the sum rule.</p>
+<p>The power rule expresses <span class="math inline">\(f=u\cdot v\)</span>. With <span class="math inline">\(u(x)=x^3\)</span> and <span class="math inline">\(v(x)=(1-x)^2\)</span> we get:</p>
+<p><span class="math display">\[
+u'(x) = 3x^2, \quad v'(x) = 2 \cdot (1-x)^1 \cdot (-1),
+\]</span></p>
+<p>the last by the chain rule. Combining with <span class="math inline">\(u' v + u v'\)</span> we get: <span class="math inline">\(f'(x) = (3x^2)\cdot (1-x)^2 + x^3 \cdot (-2) \cdot (1-x)\)</span>.</p>
+<p>Otherwise, the polynomial can be expanded to give <span class="math inline">\(f(x)=x^5-2x^4+x^3\)</span> which has derivative <span class="math inline">\(f'(x) = 5x^4 - 8x^3 + 3x^2\)</span>.</p>
+<hr>
+<p>Find the derivative of <span class="math inline">\(f(x) = x \cdot e^{-x^2}\)</span>.</p>
+<p>Using the product rule and then the chain rule, we have:</p>
+<p><span class="math display">\[\begin{align*}
+f'(x) &amp;= [x \cdot e^{-x^2}]'\\
+&amp;= [x]' \cdot e^{-x^2} + x \cdot [e^{-x^2}]'\\
+&amp;= 1 \cdot e^{-x^2} + x \cdot (e^{-x^2}) \cdot [-x^2]'\\
+&amp;= e^{-x^2} + x \cdot e^{-x^2} \cdot (-2x)\\
+&amp;= e^{-x^2} (1 - 2x^2).
+\end{align*}\]</span></p>
+<hr>
+<p>Find the derivative of <span class="math inline">\(f(x) = e^{-ax} \cdot \sin(x)\)</span>.</p>
+<p>Using the product rule and then the chain rule, we have:</p>
+<p><span class="math display">\[\begin{align*}
+f'(x) &amp;= [e^{-ax} \cdot \sin(x)]'\\
+&amp;= [e^{-ax}]' \cdot \sin(x) + e^{-ax} \cdot [\sin(x)]'\\
+&amp;= e^{-ax} \cdot [-ax]' \cdot \sin(x) + e^{-ax} \cdot \cos(x)\\
+&amp;= e^{-ax} \cdot (-a)   \cdot \sin(x) + e^{-ax} \cos(x)\\
+&amp;= e^{-ax}(\cos(x) - a\sin(x)).
+\end{align*}\]</span></p>
+<hr>
+<p>Find the derivative of <span class="math inline">\(e^{-x^2/2}\)</span> at <span class="math inline">\(x=1\)</span>.</p>
+<p><span class="math display">\[
+[e^{-x^2/2}]'\big|_{x=1} =
+(e^{-x^2/2} \cdot \frac{-2x}{2}) \big|_{x=1} =
+e^{-1/2} \cdot (-1) = -e^{-1/2}.
+\]</span></p>
+</section>
+<section id="example-derivative-of-inverse-functions" class="level5">
+<h5 class="anchored" data-anchor-id="example-derivative-of-inverse-functions">Example: derivative of inverse functions</h5>
+<p>Suppose we knew that <span class="math inline">\(\log(x)\)</span> had derivative of <span class="math inline">\(1/x\)</span>, but didn’t know the derivative of <span class="math inline">\(e^x\)</span>. From their inverse relation, we have: <span class="math inline">\(x=\log(e^x)\)</span>, so taking derivatives of both sides would yield:</p>
+<p><span class="math display">\[
+1 = (\frac{1}{e^x}) \cdot [e^x]'.
+\]</span></p>
+<p>Or solving, <span class="math inline">\([e^x]' = e^x\)</span>. This is a general strategy to find the derivative of an <em>inverse</em> function.</p>
+<p>The graph of an inverse function is related to the graph of the function through the symmetry <span class="math inline">\(y=x\)</span>.</p>
+<p>For example, the graph of <span class="math inline">\(e^x\)</span> and <span class="math inline">\(\log(x)\)</span> have this symmetry, emphasized below:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = exp(x)
+f′(x) = exp(x)
+f⁻¹(x) = log(x)  # using Unicode typed with "f^\-^\1"
+xs = range(0, 2, length=25)
+ys = f.(xs)
+plot(f, 0, 2, aspect_ratio=:equal, xlim=(0,8), ylim=(0,8), legend=false)
+scatter!(xs, ys)
+plot!(f⁻¹, extrema(ys)...)
+scatter!(ys, xs, color=:blue)
+plot!(identity, linestyle=:dot) # the line y=x
+x₀, y₀ = xs[13], ys[13]
+plot!([x₀, y₀],[y₀, x₀], linestyle=:dash)
+ys′ = @.  y₀ + f(x₀)*(xs - x₀)
+plot!(xs, ys′, linestyle=:dash)
+g(y) = 1/f′(f⁻¹(y))
+xs′ = @. x₀ + g(y₀) * (ys - y₀)
+plot!(ys, xs′, linestyle=:dash)</code></pre>
+<p>The point <span class="math inline">\((1, e)\)</span> on the graph of <span class="math inline">\(e^x\)</span> matches the point <span class="math inline">\((e, 1)\)</span> on the graph of the inverse function, <span class="math inline">\(\log(x)\)</span>. The slope of the tangent line at <span class="math inline">\(x=1\)</span> to <span class="math inline">\(e^x\)</span> is given by <span class="math inline">\(e\)</span> as well. What is the slope of the tangent line to <span class="math inline">\(\log(x)\)</span> at <span class="math inline">\(x=e\)</span>?</p>
+<p>As seen, the value can be computed, but how?</p>
+<p>Finding the derivative of the inverse function can be achieved from the chain rule using the identify <span class="math inline">\(f^{-1}(f(x)) = x\)</span> for all <span class="math inline">\(x\)</span> in the domain of <span class="math inline">\(f\)</span>.</p>
+<p>The chain rule applied to both sides, yields:</p>
+<p><span class="math display">\[
+1 = [f^{-1}]'(f(x)) \cdot f'(x)
+\]</span></p>
+<p>Solving, we see that <span class="math inline">\([f^{-1}]'(f(x)) = 1/f'(x)\)</span>. To emphasize the evaluation of the derivative of the inverse function at <span class="math inline">\(f(x)\)</span> we might write:</p>
+<p><span class="math display">\[
+\frac{d}{du} (f^{-1}(u)) \big|_{u=f(x)} = \frac{1}{f'(x)}
+\]</span></p>
+<p>So the reciprocal of the slope of the tangent line of <span class="math inline">\(f\)</span> at the mirror image point. In the above, we see if the slope of the tangent line at <span class="math inline">\((1,e)\)</span> to <span class="math inline">\(f\)</span> is <span class="math inline">\(e\)</span>, then the slope of the tangent line to <span class="math inline">\(f^{-1}(x)\)</span> at <span class="math inline">\((e,1)\)</span> would be <span class="math inline">\(1/e\)</span>.</p>
+</section>
+<section id="rules-of-derivatives-and-some-sample-functions" class="level4">
+<h4 class="anchored" data-anchor-id="rules-of-derivatives-and-some-sample-functions">Rules of derivatives and some sample functions</h4>
+<p>This table summarizes the rules of derivatives that allow derivatives of more complicated expressions to be computed with the derivatives of their pieces.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+nm = ["Power rule", "constant", "sum/difference", "product", "quotient", "chain"]
+rule = [L"[x^n]' = n\cdot x^{n-1}",
+ L"[cf(x)]' = c \cdot f'(x)",
+ L"[f(x) \pm g(x)]' = f'(x) \pm g'(x)",
+ L"[f(x) \cdot g(x)]' = f'(x)\cdot g(x) + f(x) \cdot g'(x)",
+ L"[f(x)/g(x)]' = (f'(x) \cdot g(x) - f(x) \cdot g'(x)) / g(x)^2",
+ L"[f(g(x))]' = f'(g(x)) \cdot g'(x)"]
+d = DataFrame(Name=nm, Rule=rule)
+table(d)</code></pre>
+<p>This table gives some useful derivatives:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+fn = [L"x^n (\text{ all } n)",
+L"e^x",
+L"\log(x)",
+L"\sin(x)",
+L"\cos(x)"]
+a = [L"nx^{n-1}",
+L"e^x",
+L"1/x",
+L"\cos(x)",
+L"-\sin(x)"]
+d = DataFrame(Function=fn, Derivative=a)
+table(d)</code></pre>
+</section>
+</section>
+</section>
+<section id="higher-order-derivatives" class="level2" data-number="22.5">
+<h2 data-number="22.5" class="anchored" data-anchor-id="higher-order-derivatives"><span class="header-section-number">22.5</span> Higher-order derivatives</h2>
+<p>The derivative of a function is an operator, it takes a function and returns a new, derived, function. We could repeat this operation. The result is called a higher-order derivative. The Lagrange notation uses additional “primes” to indicate how many. So <span class="math inline">\(f''(x)\)</span> is the second derivative and <span class="math inline">\(f'''(x)\)</span> the third. For even higher orders, sometimes the notation is <span class="math inline">\(f^{(n)}(x)\)</span> to indicate an <span class="math inline">\(n\)</span>th derivative.</p>
+<section id="examples-2" class="level5">
+<h5 class="anchored" data-anchor-id="examples-2">Examples</h5>
+<p>Find the first <span class="math inline">\(3\)</span> derivatives of <span class="math inline">\(f(x) = ax^3 + bx^2 + cx + d\)</span>.</p>
+<p>Differentiating a polynomial is done with the sum rule, here we repeat three times:</p>
+<p><span class="math display">\[\begin{align*}
+f(x)    &amp;= ax^3 + bx^2 + cx + d\\
+f'(x)   &amp;= 3ax^2 + 2bx + c \\
+f''(x)  &amp;= 3\cdot 2 a x + 2b \\
+f'''(x) &amp;= 6a
+\end{align*}\]</span></p>
+<p>We can see, the fourth derivative – and all higher order ones – would be identically <span class="math inline">\(0\)</span>. This is part of a general phenomenon: an <span class="math inline">\(n\)</span>th degree polynomial has only <span class="math inline">\(n\)</span> non-zero derivatives.</p>
+<hr>
+<p>Find the first <span class="math inline">\(5\)</span> derivatives of <span class="math inline">\(\sin(x)\)</span>.</p>
+<p><span class="math display">\[\begin{align*}
+f(x)    &amp;= \sin(x) \\
+f'(x)   &amp;= \cos(x) \\
+f''(x)  &amp;= -\sin(x) \\
+f'''(x) &amp;= -\cos(x) \\
+f^{(4)} &amp;= \sin(x) \\
+f^{(5)} &amp;= \cos(x)
+\end{align*}\]</span></p>
+<p>We see the derivatives repeat themselves. (We also see alternative notation for higher order derivatives.)</p>
+<hr>
+<p>Find the second derivative of <span class="math inline">\(e^{-x^2}\)</span>.</p>
+<p>We need the chain rule <em>and</em> the product rule:</p>
+<p><span class="math display">\[
+[e^{-x^2}]'' = [e^{-x^2} \cdot (-2x)]' = \left(e^{-x^2} \cdot (-2x)\right) \cdot(-2x) + e^{-x^2} \cdot (-2) =
+e^{-x^2}(4x^2 - 2).
+\]</span></p>
+<p>This can be verified:</p>
+<pre class="{julia}"><code>diff(diff(exp(-x^2))) |&gt; simplify</code></pre>
+<p>Having to iterate the use of <code>diff</code> is cumbersome. An alternate notation is either specifying the variable twice: <code>diff(ex, x, x)</code> or using a number after the variable: <code>diff(ex, x, 2)</code>:</p>
+<pre class="{julia}"><code>diff(exp(-x^2), x, x) |&gt; simplify</code></pre>
+<p>Higher-order derivatives can become involved when the product or quotient rules becomes involved.</p>
+</section>
+</section>
+<section id="questions" class="level2" data-number="22.6">
+<h2 data-number="22.6" class="anchored" data-anchor-id="questions"><span class="header-section-number">22.6</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>The derivative at <span class="math inline">\(c\)</span> is the slope of the tangent line at <span class="math inline">\(x=c\)</span>. Answer the following based on this graph:</p>
+<pre class="{julia}"><code>fn = x -&gt; -x*exp(x)*sin(pi*x)
+plot(fn, 0, 2)</code></pre>
+<p>At which of these points <span class="math inline">\(c= 1/2, 1, 3/2\)</span> is the derivative negative?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``1/2``", "``1``", "``3/2``"]
+answ = 1
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>Which value looks bigger from reading the graph:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``f(1)``", "``f(3/2)``"]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>At <span class="math inline">\(0.708 \dots\)</span> and <span class="math inline">\(1.65\dots\)</span> the derivative has a common value. What is it?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(0, 1e-2)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>Consider the graph of the <code>airyai</code> function (from <code>SpecialFunctions</code>) over <span class="math inline">\([-5, 5]\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+plot(airyai, -5, 5)</code></pre>
+<p>At <span class="math inline">\(x = -2.5\)</span> the derivative is positive or negative?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["positive", "negative"]
+answ = 1
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>At <span class="math inline">\(x=0\)</span> the derivative is positive or negative?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["positive", "negative"]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>At <span class="math inline">\(x = 2.5\)</span> the derivative is positive or negative?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["positive", "negative"]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>Compute the derivative of <span class="math inline">\(e^x\)</span> using <code>limit</code>. What do you get?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``e^x``", "``x^e``", "``(e-1)x^e``", "``e x^{(e-1)}``", "something else"]
+answ = 1
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>Compute the derivative of <span class="math inline">\(x^e\)</span> using <code>limit</code>. What do you get?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``e^x``", "``x^e``", "``(e-1)x^e``", "``e x^{(e-1)}``", "something else"]
+answ = 4
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>Compute the derivative of <span class="math inline">\(e^{e\cdot x}\)</span> using <code>limit</code>. What do you get?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``e^x``", "``x^e``", "``(e-1)x^e``", "``e x^{(e-1)}``", "``e \\cdot e^{e\\cdot x}``", "something else"]
+answ = 5
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>In the derivation of the derivative of <span class="math inline">\(\sin(x)\)</span>, the following limit is needed:</p>
+<p><span class="math display">\[
+L = \lim_{h \rightarrow 0} \frac{\cos(h) - 1}{h}.
+\]</span></p>
+<p>This is</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L" $1$, as this is clearly the analog of the limit of $\sin(h)/h$.",
+L"Does not exist. The answer is $0/0$ which is undefined",
+L" $0$,  as this expression is the derivative of cosine at $0$. The answer follows, as cosine clearly has a tangent line with slope $0$  at $x=0$."]
+answ = 3
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>Let <span class="math inline">\(f(x) = (e^x + e^{-x})/2\)</span> and <span class="math inline">\(g(x) = (e^x - e^{-x})/2\)</span>. Which is true?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``f'(x) =  g(x)``",
+"``f'(x) = -g(x)``",
+"``f'(x) =  f(x)``",
+"``f'(x) = -f(x)``"
+]
+answ= 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>Let <span class="math inline">\(f(x) = (e^x + e^{-x})/2\)</span> and <span class="math inline">\(g(x) = (e^x - e^{-x})/2\)</span>. Which is true?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``f''(x) =  g(x)``",
+"``f''(x) = -g(x)``",
+"``f''(x) =  f(x)``",
+"``f''(x) = -f(x)``"]
+answ= 3
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-8" class="level6">
+<h6 class="anchored" data-anchor-id="question-8">Question</h6>
+<p>Consider the function <span class="math inline">\(f\)</span> and its transformation <span class="math inline">\(g(x) = a + f(x)\)</span> (shift up by <span class="math inline">\(a\)</span>). Do <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> have the same derivative?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq("yes")</code></pre>
+<p>Consider the function <span class="math inline">\(f\)</span> and its transformation <span class="math inline">\(g(x) = f(x - a)\)</span> (shift right by <span class="math inline">\(a\)</span>). Do <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> have the same derivative?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq("no")</code></pre>
+<p>Consider the function <span class="math inline">\(f\)</span> and its transformation <span class="math inline">\(g(x) = f(x - a)\)</span> (shift right by <span class="math inline">\(a\)</span>). Is <span class="math inline">\(g'\)</span> at <span class="math inline">\(x\)</span> equal to <span class="math inline">\(f'\)</span> at <span class="math inline">\(x-a\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq("yes")</code></pre>
+<p>Consider the function <span class="math inline">\(f\)</span> and its transformation <span class="math inline">\(g(x) = c f(x)\)</span>, <span class="math inline">\(c &gt; 1\)</span>. Do <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> have the same derivative?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq("no")</code></pre>
+<p>Consider the function <span class="math inline">\(f\)</span> and its transformation <span class="math inline">\(g(x) = f(x/c)\)</span>, <span class="math inline">\(c &gt; 1\)</span>. Do <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> have the same derivative?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq("no")</code></pre>
+<p>Which of the following is true?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"If the graphs of $f$ and $g$ are translations up and down, the tangent line at corresponding points is unchanged.",
+L"If the graphs of $f$ and $g$ are rescalings of each other through $g(x)=f(x/c)$, $c &gt; 1$. Then the tangent line for corresponding points is the same.",
+L"If the graphs of $f$ and $g$ are rescalings of each other through $g(x)=cf(x)$, $c &gt; 1$. Then the tangent line for corresponding points is the same."
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-9" class="level6">
+<h6 class="anchored" data-anchor-id="question-9">Question</h6>
+<p>The rate of change of volume with respect to height is <span class="math inline">\(3h\)</span>. The rate of change of height with respect to time is <span class="math inline">\(2t\)</span>. At at <span class="math inline">\(t=3\)</span> the height is <span class="math inline">\(h=14\)</span> what is the rate of change of volume with respect to time when <span class="math inline">\(t=3\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+## dv/dt = dv/dh * dh/dt = 3h * 2t
+h = 14; t=3
+val = (3*h) * (2*t)
+numericq(val)</code></pre>
+</section>
+<section id="question-10" class="level6">
+<h6 class="anchored" data-anchor-id="question-10">Question</h6>
+<p>Which equation below is <span class="math inline">\(f(x) = \sin(k\cdot x)\)</span> a solution of (<span class="math inline">\(k &gt; 1\)</span>)?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``f'(x) =  k^2  \\cdot f(x)``",
+"``f'(x) = -k^2  \\cdot f(x)``",
+"``f''(x) = k^2  \\cdot f(x)``",
+"``f''(x) = -k^2 \\cdot f(x)``"]
+answ = 4
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-11" class="level6">
+<h6 class="anchored" data-anchor-id="question-11">Question</h6>
+<p>Let <span class="math inline">\(f(x) = e^{k\cdot x}\)</span>, <span class="math inline">\(k &gt; 1\)</span>. Which equation below is <span class="math inline">\(f(x)\)</span> a solution of?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``f'(x) = k^2   \\cdot f(x)``",
+"``f'(x) = -k^2  \\cdot f(x)``",
+"``f''(x) = k^2  \\cdot f(x)``",
+"``f''(x) = -k^2 \\cdot f(x)``"]
+answ = 3
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-12" class="level6">
+<h6 class="anchored" data-anchor-id="question-12">Question</h6>
+<p>Their are <span class="math inline">\(6\)</span> trig functions. The derivatives of <span class="math inline">\(\sin(x)\)</span> and <span class="math inline">\(\cos(x)\)</span> should be memorized. The others can be derived if not memorized using the quotient rule or chain rule.</p>
+<p>What is <span class="math inline">\([\tan(x)]'\)</span>? (Use <span class="math inline">\(\tan(x) =  \sin(x)/\cos(x)\)</span>.)</p>
+<pre class="{julia}"><code>#| echo: false
+trig_choices = [
+"``\\sec^2(x)``",
+"``\\sec(x)\\tan(x)``",
+"``-\\csc^2(x)``",
+"``-\\csc(x)\\cot(x)``"
+]
+radioq(trig_choices, 1)</code></pre>
+<p>What is <span class="math inline">\([\cot(x)]'\)</span>? (Use <span class="math inline">\(\cot(x) = \cos(x)/\sin(x)\)</span>.)</p>
+<pre class="{julia}"><code>#| echo: false
+radioq(trig_choices, 3)</code></pre>
+<p>What is <span class="math inline">\([\sec(x)]'\)</span>? (Use <span class="math inline">\(\sec(x) = 1/\cos(x)\)</span>.)</p>
+<pre class="{julia}"><code>#| echo: false
+radioq(trig_choices, 2)</code></pre>
+<p>What is <span class="math inline">\([\csc(x)]'\)</span>? (Use <span class="math inline">\(\csc(x) = 1/\sin(x)\)</span>.)</p>
+<pre class="{julia}"><code>#| echo: false
+radioq(trig_choices, 4)</code></pre>
+</section>
+<section id="question-13" class="level6">
+<h6 class="anchored" data-anchor-id="question-13">Question</h6>
+<p>Consider this picture of composition:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = sin(x)
+g(x) = exp(x)
+a,b = 0, 1.55
+
+xs = range(a, b, length=100)
+ys = g.(xs)
+us = range(extrema(ys)..., length=100)
+vs = f.(us)
+pf = plot(vs, us, ylim=extrema(ys), ymirror=true, legend=false)
+xs′ = range(0.5, 1.5, length=100)
+us′ = g.(xs′)
+vs′ = [f(g(1) + g'(1)*(x-1)) for x ∈ xs′]
+plot!(pf, vs′, us′)
+
+plot!(pf, [1, f(g(1)), f(g(1))], [g(1), g(1), 1])
+quiver!(pf, [.75, f(g(1))], [g(1), 2], quiver=([-.01, 0],[0, -0.1]))
+pg = plot(xs, ys, ylim=extrema(ys), legend=false)
+plot!(pg, [1,1,0],[1, g(1),g(1)])
+quiver!(pg, [1, 0.5], [2, g(1)], quiver=([0, -0.1],[0.1, 0]))
+plot!(tangent(g,1))
+l = @layout [a b]
+plot(pf, pg, layout=l)</code></pre>
+<p>The right graph is of <span class="math inline">\(g(x) = \exp(x)\)</span> at <span class="math inline">\(x=1\)</span>, the left graph of <span class="math inline">\(f(x) = \sin(x)\)</span> <em>rotated</em> <span class="math inline">\(90\)</span> degrees counter-clockwise. Chasing the arrows shows graphically how <span class="math inline">\(f(g(1))\)</span> can be computed. The nearby values <span class="math inline">\(f(g(1+h))\)</span> are – using the tangent line of <span class="math inline">\(g\)</span> at <span class="math inline">\(x-1\)</span> – approximated by <span class="math inline">\(f(g(1) + g'(1)\cdot h)\)</span>, as shown in the graph segment on the left.</p>
+<p>Assuming the approximation gets better for <span class="math inline">\(h\)</span> close to <span class="math inline">\(0\)</span>, as it visually does, the derivative at <span class="math inline">\(1\)</span> for <span class="math inline">\(f(g(x))\)</span> should be given by this limit:</p>
+<p><span class="math display">\[\begin{align*}
+\frac{d(f\circ g)}{dx}\mid_{x=1}
+&amp;= \lim_{h\rightarrow 0} \frac{f(g(1) + g'(1)h)-f(g(1))}{h}\\
+&amp;= \lim_{h\rightarrow 0} \frac{f(g(1) + g'(1)h)-f(g(1))}{g'(1)h} \cdot g'(1)\\
+&amp;= \lim_{h\rightarrow 0} (f\circ g)'(g(1)) \cdot g'(1).
+\end{align*}\]</span></p>
+<p>What limit law, described below assuming all limits exist. allows the last equals sign?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw"""
+The limit of a sum is the sum of the limits:
+``\lim_{x\rightarrow c}(au(x)+bv(x)) = a\lim_{x\rightarrow c}u(x) + b\lim_{x\rightarrow c}v(x)``
+""",
+raw"""
+The limit of a product is the product of the limits:
+``\lim_{x\rightarrow c}(u(x)\cdot v(x)) = \lim_{x\rightarrow c}u(x) \cdot \lim_{x\rightarrow c}v(x)``
+""",
+raw"""
+The limit of a composition (under assumptions on ``v``):
+``\lim_{x \rightarrow c}u(v(x)) = \lim_{w \rightarrow \lim_{x \rightarrow c}v(x)} u(w)``.
+"""
+]
+radioq(choices, 3, keep_order=true)</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../derivatives.html" class="pagination-link" aria-label="Derivatives">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Derivatives</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../derivatives/numeric_derivatives.html" class="pagination-link" aria-label="Numeric derivatives">
+        <span class="nav-page-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/derivatives/derivatives.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

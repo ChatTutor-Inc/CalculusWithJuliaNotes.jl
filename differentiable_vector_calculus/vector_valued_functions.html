@@ -1,0 +1,3108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>55&nbsp; Vector-valued functions, f:R \rightarrow R^n – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../differentiable_vector_calculus/scalar_functions.html" rel="next">
+<link href="../differentiable_vector_calculus/vectors.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../differentiable_vector_calculus.html">Differential vector calculus</a></li><li class="breadcrumb-item"><a href="../differentiable_vector_calculus/vector_valued_functions.html"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#definition" id="toc-definition" class="nav-link active" data-scroll-target="#definition"><span class="header-section-number">55.1</span> Definition</a></li>
+  <li><a href="#representation-in-julia" id="toc-representation-in-julia" class="nav-link" data-scroll-target="#representation-in-julia"><span class="header-section-number">55.2</span> Representation in Julia</a></li>
+  <li><a href="#space-curves" id="toc-space-curves" class="nav-link" data-scroll-target="#space-curves"><span class="header-section-number">55.3</span> Space curves</a>
+  <ul class="collapse">
+  <li><a href="#the-plot_parametric-function" id="toc-the-plot_parametric-function" class="nav-link" data-scroll-target="#the-plot_parametric-function"><span class="header-section-number">55.3.1</span> The <code>plot_parametric</code> function</a></li>
+  </ul></li>
+  <li><a href="#limits-and-continuity" id="toc-limits-and-continuity" class="nav-link" data-scroll-target="#limits-and-continuity"><span class="header-section-number">55.4</span> Limits and continuity</a>
+  <ul class="collapse">
+  <li><a href="#derivatives" id="toc-derivatives" class="nav-link" data-scroll-target="#derivatives"><span class="header-section-number">55.4.1</span> Derivatives</a></li>
+  <li><a href="#symbolic-representation" id="toc-symbolic-representation" class="nav-link" data-scroll-target="#symbolic-representation"><span class="header-section-number">55.4.2</span> Symbolic representation</a></li>
+  <li><a href="#applications-of-the-derivative" id="toc-applications-of-the-derivative" class="nav-link" data-scroll-target="#applications-of-the-derivative"><span class="header-section-number">55.4.3</span> Applications of the derivative</a></li>
+  </ul></li>
+  <li><a href="#derivative-rules" id="toc-derivative-rules" class="nav-link" data-scroll-target="#derivative-rules"><span class="header-section-number">55.5</span> Derivative rules</a></li>
+  <li><a href="#moving-frames-of-reference" id="toc-moving-frames-of-reference" class="nav-link" data-scroll-target="#moving-frames-of-reference"><span class="header-section-number">55.6</span> Moving frames of reference</a></li>
+  <li><a href="#arc-length" id="toc-arc-length" class="nav-link" data-scroll-target="#arc-length"><span class="header-section-number">55.7</span> Arc length</a></li>
+  <li><a href="#evolutes-and-involutes" id="toc-evolutes-and-involutes" class="nav-link" data-scroll-target="#evolutes-and-involutes"><span class="header-section-number">55.8</span> Evolutes and involutes</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">55.9</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/differentiable_vector_calculus/vector_valued_functions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../differentiable_vector_calculus.html">Differential vector calculus</a></li><li class="breadcrumb-item"><a href="../differentiable_vector_calculus/vector_valued_functions.html"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses these add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+plotly()
+using SymPy
+using Roots
+using LinearAlgebra
+using QuadGK</code></pre>
+<p>and</p>
+<pre class="{julia}"><code>import DifferentialEquations
+import DifferentialEquations: ODEProblem, Tsit5</code></pre>
+<hr>
+<p>We discuss functions of a single variable that return a vector in <span class="math inline">\(R^n\)</span>. There are many parallels to univariate functions (when <span class="math inline">\(n=1\)</span>) and differences.</p>
+<section id="definition" class="level2" data-number="55.1">
+<h2 data-number="55.1" class="anchored" data-anchor-id="definition"><span class="header-section-number">55.1</span> Definition</h2>
+<p>A function <span class="math inline">\(\vec{f}: R \rightarrow R^n\)</span>, <span class="math inline">\(n &gt; 1\)</span> is called a vector-valued function. Some examples:</p>
+<p><span class="math display">\[
+\vec{f}(t) = \langle \sin(t), 2\cos(t) \rangle, \quad
+\vec{g}(t) = \langle \sin(t), \cos(t), t \rangle, \quad
+\vec{h}(t) = \langle 2, 3 \rangle + t \cdot \langle 1, 2 \rangle.
+\]</span></p>
+<p>The components themselves are also functions of <span class="math inline">\(t\)</span>, in this case univariate functions. Depending on the context, it can be useful to view vector-valued functions as a function that returns a vector, or a vector of the component functions.</p>
+<p>The above example functions have <span class="math inline">\(n\)</span> equal <span class="math inline">\(2\)</span>, <span class="math inline">\(3\)</span>, and <span class="math inline">\(2\)</span> respectively. We will see that many concepts of calculus for univariate functions (<span class="math inline">\(n=1\)</span>) have direct counterparts.</p>
+<p>(We use <span class="math inline">\(\vec{f}\)</span> above to emphasize the return value is a vector, but will quickly drop that notation and let context determine if <span class="math inline">\(f\)</span> refers to a scalar- or vector-valued function.)</p>
+</section>
+<section id="representation-in-julia" class="level2" data-number="55.2">
+<h2 data-number="55.2" class="anchored" data-anchor-id="representation-in-julia"><span class="header-section-number">55.2</span> Representation in Julia</h2>
+<p>In <code>Julia</code>, the representation of a vector-valued function is straightforward: we define a function of a single variable that returns a vector. For example, the three functions above would be represented by:</p>
+<pre class="{julia}"><code>f(t) = [sin(t), 2*cos(t)]
+g(t) = [sin(t), cos(t), t]
+h(t) = [2, 3] + t * [1, 2]</code></pre>
+<p>For a given <code>t</code>, these evaluate to a vector. For example:</p>
+<pre class="{julia}"><code>h(2)</code></pre>
+<p>We can create a vector of functions, e.g., <code>F = [cos, sin, identity]</code>, but calling this object, as in <code>F(t)</code>, would require some work, such as <code>t = 1; [f(t) for f in F]</code> or <code>1 .|&gt; F</code>.</p>
+<pre class="{julia}"><code>F = [cos, sin, identity]
+[f(1) for f in F]</code></pre>
+<p>or</p>
+<pre class="{julia}"><code>1 .|&gt; F</code></pre>
+</section>
+<section id="space-curves" class="level2" data-number="55.3">
+<h2 data-number="55.3" class="anchored" data-anchor-id="space-curves"><span class="header-section-number">55.3</span> Space curves</h2>
+<p>A vector-valued function is typically visualized as a curve. That is, for some range, <span class="math inline">\(a \leq t \leq b\)</span> the set of points <span class="math inline">\(\{\vec{f}(t): a \leq t \leq b\}\)</span> are plotted. If, say in <span class="math inline">\(n=2\)</span>, we have <span class="math inline">\(x(t)\)</span> and <span class="math inline">\(y(t)\)</span> as the component functions, then the graph would also be the parametric plot of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. The term <em>planar</em> curve is common for the <span class="math inline">\(n=2\)</span> case and <em>space</em> curve for the <span class="math inline">\(n \geq 3\)</span> case.</p>
+<p>This plot represents the vectors with their tails at the origin.</p>
+<p>There is a convention for plotting the component functions to yield a parametric plot within the <code>Plots</code> package (e.g., <code>plot(x, y, a, b)</code>). This can be used to make polar plots, where <code>x</code> is <code>t -&gt; r(t)*cos(t)</code> and <code>y</code> is <code>t -&gt; r(t)*sin(t)</code>.</p>
+<p>However, we will use a different approach, as the component functions are not naturally produced from the vector-valued function.</p>
+<p>In <code>Plots</code>, the command <code>plot(xs, ys)</code>, where, say, <code>xs=[x1, x2, ..., xn]</code> and <code>ys=[y1, y2, ..., yn]</code>, will make a connect-the-dot plot between corresponding pairs of points. As previously discussed, this can be used as an alternative to plotting a function through <code>plot(f, a, b)</code>: first make a set of <span class="math inline">\(x\)</span> values, say <code>xs=range(a, b, length=100)</code>; then the corresponding <span class="math inline">\(y\)</span> values, say <code>ys = f.(xs)</code>; and then plotting through <code>plot(xs, ys)</code>.</p>
+<p>Similarly, were a third vector, <code>zs</code>, for <span class="math inline">\(z\)</span> components used, <code>plot(xs, ys, zs)</code> will make a <span class="math inline">\(3\)</span>-dimensional connect the dot plot</p>
+<p>However, our representation of vector-valued functions naturally generates a vector of points: <code>[[x1,y1], [x2, y2], ..., [xn, yn]]</code>, as this comes from broadcasting <code>f</code> over some time values. That is, for a collection of time values, <code>ts</code> the command <code>f.(ts)</code> will produce a vector of points. (Technically a vector of vectors, but points if you identify the <span class="math inline">\(2\)</span>-<span class="math inline">\(d\)</span> vectors as points.)</p>
+<p>To get the <code>xs</code> and <code>ys</code> from this is conceptually easy: just iterate over all the points and extract the corresponding component. For example, to get <code>xs</code> we would have a command like <code>[p[1] for p in f.(ts)]</code>. Similarly, the <code>ys</code> would use <code>p[2]</code> in place of <code>p[1]</code>. The <code>unzip</code> function from the <code>CalculusWithJulia</code> package does this for us. The name comes from how the <code>zip</code> function in base <code>Julia</code> takes two vectors and returns a vector of the values paired off. This is the reverse. As previously mentioned, <code>unzip</code> uses the <code>invert</code> function of the <code>SplitApplyCombine</code> package to invert the indexing (the <span class="math inline">\(j\)</span>th component of the <span class="math inline">\(i\)</span>th point can be referenced by <code>vs[i][j]</code> or <code>invert(vs)[j][i]</code>).</p>
+<p>Visually, we have <code>unzip</code> performing this reassociation:</p>
+<pre class="{verbatim}"><code>[[x1, y1, z1],         (⌈x1⌉,  ⌈y1⌉, ⌈z1⌉,
+ [x2, y2, z2],          |x2|, |y2|, |z2|,
+ [x3, y3, z3],   --&gt;    |x3|, |y3|, |z3|,
+     ⋮                         ⋮
+ [xn, yn, zn]]          ⌊xn⌋,  ⌊yn⌋, ⌊zn⌋ )</code></pre>
+<p>To turn a collection of vectors into separate arguments for a function, splatting (the <code>...</code>) is used.</p>
+<hr>
+<p>Finally, with these definitions, we can visualize the three functions we have defined.</p>
+<p>Here we show the plot of <code>f</code> over the values between <span class="math inline">\(0\)</span> and <span class="math inline">\(2\pi\)</span> and also add a vector anchored at the origin defined by <code>f(1)</code>.</p>
+<pre class="{julia}"><code>#| hold: true
+ts = range(0, 2pi, length=200)
+xs, ys = unzip(f.(ts))
+plot(xs, ys)
+arrow!([0, 0], f(1))</code></pre>
+<p>The trace of the plot is an ellipse. If we describe the components as <span class="math inline">\(\vec{f}(t) = \langle x(t), y(t) \rangle\)</span>, then we have <span class="math inline">\(x(t)^2 + y(t)^2/4 = 1\)</span>. That is, for any value of <span class="math inline">\(t\)</span>, the resulting point satisfies the equation <span class="math inline">\(x^2 + y^2/4 =1\)</span> for an ellipse.</p>
+<p>The plot of <span class="math inline">\(g\)</span> needs <span class="math inline">\(3\)</span>-dimensions to render. For most plotting backends, the following should work with no differences, save the additional vector is anchored in <span class="math inline">\(3\)</span> dimensions now:</p>
+<pre class="{julia}"><code>#| hold: true
+ts = range(0, 6pi, length=200)
+plot(unzip(g.(ts))...) # use splatting to avoid xs,ys,zs = unzip(g.(ts))
+arrow!([0, 0, 0], g(2pi))</code></pre>
+<p>Here the graph is a helix; three turns are plotted. If we write <span class="math inline">\(g(t) = \langle x(t), y(t), z(t) \rangle\)</span>, as the <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> values trace out a circle, the <span class="math inline">\(z\)</span> value increases. When the graph is viewed from above, as below, we see only <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> components, and the view is circular.</p>
+<pre class="{julia}"><code>#| hold: true
+ts = range(0, 6pi, length=200)
+plot(unzip(g.(ts))..., camera=(0, 90))</code></pre>
+<p>The graph of <span class="math inline">\(h\)</span> shows that this function parameterizes a line in space. The line segment for <span class="math inline">\(-2 \leq t \leq 2\)</span> is shown below:</p>
+<pre class="{julia}"><code>#| hold: true
+ts = range(-2, 2, length=200)
+plot(unzip(h.(ts))...)</code></pre>
+<section id="the-plot_parametric-function" class="level3" data-number="55.3.1">
+<h3 data-number="55.3.1" class="anchored" data-anchor-id="the-plot_parametric-function"><span class="header-section-number">55.3.1</span> The <code>plot_parametric</code> function</h3>
+<p>While the <code>unzip</code> function is easy to understand as a function that reshapes data from one format into one that <code>plot</code> can use, its usage is a bit cumbersome. The <code>CalculusWithJulia</code> package provides a function <code>plot_parametric</code> which hides the use of <code>unzip</code> and the splatting within a function definition.</p>
+<p>The function borrows a calling style for <code>Makie</code>. The interval to plot over is specified first using <code>a..b</code> notation (which specifies a closed interval in the <code>IntervalSets</code> package), then the function is specified. Additional keyword arguments are passed along to <code>plot</code>.</p>
+<pre class="{julia}"><code>plot_parametric(-2..2, h)</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Defining plotting functions in <code>Julia</code> for <code>Plots</code> is facilitated by the <code>RecipesBase</code> package. There are two common choices: creating a new function for plotting, as is done with <code>plot_parametric</code> and <code>plot_polar</code>; or creating a new type so that <code>plot</code> can dispatch to an appropriate plotting method. The latter would also be a reasonable choice, but wasn’t taken here. In any case, each can be avoided by creating the appropriate values for <code>xs</code> and <code>ys</code> (and possibly <code>zs</code>).</p>
+</div>
+</div>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>Familiarity with equations for lines, circles, and ellipses is important, as these fundamental geometric shapes are often building blocks in the description of other more complicated things.</p>
+<p>The point-slope equation of a line, <span class="math inline">\(y = y_0 + m \cdot (x - x_0)\)</span> finds an analog. The slope, <span class="math inline">\(m\)</span>, is replaced with a vector <span class="math inline">\(\vec{v}\)</span> and the point, <span class="math inline">\((x_0, y_0)\)</span> is replaced with a vector <span class="math inline">\(\vec{p}\)</span> identified with a point in the plane. A parameterization would then be <span class="math inline">\(\vec{f}(t) = \vec{p} + (t - t_0) \vec{v}\)</span>. From this, we have <span class="math inline">\(\vec{f}(t_0) = \vec{p}\)</span>.</p>
+<p>The unit circle is instrumental in introducing the trigonometric functions though the identification of an angle <span class="math inline">\(t\)</span> with a point on the unit circle <span class="math inline">\((x,y)\)</span> through <span class="math inline">\(y = \sin(t)\)</span> and <span class="math inline">\(x=\cos(t)\)</span>. With this identification certain properties of the trigonometric functions are immediately seen, such as the period of <span class="math inline">\(\sin\)</span> and <span class="math inline">\(\cos\)</span> being <span class="math inline">\(2\pi\)</span>, or the angles for which <span class="math inline">\(\sin\)</span> and <span class="math inline">\(\cos\)</span> are positive or even increasing. Further, this gives a natural parameterization for a vector-valued function whose plot yields the unit circle, namely <span class="math inline">\(\vec{f}(t) = \langle \cos(t), \sin(t) \rangle\)</span>. This parameterization starts (at <span class="math inline">\(t=0\)</span>) at the point <span class="math inline">\((1, 0)\)</span>. More generally, we might have additional parameters <span class="math inline">\(\vec{f}(t) = \vec{p} + R \cdot \langle \cos(\omega(t-t_0)), \sin(\omega(t-t_0)) \rangle\)</span> to change the origin, <span class="math inline">\(\vec{p}\)</span>; the radius, <span class="math inline">\(R\)</span>; the starting angle, <span class="math inline">\(t_0\)</span>; and the rotational frequency, <span class="math inline">\(\omega\)</span>.</p>
+<p>An ellipse has a slightly more general equation than a circle and in simplest forms may satisfy the equation <span class="math inline">\(x^2/a^2 +  y^2/b^2 = 1\)</span>, where <em>when</em> <span class="math inline">\(a=b\)</span> a circle is being described. A vector-valued function of the form <span class="math inline">\(\vec{f}(t) = \langle a\cdot\cos(t),  b\cdot\sin(t) \rangle\)</span> will trace out an ellipse.</p>
+<p>The above description of an ellipse is useful, but it can also be useful to re-express the ellipse so that one of the foci is at the origin. With this, the ellipse can be given in <em>polar</em> coordinates through a description of the radius:</p>
+<p><span class="math display">\[
+r(\theta) = \frac{a (1 - e^2)}{1 + e \cos(\theta)}.
+\]</span></p>
+<p>Here, <span class="math inline">\(a\)</span> is the semi-major axis (<span class="math inline">\(a &gt; b\)</span>); <span class="math inline">\(e\)</span> is the <em>eccentricity</em> given by <span class="math inline">\(b = a \sqrt{1 - e^2}\)</span>; and <span class="math inline">\(\theta\)</span> a polar angle.</p>
+<p>Using the conversion to Cartesian equations, we have <span class="math inline">\(\vec{f}(\theta) = \langle r(\theta) \cos(\theta), r(\theta) \sin(\theta)\rangle\)</span>.</p>
+<p>For example:</p>
+<pre class="{julia}"><code>#| hold: true
+a, ecc = 20, 3/4
+f(t) = a*(1-ecc^2)/(1 + ecc*cos(t)) * [cos(t), sin(t)]
+plot_parametric(0..2pi, f, legend=false)
+scatter!([0],[0], markersize=4)</code></pre>
+</section>
+<section id="example-1" class="level5">
+<h5 class="anchored" data-anchor-id="example-1">Example</h5>
+<p>The <a href="https://en.wikipedia.org/wiki/Spirograph">Spirograph</a> is “… a geometric drawing toy that produces mathematical roulette curves of the variety technically known as hypotrochoids and epitrochoids. It was developed by British engineer Denys Fisher and first sold in <span class="math inline">\(1965\)</span>.” These can be used to make interesting geometrical curves.</p>
+<p>Following Wikipedia: Consider a fixed outer circle <span class="math inline">\(C_o\)</span> of radius <span class="math inline">\(R\)</span> centered at the origin. A smaller inner circle <span class="math inline">\(C_i\)</span> of radius <span class="math inline">\(r &lt; R\)</span> rolling inside <span class="math inline">\(C_o\)</span> and is continuously tangent to it. <span class="math inline">\(C_i\)</span> will be assumed never to slip on <span class="math inline">\(C_o\)</span> (in a real Spirograph, teeth on both circles prevent such slippage). Now assume that a point <span class="math inline">\(A\)</span> lying somewhere inside <span class="math inline">\(C_{i}\)</span> is located a distance <span class="math inline">\(\rho &lt; r\)</span> from <span class="math inline">\(C_i\)</span>’s center.</p>
+<p>The center of the inner circle will move in a circular manner with radius <span class="math inline">\(R-r\)</span>. The fixed point on the inner circle will rotate about this center. The accumulated angle may be described by the angle the point of contact of the inner circle with the outer circle. Call this angle <span class="math inline">\(t\)</span>.</p>
+<p>Suppose the outer circle is centered at the origin and the inner circle starts (<span class="math inline">\(t=0\)</span>) with center <span class="math inline">\((R-r, 0)\)</span> and rotates around counterclockwise. Then if the point of contact makes angle <span class="math inline">\(t\)</span>, the arc length along the outer circle is <span class="math inline">\(Rt\)</span>. The inner circle will have moved a distance <span class="math inline">\(r t'\)</span> in the opposite direction, so <span class="math inline">\(Rt =-r t'\)</span> and solving the angle will be <span class="math inline">\(t' = -(R/r)t\)</span>.</p>
+<p>If the initial position of the fixed point is at <span class="math inline">\((\rho, 0)\)</span> relative to the origin, then the following function will describe the motion:</p>
+<p><span class="math display">\[
+\vec{s}(t) = (R-r) \cdot \langle \cos(t), \sin(t) \rangle +
+\rho \cdot \langle \cos(-\frac{R}{r}t), \sin(-\frac{R}{r}t) \rangle.
+\]</span></p>
+<p>To visualize this we first define a helper function to draw a circle at point <span class="math inline">\(P\)</span> with radius <span class="math inline">\(R\)</span>:</p>
+<pre class="{julia}"><code>circle!(P, R; kwargs...) = plot_parametric!(0..2pi, t -&gt; P + R * [cos(t), sin(t)]; kwargs...)</code></pre>
+<p>Then we have this function to visualize the spirograph for different <span class="math inline">\(t\)</span> values:</p>
+<pre class="{julia}"><code>function spiro(t; r=2, R=5, rho=0.8*r)
+
+    cent(t) = (R-r) * [cos(t), sin(t)]
+
+    p = plot(legend=false, aspect_ratio=:equal)
+    circle!([0,0], R, color=:blue)
+    circle!(cent(t), r, color=:black)
+
+    tp(t) = -R/r * t
+
+    s(t) = cent(t) + rho * [cos(tp(t)), sin(tp(t))]
+    plot_parametric!(0..t, s, color=:red)
+
+    p
+end</code></pre>
+<p>And we can see the trace for <span class="math inline">\(t=\pi\)</span>:</p>
+<pre class="{julia}"><code>spiro(pi)</code></pre>
+<p>The point of contact is at <span class="math inline">\((-R, 0)\)</span>, as expected. Carrying this forward to a full circle’s worth is done through:</p>
+<pre class="{julia}"><code>spiro(2pi)</code></pre>
+<p>The curve does not match up at the start. For that, a second time around the outer circle is needed:</p>
+<pre class="{julia}"><code>spiro(4pi)</code></pre>
+<p>Whether the curve will have a period or not is decided by the ratio of <span class="math inline">\(R/r\)</span> being rational or irrational.</p>
+</section>
+<section id="example-2" class="level5">
+<h5 class="anchored" data-anchor-id="example-2">Example</h5>
+<p>In 1935 <a href="https://arthur.io/art/marcel-duchamp/rotorelief-no-10-cage-modele-depose-verso">Marcel Duchamp</a> showed a collection of “Rotorelief” discs at a French fair for inventors. Disk number 10 is comprised of several nested, off-center circles on disk that would be rotated to give a sense of movement. To mimic the effect:</p>
+<ul>
+<li>for each circle, <span class="math inline">\(3\)</span> points where selected using a mouse from an image and their pixels recorded;</li>
+<li>as <span class="math inline">\(3\)</span> points determine a circle, the center and radius of each circle can be solved for</li>
+<li>the exterior of the disc is drawn (the last specified circle below);</li>
+<li>each nested circle is drawn after its center is rotated by <span class="math inline">\(\theta\)</span> radian;</li>
+<li>an animation captures the movement for display.</li>
+</ul>
+<pre class="{julia}"><code>#| echo: false
+let
+# https://exploratorium.tumblr.com/post/33140874462/marcel-duchamp-rotoreliefs-duchamp-recognized
+
+# coordinates and colors selected by gimp from
+    # https://arthur.io/art/marcel-duchamp/rotorelief-no-10-cage-modele-depose-verso
+    gr()
+    circs = [466 548 513 505 556 554 # x₁,y₁,x₂,y₂,x₂,y₃
+             414 549 511 455 595 549
+             365 545 507 408 635 548
+             319 541 506 361 673 546
+             277 543 509 317 711 546
+             236 539 507 272 747 551
+             201 541 504 230 781 550
+             166 541 503 189 816 544
+             140 542 499 153 848 538
+             116 537 496 119 879 538
+             96 539 501 90 905 534
+             81 530 500 67 930 530
+             72 525 498 51 949 529
+             66 520 500 36 966 527
+             60 515 499 25 982 526
+             35 509 499 11 1004 525 # outer edge, c₀
+             ]
+
+    greenblue= RGB(8/100, 58/100, 53/100)
+    grey = RGB(76/100, 74/100, 72/100)
+    white = RGB(88/100, 85/100, 81/100)
+
+    # solve for center of circle, radius for each
+    @syms h::positive k::positive r::positive
+    function solve_i(i)
+        eqs = [(p[1] - h)^2 + (p[2]-k)^2 ~ r^2 for
+               p ∈ (circs[i,1:2], circs[i,3:4], circs[i,5:6])]
+        d = solve(tuple(eqs...))[1]
+        (x=float(d[h]), y=float(d[k]), r=float(d[r]))
+    end
+    c₀, cs... = solve_i.(16:-1:1) # c₀ is centered
+
+    function duchamp_rotorelief_10(θ)
+        p = plot(legend=false,
+                 axis=nothing, xaxis=false, yaxis=false,
+                 aspect_ratio=:equal)
+
+        O = [c₀.x, c₀.y]
+        θ̂ = [cos(θ), sin(θ)]
+
+        circle!(O, c₀.r, # outer ring is c₀
+                linewidth=2,
+                color=grey, fill=white,
+                seriestype=:shape)
+
+        for (i,c) ∈ enumerate(cs)   # add nested rings
+            rᵢ = sqrt((c₀.x - c.x)^2+(c₀.y - c.y)^2)
+            P = O + rᵢ * θ̂  # rotate about origin by θ
+            circle!(P, c.r,
+                    linewidth = i == 1 ? 1 : i &lt;= 3 ? 2 : 3,
+                    color=greenblue)
+        end
+
+        p
+
+    end
+
+    # animate using Plots.@animate macro
+    anim = @animate for θ ∈ range(0, -2π, length=60)
+        duchamp_rotorelief_10(θ)
+    end
+
+    fname = tempname() * ".gif"
+    gif(anim, fname, fps = 40)
+
+    plotly()
+    ImageFile(fname, "Duchamp rotorelief")
+end</code></pre>
+<pre class="{julia}"><code>#| echo: false
+#import PlutoUI
+#PlutoUI.LocalResource(fname) # to display w/in Pluto
+nothing</code></pre>
+</section>
+<section id="example-3" class="level5">
+<h5 class="anchored" data-anchor-id="example-3">Example</h5>
+<p><a href="http://www.phschool.com/science/science_news/articles/tilt_a_whirl.html">Ivars Peterson</a> described the carnival ride “tilt-a-whirl” as a chaotic system, whose equations of motion are presented in <a href="https://doi.org/10.1119/1.17742">American Journal of Physics</a> by Kautz and Huggard. The tilt-a-whirl has a platform that moves in a circle that also moves up and down. To describe the motion of a point on the platform assuming it has radius <span class="math inline">\(R\)</span> and period <span class="math inline">\(T\)</span> and rises twice in that period could be done with the function:</p>
+<p><span class="math display">\[
+\vec{u}(t) = \langle R \sin(2\pi t/T), R \cos(2\pi t/T), h + h \cdot \sin(2\pi t/ T) \rangle.
+\]</span></p>
+<p>A passenger sits on a circular platform with radius <span class="math inline">\(r\)</span> attached at some point on the larger platform. The dynamics of the person on the tilt-a-whirl depend on physics, but for simplicity, let’s assume the platform moves at a constant rate with period <span class="math inline">\(S\)</span> and has no relative <span class="math inline">\(z\)</span> component. The motion of the platform in relation to the point it is attached would be modeled by:</p>
+<p><span class="math display">\[
+\vec{v}(t) = \langle r \sin(2\pi t/S), r \cos(2\pi t/S), 0 \rangle.
+\]</span></p>
+<p>And the motion relative to the origin would be the vector sum, or superposition:</p>
+<p><span class="math display">\[
+\vec{f}(t) = \vec{u}(t) + \vec{v}(t).
+\]</span></p>
+<p>To visualize for some parameters, we have:</p>
+<pre class="{julia}"><code>#| hold: true
+M, m = 25, 5
+height = 5
+S, T = 8, 2
+outer(t) = [M * sin(2pi*t/T), M * cos(2pi*t/T), height*(1 +sin(2pi * (t-pi/2)/T))]
+inner(t) = [m * sin(2pi*t/S), m * cos(2pi*t/S), 0]
+f(t) = outer(t) + inner(t)
+plot_parametric(0..8, f)</code></pre>
+</section>
+</section>
+</section>
+<section id="limits-and-continuity" class="level2" data-number="55.4">
+<h2 data-number="55.4" class="anchored" data-anchor-id="limits-and-continuity"><span class="header-section-number">55.4</span> Limits and continuity</h2>
+<p>The definition of a limit for a univariate function is: For every <span class="math inline">\(\epsilon &gt; 0\)</span> there exists a <span class="math inline">\(\delta &gt; 0\)</span> such that <em>if</em> <span class="math inline">\(0 &lt; |x-c| &lt; \delta\)</span> <em>then</em> <span class="math inline">\(|f(x) - L | &lt; \epsilon\)</span>.</p>
+<p>If the notion of “<span class="math inline">\(\vec{f}\)</span> is close to <span class="math inline">\(L\)</span>” is replaced by close in the sense of a norm, or vector distance, then the same limit definition can be used, with the new wording “… <span class="math inline">\(\| \vec{f}(x) - L \| &lt; \epsilon\)</span>”.</p>
+<p>The notion of continuity is identical: <span class="math inline">\(\vec{f}(t)\)</span> is continuous at <span class="math inline">\(t_0\)</span> if <span class="math inline">\(\lim_{t \rightarrow t_0}\vec{f}(t) = \vec{f}(t_0)\)</span>. More informally <span class="math inline">\(\| \vec{f}(t) - \vec{f}(t_0)\| \rightarrow 0\)</span>.</p>
+<p>A consequence of the triangle inequality is that a vector-valued function is continuous or has a limit if and only if its component functions do.</p>
+<section id="derivatives" class="level3" data-number="55.4.1">
+<h3 data-number="55.4.1" class="anchored" data-anchor-id="derivatives"><span class="header-section-number">55.4.1</span> Derivatives</h3>
+<p>If <span class="math inline">\(\vec{f}(t)\)</span> is vector valued, and <span class="math inline">\(\Delta t &gt; 0\)</span> then we can consider the vector:</p>
+<p><span class="math display">\[
+\vec{f}(t + \Delta t) - \vec{f}(t)
+\]</span></p>
+<p>For example, if <span class="math inline">\(\vec{f}(t) = \langle 3\cos(t), 2\sin(t) \rangle\)</span> and <span class="math inline">\(t=\pi/4\)</span> and <span class="math inline">\(\Delta t = \pi/16\)</span> we have this picture:</p>
+<pre class="{julia}"><code>#| hold: true
+f(t) = [3cos(t), 2sin(t)]
+t, Δt = pi/4, pi/16
+df = f(t + Δt) - f(t)
+
+plot(legend=false)
+arrow!([0,0], f(t))
+arrow!([0,0], f(t + Δt))
+arrow!(f(t), df)</code></pre>
+<p>The length of the difference appears to be related to the length of <span class="math inline">\(\Delta t\)</span>, in a similar manner as the univariate derivative. The following limit defines the <em>derivative</em> of a vector-valued function:</p>
+<p><span class="math display">\[
+\vec{f}'(t) = \lim_{\Delta t \rightarrow 0} \frac{f(t + \Delta t) - f(t)}{\Delta t}.
+\]</span></p>
+<p>The limit exists if the component limits do. The component limits are just the derivatives of the component functions. So, if <span class="math inline">\(\vec{f}(t) = \langle x(t), y(t) \rangle\)</span>, then <span class="math inline">\(\vec{f}'(t) = \langle x'(t), y'(t) \rangle\)</span>.</p>
+<p>If the derivative is never <span class="math inline">\(\vec{0}\)</span>, the curve is called <em>regular</em>. For a regular curve the derivative is a tangent vector to the parameterized curve, akin to the case for a univariate function. We can use <code>ForwardDiff</code> to compute the derivative in the exact same manner as was done for univariate functions:</p>
+<pre class="{julia}"><code>#| eval: false
+using ForwardDiff
+D(f,n=1) = n &gt; 1 ? D(D(f),n-1) : x -&gt; ForwardDiff.derivative(f, float(x))
+Base.adjoint(f::Function) = D(f)         # allow f' to compute derivative</code></pre>
+<p>(This is already done by the <code>CalculusWithJulia</code> package.)</p>
+<p>We can visualize the tangential property through a graph:</p>
+<pre class="{julia}"><code>#| hold: true
+f(t) = [3cos(t), 2sin(t)]
+p = plot_parametric(0..2pi, f, legend=false, aspect_ratio=:equal)
+for t in [1,2,3]
+    arrow!(f(t), f'(t))   # add arrow with tail on curve, in direction of derivative
+end
+p</code></pre>
+</section>
+<section id="symbolic-representation" class="level3" data-number="55.4.2">
+<h3 data-number="55.4.2" class="anchored" data-anchor-id="symbolic-representation"><span class="header-section-number">55.4.2</span> Symbolic representation</h3>
+<p>Were symbolic expressions used in place of functions, the vector-valued function would naturally be represented as a vector of expressions:</p>
+<pre class="{julia}"><code>@syms 𝒕
+𝒗vf = [cos(𝒕), sin(𝒕), 𝒕]</code></pre>
+<p>We will see working with these expressions is not identical to working with a vector-valued function.</p>
+<p>To plot, we can avail ourselves of the the parametric plot syntax. The following expands to <code>plot(cos(t), sin(t), t, 0, 2pi)</code>:</p>
+<pre class="{julia}"><code>plot(𝒗vf..., 0, 2pi)</code></pre>
+<p>The <code>unzip</code> usage, as was done above, could be used, but it would be more trouble in this case.</p>
+<p>To evaluate the function at a given value, say <span class="math inline">\(t=2\)</span>, we can use <code>subs</code> with broadcasting to substitute into each component:</p>
+<pre class="{julia}"><code>subs.(𝒗vf, 𝒕=&gt;2)</code></pre>
+<p>Limits are performed component by component, and can also be defined by broadcasting, again with the need to adjust the values:</p>
+<pre class="{julia}"><code>@syms Δ
+limit.((subs.(𝒗vf, 𝒕 =&gt; 𝒕 + Δ) - 𝒗vf) / Δ, Δ =&gt; 0)</code></pre>
+<p>Derivatives, as was just done through a limit, are a bit more straightforward than evaluation or limit taking, as we won’t bump into the shape mismatch when broadcasting:</p>
+<pre class="{julia}"><code>diff.(𝒗vf, 𝒕)</code></pre>
+<p>The second derivative, can be found through:</p>
+<pre class="{julia}"><code>diff.(𝒗vf, 𝒕, 𝒕)</code></pre>
+</section>
+<section id="applications-of-the-derivative" class="level3" data-number="55.4.3">
+<h3 data-number="55.4.3" class="anchored" data-anchor-id="applications-of-the-derivative"><span class="header-section-number">55.4.3</span> Applications of the derivative</h3>
+<p>Here are some sample applications of the derivative.</p>
+<section id="example-equation-of-the-tangent-line" class="level5">
+<h5 class="anchored" data-anchor-id="example-equation-of-the-tangent-line">Example: equation of the tangent line</h5>
+<p>The derivative of a vector-valued function is similar to that of a univariate function, in that it indicates a direction tangent to a curve. The point-slope form offers a straightforward parameterization. We have a point given through the vector-valued function and a direction given by its derivative. (After identifying a vector with its tail at the origin with the point that is the head of the vector.)</p>
+<p>With this, the equation is simply <span class="math inline">\(\vec{tl}(t) = \vec{f}(t_0) + \vec{f}'(t_0) \cdot (t - t_0)\)</span>, where the dot indicates scalar multiplication.</p>
+</section>
+<section id="example-parabolic-motion" class="level5">
+<h5 class="anchored" data-anchor-id="example-parabolic-motion">Example: parabolic motion</h5>
+<p>In physics, we learn that the equation <span class="math inline">\(F=ma\)</span> can be used to derive a formula for position, when acceleration, <span class="math inline">\(a\)</span>, is a constant. The resulting equation of motion is <span class="math inline">\(x = x_0 + v_0t + (1/2) at^2\)</span>. Similarly, if <span class="math inline">\(x(t)\)</span> is a vector-valued position vector, and the <em>second</em> derivative, <span class="math inline">\(x''(t) =\vec{a}\)</span>, a constant, then we have: <span class="math inline">\(x(t) = \vec{x_0} + \vec{v_0}t + (1/2) \vec{a} t^2\)</span>.</p>
+<p>For two dimensions, we have the force due to gravity acts downward, only in the <span class="math inline">\(y\)</span> direction. The acceleration is then <span class="math inline">\(\vec{a} = \langle 0, -g \rangle\)</span>. If we start at the origin, with initial velocity <span class="math inline">\(\vec{v_0} = \langle 2, 3\rangle\)</span>, then we can plot the trajectory until the object returns to ground (<span class="math inline">\(y=0\)</span>) as follows:</p>
+<pre class="{julia}"><code>#| hold: true
+gravity = 9.8
+x0, v0, a = [0,0], [2, 3], [0, -gravity]
+xpos(t) = x0 + v0*t + (1/2)*a*t^2
+
+t_0 = find_zero(t -&gt; xpos(t)[2], (1/10, 100))  # find when y=0
+
+plot_parametric(0..t_0, xpos)</code></pre>
+<pre class="{julia}"><code>#| echo: false
+# https://en.wikipedia.org/wiki/Tractrix
+# https://sinews.siam.org/Details-Page/a-bike-and-a-catenary
+# https://www.math.psu.edu/tabachni/talks/BicycleDouble.pdf
+# https://www.tandfonline.com/doi/abs/10.4169/amer.math.monthly.120.03.199
+# https://projecteuclid.org/download/pdf_1/euclid.em/1259158427
+nothing</code></pre>
+</section>
+<section id="example-a-tractrix" class="level5">
+<h5 class="anchored" data-anchor-id="example-a-tractrix">Example: a tractrix</h5>
+<p>A <a href="https://en.wikipedia.org/wiki/Tractrix">tractrix</a>, studied by Perrault, Newton, Huygens, and many others, is the curve along which an object moves when pulled in a horizontal plane by a line segment attached to a pulling point (Wikipedia). If the object is placed at <span class="math inline">\((a,0)\)</span> and the puller at the origin, and the puller moves along the positive <span class="math inline">\(y\)</span> axis, then the line will always be tangent to the curve and of fixed length, so determinable from the motion of the puller. In this example <span class="math inline">\(dy/dx = -\sqrt{a^2-x^2}/x\)</span>.</p>
+<p>This is the key property: “Due to the geometrical way it was defined, the tractrix has the property that the segment of its tangent, between the asymptote and the point of tangency, has constant length <span class="math inline">\(a\)</span>.”</p>
+<p>The tracks made by the front and rear bicycle wheels also have this same property and similarly afford a mathematical description. We follow <a href="https://doi.org/10.2307/2691097">Dunbar, Bosman, and Nooij</a> from <em>The Track of a Bicycle Back Tire</em> below, though <a href="https://projecteuclid.org/download/pdf_1/euclid.em/1259158427">Levi and Tabachnikov</a> and <a href="https://www.tandfonline.com/doi/abs/10.4169/amer.math.monthly.120.03.199">Foote, Levi, and Tabachnikov</a> were also consulted. Let <span class="math inline">\(a\)</span> be the distance between the front and back wheels, whose positions are parameterized by <span class="math inline">\(\vec{F}(t)\)</span> and <span class="math inline">\(\vec{B}(t)\)</span>, respectively. The key property is the distance between the two is always <span class="math inline">\(a\)</span>, and, as the back wheel is always moving in the direction of the front wheel, we have <span class="math inline">\(\vec{B}'(t)\)</span> is in the direction of <span class="math inline">\(\vec{F}(t) - \vec{B}(t)\)</span>, that is the vector <span class="math inline">\((\vec{F}(t)-\vec{B}(t))/a\)</span> is a unit vector in the direction of the derivative of <span class="math inline">\(\vec{B}\)</span>. How long is the derivative vector? That would be answered by the speed of the back wheel, which is related to the velocity of the front wheel. But only the component of the velocity in the direction of <span class="math inline">\(\vec{F}(t)-\vec{B}(t)\)</span>, so the speed of the back wheel is the length of the projection of <span class="math inline">\(\vec{F}'(t)\)</span> onto the unit vector <span class="math inline">\((\vec{F}(t)-\vec{B}(t))/a\)</span>, which is identified through the dot product.</p>
+<p>Combined, this gives the following equations relating <span class="math inline">\(\vec{F}(t)\)</span> to <span class="math inline">\(\vec{B}(t)\)</span>:</p>
+<p><span class="math display">\[
+s_B(t) = \vec{F}'(t) \cdot \frac{\vec{F}(t)-\vec{B}(t)}{a}, \quad
+\vec{B}'(t) = s_B(t) \frac{\vec{F}(t)-\vec{B}(t)}{a}.
+\]</span></p>
+<p>This is a <em>differential</em> equation describing the motion of the back wheel in terms of the front wheel.</p>
+<p>If the back wheel trajectory is known, the relationship is much easier, as the two differ by a vector of length <span class="math inline">\(a\)</span> in the direction of <span class="math inline">\(\vec{B}'(t)\)</span>, or:</p>
+<p><span class="math display">\[
+F(t) = \vec{B}(t) + a \frac{\vec{B'(t)}}{\|\vec{B}'(t)\|}.
+\]</span></p>
+<p>We don’t discuss when a differential equation has a solution, or if it is unique when it does, but note that the differential equation above may be solved numerically, in a manner somewhat similar to what was discussed in <a href="../ODEs/odes.html">ODEs</a>. Here we will use the <code>DifferentialEquations</code> package for finding numeric solutions.</p>
+<p>We can define our equation as follows, using <code>p</code> to pass in the two parameters: the wheel-base length <span class="math inline">\(a\)</span>, and <span class="math inline">\(F(t)\)</span>, the parameterization of the front wheel in time:</p>
+<pre class="{julia}"><code>
+function bicycle(dB, B, p, t)
+
+  a, F = p   # unpack parameters
+
+  speed =  F'(t) ⋅ (F(t) - B) / a
+  dB[1], dB[2] = speed * (F(t) - B) / a
+
+end</code></pre>
+<p>Let’s consider a few simple cases first. We suppose <span class="math inline">\(a=1\)</span> and the front wheel moves in a circle of radius <span class="math inline">\(3\)</span>. Here is how we can plot two loops:</p>
+<pre class="{julia}"><code>t₀, t₁ = 0.0, 4pi
+
+tspan₁ = (t₀, t₁)  # time span to consider
+
+a₁ = 1
+F₁(t) = 3 * [cos(t), sin(t)]
+p₁ = (a₁, F₁)      # combine parameters
+
+B₁0 = F₁(0) - [0, a₁]  # some initial position for the back
+prob₁ = ODEProblem(bicycle, B₁0, tspan₁, p₁)
+
+out₁ = solve(prob₁, reltol=1e-6, Tsit5())</code></pre>
+<p>The object <code>out</code> holds the answer. This object is callable, in that <code>out(t)</code> will return the numerically computed value for the answer to our equation at time point <code>t</code>.</p>
+<p>To plot the two trajectories, we could use that <code>out.u</code> holds the <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> components of the computed trajectory, but more simply, we can just call <code>out</code> like a function.</p>
+<pre class="{julia}"><code>plt₁ = plot_parametric(t₀..t₁, F₁, legend=false)
+plot_parametric!(t₀..t₁, out₁,   linewidth=3)
+
+## add the bicycle as a line segment at a few times along the path
+for t in range(t₀, t₁, length=11)
+    plot!(unzip([out₁(t), F₁(t)])..., linewidth=3, color=:black)
+end
+plt₁</code></pre>
+<p>That the rear wheel track appears shorter, despite the rear wheel starting outside the circle, is typical of bicycle tracks and also a reason to rotate tires on car, as the front ones move a bit more than the rear, so presumably wear faster.</p>
+<p>Let’s look what happens if the front wheel wobbles back and forth following a sine curve. Repeating the above, only with <span class="math inline">\(F\)</span> redefined, we have:</p>
+<pre class="{julia}"><code>a₂ = 1
+F₂(t) = [t, 2sin(t)]
+p₂ = (a₂, F₂)
+
+B₂0 = F₂(0) - [0, a₂]  # some initial position for the back
+prob₂ = ODEProblem(bicycle, B₂0, tspan₁, p₂)
+
+out₂ = solve(prob₂, reltol=1e-6, Tsit5())
+
+plot_parametric(t₀..t₁, F₂, legend=false)
+plot_parametric!(t₀..t₁, t -&gt; out₂(t),  linewidth=3)</code></pre>
+<p>Again, the back wheel moves less than the front.</p>
+<p>The motion of the back wheel need not be smooth, even if the motion of the front wheel is, as this curve illustrates:</p>
+<pre class="{julia}"><code>a₃ = 1
+F₃(t) = [cos(t), sin(t)] + [cos(2t), sin(2t)]
+p₃ = (a₃, F₃)
+
+B₃0 = F₃(0) - [0,a₃]
+prob₃ = ODEProblem(bicycle, B₃0, tspan₁, p₃)
+
+out₃ = solve(prob₃, reltol=1e-6, Tsit5())
+plot_parametric(t₀..t₁, F₃, legend=false)
+plot_parametric!(t₀..t₁, t -&gt; out₃(t), linewidth=3)</code></pre>
+<p>The back wheel is moving backwards for part of the above trajectory.</p>
+<p>This effect can happen even for a front wheel motion as simple as a circle when the front wheel radius is less than the wheelbase:</p>
+<pre class="{julia}"><code>a₄ = 1
+F₄(t) = a₄/3 * [cos(t), sin(t)]
+p₄ = (a₄, F₄)
+
+t₀₄, t₁₄ = 0.0, 25pi
+tspan₄ = (t₀₄, t₁₄)
+
+B₄0 = F₄(0) - [0, a₄]
+prob₄ = ODEProblem(bicycle, B₄0, tspan₄, p₄)
+
+out₄ = solve(prob₄, reltol=1e-6, Tsit5())
+plot_parametric(t₀₄..t₁₄, F₄, legend=false, aspect_ratio=:equal)
+plot_parametric!(t₀₄..t₁₄, t -&gt; out₄(t), linewidth=3)</code></pre>
+<p>Later we will characterize when there are cusps in the rear-wheel trajectory.</p>
+</section>
+</section>
+</section>
+<section id="derivative-rules" class="level2" data-number="55.5">
+<h2 data-number="55.5" class="anchored" data-anchor-id="derivative-rules"><span class="header-section-number">55.5</span> Derivative rules</h2>
+<p>From the definition, as it is for univariate functions, for vector-valued functions <span class="math inline">\(\vec{f}, \vec{g}: R \rightarrow R^n\)</span>:</p>
+<p><span class="math display">\[
+[\vec{f} + \vec{g}]'(t) = \vec{f}'(t) + \vec{g}'(t), \quad\text{and }
+[a\vec{f}]'(t) = a \vec{f}'(t).
+\]</span></p>
+<p>If <span class="math inline">\(a(t)\)</span> is a univariate (scalar) function of <span class="math inline">\(t\)</span>, then a product rule holds:</p>
+<p><span class="math display">\[
+[a(t) \vec{f}(t)]' = a'(t)\vec{f}(t) + a(t)\vec{f}'(t).
+\]</span></p>
+<p>If <span class="math inline">\(s\)</span> is a univariate function, then the composition <span class="math inline">\(\vec{f}(s(t))\)</span> can be differentiated. Each component would satisfy the chain rule, and consequently:</p>
+<p><span class="math display">\[
+\frac{d}{dt}\left(\vec{f}(s(t))\right) = \vec{f}'(s(t)) \cdot s'(t),
+\]</span></p>
+<p>The dot being scalar multiplication by the derivative of the univariate function <span class="math inline">\(s\)</span>.</p>
+<p>Vector-valued functions do not have multiplication or division defined for them, so there are no ready analogues of the product and quotient rule. However, the dot product and the cross product produce new functions that may have derivative rules available.</p>
+<p>For the dot product, the combination <span class="math inline">\(\vec{f}(t) \cdot \vec{g}(t)\)</span> we have a univariate function of <span class="math inline">\(t\)</span>, so we know a derivative is well defined. Can it be represented in terms of the vector-valued functions? In terms of the component functions, we have this calculation specific to <span class="math inline">\(n=2\)</span>, but that which can be generalized:</p>
+<p><span class="math display">\[\begin{align*}
+\frac{d}{dt}(\vec{f}(t) \cdot \vec{g}(t)) &amp;=
+\frac{d}{dt}(f_1(t) g_1(t) + f_2(t) g_2(t))\\
+&amp;= f_1'(t) g_1(t) + f_1(t) g_1'(t) + f_2'(t) g_2(t) + f_2(t) g_2'(t)\\
+&amp;= f_1'(t) g_1(t) + f_2'(t) g_2(t) + f_1(t) g_1'(t)  + f_2(t) g_2'(t)\\
+&amp;= \vec{f}'(t)\cdot \vec{g}(t) + \vec{f}(t) \cdot \vec{g}'(t).
+\end{align*}\]</span></p>
+<p>Suggesting that a product rule like formula applies for dot products.</p>
+<p>For the cross product, we let <code>SymPy</code> derive a formula for us.</p>
+<pre class="{julia}"><code>@syms tₛ us()[1:3] vs()[1:3]
+uₛ = tₛ .|&gt; us  # evaluate each of us at t
+vₛ = tₛ .|&gt; vs</code></pre>
+<p>Then the cross product has a derivative:</p>
+<pre class="{julia}"><code>diff.(uₛ × vₛ, tₛ)</code></pre>
+<p>Admittedly, that isn’t very clear. With a peek at the answer, we show that the derivative is the same as the product rule would suggest (<span class="math inline">\(\vec{u}' \times \vec{v} + \vec{u} \times \vec{v}'\)</span>):</p>
+<pre class="{julia}"><code>diff.(uₛ × vₛ, tₛ) - (diff.(uₛ, tₛ) × vₛ + uₛ × diff.(vₛ, tₛ))</code></pre>
+<p>In summary, these two derivative formulas hold for vector-valued functions <span class="math inline">\(R \rightarrow R^n\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+(\vec{u} \cdot \vec{v})' &amp;= \vec{u}' \cdot \vec{v} + \vec{u} \cdot \vec{v}',\\
+(\vec{u} \times \vec{v})' &amp;= \vec{u}' \times \vec{v} + \vec{u} \times \vec{v}'.
+\end{align*}\]</span></p>
+<section id="application.-circular-motion-and-the-tangent-vector." class="level5">
+<h5 class="anchored" data-anchor-id="application.-circular-motion-and-the-tangent-vector.">Application. Circular motion and the tangent vector.</h5>
+<p>The parameterization <span class="math inline">\(\vec{r}(t) = \langle \cos(t), \sin(t) \rangle\)</span> describes a circle. Characteristic of this motion is a constant radius, or in terms of a norm: <span class="math inline">\(\| \vec{r}(t) \| = c\)</span>. The norm squared, can be expressed in terms of the dot product:</p>
+<p><span class="math display">\[
+\| \vec{r}(t) \|^2 = \vec{r}(t) \cdot \vec{r}(t).
+\]</span></p>
+<p>Differentiating this for the case of a constant radius yields the equation <span class="math inline">\(0 = [\vec{r}\cdot\vec{r}]'(t)\)</span>, which simplifies through the product rule and commutativity of the dot product to <span class="math inline">\(0 = 2 \vec{r}(t) \cdot \vec{r}'(t)\)</span>. That is, the two vectors are orthogonal to each other. This observation proves to be very useful, as will be seen.</p>
+</section>
+<section id="example-keplers-laws" class="level5">
+<h5 class="anchored" data-anchor-id="example-keplers-laws">Example: Kepler’s laws</h5>
+<p><a href="https://tinyurl.com/y38wragh">Kepler</a>’s laws of planetary motion are summarized by:</p>
+<ul>
+<li>The orbit of a planet is an ellipse with the Sun at one of the two foci.</li>
+<li>A line segment joining a planet and the Sun sweeps out equal areas during equal intervals of time.</li>
+<li>The square of the orbital period of a planet is directly proportional to the cube of the semi-major axis of its orbit.</li>
+</ul>
+<p>Kepler was a careful astronomer, and derived these laws empirically. We show next how to derive these laws using vector calculus assuming some facts on Newtonian motion, as postulated by Newton. This approach is borrowed from <a href="https://mathcs.clarku.edu/~djoyce/ma131/kepler.pdf">Joyce</a>.</p>
+<p>We adopt a sun-centered view of the universe, placing the sun at the origin and letting <span class="math inline">\(\vec{x}(t)\)</span> be the position of a planet relative to this origin. We can express this in terms of a magnitude and direction through <span class="math inline">\(r(t) \hat{x}(t)\)</span>.</p>
+<p>Newton’s law of gravitational force between the sun and this planet is then expressed by:</p>
+<p><span class="math display">\[
+\vec{F} = -\frac{G M m}{r^2} \hat{x}(t).
+\]</span></p>
+<p>Newton’s famous law relating force and acceleration is</p>
+<p><span class="math display">\[
+\vec{F} = m \vec{a} = m \ddot{\vec{x}}.
+\]</span></p>
+<p>Combining, Newton states <span class="math inline">\(\vec{a} = -(GM/r^2) \hat{x}\)</span>.</p>
+<p>Now to show the first law. Consider <span class="math inline">\(\vec{x} \times \vec{v}\)</span>. It is constant, as:</p>
+<p><span class="math display">\[\begin{align*}
+(\vec{x} \times \vec{v})' &amp;= \vec{x}' \times \vec{v} + \vec{x} \times \vec{v}'\\
+&amp;= \vec{v} \times \vec{v} + \vec{x} \times \vec{a}.
+\end{align*}\]</span></p>
+<p>Both terms are <span class="math inline">\(\vec{0}\)</span>, as <span class="math inline">\(\vec{a}\)</span> is parallel to <span class="math inline">\(\vec{x}\)</span> by the above, and clearly <span class="math inline">\(\vec{v}\)</span> is parallel to itself.</p>
+<p>This says, <span class="math inline">\(\vec{x} \times \vec{v} = \vec{c}\)</span> is a constant vector, meaning, the motion of <span class="math inline">\(\vec{x}\)</span> must lie in a plane, as <span class="math inline">\(\vec{x}\)</span> is always orthogonal to the fixed vector <span class="math inline">\(\vec{c}\)</span>.</p>
+<p>Now, by differentiating <span class="math inline">\(\vec{x} = r \hat{x}\)</span> we have:</p>
+<p><span class="math display">\[\begin{align*}
+\vec{v} &amp;= \vec{x}'\\
+&amp;= (r\hat{x})'\\
+&amp;= r' \hat{x} + r \hat{x}',
+\end{align*}\]</span></p>
+<p>and so</p>
+<p><span class="math display">\[\begin{align*}
+\vec{c} &amp;= \vec{x} \times \vec{v}\\
+&amp;= (r\hat{x}) \times (r'\hat{x} + r \hat{x}')\\
+&amp;= r^2 (\hat{x} \times \hat{x}').
+\end{align*}\]</span></p>
+<p>From this, we can compute <span class="math inline">\(\vec{a} \times \vec{c}\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+\vec{a} \times \vec{c} &amp;= (-\frac{GM}{r^2})\hat{x} \times r^2(\hat{x} \times \hat{x}')\\
+&amp;= -GM \hat{x} \times (\hat{x} \times \hat{x}') \\
+&amp;= GM (\hat{x} \times \hat{x}')\times \hat{x}.
+\end{align*}\]</span></p>
+<p>The last line by anti-commutativity.</p>
+<p>But, the triple cross product can be simplified through the identify <span class="math inline">\((\vec{u}\times\vec{v})\times\vec{w} = (\vec{u}\cdot\vec{w})\vec{v} - (\vec{v}\cdot\vec{w})\vec{u}\)</span>. So, the above becomes:</p>
+<p><span class="math display">\[\begin{align*}
+\vec{a} \times \vec{c} &amp;=  GM ((\hat{x}\cdot\hat{x})\hat{x}' - (\hat{x} \cdot \hat{x}')\hat{x})\\
+&amp;= GM (1 \hat{x}' - 0 \hat{x}).
+\end{align*}\]</span></p>
+<p>Now, since <span class="math inline">\(\vec{c}\)</span> is constant, we have:</p>
+<p><span class="math display">\[\begin{align*}
+(\vec{v} \times \vec{c})' &amp;= (\vec{a} \times \vec{c})\\
+&amp;= GM \hat{x}'\\
+&amp;= (GM\hat{x})'.
+\end{align*}\]</span></p>
+<p>The two sides have the same derivative, hence differ by a constant:</p>
+<p><span class="math display">\[
+\vec{v} \times \vec{c} = GM \hat{x} + \vec{d}.
+\]</span></p>
+<p>As <span class="math inline">\(\vec{x}\)</span> and <span class="math inline">\(\vec{v}\times\vec{c}\)</span> lie in the same plane - orthogonal to <span class="math inline">\(\vec{c}\)</span> - so does <span class="math inline">\(\vec{d}\)</span>. With a suitable re-orientation, so that <span class="math inline">\(\vec{d}\)</span> is along the <span class="math inline">\(x\)</span> axis, <span class="math inline">\(\vec{c}\)</span> is along the <span class="math inline">\(z\)</span>-axis, then we have <span class="math inline">\(\vec{c} = \langle 0,0,c\rangle\)</span> and <span class="math inline">\(\vec{d} = \langle d ,0,0 \rangle\)</span>, and <span class="math inline">\(\vec{x} = \langle x, y, 0 \rangle\)</span>. Set <span class="math inline">\(\theta\)</span> to be the angle, then <span class="math inline">\(\hat{x} = \langle \cos(\theta), \sin(\theta), 0\rangle\)</span>.</p>
+<p>Now</p>
+<p><span class="math display">\[\begin{align*}
+c^2 &amp;= \|\vec{c}\|^2 \\
+&amp;= \vec{c} \cdot \vec{c}\\
+&amp;= (\vec{x} \times \vec{v}) \cdot \vec{c}\\
+&amp;= \vec{x} \cdot (\vec{v} \times \vec{c})\\
+&amp;= r\hat{x} \cdot (GM\hat{x} + \vec{d})\\
+&amp;= GMr + r \hat{x} \cdot \vec{d}\\
+&amp;= GMr + rd \cos(\theta).
+\end{align*}\]</span></p>
+<p>Solving, this gives the first law. That is, the radial distance is in the form of an ellipse:</p>
+<p><span class="math display">\[
+r = \frac{c^2}{GM + d\cos(\theta)} =
+\frac{c^2/(GM)}{1 + (d/GM) \cos(\theta)}.
+\]</span></p>
+<hr>
+<p>Kepler’s second law can also be derived from vector calculus. This derivation follows that given at <a href="https://ocw.mit.edu/courses/mathematics/18-02sc-multivariable-calculus-fall-2010/1.-vectors-and-matrices/part-c-parametric-equations-for-curves/session-21-keplers-second-law/MIT18_02SC_MNotes_k.pdf">MIT OpenCourseWare</a> and <a href="https://ocw.mit.edu/courses/mathematics/18-02sc-multivariable-calculus-fall-2010/index.htm">OpenCourseWare</a>.</p>
+<p>The second law states that the area being swept out during a time duration only depends on the duration of time, not the time. Let <span class="math inline">\(\Delta t\)</span> be this duration. Then if <span class="math inline">\(\vec{x}(t)\)</span> is the position vector, as above, we have the area swept out between <span class="math inline">\(t\)</span> and <span class="math inline">\(t + \Delta t\)</span> is visualized along the lines of:</p>
+<pre class="{julia}"><code>#| hold: true
+x1(t) = [cos(t), 2 * sin(t)]
+t0, t1, Delta = 1.0, 2.0, 1/10
+plot_parametric(0..pi/2, x1)
+
+arrow!([0,0], x1(t0)); arrow!([0,0], x1(t0 + Delta))
+arrow!(x1(t0), x1(t0+Delta)- x1(t0), linewidth=5)</code></pre>
+<p>The area swept out, is basically the half the area of the parallelogram formed by <span class="math inline">\(\vec{x}(t)\)</span> and <span class="math inline">\(\Delta \vec{x}(t) = \vec{x}(t + \Delta t) - \vec{x}(t)\)</span>. This area is <span class="math inline">\((1/2) (\vec{x} \times \Delta\vec{x}(t))\)</span>.</p>
+<p>If we divide through by <span class="math inline">\(\Delta t\)</span>, and take a limit we have:</p>
+<p><span class="math display">\[
+\frac{dA}{dt} = \| \frac{1}{2}\lim_{\Delta t \rightarrow 0} (\vec{x} \times \frac{\vec{x}(t + \Delta t) - \vec{x}(t)}{\Delta t})\| =
+\frac{1}{2}\|\vec{x} \times \vec{v}\|.
+\]</span></p>
+<p>But we saw above, that for the motion of a planet, that <span class="math inline">\(\vec{x} \times \vec{v} = \vec{c}\)</span>, a constant. This says, <span class="math inline">\(dA\)</span> is a constant independent of <span class="math inline">\(t\)</span>, and consequently, the area swept out over a duration of time will not depend on the particular times involved, just the duration.</p>
+<hr>
+<p>The third law relates the period to a parameter of the ellipse. We have from the above a strong suggestion that area of the ellipse can be found by integrating <span class="math inline">\(dA\)</span> over the period, say <span class="math inline">\(T\)</span>. Assuming that is the case and letting <span class="math inline">\(a\)</span> be the semi-major axis length, and <span class="math inline">\(b\)</span> the semi-minor axis length, then</p>
+<p><span class="math display">\[
+\pi a b = \int_0^T dA = \int_0^T (1/2) \|\vec{x} \times \vec{v}\| dt = \| \vec{x} \times \vec{v}\| \frac{T}{2}.
+\]</span></p>
+<p>As <span class="math inline">\(c = \|\vec{x} \times \vec{v}\|\)</span> is a constant, this allows us to express <span class="math inline">\(c\)</span> by: <span class="math inline">\(2\pi a b/T\)</span>.</p>
+<p>But, we have</p>
+<p><span class="math display">\[
+r(\theta) = \frac{c^2}{GM + d\cos(\theta)} = \frac{c^2/(GM)}{1 + d/(GM) \cos(\theta)}.
+\]</span></p>
+<p>So, <span class="math inline">\(e = d/(GM)\)</span> and <span class="math inline">\(a (1 - e^2) = c^2/(GM)\)</span>. Using <span class="math inline">\(b = a \sqrt{1-e^2}\)</span> we have:</p>
+<p><span class="math display">\[
+a(1-e^2) = c^2/(GM) = (\frac{2\pi a b}{T})^2 \frac{1}{GM} =
+\frac{(2\pi)^2}{GM} \frac{a^2 (a^2(1-e^2))}{T^2},
+\]</span></p>
+<p>or after cancelling <span class="math inline">\((1-e^2)\)</span> from each side:</p>
+<p><span class="math display">\[
+T^2 = \frac{(2\pi)^2}{GM} \frac{a^4}{a} = \frac{(2\pi)^2}{GM} a^3.
+\]</span></p>
+<hr>
+<p>The above shows how Newton might have derived Kepler’s observational facts. Next we show, that assuming the laws of Kepler can anticipate Newton’s equation for gravitational force. This follows <a href="https://en.wikipedia.org/wiki/Kepler%27s_laws_of_planetary_motion#Planetary_acceleration">Wikipedia</a>.</p>
+<p>Now let <span class="math inline">\(\vec{r}(t)\)</span> be the position of the planet relative to the Sun at the origin, in two dimensions (we used <span class="math inline">\(\vec{x}(t)\)</span> above). Assume <span class="math inline">\(\vec{r}(0)\)</span> points in the <span class="math inline">\(x\)</span> direction. Write <span class="math inline">\(\vec{r} = r \hat{r}\)</span>. Define <span class="math inline">\(\hat{\theta}(t)\)</span> to be the mapping from time <span class="math inline">\(t\)</span> to the angle defined by <span class="math inline">\(\hat{r}\)</span> through the unit circle.</p>
+<p>Then we express the velocity (<span class="math inline">\(\dot{\vec{r}}\)</span>) and acceleration (<span class="math inline">\(\ddot{\vec{r}}\)</span>) in terms of the orthogonal vectors <span class="math inline">\(\hat{r}\)</span> and <span class="math inline">\(\hat{\theta}\)</span>, as follows:</p>
+<p><span class="math display">\[
+\frac{d}{dt}(r \hat{r}) = \dot{r} \hat{r} + r \dot{\hat{r}} =  \dot{r} \hat{r} + r \dot{\theta}\hat{\theta}.
+\]</span></p>
+<p>The last equality from expressing <span class="math inline">\(\hat{r}(t) = \hat{r}(\theta(t))\)</span> and using the chain rule, noting <span class="math inline">\(d(\hat{r}(\theta))/d\theta = \hat{\theta}\)</span>.</p>
+<p>Continuing,</p>
+<p><span class="math display">\[
+\frac{d^2}{dt^2}(r \hat{r}) =
+(\ddot{r} \hat{r} + \dot{r} \dot{\hat{r}}) +
+(\dot{r} \dot{\theta}\hat{\theta} + r \ddot{\theta}\hat{\theta} + r \dot{\theta}\dot{\hat{\theta}}).
+\]</span></p>
+<p>Noting, similar to above, <span class="math inline">\(\dot{\hat{\theta}}  = d\hat{\theta}/dt = d\hat{\theta}/d\theta \cdot d\theta/dt = -\dot{\theta} \hat{r}\)</span> we can express the above in terms of <span class="math inline">\(\hat{r}\)</span> and <span class="math inline">\(\hat{\theta}\)</span> as:</p>
+<p><span class="math display">\[
+\vec{a} = \frac{d^2}{dt^2}(r \hat{r}) = (\ddot{r} - r (\dot{\theta})^2) \hat{r}  + (r\ddot{\theta}  + 2\dot{r}\dot{\theta}) \hat{\theta}.
+\]</span></p>
+<p>That is, in general, the acceleration has a radial component and a transversal component.</p>
+<p>Kepler’s second law says that the area increment over time is constant (<span class="math inline">\(dA/dt\)</span>), but this area increment is approximated by the following wedge in polar coordinates: <span class="math inline">\(dA = (1/2) r \cdot rd\theta\)</span>. We have then <span class="math inline">\(dA/dt = r^2 \dot{\theta}\)</span> is constant.</p>
+<p>Differentiating, we have:</p>
+<p><span class="math display">\[
+0 = \frac{d(r^2 \dot{\theta})}{dt} = 2r\dot{r}\dot{\theta} + r^2 \ddot{\theta},
+\]</span></p>
+<p>which is the transversal component of the acceleration times <span class="math inline">\(r\)</span>, as decomposed above. This means, that the acceleration of the planet is completely towards the Sun at the origin.</p>
+<p>Kepler’s first law, relates <span class="math inline">\(r\)</span> and <span class="math inline">\(\theta\)</span> through the polar equation of an ellipse:</p>
+<p><span class="math display">\[
+r = \frac{p}{1 + \epsilon \cos(\theta)}.
+\]</span></p>
+<p>Expressing in terms of <span class="math inline">\(p/r\)</span> and differentiating in <span class="math inline">\(t\)</span> gives:</p>
+<p><span class="math display">\[
+-\frac{p \dot{r}}{r^2} = -\epsilon\sin(\theta) \dot{\theta}.
+\]</span></p>
+<p>Or</p>
+<p><span class="math display">\[
+p\dot{r} = \epsilon\sin(\theta) r^2 \dot{\theta} = \epsilon \sin(\theta) C,
+\]</span></p>
+<p>For a constant <span class="math inline">\(C\)</span>, used above, as the second law implies <span class="math inline">\(r^2 \dot{\theta}\)</span> is constant. (This constant can be expressed in terms of parameters describing the ellipse.)</p>
+<p>Differentiating again in <span class="math inline">\(t\)</span>, gives:</p>
+<p><span class="math display">\[
+p \ddot{r} = C\epsilon \cos(\theta) \dot{\theta} = C\epsilon \cos(\theta)\frac{C}{r^2}.
+\]</span></p>
+<p>So <span class="math inline">\(\ddot{r} = (C^2 \epsilon / p) \cos{\theta} (1/r^2)\)</span>.</p>
+<p>The radial acceleration from above is:</p>
+<p><span class="math display">\[
+\ddot{r} - r (\dot{\theta})^2 =
+(C^2 \epsilon/p) \cos{\theta} \frac{1}{r^2} - r\frac{C^2}{r^4} = \frac{C^2}{pr^2}(\epsilon \cos(\theta) - \frac{p}{r}).
+\]</span></p>
+<p>Using <span class="math inline">\(p/r = 1 + \epsilon\cos(\theta)\)</span>, we have the radial acceleration is <span class="math inline">\(C^2/p \cdot (1/r^2)\)</span>. That is the acceleration, is proportional to the inverse square of the position, and using the relation between <span class="math inline">\(F\)</span>, force, and acceleration, we see the force on the planet follows the inverse-square law of Newton.</p>
+</section>
+</section>
+<section id="moving-frames-of-reference" class="level2" data-number="55.6">
+<h2 data-number="55.6" class="anchored" data-anchor-id="moving-frames-of-reference"><span class="header-section-number">55.6</span> Moving frames of reference</h2>
+<p>In the last example, it proved useful to represent vectors in terms of other unit vectors, in that case <span class="math inline">\(\hat{r}\)</span> and <span class="math inline">\(\hat{\theta}\)</span>. Here we discuss a coordinate system defined intrinsically by the motion along the trajectory of a curve.</p>
+<p>Let <span class="math inline">\(r(t)\)</span> be a smooth vector-valued function in <span class="math inline">\(R^3\)</span>. It gives rise to a space curve, through its graph. This curve has tangent vector <span class="math inline">\(\vec{r}'(t)\)</span>, indicating the direction of travel along <span class="math inline">\(\vec{r}\)</span> as <span class="math inline">\(t\)</span> increases. The length of <span class="math inline">\(\vec{r}'(t)\)</span> depends on the parameterization of <span class="math inline">\(\vec{r}\)</span>, as for any increasing, differentiable function <span class="math inline">\(s(t)\)</span>, the composition <span class="math inline">\(\vec{r}(s(t))\)</span> will have derivative, <span class="math inline">\(\vec{r}'(s(t)) s'(t)\)</span>, having the same direction as <span class="math inline">\(\vec{r}'(t)\)</span> (at suitably calibrated points), but not the same magnitude, the factor of <span class="math inline">\(s(t)\)</span> being involved.</p>
+<p>To discuss properties intrinsic to the curve, the unit vector is considered:</p>
+<p><span class="math display">\[
+\hat{T}(t) = \frac{\vec{r}'(t)}{\|\vec{r}'(t)\|}.
+\]</span></p>
+<p>The function <span class="math inline">\(\hat{T}(t)\)</span> is the unit tangent vector. An assumption of regularity ensures the denominator is never <span class="math inline">\(0\)</span>.</p>
+<p>Now define the unit <em>normal</em>, <span class="math inline">\(\hat{N}(t)\)</span>, by:</p>
+<p><span class="math display">\[
+\hat{N}(t) = \frac{\hat{T}'(t)}{\| \hat{T}'(t) \|}.
+\]</span></p>
+<p>Since <span class="math inline">\(\|\hat{T}(t)\| = 1\)</span>, a constant, it must be that <span class="math inline">\(\hat{T}'(t) \cdot \hat{T}(t) = 0\)</span>, that is, the <span class="math inline">\(\hat{N}\)</span> and <span class="math inline">\(\hat{T}\)</span> are orthogonal.</p>
+<p>Finally, define the <em>binormal</em>, <span class="math inline">\(\hat{B}(t) = \hat{T}(t) \times \hat{N}(t)\)</span>. At each time <span class="math inline">\(t\)</span>, the three unit vectors are orthogonal to each other. They form a moving coordinate system for the motion along the curve that does not depend on the parameterization.</p>
+<p>We can visualize this, for example along a <a href="https://tinyurl.com/y4lo29mv">Viviani</a> curve, as is done in a <a href="https://en.wikipedia.org/wiki/Frenet%E2%80%93Serret_formulas">Wikipedia</a> animation:</p>
+<pre class="{julia}"><code>#| hold: true
+function viviani(t, a=1)
+    [a*(1-cos(t)), a*sin(t), 2a*sin(t/2)]
+end
+
+
+Tangent(t) = viviani'(t)/norm(viviani'(t))
+Normal(t) = Tangent'(t)/norm(Tangent'(t))
+Binormal(t) = Tangent(t) × Normal(t)
+
+p = plot(legend=false)
+plot_parametric!(-2pi..2pi, viviani)
+
+t0, t1 = -pi/3, pi/2 + 2pi/5
+r0, r1 = viviani(t0), viviani(t1)
+arrow!(r0, Tangent(t0)); arrow!(r0, Binormal(t0)); arrow!(r0, Normal(t0))
+arrow!(r1, Tangent(t1)); arrow!(r1, Binormal(t1)); arrow!(r1, Normal(t1))
+p</code></pre>
+<hr>
+<p>The <em>curvature</em> of a <span class="math inline">\(3\)</span>-dimensional space curve is defined by:</p>
+<blockquote class="blockquote">
+<p><em>The curvature</em>: For a <span class="math inline">\(3-D\)</span> curve the curvature is defined by:</p>
+<p><span class="math inline">\(\kappa = \frac{\| r'(t) \times r''(t) \|}{\| r'(t) \|^3}.\)</span></p>
+</blockquote>
+<p>For <span class="math inline">\(2\)</span>-dimensional space curves, the same formula applies after embedding a <span class="math inline">\(0\)</span> third component. It can also be expressed directly as</p>
+<p><span class="math display">\[
+\kappa = (x'y''-x''y')/\|r'\|^3. \quad (r(t) =\langle x(t), y(t) \rangle)
+\]</span></p>
+<p>Curvature can also be defined as derivative of the tangent vector, <span class="math inline">\(\hat{T}\)</span>, <em>when</em> the curve is parameterized by arc length, a topic still to be taken up. The vector <span class="math inline">\(\vec{r}'(t)\)</span> is the direction of motion, whereas <span class="math inline">\(\vec{r}''(t)\)</span> indicates how fast and in what direction this is changing. For curves with little curve in them, the two will be nearly parallel and the cross product small (reflecting the presence of <span class="math inline">\(\cos(\theta)\)</span> in the definition). For “curvy” curves, <span class="math inline">\(\vec{r}''\)</span> will be in a direction opposite of <span class="math inline">\(\vec{r}'\)</span> to the <span class="math inline">\(\cos(\theta)\)</span> term in the cross product will be closer to <span class="math inline">\(1\)</span>.</p>
+<p>Let <span class="math inline">\(\vec{r}(t) = k \cdot \langle \cos(t), \sin(t), 0 \rangle\)</span>. This will have curvature:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms k::positive t::real
+r1 = k * [cos(t), sin(t), 0]
+norm(diff.(r1,t) × diff.(r1,t,t)) / norm(diff.(r1,t))^3 |&gt; simplify</code></pre>
+<p>For larger circles (bigger <span class="math inline">\(\|k\|\)</span>) there is less curvature. The limit being a line with curvature <span class="math inline">\(0\)</span>.</p>
+<p>If a curve is imagined to have a tangent “circle” (second order Taylor series approximation), then the curvature of that circle matches the curvature of the curve.</p>
+<p>The <a href="https://en.wikipedia.org/wiki/Torsion_of_a_curve">torsion</a>, <span class="math inline">\(\tau\)</span>, of a space curve (<span class="math inline">\(n=3\)</span>), is a measure of how sharply the curve is twisting out of the plane of curvature.</p>
+<p>The torsion is defined for smooth curves by</p>
+<blockquote class="blockquote">
+<p><em>The torsion</em>:</p>
+<p><span class="math inline">\(\tau = \frac{(\vec{r}' \times \vec{r}'') \cdot \vec{r}'''}{\|\vec{r}' \times \vec{r}''\|^2}.\)</span></p>
+</blockquote>
+<p>For the torsion to be defined, the cross product <span class="math inline">\(\vec{r}' \times \vec{r}''\)</span> must be non zero, that is the two must not be parallel or zero.</p>
+<section id="example-tubular-surface" class="level5">
+<h5 class="anchored" data-anchor-id="example-tubular-surface">Example: Tubular surface</h5>
+<pre class="{julia}"><code>#| echo: false
+gr();</code></pre>
+<p>This last example comes from a collection of several <a href="https://github.com/empet/3D-Viz-with-PlotlyJS.jl/blob/main/5-Tubular-surface.ipynb">examples</a> provided by Discourse user <code>@empet</code> to illustrate <code>plotlyjs</code>. We adopt it to <code>Plots</code> with some minor changes below.</p>
+<p>The task is to illustrate a space curve, <span class="math inline">\(c(t)\)</span>, using a tubular surface. At each time point <span class="math inline">\(t\)</span>, assume the curve has tangent, <span class="math inline">\(e_1\)</span>; normal, <span class="math inline">\(e_2\)</span>; and binormal, <span class="math inline">\(e_3\)</span>. (This assumes the defining derivatives exist and are non-zero and the cross product in the torsion is non zero.) The tubular surface is a circle of radius <span class="math inline">\(\epsilon\)</span> in the plane determined by the normal and binormal. This curve would be parameterized by <span class="math inline">\(r(t,u) = c(t) + \epsilon (e_2(t) \cdot \cos(u) + e_3(t) \cdot \sin(u))\)</span> for varying <span class="math inline">\(u\)</span>.</p>
+<p>The Frenet-Serret equations setup a system of differential equations driven by the curvature and torsion. We use the <code>DifferentialEquations</code> package to solve this equation for two specific functions and a given initial condition. The equations when expanded into coordinates become <span class="math inline">\(12\)</span> different equations:</p>
+<pre class="{julia}"><code># e₁, e₂, e₃, (x,y,z)
+function Frenet_eq!(du, u, p, s)  #system of ODEs
+    κ, τ = p
+    du[1] =  κ(s) * u[4]               # e₁′ = κ ⋅ e₂
+    du[2] =  κ(s) * u[5]
+    du[3] =  κ(s) * u[6]
+    du[4] = -κ(s) * u[1] + τ(s) * u[7] # e₂′ = - κ ⋅ e₁ + τ ⋅ e₃
+    du[5] = -κ(s) * u[2] + τ(s) * u[8]
+    du[6] = -κ(s) * u[3] + τ(s) * u[9]
+    du[7] = -τ(s) * u[4]               # e₃′ = - τ ⋅ e₂
+    du[8] = -τ(s) * u[5]
+    du[9] = -τ(s) * u[6]
+    du[10] = u[1]                      # c′ = e₁
+    du[11] = u[2]
+    du[12] = u[3]
+end</code></pre>
+<p>The last set of equations describe the motion of the spine. It follows from specifying the tangent to the curve is <span class="math inline">\(e_1\)</span>, as desired; it is parameterized by arc length, as <span class="math inline">\(\mid c'(t) \mid = 1\)</span>.</p>
+<p>Following the example of <code>@empet</code>, we define a curvature function and torsion function, the latter a constant:</p>
+<pre class="{julia}"><code>κ(s) = 3 * sin(s/10) * sin(s/10)
+τ(s) = 0.35</code></pre>
+<p>The initial condition and time span are set with:</p>
+<pre class="{julia}"><code>e₁₀, e₂₀, e₃₀ = [1,0,0], [0,1,0], [0,0,1]
+u₀ = [0, 0, 0]
+u0 = vcat(e₁₀, e₂₀, e₃₀, u₀) # initial condition for the system of ODE
+t_span = (0.0,  150.0)          # time interval for solution</code></pre>
+<p>With this set up, the problem can be solved:</p>
+<pre class="{julia}"><code>prob = ODEProblem(Frenet_eq!, u0, t_span, (κ, τ))
+sol = solve(prob, Tsit5());</code></pre>
+<p>The “spine” is the center axis of the tube and is the <span class="math inline">\(10\)</span>th, <span class="math inline">\(11\)</span>th, and <span class="math inline">\(12\)</span>th coordinates:</p>
+<pre class="{julia}"><code>spine(t) = sol(t)[10:12]</code></pre>
+<p>The tangent, normal, and binormal can be similarly defined using the other <span class="math inline">\(9\)</span> indices:</p>
+<pre class="{julia}"><code>e₁(t) = sol(t)[1:3]
+e₂(t) = sol(t)[4:6]
+e₃(t) = sol(t)[7:9]</code></pre>
+<p>We fix a small time range and show the trace of the spine and the frame at a single point in time:</p>
+<pre class="{julia}"><code>a_0, b_0 = 50, 60
+ts_0 = range(a_0, b_0, length=251)
+
+t_0 = (a_0 + b_0) / 2
+ϵ = 1/5
+
+plot_parametric(a_0..b_0, spine)
+
+arrow!(spine(t_0), e₁(t_0))
+arrow!(spine(t_0), e₂(t_0))
+arrow!(spine(t_0), e₃(t_0))
+
+r_0(t, θ) = spine(t) + ϵ * (e₂(t)*cos(θ) + e₃(t)*sin(θ))
+plot_parametric!(0..2pi, θ -&gt; r_0(t_0, θ))</code></pre>
+<p>The <code>ϵ</code> value determines the radius of the tube; we see it above as the radius of the drawn circle. The function <code>r</code> for a fixed <code>t</code> traces out such a circle centered at a point on the spine. For a fixed <code>θ</code>, the function <code>r</code> describes a line on the surface of the tube paralleling the spine.</p>
+<p>The tubular surface is now ready to be rendered along the entire time span using a pattern for parametrically defined surfaces:</p>
+<pre class="{julia}"><code>#| hold: true
+ts = range(t_span..., length=1001)
+θs = range(0, 2pi, length=100)
+surface(unzip(r_0.(ts, θs'))...)</code></pre>
+<pre class="{julia}"><code>#| echo: false
+plotly();</code></pre>
+</section>
+</section>
+<section id="arc-length" class="level2" data-number="55.7">
+<h2 data-number="55.7" class="anchored" data-anchor-id="arc-length"><span class="header-section-number">55.7</span> Arc length</h2>
+<p>In <a href="../integrals/arc_length.html">Arc length</a> there is a discussion of how to find the arc length of a parameterized curve in <span class="math inline">\(2\)</span> dimensions. The general case is discussed by <a href="https://randomproofs.files.wordpress.com/2010/11/arc_length.pdf">Destafano</a> who shows:</p>
+<blockquote class="blockquote">
+<p><em>Arc-length</em>: if a curve <span class="math inline">\(C\)</span> is parameterized by a smooth function <span class="math inline">\(\vec{r}(t)\)</span> over an interval <span class="math inline">\(I\)</span>, then the arc length of <span class="math inline">\(C\)</span> is:</p>
+<p><span class="math display">\[
+\int_I \| \vec{r}'(t)  \| dt.
+\]</span></p>
+</blockquote>
+<p>If we associate <span class="math inline">\(\vec{r}'(t)\)</span> with the velocity, then this is the integral of the speed (the magnitude of the velocity).</p>
+<p>Let <span class="math inline">\(I=[a,b]\)</span> and <span class="math inline">\(s(t): [v,w] \rightarrow [a,b]\)</span> such that <span class="math inline">\(s\)</span> is increasing and differentiable. Then <span class="math inline">\(\vec{\phi} = \vec{r} \circ s\)</span> will have</p>
+<p><span class="math display">\[
+\text{arc length} =
+\int_v^w \| \vec{\phi}'(t)\| dt =
+\int_v^w \| \vec{r}'(s(t))\| s'(t) dt =
+\int_a^b \| \vec{r}'(u) \| du,
+\]</span></p>
+<p>by a change of variable <span class="math inline">\(u=s(t)\)</span>. As such the arc length is a property of the curve and not the parameterization of the curve.</p>
+<p>For some parameterization, we can define</p>
+<p><span class="math display">\[
+s(t) = \int_0^t \| \vec{r}'(u) \| du
+\]</span></p>
+<p>Then by the fundamental theorem of calculus, <span class="math inline">\(s(t)\)</span> is non-decreasing. If <span class="math inline">\(\vec{r}'\)</span> is assumed to be non-zero and continuous (regular), then <span class="math inline">\(s(t)\)</span> has a derivative and an inverse which is monotonic. Using the inverse function <span class="math inline">\(s^{-1}\)</span> to change variables (<span class="math inline">\(\vec{\phi} = \vec{r} \circ s^{-1}\)</span>) has</p>
+<p><span class="math display">\[
+\int_0^c \| \phi'(t) \| dt =
+\int_{s^{-1}(0)}^{s^{-1}(c)} \| \vec{r}'(u) \| du =
+s(s^{-1}(c)) - s(s^{-1}(0)) =
+c
+\]</span></p>
+<p>That is, the arc length from <span class="math inline">\([0,c]\)</span> for <span class="math inline">\(\phi\)</span> is just <span class="math inline">\(c\)</span>; the curve <span class="math inline">\(C\)</span> is parameterized by arc length.</p>
+<section id="example-4" class="level5">
+<h5 class="anchored" data-anchor-id="example-4">Example</h5>
+<p>Viviani’s curve is the intersection of sphere of radius <span class="math inline">\(a\)</span> with a cylinder of radius <span class="math inline">\(a\)</span>. A parameterization was given previously by:</p>
+<pre class="{julia}"><code>function viviani(t, a=1)
+    [a*(1-cos(t)), a*sin(t), 2a*sin(t/2)]
+end</code></pre>
+<p>The curve is traced out over the interval <span class="math inline">\([0, 4\pi]\)</span>. We try to find the arc-length:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms t::positive a::positive
+speed = simplify(norm(diff.(viviani(t, a), t)))
+integrate(speed, (t, 0, 4*PI))</code></pre>
+<p>We see that the answer depends linearly on <span class="math inline">\(a\)</span>, but otherwise is a constant expressed as an integral. We use <code>QuadGk</code> to provide a numeric answer for the case <span class="math inline">\(a=1\)</span>:</p>
+<pre class="{julia}"><code>quadgk(t -&gt; norm(viviani'(t)), 0, 4pi)</code></pre>
+</section>
+<section id="example-5" class="level5">
+<h5 class="anchored" data-anchor-id="example-5">Example</h5>
+<p>Very few parameterized curves admit a closed-form expression for parameterization by arc-length. Let’s consider the helix expressed by <span class="math inline">\(\langle a\cos(t), a\sin(t), bt\rangle\)</span>, as this does allow such a parameterization.</p>
+<pre class="{julia}"><code>@syms aₕ::positive bₕ::positive tₕ::positive alₕ::positive
+helix = [aₕ * cos(tₕ), aₕ * sin(tₕ), bₕ * tₕ]
+speed = simplify( norm(diff.(helix, tₕ)) )
+s = integrate(speed, (tₕ, 0, alₕ))</code></pre>
+<p>So <code>s</code> is a linear function. We can re-parameterize by:</p>
+<pre class="{julia}"><code>eqnₕ = subs.(helix, tₕ =&gt; alₕ/sqrt(aₕ^2 + bₕ^2))</code></pre>
+<p>To see that the speed, <span class="math inline">\(\| \vec{\phi}' \|\)</span>, is constantly <span class="math inline">\(1\)</span>:</p>
+<pre class="{julia}"><code>simplify(norm(diff.(eqnₕ, alₕ)))</code></pre>
+<p>From this, we have the arc length is:</p>
+<p><span class="math display">\[
+\int_0^t \| \vec{\phi}'(u) \| du = \int_0^t 1 du = t
+\]</span></p>
+<hr>
+<p>Parameterizing by arc-length is only explicitly possible for a few examples, however knowing it can be done in theory, is important. Some formulas are simplified, such as the tangent, normal, and binormal. Let <span class="math inline">\(\vec{r}(s)\)</span> be parameterized by arc length, then:</p>
+<p><span class="math display">\[
+\hat{T}(s)= \vec{r}'(s) / \| \vec{r}'(s) \| = \hat{r}'(s),\quad
+\hat{N}(s) = \hat{T}'(s) / \| \hat{T}'(s)\| = \hat{T}'(s)/\kappa,\quad
+\hat{B} = \hat{T} \times \hat{N},
+\]</span></p>
+<p>As before, but further, we have if <span class="math inline">\(\kappa\)</span> is the curvature and <span class="math inline">\(\tau\)</span> the torsion, these relationships expressing the derivatives with respect to <span class="math inline">\(s\)</span> in terms of the components in the frame:</p>
+<p><span class="math display">\[\begin{align*}
+\hat{T}'(s) &amp;=                    &amp;\kappa \hat{N}(s)  &amp;\\
+\hat{N}'(s) &amp;= -\kappa \hat{T}(s) &amp;                   &amp;+ \tau \hat{B}(s)\\
+\hat{B}'(s) &amp;=                    &amp;-\tau \hat{N}(s)   &amp;
+\end{align*}\]</span></p>
+<p>These are the <a href="https://en.wikipedia.org/wiki/Frenet%E2%80%93Serret_formulas">Frenet-Serret</a> formulas.</p>
+</section>
+<section id="example-6" class="level5">
+<h5 class="anchored" data-anchor-id="example-6">Example</h5>
+<p>Continuing with our parameterization of a helix by arc length, we can compute the curvature and torsion by differentiation:</p>
+<pre class="{julia}"><code>gammaₕ = subs.(helix, tₕ =&gt; alₕ/sqrt(aₕ^2 + bₕ^2))   # gamma parameterized by arc length
+@syms uₕ::positive
+gammaₕ₁ = subs.(gammaₕ, alₕ .=&gt; uₕ)                  # u is arc-length parameterization</code></pre>
+<pre class="{julia}"><code>Tₕ = diff.(gammaₕ₁, uₕ)
+norm(Tₕ)  |&gt; simplify</code></pre>
+<p>The length is one, as the speed of a curve parameterized by arc-length is 1.</p>
+<pre class="{julia}"><code>outₕ = diff.(Tₕ, uₕ)</code></pre>
+<p>This should be <span class="math inline">\(\kappa \hat{N}\)</span>, so we do:</p>
+<pre class="{julia}"><code>κₕ = norm(outₕ) |&gt; simplify
+Normₕ = outₕ / κₕ
+κₕ, Normₕ</code></pre>
+<p>Interpreting, <span class="math inline">\(a\)</span> is the radius of the circle and <span class="math inline">\(b\)</span> how tight the coils are. If <span class="math inline">\(a\)</span> gets much larger than <span class="math inline">\(b\)</span>, then the curvature is like <span class="math inline">\(1/a\)</span>, just as with a circle. If <span class="math inline">\(b\)</span> gets very big, then the trajectory looks more stretched out and the curvature gets smaller.</p>
+<p>To find the torsion, we find, <span class="math inline">\(\hat{B}\)</span> then differentiate:</p>
+<pre class="{julia}"><code>Bₕ = Tₕ × Normₕ
+outₕ₁ = diff.(Bₕ, uₕ)
+τₕ = norm(outₕ₁)</code></pre>
+<p>This looks complicated, as does <code>Norm</code>:</p>
+<pre class="{julia}"><code>Normₕ</code></pre>
+<p>However, the torsion, up to a sign, simplifies nicely:</p>
+<pre class="{julia}"><code>τₕ |&gt; simplify</code></pre>
+<p>Here, when <span class="math inline">\(b\)</span> gets large, the curve looks more and more “straight” and the torsion decreases. Similarly, if <span class="math inline">\(a\)</span> gets big, the torsion decreases.</p>
+</section>
+<section id="example-7" class="level5">
+<h5 class="anchored" data-anchor-id="example-7">Example</h5>
+<p><a href="https://projecteuclid.org/download/pdf_1/euclid.em/1259158427">Levi and Tabachnikov</a> consider the trajectories of the front and rear bicycle wheels. Recall the notation previously used: <span class="math inline">\(\vec{F}(t)\)</span> for the front wheel, and <span class="math inline">\(\vec{B}(t)\)</span> for the rear wheel trajectories. Consider now their parameterization by arc length, using <span class="math inline">\(u\)</span> for the arc-length parameter for <span class="math inline">\(\vec{F}\)</span> and <span class="math inline">\(v\)</span> for <span class="math inline">\(\vec{B}\)</span>. We define <span class="math inline">\(\alpha(u)\)</span> to be the steering angle of the bicycle. This can be found as the angle between the tangent vector of the path of <span class="math inline">\(\vec{F}\)</span> with the vector <span class="math inline">\(\vec{F} - \vec{B}\)</span>. Let <span class="math inline">\(\kappa\)</span> be the curvature of the front wheel and <span class="math inline">\(k\)</span> the curvature of the back wheel.</p>
+<pre class="{julia}"><code>#| echo: false
+let
+    gr()
+a = 1
+F(t) = [cos(pi/2 - t), 2sin(pi/2-t)]
+p = (a, F)
+
+t0, t1 = -pi/6, pi/2.75
+tspan = (t0, t1)
+
+t = 7pi/6
+B0 = F(t0) + a*[cos(t), sin(t)]
+prob = ODEProblem(bicycle, B0, tspan, p)
+
+out = solve(prob, reltol=1e-6, Tsit5())
+plt = plot_parametric(t0..t1, F, linewidth=3,
+                      xticks=nothing, yticks=nothing, border=:none,
+                      legend=false, aspect_ratio=:equal)
+plot_parametric!(t0..t1, t -&gt; out(t),  linewidth=3)
+
+t = pi/4
+arrow!(out(t), 2*(F(t) - out(t)))
+plot!(unzip([out(t), F(t)])..., linewidth=2)
+arrow!(F(t), F'(t)/norm(F'(t)))
+Fphat(t) = F'(t)/norm(F'(t))
+arrow!( F(t), -Fphat'(t)/norm(Fphat'(t)))
+using LaTeXStrings
+annotate!([(-.5,1.5,L"k"),
+(.775,1.55,L"\kappa"),
+(.85, 1.3, L"\alpha")])
+plotly()
+plt
+end</code></pre>
+<p>Levi and Tabachnikov prove in their Proposition 2.4:</p>
+<p><span class="math display">\[\begin{align*}
+\kappa(u) &amp;= \frac{d\alpha(u)}{du} + \frac{\sin(\alpha(u))}{a},\\
+|\frac{dv}{du}| &amp;= |\cos(\alpha)|, \quad \text{and}\\
+k &amp;= \frac{\tan(\alpha)}{a}.
+\end{align*}\]</span></p>
+<p>The first equation relates the steering angle with the curvature. If the steering angle is not changed (<span class="math inline">\(d\alpha/du=0\)</span>) then the curvature is constant and the motion is circular. It will be greater for larger angles (up to <span class="math inline">\(\pi/2\)</span>). As the curvature is the reciprocal of the radius, this means the radius of the circular trajectory will be smaller. For the same constant steering angle, the curvature will be smaller for longer wheelbases, meaning the circular trajectory will have a larger radius. For cars, which have similar dynamics, this means longer wheelbase cars will take more room to make a U-turn.</p>
+<p>The second equation may be interpreted in ratio of arc lengths. The infinitesimal arc length of the rear wheel is proportional to that of the front wheel only scaled down by <span class="math inline">\(\cos(\alpha)\)</span>. When <span class="math inline">\(\alpha=0\)</span> - the bike is moving in a straight line - and the two are the same. At the other extreme - when <span class="math inline">\(\alpha=\pi/2\)</span> - the bike must be pivoting on its rear wheel and the rear wheel has no arc length. This cosine, is related to the speed of the back wheel relative to the speed of the front wheel, which was used in the initial differential equation.</p>
+<p>The last equation, relates the curvature of the back wheel track to the steering angle of the front wheel. When <span class="math inline">\(\alpha=\pm\pi/2\)</span>, the rear-wheel curvature, <span class="math inline">\(k\)</span>, is infinite, resulting in a cusp (no circle with non-zero radius will approximate the trajectory). This occurs when the front wheel is steered orthogonal to the direction of motion. As was seen in previous graphs of the trajectories, a cusp can happen for quite regular front wheel trajectories.</p>
+<p>To derive the first one, we have previously noted that when a curve is parameterized by arc length, the curvature is more directly computed: it is the magnitude of the derivative of the tangent vector. The tangent vector is of unit length, when parametrized by arc length. This implies its derivative will be orthogonal. If <span class="math inline">\(\vec{r}(t)\)</span> is a parameterization by arc length, then the curvature formula simplifies as:</p>
+<p><span class="math display">\[\begin{align*}
+\kappa(s) &amp;= \frac{\| \vec{r}'(s) \times \vec{r}''(s) \|}{\|\vec{r}'(s)\|^3} \\
+&amp;= \frac{\| \vec{r}'(s) \times \vec{r}''(s) \|}{1}                           \\
+&amp;= \| \vec{r}'(s) \| \| \vec{r}''(s) \| \sin(\theta)                         \\
+&amp;= 1 \| \vec{r}''(s) \| 1 = \| \vec{r}''(s) \|.
+\end{align*}\]</span></p>
+<p>So in the above, the curvature is <span class="math inline">\(\kappa = \| \vec{F}''(u) \|\)</span> and <span class="math inline">\(k = \|\vec{B}''(v)\|\)</span>.</p>
+<p>On the figure, the tangent vector <span class="math inline">\(\vec{F}'(u)\)</span> is drawn, along with this unit vector rotated by <span class="math inline">\(\pi/2\)</span>. We call these, for convenience, <span class="math inline">\(\vec{U}\)</span> and <span class="math inline">\(\vec{V}\)</span>. We have <span class="math inline">\(\vec{U} = \vec{F}'(u)\)</span> and <span class="math inline">\(\vec{V} = -(1/\kappa) \vec{F}''(u)\)</span>.</p>
+<p>The key decomposition, is to express a unit vector in the direction of the line segment, as the vector <span class="math inline">\(\vec{U}\)</span> rotated by <span class="math inline">\(\alpha\)</span> degrees. Mathematically, this is usually expressed in matrix notation, but more explicitly by</p>
+<p><span class="math display">\[
+\langle \cos(\alpha) \vec{U}_1 + \sin(\alpha) \vec{U}_2,
+-\sin(\alpha) \vec{U}_1 + \cos(\alpha) \vec{U}_2 \rangle =
+\vec{U} \cos(\alpha) + \vec{V} \sin(\alpha).
+\]</span></p>
+<p>With this, the mathematical relationship between <span class="math inline">\(F\)</span> and <span class="math inline">\(B\)</span> is just a multiple of this unit vector:</p>
+<p><span class="math display">\[
+\vec{B}(u) = \vec{F}(u) - a \vec{U} \cos(\alpha) - a \vec{V} \sin(\alpha).
+\]</span></p>
+<p>It must be that the tangent line of <span class="math inline">\(\vec{B}\)</span> is parallel to <span class="math inline">\(\vec{U} \cos(\alpha) + \vec{V} \sin(\alpha)\)</span>. To utilize this, we differentiate <span class="math inline">\(\vec{B}\)</span> using the facts that <span class="math inline">\(\vec{U}' = -\kappa \vec{V}\)</span> and <span class="math inline">\(\vec{V}' = \kappa \vec{U}\)</span>. These coming from <span class="math inline">\(\vec{U} = \vec{F}'\)</span> and so it’s derivative in <span class="math inline">\(u\)</span> has magnitude yielding the curvature, <span class="math inline">\(\kappa\)</span>, and direction orthogonal to <span class="math inline">\(\vec{U}\)</span>.</p>
+<p><span class="math display">\[\begin{align*}
+\vec{B}'(u) &amp;= \vec{F}'(u)
+-a \vec{U}' \cos(\alpha) -a \vec{U} (-\sin(\alpha)) \alpha'
+-a \vec{V}' \sin(\alpha) - a \vec{V} \cos(\alpha) \alpha'\\
+&amp; =  \vec{U}
++a (\kappa) \vec{V} \cos(\alpha) + a \vec{U} \sin(\alpha) \alpha' -
+a (\kappa) \vec{U} \sin(\alpha) - a \vec{V} \cos(\alpha) \alpha' \\
+&amp;= \vec{U}
++ a(\alpha' - \kappa) \sin(\alpha) \vec{U}
+- a(\alpha' - \kappa) \cos(\alpha)\vec{V}.
+\end{align*}\]</span></p>
+<p>Extend the <span class="math inline">\(2\)</span>-dimensional vectors to <span class="math inline">\(3\)</span> dimensions, by adding a zero <span class="math inline">\(z\)</span> component, then:</p>
+<p><span class="math display">\[\begin{align*}
+\vec{0} &amp;= (\vec{U}
++ a(\alpha' - \kappa) \sin(\alpha) \vec{U}
++ a(\alpha' - \kappa) \cos(\alpha)\vec{V}) \times
+(\vec{U} \cos(\alpha) +  \vec{V} \sin(\alpha)) \\
+&amp;= (\vec{U} \times \vec{V}) \sin(\alpha) +
+a(\alpha' - \kappa) \sin(\alpha) \vec{U} \times  \vec{V} \sin(\alpha) -
+a(\alpha' - \kappa) \cos(\alpha)\vec{V} \times \vec{U} \cos(\alpha) \\
+&amp;= (\sin(\alpha) + a(\alpha'-\kappa) \sin^2(\alpha) +
+a(\alpha'-\kappa) \cos^2(\alpha)) \vec{U} \times \vec{V} \\
+&amp;= (\sin(\alpha) + a (\alpha' - \kappa)) \vec{U} \times \vec{V}.
+\end{align*}\]</span></p>
+<p>The terms <span class="math inline">\(\vec{U} \times\vec{U}\)</span> and <span class="math inline">\(\vec{V}\times\vec{V}\)</span> being <span class="math inline">\(\vec{0}\)</span>, due to properties of the cross product. This says the scalar part must be <span class="math inline">\(0\)</span>, or</p>
+<p><span class="math display">\[
+\frac{\sin(\alpha)}{a} + \alpha' = \kappa.
+\]</span></p>
+<p>As for the second equation, from the expression for <span class="math inline">\(\vec{B}'(u)\)</span>, after setting <span class="math inline">\(a(\alpha'-\kappa) = -\sin(\alpha)\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+\|\vec{B}'(u)\|^2
+&amp;= \| (1 -\sin(\alpha)\sin(\alpha)) \vec{U} +\sin(\alpha)\cos(\alpha) \vec{V} \|^2\\
+&amp;= \| \cos^2(\alpha) \vec{U} +\sin(\alpha)\cos(\alpha) \vec{V} \|^2\\
+&amp;= (\cos^2(\alpha))^2 + (\sin(\alpha)\cos(\alpha))^2\quad\text{using } \vec{U}\cdot\vec{V}=0\\
+&amp;= \cos^2(\alpha)(\cos^2(\alpha) + \sin^2(\alpha))\\
+&amp;= \cos^2(\alpha).
+\end{align*}\]</span></p>
+<p>From this <span class="math inline">\(\|\vec{B}(u)\| = |\cos(\alpha)\|\)</span>. But <span class="math inline">\(1 = \|d\vec{B}/dv\| = \|d\vec{B}/du \| \cdot |du/dv|\)</span> and <span class="math inline">\(|dv/du|=|\cos(\alpha)|\)</span> follows.</p>
+</section>
+</section>
+<section id="evolutes-and-involutes" class="level2" data-number="55.8">
+<h2 data-number="55.8" class="anchored" data-anchor-id="evolutes-and-involutes"><span class="header-section-number">55.8</span> Evolutes and involutes</h2>
+<p>Following <a href="https://doi.org/10.4169/amer.math.monthly.120.03.217">Fuchs</a> we discuss a geometric phenomenon known and explored by Huygens, and likely earlier. We stick to the two-dimensional case, Fuchs extends this to three dimensions. The following figure</p>
+<pre class="{julia}"><code>#| echo: false
+Xₑ(t)= 2 * cos(t)
+Yₑ(t) = sin(t)
+rₑ(t) = [Xₑ(t), Yₑ(t)]
+unit_vec(x) = x / norm(x)
+plot(legend=false, aspect_ratio=:equal)
+ts = range(0, 2pi, length=50)
+for t in ts
+    Pₑ, Vₑ = rₑ(t), unit_vec([-Yₑ'(t), Xₑ'(t)])
+    plot_parametric!(-4..4, x -&gt; Pₑ + x*Vₑ)
+end
+plot!(Xₑ, Yₑ, 0, 2pi, linewidth=5)</code></pre>
+<p>is that of an ellipse with many <em>normal</em> lines drawn to it. The normal lines appear to intersect in a somewhat diamond-shaped curve. This curve is the evolute of the ellipse. We can characterize this using the language of planar curves.</p>
+<p>Consider a parameterization of a curve by arc-length, <span class="math inline">\(\vec\gamma(s) = \langle u(s), v(s) \rangle\)</span>. The unit <em>tangent</em> to this curve is <span class="math inline">\(\vec\gamma'(s) = \hat{T}(s) = \langle u'(s), v'(s) \rangle\)</span> and by simple geometry the unit <em>normal</em> will be <span class="math inline">\(\hat{N}(s) = \langle -v'(s), u'(s) \rangle\)</span>. At a time <span class="math inline">\(t\)</span>, a line through the curve parameterized by <span class="math inline">\(\vec\gamma\)</span> is given by <span class="math inline">\(l_t(a) = \vec\gamma(t) + a \hat{N}(t)\)</span>.</p>
+<p>Consider two nearby points <span class="math inline">\(t\)</span> and <span class="math inline">\(t+\epsilon\)</span> and the intersection of <span class="math inline">\(l_t\)</span> and <span class="math inline">\(l_{t+\epsilon}\)</span>. That is, we need points <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> with: <span class="math inline">\(l_t(a) = l_{t+\epsilon}(b)\)</span>. Setting the components equal, this is:</p>
+<p><span class="math display">\[\begin{align*}
+u(t) - av'(t) &amp;= u(t+\epsilon) - bv'(t+\epsilon) \\
+v(t) + au'(t) &amp;= v(t+\epsilon) + bu'(t+\epsilon).
+\end{align*}\]</span></p>
+<p>This is a linear equation in two unknowns (<span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>) which can be solved. Here is the value for <code>a</code>:</p>
+<pre class="{julia}"><code>@syms u() v() t epsilon w
+@syms a b
+γ(t) = [u(t),v(t)]
+n(t) = subs.(diff.([-v(w), u(w)], w), w.=&gt;t)
+l(a, t) = γ(t) + a * n(t)
+out = solve(l(a, t) - l(b, t+epsilon), [a,b])
+out[a]</code></pre>
+<p>Letting <span class="math inline">\(\epsilon \rightarrow 0\)</span> we get an expression for <span class="math inline">\(a\)</span> that will describe the evolute at time <span class="math inline">\(t\)</span> in terms of the function <span class="math inline">\(\gamma\)</span>. Looking at the expression above, we can see that dividing the <em>numerator</em> by <span class="math inline">\(\epsilon\)</span> and taking a limit will yield <span class="math inline">\(u'(t)^2 + v'(t)^2\)</span>. If the <em>denominator</em> has a limit after dividing by <span class="math inline">\(\epsilon\)</span>, then we can find the description sought. Pursuing this leads to:</p>
+<p><span class="math display">\[\begin{align*}
+\frac{u'(t) v'(t+\epsilon) - v'(t) u'(t+\epsilon)}{\epsilon}
+&amp;= \frac{u'(t) v'(t+\epsilon) -u'(t)v'(t) + u'(t)v'(t)- v'(t) u'(t+\epsilon)}{\epsilon} \\
+&amp;= \frac{u'(t)(v'(t+\epsilon) -v'(t))}{\epsilon} + \frac{(u'(t)- u'(t+\epsilon))v'(t)}{\epsilon},
+\end{align*}\]</span></p>
+<p>which in the limit will give <span class="math inline">\(u'(t)v''(t) - u''(t) v'(t)\)</span>. All told, in the limit as <span class="math inline">\(\epsilon \rightarrow 0\)</span> we get</p>
+<p><span class="math display">\[\begin{align*}
+a &amp;= \frac{u'(t)^2 + v'(t)^2}{u'(t)v''(t) - v'(t) u''(t)} \\
+&amp;= 1/(\|\vec\gamma'\|\kappa) \\
+&amp;= 1/(\|\hat{T}\|\kappa) \\
+&amp;= 1/\kappa,
+\end{align*}\]</span></p>
+<p>with <span class="math inline">\(\kappa\)</span> being the curvature of the planar curve. That is, the evolute of <span class="math inline">\(\vec\gamma\)</span> is described by:</p>
+<p><span class="math display">\[
+\vec\beta(s) = \vec\gamma(s) + \frac{1}{\kappa(s)}\hat{N}(s).
+\]</span></p>
+<p>Revisualizing:</p>
+<pre class="{julia}"><code>rₑ₃(t) = [2cos(t), sin(t), 0]
+Tangent(r, t) = unit_vec(r'(t))
+Normal(r, t) = unit_vec((𝒕 -&gt; Tangent(r, 𝒕))'(t))
+curvature(r, t) = norm(r'(t) × r''(t) ) / norm(r'(t))^3
+
+plot_parametric(0..2pi, t -&gt; rₑ₃(t)[1:2], legend=false, aspect_ratio=:equal)
+plot_parametric!(0..2pi, t -&gt; (rₑ₃(t) + Normal(rₑ₃, t)/curvature(rₑ₃, t))[1:2])</code></pre>
+<p>We computed the above illustration using <span class="math inline">\(3\)</span> dimensions (hence the use of <code>[1:2]...</code>) as the curvature formula is easier to express. Recall, the curvature also appears in the <a href="https://en.wikipedia.org/wiki/Frenet%E2%80%93Serret_formulas">Frenet-Serret</a> formulas: <span class="math inline">\(d\hat{T}/ds = \kappa \hat{N}\)</span> and <span class="math inline">\(d\hat{N}/ds = -\kappa \hat{T}+ \tau \hat{B}\)</span>. In a planar curve, as under consideration, the binormal is <span class="math inline">\(\vec{0}\)</span>. This allows the computation of <span class="math inline">\(\vec\beta(s)'\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+\vec{\beta}' &amp;= \frac{d(\vec\gamma + (1/ \kappa) \hat{N})}{ds}\\
+&amp;= \hat{T} + (-\frac{\kappa '}{\kappa ^2}\hat{N} + \frac{1}{\kappa} \hat{N}')\\
+&amp;= \hat{T} - \frac{\kappa '}{\kappa ^2}\hat{N} + \frac{1}{\kappa} (-\kappa \hat{T})\\
+&amp;= - \frac{\kappa '}{\kappa ^2}\hat{N}.
+\end{align*}\]</span></p>
+<p>We see <span class="math inline">\(\vec\beta'\)</span> is zero (the curve is non-regular) when <span class="math inline">\(\kappa'(s) = 0\)</span>. The curvature changes from increasing to decreasing, or vice versa at each of the <span class="math inline">\(4\)</span> crossings of the major and minor axes - there are <span class="math inline">\(4\)</span> non-regular points, and we see <span class="math inline">\(4\)</span> cusps in the evolute.</p>
+<p>The curve parameterized by <span class="math inline">\(\vec{r}(t) = 2(1 - \cos(t)) \langle \cos(t), \sin(t)\rangle\)</span> over <span class="math inline">\([0,2\pi]\)</span> is cardiod. It is formed by rolling a circle of radius <span class="math inline">\(r\)</span> around another similar sized circle. The following graphically shows the evolute is a smaller cardiod (one-third the size). For fun, the evolute of the evolute is drawn:</p>
+<pre class="{julia}"><code>function evolute(r)
+    t -&gt; r(t) + 1/curvature(r, t) * Normal(r, t)
+end</code></pre>
+<pre class="{julia}"><code>#| hold: trie
+r(t) = 2*(1 - cos(t)) * [cos(t), sin(t), 0]
+
+plot(legend=false, aspect_ratio=:equal)
+plot_parametric!(0..2pi, t -&gt; r(t)[1:2])
+plot_parametric!(0..2pi, t -&gt; evolute(r)(t)[1:2])
+plot_parametric!(0..2pi, t -&gt; ((evolute∘evolute)(r)(t))[1:2])</code></pre>
+<hr>
+<p>If <span class="math inline">\(\vec\beta\)</span> is <em>the</em> <strong>evolute</strong> of <span class="math inline">\(\vec\gamma\)</span>, then <span class="math inline">\(\vec\gamma\)</span> is <em>an</em> <strong>involute</strong> of <span class="math inline">\(\beta\)</span>. For a given curve, there is a parameterized family of involutes. While this definition has a pleasing self-referentialness, it doesn’t have an immediately clear geometric interpretation. For that, consider the image of a string of fixed length <span class="math inline">\(a\)</span> attached to the curve <span class="math inline">\(\vec\gamma\)</span> at some point <span class="math inline">\(t_0\)</span>. As this curve wraps around the curve traced by <span class="math inline">\(\vec\gamma\)</span> it is held taut so that it makes a tangent at the point of contact. The end of the string will trace out a curve and this is the trace of an <em>involute</em>.</p>
+<pre class="{julia}"><code>#| hold: true
+r(t) = [t, cosh(t)]
+t0, t1 = -2, 0
+a = t1
+
+beta(r, t) = r(t) - Tangent(r, t) * quadgk(t -&gt; norm(r'(t)), a, t)[1]
+
+p = plot_parametric(-2..2, r, legend=false)
+plot_parametric!(t0..t1, t -&gt; beta(r, t))
+for t in range(t0,-0.2, length=4)
+    arrow!(r(t), -Tangent(r, t) * quadgk(t -&gt; norm(r'(t)), a, t)[1])
+    scatter!(unzip([r(t)])...)
+end
+p</code></pre>
+<p>This lends itself to this mathematical description, if <span class="math inline">\(\vec\gamma(t)\)</span> parameterizes the planar curve, then an involute for <span class="math inline">\(\vec\gamma(t)\)</span> is described by:</p>
+<p><span class="math display">\[
+\vec\beta(t) = \vec\gamma(t) + \left((a - \int_{t_0}^t \| \vec\gamma'(t)\| dt) \hat{T}(t)\right),
+\]</span></p>
+<p>where <span class="math inline">\(\hat{T}(t) = \vec\gamma'(t)/\|\vec\gamma'(t)\|\)</span> is the unit tangent vector. The above uses two parameters (<span class="math inline">\(a\)</span> and <span class="math inline">\(t_0\)</span>), but only one is needed, as there is an obvious redundancy (a point can <em>also</em> be expressed by <span class="math inline">\(t\)</span> and the shortened length of string). <a href="https://en.wikipedia.org/wiki/Involute">Wikipedia</a> uses this definition for <span class="math inline">\(a\)</span> and <span class="math inline">\(t\)</span> values in an interval <span class="math inline">\([t_0, t_1]\)</span>:</p>
+<p><span class="math display">\[
+\vec\beta_a(t) = \vec\gamma(t) - \frac{\vec\gamma'(t)}{\|\vec\gamma'(t)\|}\int_a^t \|\vec\gamma'(t)\| dt.
+\]</span></p>
+<p>If <span class="math inline">\(\vec\gamma(s)\)</span> is parameterized by arc length, then this simplifies quite a bit, as the unit tangent is just <span class="math inline">\(\vec\gamma'(s)\)</span> and the remaining arc length just <span class="math inline">\((s-a)\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+\vec\beta_a(s) &amp;= \vec\gamma(s) - \vec\gamma'(s) (s-a) \\
+&amp;=\vec\gamma(s) - \hat{T}_{\vec\gamma}(s)(s-a).\quad (a \text{ is the arc-length parameter})
+\end{align*}\]</span></p>
+<p>With this characterization, we see several properties:</p>
+<ul>
+<li>From <span class="math inline">\(\vec\beta_a'(s) = \hat{T}(s) - (\kappa(s) \hat{N}(s) (s-a) + \hat{T}(s)) = -\kappa_{\vec\gamma}(s) \cdot (s-a) \cdot \hat{N}_{\vec\gamma}(s)\)</span>, the involute is <em>not</em> regular at <span class="math inline">\(s=a\)</span>, as its derivative is zero.</li>
+<li>As <span class="math inline">\(\vec\beta_a(s) = \vec\beta_0(s) + a\hat{T}(s)\)</span>, the family of curves is parallel.</li>
+<li>The evolute of <span class="math inline">\(\vec\beta_a(s)\)</span>, <span class="math inline">\(s\)</span> the arc-length parameter of <span class="math inline">\(\vec\gamma\)</span>, can be shown to be <span class="math inline">\(\vec\gamma\)</span>. This requires more work:</li>
+</ul>
+<p>The evolute for <span class="math inline">\(\vec\beta_a(s)\)</span> is:</p>
+<p><span class="math display">\[
+\vec\beta_a(s) + \frac{1}{\kappa_{\vec\beta_a}(s)}\hat{N}_{\vec\beta_a}(s).
+\]</span></p>
+<p>In the following we show that:</p>
+<p><span class="math display">\[\begin{align*}
+\kappa_{\vec\beta_a}(s) &amp;= 1/(s-a),\\
+\hat{N}_{\vec\beta_a}(s) &amp;= \hat{T}_{\vec\beta_a}'(s)/\|\hat{T}_{\vec\beta_a}'(s)\| = -\hat{T}_{\vec\gamma}(s).
+\end{align*}\]</span></p>
+<p>The first shows in a different way that when <span class="math inline">\(s=a\)</span> the curve is not regular, as the curvature fails to exists. In the above figure, when the involute touches <span class="math inline">\(\vec\gamma\)</span>, there will be a cusp.</p>
+<p>With these two identifications and using <span class="math inline">\(\vec\gamma'(s) = \hat{T}_{\vec\gamma(s)}\)</span>, we have the evolute simplifies to</p>
+<p><span class="math display">\[\begin{align*}
+\vec\beta_a(s) + \frac{1}{\kappa_{\vec\beta_a}(s)}\hat{N}_{\vec\beta_a}(s)
+&amp;=
+\vec\gamma(s) + \vec\gamma'(s)(s-a)  + \frac{1}{\kappa_{\vec\beta_a}(s)}\hat{N}_{\vec\beta_a}(s) \\
+&amp;=
+\vec\gamma(s) + \hat{T}_{\vec\gamma}(s)(s-a) + \frac{1}{1/(s-a)} (-\hat{T}_{\vec\gamma}(s)) \\
+&amp;= \vec\gamma(s).
+\end{align*}\]</span></p>
+<p>That is the evolute of an involute of <span class="math inline">\(\vec\gamma(s)\)</span> is <span class="math inline">\(\vec\gamma(s)\)</span>.</p>
+<p>We have:</p>
+<p><span class="math display">\[\begin{align*}
+\beta_a(s) &amp;= \vec\gamma - \vec\gamma'(s)(s-a)\\
+\beta_a'(s) &amp;= -\kappa_{\vec\gamma}(s)(s-a)\hat{N}_{\vec\gamma}(s)\\
+\beta_a''(s) &amp;= (-\kappa_{\vec\gamma}(s)(s-a))' \hat{N}_{\vec\gamma}(s) + (-\kappa_{\vec\gamma}(s)(s-a))(-\kappa_{\vec\gamma}\hat{T}_{\vec\gamma}(s)),
+\end{align*}\]</span></p>
+<p>the last line by the Frenet-Serret formula for <em>planar</em> curves which show <span class="math inline">\(\hat{T}'(s) = \kappa(s) \hat{N}\)</span> and <span class="math inline">\(\hat{N}'(s) = -\kappa(s)\hat{T}(s)\)</span>.</p>
+<p>To compute the curvature of <span class="math inline">\(\vec\beta_a\)</span>, we need to compute both:</p>
+<p><span class="math display">\[\begin{align*}
+\| \vec\beta' \|^3 &amp;= |\kappa^3 (s-a)^3|\\
+\| \vec\beta' \times \vec\beta'' \| &amp;= |\kappa(s)^3 (s-a)^2|,
+\end{align*}\]</span></p>
+<p>the last line using both <span class="math inline">\(\hat{N}\times\hat{N} = \vec{0}\)</span> and <span class="math inline">\(\|\hat{N}\times\hat{T}\| = 1\)</span>. The curvature then is <span class="math inline">\(\kappa_{\vec\beta_a}(s) = 1/(s-a)\)</span>.</p>
+<p>Using the formula for <span class="math inline">\(\vec\beta'\)</span> above, we get <span class="math inline">\(\hat{T}_\beta(s)=\hat{N}_{\vec\gamma}(s)\)</span> so <span class="math inline">\(\hat{T}_\beta(s)' = -\kappa_{\vec\gamma}(s) \hat{T}_{\vec\gamma}(s)\)</span> with unit vector just <span class="math inline">\(\hat{N}_{\vec\beta_a} = -\hat{T}_{\vec\gamma}(s)\)</span>.</p>
+<hr>
+<p>Show that <em>an</em> involute of the cycloid <span class="math inline">\(\vec{r}(t) = \langle t - \sin(t), 1 - \cos(t) \rangle\)</span> is also a cycloid. We do so graphically:</p>
+<pre class="{julia}"><code>#| hold: true
+r(t) = [t - sin(t), 1 - cos(t)]
+## find *involute*: r - r'/|r'| * int(|r'|, a, t)
+t0, t1, a = 2PI, PI, PI
+@syms t::real
+rp = diff.(r(t), t)
+speed = 2sin(t/2)
+
+ex = r(t) - rp/speed * integrate(speed, t)
+
+plot_parametric(0..4pi, r, legend=false)
+plot_parametric!(0..4pi, u -&gt; float.(subs.(ex, t .=&gt; u)))</code></pre>
+<p>The expression <code>ex</code> is secretly <code>[t + sin(t), 3 + cos(t)]</code>, another cycloid.</p>
+<section id="example-goats" class="level5">
+<h5 class="anchored" data-anchor-id="example-goats">Example: goats</h5>
+<p>An old problem of calculus is called the <a href="https://en.wikipedia.org/wiki/Goat_problem">goat problem</a>. This formulation – with horses – is from <span class="math inline">\(1748\)</span>:</p>
+<blockquote class="blockquote">
+<p>Observing a horse tied to feed in a gentlemen’s park, with one end of a rope to his fore foot, and the other end to one of the circular iron rails, inclosing a pond, the circumference of which rails being <span class="math inline">\(160\)</span> yards, equal to the length of the rope, what quantity of ground at most, could the horse feed?</p>
+</blockquote>
+<p>Let <span class="math inline">\(r\)</span> be the radius of a circle and for concreteness we position it at <span class="math inline">\((-r, 0)\)</span>. Let <span class="math inline">\(R\)</span> be the length of a rope, and suppose <span class="math inline">\(R \ge 2\pi r\)</span>. (It is equal in the problem). Then the question can be rephrased as what is <em>twice</em> the area suggested by this graphic which is drawn in pieces:</p>
+<ul>
+<li>Between angles <span class="math inline">\(0\)</span> and <span class="math inline">\(\pi/2\)</span> the horse has unconstrained access, so they can graze a wedge of radius <span class="math inline">\(R\)</span>.</li>
+<li>Between angles <span class="math inline">\(\pi/2\)</span> and until the horse’s <span class="math inline">\(y\)</span> position is <span class="math inline">\(0\)</span> when the tether is taut the boundary of what can be eaten is described by the involute.</li>
+<li>The horse can’t eat from within the circle or radius <span class="math inline">\(r\)</span>.</li>
+</ul>
+<pre class="{julia}"><code>#| echo: false
+let
+    r,R = 1, 10
+    R = max(R, pi*r) # R ≥ 1/2 circumference
+
+    γ(θ) = -2r*cos(θ) * [cos(θ), sin(θ)] # parameterize the circle of radius r
+    involute(t) = γ(t) + γ'(t)/norm(γ'(t))* (R - quadgk(u -&gt; norm(γ'(u)), pi/2, t)[1])
+    t₀ = find_zero(t -&gt; round(involute(t)[2], digits=4), (3pi/4, pi))
+
+    p = plot(; legend=false)
+    plot_polar!(0..(pi/2), t -&gt; R) # unobstructed -&gt; quarter circle
+    plot_parametric!((pi/2)..t₀, involute)
+    plot_parametric!((pi/2)..pi, γ)
+    plot!([0,R],[0,0])
+end</code></pre>
+<p>To solve for the area we parameterize the circle of radius <span class="math inline">\(r\)</span> between <span class="math inline">\(\pi/2\)</span> and when the involute would cross the <span class="math inline">\(x\)</span> axis. We use <code>find_zero</code> to identify the value.</p>
+<pre class="{julia}"><code>let
+r,R = 160/(2π), 160
+R = max(R, pi*r) # R ≥ 1/2 circumference
+γ(θ) = -2r*cos(θ) * [cos(θ), sin(θ)]
+## find *involute*: r - r'/|r'| * int(|r'|, a, t)
+involute(t) = γ(t) + γ'(t)/norm(γ'(t))* (R - quadgk(u -&gt; norm(γ'(u)), pi/2, t)[1])
+
+t₀ = find_zero(t -&gt; round(involute(t)[2], digits=4), (3pi/4, pi))
+
+A₁ = π * R^2 / 4
+y(t) = involute(t)[2]
+x′(t) = (h=1e-4; (involute(t+h)[1]-involute(t-h)[1])/(2h))
+A₂ = quadgk(t -&gt; -y(t)*x′(t), pi/2, t₀)[1]  # A₂ = -∫ y dx, as counterclockwise parameterization
+A₃ = (1/2) * π * r^2
+2 * (A₁ + A₂ - A₃)
+end</code></pre>
+<p>The calculation for <span class="math inline">\(A_1\)</span> and <span class="math inline">\(A_3\)</span> are from the familiar formula for the area of a circle. However, <span class="math inline">\(A_2\)</span> requires the formula for area above the <span class="math inline">\(x\)</span> axis when the curve is parameterized: <span class="math inline">\(A = -\int_a^b y(t) x'(t) dt\)</span>, given how the curve is parameterized. As written, the automatic derivative of the numeric integral gives an error, so a central-difference approximation is used for <span class="math inline">\(x'(t)\)</span>.</p>
+</section>
+</section>
+<section id="questions" class="level2" data-number="55.9">
+<h2 data-number="55.9" class="anchored" data-anchor-id="questions"><span class="header-section-number">55.9</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>A cycloid is formed by pushing a wheel on a surface without slipping. The position of a fixed point on the outer rim of the wheel traces out the cycloid. Suppose the wheel has radius <span class="math inline">\(R\)</span> and the initial position of the point is at the bottom, <span class="math inline">\((0,0)\)</span>. Let <span class="math inline">\(t\)</span> measure angle measurement, in radians. Then the point of contact of the wheel will be at <span class="math inline">\(Rt\)</span>, as that is the distance the wheel will have rotated. That is, the hub of the wheel will move according to <span class="math inline">\(\langle Rt,~ R\rangle\)</span>. Relative to the hub, the point on the rim will have coordinates <span class="math inline">\(\langle -R\sin(t), -R\cos(t) \rangle\)</span>, so the superposition gives:</p>
+<p><span class="math display">\[
+\vec{r}(t) = \langle Rt - R\sin(t), R - R\cos(t) \rangle.
+\]</span></p>
+<p>What is the position at <span class="math inline">\(t=\pi/4\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+q"[0.0782914, 0.292893 ]",
+q"[0.181172, 0.5]",
+q"[0.570796, 1.0]"]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>And the position at <span class="math inline">\(\pi/2\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+q"[0.0782914, 0.292893 ]",
+q"[0.181172, 0.5]",
+q"[0.570796, 1.0]"]
+answ = 3
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>Suppose instead of keeping track of a point on the outer rim of the wheel, a point a distance <span class="math inline">\(r &lt; R\)</span> from the hub is chosen in the above description of a cycloid (a <a href="http://mathworld.wolfram.com/CurtateCycloid.html">Curtate</a> cycloid). If we start at <span class="math inline">\(\langle 0,~ R-r \rangle\)</span>, what will be the position at <span class="math inline">\(t\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+" ``\\langle Rt - r\\sin(t),~ R - r\\cos(t) \\rangle``",
+" ``\\langle Rt - R\\sin(t),~ R - R\\cos(t) \\rangle``",
+" ``\\langle -r\\sin(t),~ -r\\cos(t) \\rangle``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>For the cycloid <span class="math inline">\(\vec{r}(t) = \langle t - \sin(t),~ 1 - \cos(t) \rangle\)</span>, find a simplified expression for <span class="math inline">\(\| \vec{r}'(t)\|\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    " ``\\sqrt{2 - 2\\cos(t)}``",
+    " ``1``",
+    " ``1 - \\cos(t)``",
+    " ``1 + \\cos(t) + \\cos(2t)``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>The cycloid <span class="math inline">\(\vec{r}(t) = \langle t - \sin(t),~ 1 - \cos(t) \rangle\)</span> has a formula for the arc length from <span class="math inline">\(0\)</span> to <span class="math inline">\(t\)</span> given by: <span class="math inline">\(l(t) = 4 - 4\cos(t/2)\)</span>.</p>
+<p>Plot the following two equations over <span class="math inline">\([0,8]\)</span> which are a reparameterization of the cycloid by <span class="math inline">\(l^{-1}(t)\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+γ(s) = 2 * acos(1-s/4)
+x1(s) = γ(s) - sin(γ(s))
+y1(s) = 1 - cos(γ(s))</code></pre>
+<p>How many arches of the cycloid are traced out?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+radioq(1:3, 1, keep_order=true)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>Consider the cycloid <span class="math inline">\(\vec{r}(t) = \langle t - \sin(t),~ 1 - \cos(t) \rangle\)</span></p>
+<p>What is the derivative at <span class="math inline">\(t=\pi/2\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+q"[1,1]",
+q"[2,0]",
+q"[0,0]"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>What is the derivative at <span class="math inline">\(t=\pi\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+q"[1,1]",
+q"[2,0]",
+q"[0,0]"
+]
+answ = 2
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>Consider the circle <span class="math inline">\(\vec{r}(t) = R \langle \cos(t),~ \sin(t) \rangle\)</span>, <span class="math inline">\(R &gt; 0\)</span>. Find the norm of <span class="math inline">\(\vec{r}'(t)\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    " ``1``",
+    " ``1/R``",
+    " ``R``",
+    " ``R^2``"
+]
+answ = 3
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>The curve described by <span class="math inline">\(\vec{r}(t) = \langle 10t,~ 10t - 16t^2\rangle\)</span> models the flight of an arrow. Compute the length traveled from when it is launched to when it returns to the ground.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+x(t) = 10t
+y(t) = 10t - 16t^2
+a,b = sort(find_zeros(y, -10, 10))
+f(x,y) = 1
+val, _ = quadgk(t -&gt; f(x(t), y(t)) * sqrt(D(x)(t)^2 + D(y)(t)^2), a, b)
+numericq(val)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>Let <span class="math inline">\(\vec{r}(t) = \langle t, t^2 \rangle\)</span> describe a parabola. What is the arc length between <span class="math inline">\(0 \leq t \leq 1\)</span>? First, what is a formula for the speed (<span class="math inline">\(\| \vec{r}'(t)\|\)</span>)?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    " ``\\sqrt{1 + 4t^2}``",
+    " ``1 + 4t^2``",
+    " ``1``",
+    " ``t + t^2``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>Numerically find the arc length.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val,err = quadgk(t -&gt; (1 + 4t^2)^(1/2), 0, 1)
+numericq(val)</code></pre>
+</section>
+<section id="question-8" class="level6">
+<h6 class="anchored" data-anchor-id="question-8">Question</h6>
+<p>Let <span class="math inline">\(\vec{r}(t) = \langle t, t^2 \rangle\)</span> describe a parabola. What is the curvature of <span class="math inline">\(\vec{r}(t)\)</span> at <span class="math inline">\(t=0\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+@syms t::positive
+rt = [t, t^2, 0]
+rp = diff.(rt, t)
+rpp = diff.(rt, t, t)
+kappa =  norm(rp × rpp) / norm(rp)^3
+#val = N(kappa(t=&gt;0)) #2
+val = 2
+numericq(val)</code></pre>
+<p>The curvature at <span class="math inline">\(1\)</span> will be</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"greater than the curvature at ``t=0``",
+"less than the curvature at ``t=0``",
+"the same as the curvature at ``t=0``"]
+answ = 2
+radioq(choices, answ)</code></pre>
+<p>The curvature as <span class="math inline">\(t\rightarrow \infty\)</span> will be</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    " ``0``",
+    " ``\\infty``",
+    " ``1``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<hr>
+<p>Now, if we have a more general parabola by introducing a parameter <span class="math inline">\(a&gt;0\)</span>: <span class="math inline">\(\vec{r}(t) = \langle t, a\cdot t^2 \rangle\)</span>, What is the curvature of <span class="math inline">\(\vec{r}(t)\)</span> at <span class="math inline">\(t=0\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    " ``2a``",
+    " ``2/a``",
+    " ``2``",
+    " ``1``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-9" class="level6">
+<h6 class="anchored" data-anchor-id="question-9">Question</h6>
+<p>Projectile motion with constant acceleration is expressed parametrically by <span class="math inline">\(\vec{x}(t) = \vec{x}_0 + \vec{v}_0 t + (1/2) \vec{a} t^2\)</span>, where <span class="math inline">\(\vec{x}_0\)</span> and <span class="math inline">\(\vec{v}_0\)</span> are initial positions and velocity respectively. In <a href="https://ocw.mit.edu/resources/res-18-001-calculus-online-textbook-spring-2005/textbook/MITRES_18_001_strang_12.pdf">Strang</a> p451, we find an example utilizing this formula to study the curve of a baseball. Place the pitcher at the origin, the batter along the <span class="math inline">\(x\)</span> axis, then a baseball thrown with spin around its <span class="math inline">\(z\)</span> axis will have acceleration in the <span class="math inline">\(y\)</span> direction in addition to the acceration due to gravity in the <span class="math inline">\(z\)</span> direction. Suppose the ball starts <span class="math inline">\(5\)</span> feet above the ground when pitched (<span class="math inline">\(\vec{x}_0 = \langle 0,0, 5\rangle\)</span>), and has initial velocity <span class="math inline">\(\vec{v}_0 = \langle 120, -2, 2 \rangle\)</span>. (<span class="math inline">\(120\)</span> feet per second is about <span class="math inline">\(80\)</span> miles per hour). Suppose the pitcher can produce an acceleration in the <span class="math inline">\(y\)</span> direction of <span class="math inline">\(16ft/sec^2\)</span>, then <span class="math inline">\(\vec{a} = \langle 0, 16, -32\rangle\)</span> in these units. (Gravity is <span class="math inline">\(9.8m/s^2\)</span> or <span class="math inline">\(32ft/s^2\)</span>.)</p>
+<p>The plate is <span class="math inline">\(60\)</span> feet away. How long will it take for the ball to reach the batter? (When the first component is <span class="math inline">\(60\)</span>?)</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+x0 = [0,0,5]
+v0 = [120, -2, 2]
+a = [0, 16, -32]
+r(t) = x0 + v0*t + 1/2*a*t^2
+answ = 60/v0[1]
+numericq(answ)</code></pre>
+<p>At <span class="math inline">\(t=1/4\)</span> the ball is half-way to home. If the batter reads the ball at this point, where in the <span class="math inline">\(y\)</span> direction is the ball?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+x0 = [0,0,5]
+v0 = [120, -2, 2]
+a = [0, 16, -32]
+r(t) = x0 + v0*t + 1/2*a*t^2
+t = 1/4
+answ = r(t)[2]
+numericq(answ)</code></pre>
+<p>At <span class="math inline">\(t=1/2\)</span> has the ball moved more than <span class="math inline">\(1/2\)</span> foot in the <span class="math inline">\(y\)</span> direction?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+x0 = [0,0,5]
+v0 = [120, -2, 2]
+a = [0, 16, -32]
+r(t) = x0 + v0*t + 1/2*a*t^2
+t = 1/2
+answ = abs(r(t)[2]) &gt; 1/2
+yesnoq(answ)</code></pre>
+</section>
+<section id="question-10" class="level6">
+<h6 class="anchored" data-anchor-id="question-10">Question</h6>
+<p>In <a href="https://ocw.mit.edu/resources/res-18-001-calculus-online-textbook-spring-2005/textbook/MITRES_18_001_strang_12.pdf">Strang</a> we see this picture describing a curve:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+a = 1
+
+plot(t -&gt; 0, -2, 2,aspect_ratio=:equal, legend=false)
+plot!(t -&gt; 2a)
+r(t) = [0, a] + a*[cos(t), sin(t)]
+plot!(unzip(r, 0, 2pi)...)
+theta = pi/3
+plot!([0, 2a/tan(theta)], [0, 2a], linestyle=:dash)
+A = [2a*cot(theta), 2a]
+B = 2a*sin(theta)^2 *[ 1/tan(theta),1]
+scatter!(unzip([A,B])...)
+plot!([B[1],A[1],A[1]], [B[2],B[2],A[2]], linestyle=:dash)
+delta = 0.2
+annotate!([(B[1],B[2]-delta,"B"),(A[1]+delta,A[2]-delta,"A")])
+r(theta) = [2a*cot(theta), 2a*sin(theta)^2 ]
+theta0 = pi/4
+plot!(unzip(r, theta0, pi-theta0)..., linewidth=3)
+P = r(theta)
+annotate!([(P[1],P[2]-delta, "P")])</code></pre>
+<p>Strang notes that the curve is called the “witch of Agnesi” after Maria Agnesi, the author of the first three-semester calculus book. (L’Hopital’s book did not contain integration.)</p>
+<p>We wish to identify the parameterization. Using <span class="math inline">\(\theta\)</span> an angle in standard position, we can see that the component functions <span class="math inline">\(x(\theta)\)</span> and <span class="math inline">\(y(\theta)\)</span> may be found using trigonometric analysis.</p>
+<p>What is the <span class="math inline">\(x\)</span> coordinate of point <span class="math inline">\(A\)</span>? (Also the <span class="math inline">\(x\)</span> coordinate of <span class="math inline">\(P\)</span>.)</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+           " ``2\\cot(\\theta)``",
+           " ``\\cot(\\theta)``",
+           " ``2\\tan(\\theta)``",
+           " ``\\tan(\\theta)``"
+       ]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>Using the polar form of a circle, the length between the origin and <span class="math inline">\(B\)</span> is given by <span class="math inline">\(2\cos(\theta-\pi/2) = 2\sin(\theta)\)</span>. Using this, what is the <span class="math inline">\(y\)</span> coordinate of <span class="math inline">\(B\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    " ``2\\sin^2(\\theta)``",
+    " ``2\\sin(\\theta)``",
+    " ``2``",
+    " ``\\sin(\\theta)``"
+]
+answ=1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-11" class="level6">
+<h6 class="anchored" data-anchor-id="question-11">Question</h6>
+<p>Let <span class="math inline">\(n &gt; 0\)</span>, <span class="math inline">\(\vec{r}(t) = \langle t^{(n+1)},t^n\rangle\)</span>. Find the speed, <span class="math inline">\(\|\vec{r}'(t)\|\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    " ``\\frac{\\sqrt{n^{2} t^{2 n} + t^{2 n + 2} \\left(n + 1\\right)^{2}}}{t}``",
+    " ``t^n + t^{n+1}``",
+    " ``\\sqrt{n^2 + t^2}``"
+]
+answ=1
+radioq(choices, answ)</code></pre>
+<p>For <span class="math inline">\(n=2\)</span>, the arc length of <span class="math inline">\(\vec{r}\)</span> can be found exactly. What is the arc-length between <span class="math inline">\(0 \leq t \leq a\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    " ``\\frac{a^{2} \\sqrt{9 a^{2} + 4}}{3} + \\frac{4 \\sqrt{9 a^{2} + 4}}{27} - \\frac{8}{27}``",
+    " ``\\frac{2 a^{\\frac{5}{2}}}{5}``",
+    " ``\\sqrt{a^2 + 4}``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-12" class="level6">
+<h6 class="anchored" data-anchor-id="question-12">Question</h6>
+<p>The <a href="http://www-history.mcs.st-and.ac.uk/Curves/Astroid.html">astroid</a> is one of the few curves with an exactly computable arc-length. The curve is parametrized by <span class="math inline">\(\vec{r}(t) = \langle a\cos^3(t), a\sin^3(t)\rangle\)</span>. For <span class="math inline">\(a=1\)</span> find the arc-length between <span class="math inline">\(0 \leq t \leq \pi/2\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    " ``\\sqrt{2}``",
+    " ``3/2``",
+    " ``\\pi/2``",
+    " ``2``"
+]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-13" class="level6">
+<h6 class="anchored" data-anchor-id="question-13">Question</h6>
+<pre class="{julia}"><code>#| echo: false
+let
+    t0, t1 = pi/12, pi/3
+    tspan = (t0, t1)  # time span to consider
+
+    a = 1
+    r(theta) = -cos(theta) + 4*2cos(theta)*sin(theta)^2
+    F(t) = r(t) * [cos(t), sin(t)]
+    p = (a, F)      # combine parameters
+
+    B0 = F(0) - [0, a]  # some initial position for the back
+    prob = ODEProblem(bicycle, B0, tspan, p)
+
+    out = solve(prob, reltol=1e-6, Tsit5())
+
+    plt = plot(unzip(F, t0, t1)..., legend=false, color=:red)
+    plot!(plt, unzip(t-&gt;out(t),  t0, t1)..., color=:blue)
+end</code></pre>
+<p>Let <span class="math inline">\(F\)</span> and <span class="math inline">\(B\)</span> be pictured above. Which is the red curve?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"The front wheel",
+"The back wheel"
+]
+answ=1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-14" class="level6">
+<h6 class="anchored" data-anchor-id="question-14">Question</h6>
+<pre class="{julia}"><code>#| echo: false
+let
+    t0, t1 = 0.0, pi/3
+    tspan = (t0, t1)  # time span to consider
+
+    a = 1
+    r(t) = 3a * cos(2t)cos(t)
+    F(t) = r(t) * [cos(t), sin(t)]
+    p = (a, F)      # combine parameters
+
+    B0 = F(0) - [0, a]  # some initial position for the back
+    prob = ODEProblem(bicycle, B0, tspan, p)
+
+    out = solve(prob, reltol=1e-6, Tsit5())
+
+    plt = plot(unzip(F, t0, t1)..., legend=false, color=:blue)
+    plot!(plt, unzip(t-&gt;out(t),  t0, t1)..., color=:red)
+end</code></pre>
+<p>Let <span class="math inline">\(F\)</span> and <span class="math inline">\(B\)</span> be pictured above. Which is the red curve?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"The front wheel",
+"The back wheel"
+]
+answ=2
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-15" class="level6">
+<h6 class="anchored" data-anchor-id="question-15">Question</h6>
+<p>Let <span class="math inline">\(\vec{\gamma}(s)\)</span> be a parameterization of a curve by arc length and <span class="math inline">\(s(t)\)</span> some continuous increasing function of <span class="math inline">\(t\)</span>. Then <span class="math inline">\(\vec{\gamma} \circ s\)</span> also parameterizes the curve. We have</p>
+<p><span class="math display">\[
+\text{velocity}  = \frac{d (\vec{\gamma} \circ s)}{dt} = \frac{d\vec{\gamma}}{ds} \frac{ds}{dt} = \hat{T} \frac{ds}{dt}.
+\]</span></p>
+<p>Continuing with a second derivative</p>
+<p><span class="math display">\[
+\text{acceleration} = \frac{d^2(\vec{\gamma}\circ s)}{dt^2} =
+\frac{d\hat{T}}{ds} \frac{ds}{dt} \frac{ds}{dt} + \hat{T} \frac{d^2s}{dt^2} = \frac{d^2s}{dt^2}\hat{T} + \kappa (\frac{ds}{dt})^2 \hat{N},
+\]</span></p>
+<p>Using <span class="math inline">\(d\hat{T}/{ds} = \kappa\hat{N}\)</span> when parameterized by arc length.</p>
+<p>This expresses the acceleration in terms of the tangential part and the normal part. <a href="https://ocw.mit.edu/resources/res-18-001-calculus-online-textbook-spring-2005/textbook/MITRES_18_001_strang_12.pdf">Strang</a> views this in terms of driving where the car motion is determined by the gas pedal and the brake pedal only giving acceleration in the <span class="math inline">\(\hat{T}\)</span> direction) and the steering wheel (giving acceleration in the <span class="math inline">\(\hat{N}\)</span> direction).</p>
+<p>If a car is on a straight road, then <span class="math inline">\(\kappa=0\)</span>. Is the acceleration along the <span class="math inline">\(\hat{T}\)</span> direction or the <span class="math inline">\(\hat{N}\)</span> direction?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    "The ``\\hat{T}`` direction",
+    "The ``\\hat{N}`` direction"]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>Suppose no gas or brake is applied for a duration of time. The tangential acceleration will be <span class="math inline">\(0\)</span>. During this time, which of these must be <span class="math inline">\(0\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    " ``\\vec{\\gamma} \\circ s``",
+    " ``ds/dt``",
+    " ``d^2s/dt^2``"
+]
+answ = 3
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>In going around a corner (with non-zero curvature), which is true?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"The acceleration in the normal direction depends on both the curvature and the speed (``ds/dt``)",
+"The acceleration in the normal direction depends only on the curvature and not the speed (``ds/dt``)",
+"The acceleration in the normal direction depends only on the speed (``ds/dt``) and not the curvature"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-16" class="level6">
+<h6 class="anchored" data-anchor-id="question-16">Question</h6>
+<p>The evolute comes from the formula <span class="math inline">\(\vec\gamma(T) - (1/\kappa(t)) \hat{N}(t)\)</span>. For hand computation, this formula can be explicitly given by two components <span class="math inline">\(\langle X(t), Y(t) \rangle\)</span> through:</p>
+<p><span class="math display">\[\begin{align*}
+r(t) &amp;= x'(t)^2 + y'(t)^2\\
+k(t) &amp;= x'(t)y''(t) - x''(t) y'(t)\\
+X(t) &amp;= x(t) - y'(t) r(t)/k(t)\\
+Y(t) &amp;= y(t) + x'(t) r(t)/k(t)
+\end{align*}\]</span></p>
+<p>Let <span class="math inline">\(\vec\gamma(t) = \langle t, t^2 \rangle = \langle x(t), y(t)\rangle\)</span> be a parameterization of a parabola.</p>
+<ul>
+<li>Compute <span class="math inline">\(r(t)\)</span></li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    " ``1 + 4t^2``",
+    " ``1 - 4t^2``",
+    " ``1 + 2t``",
+    " ``1 - 2t``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<ul>
+<li>Compute <span class="math inline">\(k(t)\)</span></li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    " ``2``",
+    " ``-2``",
+    " ``8t``",
+    " ``-8t``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<ul>
+<li>Compute <span class="math inline">\(X(t)\)</span></li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    " ``t - 2t(1 + 4t^2)/2``",
+    " ``t - 4t(1+2t)/2``",
+    " ``t - 2(8t)/(1-2t)``",
+    " ``t - 1(1+4t^2)/2``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<ul>
+<li>Compute <span class="math inline">\(Y(t)\)</span></li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    " ``t^2 + 1(1 + 4t^2)/2``",
+    " ``t^2 + 2t(1+4t^2)/2``",
+    " ``t^2 - 1(1+4t^2)/2``",
+    " ``t^2 - 2t(1+4t^2)/2``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-17" class="level6">
+<h6 class="anchored" data-anchor-id="question-17">Question</h6>
+<p>The following will compute the evolute of an ellipse:</p>
+<pre class="{julia}"><code>#| eval: false
+@syms t a b
+x = a * cos(t)
+y = b * sin(t)
+xp, xpp, yp, ypp = diff(x, t), diff(x,t,t), diff(y,t), diff(y,t,t)
+r2 = xp^2 + yp^2
+k = xp * ypp - xpp * yp
+X = x - yp * r2 / k |&gt; simplify
+Y = y + xp * r2 / k |&gt; simplify
+[X, Y]</code></pre>
+<p>What is the resulting curve?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"An astroid of the form ``c \\langle \\cos^3(t), \\sin^3(t) \\rangle``",
+"An cubic parabola of the form ``\\langle ct^3, dt^2\\rangle``",
+"An ellipse of the form ``\\langle a\\cos(t), b\\sin(t)``",
+"A cyloid of the form ``c\\langle t + \\sin(t), 1 - \\cos(t)\\rangle``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../differentiable_vector_calculus/vectors.html" class="pagination-link" aria-label="Vectors and matrices">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../differentiable_vector_calculus/scalar_functions.html" class="pagination-link" aria-label="Scalar functions">
+        <span class="nav-page-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/differentiable_vector_calculus/vector_valued_functions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

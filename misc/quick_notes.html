@@ -1,0 +1,2182 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>73&nbsp; Quick introduction to Calculus with Julia – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../references.html" rel="next">
+<link href="../misc/unicode.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../misc/getting_started_with_julia.html">Appendices</a></li><li class="breadcrumb-item"><a href="../misc/quick_notes.html"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#types" id="toc-types" class="nav-link active" data-scroll-target="#types"><span class="header-section-number">73.1</span> Types</a></li>
+  <li><a href="#functions" id="toc-functions" class="nav-link" data-scroll-target="#functions"><span class="header-section-number">73.2</span> Functions</a>
+  <ul class="collapse">
+  <li><a href="#definition" id="toc-definition" class="nav-link" data-scroll-target="#definition"><span class="header-section-number">73.2.1</span> Definition</a></li>
+  <li><a href="#calling-a-function" id="toc-calling-a-function" class="nav-link" data-scroll-target="#calling-a-function"><span class="header-section-number">73.2.2</span> Calling a function</a></li>
+  <li><a href="#multiple-dispatch" id="toc-multiple-dispatch" class="nav-link" data-scroll-target="#multiple-dispatch"><span class="header-section-number">73.2.3</span> Multiple dispatch</a></li>
+  <li><a href="#keyword-arguments" id="toc-keyword-arguments" class="nav-link" data-scroll-target="#keyword-arguments"><span class="header-section-number">73.2.4</span> Keyword arguments</a></li>
+  </ul></li>
+  <li><a href="#symbolic-objects" id="toc-symbolic-objects" class="nav-link" data-scroll-target="#symbolic-objects"><span class="header-section-number">73.3</span> Symbolic objects</a></li>
+  <li><a href="#containers" id="toc-containers" class="nav-link" data-scroll-target="#containers"><span class="header-section-number">73.4</span> Containers</a>
+  <ul class="collapse">
+  <li><a href="#structured-collections" id="toc-structured-collections" class="nav-link" data-scroll-target="#structured-collections"><span class="header-section-number">73.4.1</span> Structured collections</a></li>
+  </ul></li>
+  <li><a href="#iteration" id="toc-iteration" class="nav-link" data-scroll-target="#iteration"><span class="header-section-number">73.5</span> Iteration</a></li>
+  <li><a href="#plots" id="toc-plots" class="nav-link" data-scroll-target="#plots"><span class="header-section-number">73.6</span> Plots</a>
+  <ul class="collapse">
+  <li><a href="#plotting-a-univariate-function-fr-rightarrow-r" id="toc-plotting-a-univariate-function-fr-rightarrow-r" class="nav-link" data-scroll-target="#plotting-a-univariate-function-fr-rightarrow-r"><span class="header-section-number">73.6.1</span> Plotting a univariate function <span class="math inline">\(f:R \rightarrow R\)</span></a></li>
+  <li><a href="#plotting-a-parameterized-space-curve-function-fr-rightarrow-rn-n-2-or-3" id="toc-plotting-a-parameterized-space-curve-function-fr-rightarrow-rn-n-2-or-3" class="nav-link" data-scroll-target="#plotting-a-parameterized-space-curve-function-fr-rightarrow-rn-n-2-or-3"><span class="header-section-number">73.6.2</span> Plotting a parameterized (space) curve function <span class="math inline">\(f:R \rightarrow R^n\)</span>, <span class="math inline">\(n = 2\)</span> or <span class="math inline">\(3\)</span></a></li>
+  <li><a href="#plotting-a-scalar-function-fr2-rightarrow-r" id="toc-plotting-a-scalar-function-fr2-rightarrow-r" class="nav-link" data-scroll-target="#plotting-a-scalar-function-fr2-rightarrow-r"><span class="header-section-number">73.6.3</span> Plotting a scalar function <span class="math inline">\(f:R^2 \rightarrow R\)</span></a></li>
+  <li><a href="#plotting-a-parameterized-surface-fr2-rightarrow-r3" id="toc-plotting-a-parameterized-surface-fr2-rightarrow-r3" class="nav-link" data-scroll-target="#plotting-a-parameterized-surface-fr2-rightarrow-r3"><span class="header-section-number">73.6.4</span> Plotting a parameterized surface <span class="math inline">\(f:R^2 \rightarrow R^3\)</span></a></li>
+  <li><a href="#plotting-a-vector-field-fr2-rightarrow-r2." id="toc-plotting-a-vector-field-fr2-rightarrow-r2." class="nav-link" data-scroll-target="#plotting-a-vector-field-fr2-rightarrow-r2."><span class="header-section-number">73.6.5</span> Plotting a vector field <span class="math inline">\(F:R^2 \rightarrow R^2\)</span>.</a></li>
+  </ul></li>
+  <li><a href="#limits" id="toc-limits" class="nav-link" data-scroll-target="#limits"><span class="header-section-number">73.7</span> Limits</a></li>
+  <li><a href="#derivatives" id="toc-derivatives" class="nav-link" data-scroll-target="#derivatives"><span class="header-section-number">73.8</span> Derivatives</a>
+  <ul class="collapse">
+  <li><a href="#derivatives-of-univariate-functions" id="toc-derivatives-of-univariate-functions" class="nav-link" data-scroll-target="#derivatives-of-univariate-functions"><span class="header-section-number">73.8.1</span> Derivatives of univariate functions</a></li>
+  <li><a href="#partial-derivatives" id="toc-partial-derivatives" class="nav-link" data-scroll-target="#partial-derivatives"><span class="header-section-number">73.8.2</span> Partial derivatives</a></li>
+  <li><a href="#jacobian" id="toc-jacobian" class="nav-link" data-scroll-target="#jacobian"><span class="header-section-number">73.8.3</span> Jacobian</a></li>
+  <li><a href="#divergence" id="toc-divergence" class="nav-link" data-scroll-target="#divergence"><span class="header-section-number">73.8.4</span> Divergence</a></li>
+  <li><a href="#curl" id="toc-curl" class="nav-link" data-scroll-target="#curl"><span class="header-section-number">73.8.5</span> Curl</a></li>
+  </ul></li>
+  <li><a href="#integrals" id="toc-integrals" class="nav-link" data-scroll-target="#integrals"><span class="header-section-number">73.9</span> Integrals</a>
+  <ul class="collapse">
+  <li><a href="#integrals-of-univariate-functions" id="toc-integrals-of-univariate-functions" class="nav-link" data-scroll-target="#integrals-of-univariate-functions"><span class="header-section-number">73.9.1</span> Integrals of univariate functions</a></li>
+  <li><a href="#d-and-3d-iterated-integrals" id="toc-d-and-3d-iterated-integrals" class="nav-link" data-scroll-target="#d-and-3d-iterated-integrals"><span class="header-section-number">73.9.2</span> 2D and 3D iterated integrals</a></li>
+  <li><a href="#line-integrals" id="toc-line-integrals" class="nav-link" data-scroll-target="#line-integrals"><span class="header-section-number">73.9.3</span> Line integrals</a></li>
+  <li><a href="#surface-integrals" id="toc-surface-integrals" class="nav-link" data-scroll-target="#surface-integrals"><span class="header-section-number">73.9.4</span> Surface integrals</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/misc/quick_notes.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../misc/getting_started_with_julia.html">Appendices</a></li><li class="breadcrumb-item"><a href="../misc/quick_notes.html"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>The <code>Julia</code> programming language with a design that makes it well suited as a supplement for the learning of calculus, as this collection of notes is intended to illustrate.</p>
+<p>As <code>Julia</code> is open source, it can be downloaded and used like many other programming languages.</p>
+<p>Julia can be used through the internet for free using the <a href="https://mybinder.org">mybinder.org</a> service. This link: <a href="https://mybinder.org/v2/gh/CalculusWithJulia/CwJScratchPad.git/master">launch binder</a> will take you to website that allows this. Just click on the <code>CalcululsWithJulia.ipynb</code> file after launching Binder by clicking on the badge. Binder provides the Jupyter interface.</p>
+<hr>
+<p>Here are some <code>Julia</code> usages to create calculus objects.</p>
+<p>The <code>Julia</code> packages loaded below are all loaded when the <code>CalculusWithJulia</code> package is loaded.</p>
+<p>A <code>Julia</code> package is loaded with the <code>using</code> command:</p>
+<pre class="{julia}"><code>using LinearAlgebra</code></pre>
+<p>The <code>LinearAlgebra</code> package comes with a <code>Julia</code> installation. Other packages can be added. Something like:</p>
+<pre class="{julia}"><code>#| eval: false
+using Pkg
+Pkg.add("SomePackageName")</code></pre>
+<p>These notes have an accompanying package, <code>CalculusWithJulia</code>, that when installed, as above, also installs most of the necessary packages to perform the examples.</p>
+<p>Packages need only be installed once, but they must be loaded into <em>each</em> session for which they will be used.</p>
+<pre class="{julia}"><code>using CalculusWithJulia</code></pre>
+<p>Packages can also be loaded through <code>import PackageName</code>. Importing does not add the exported objects of a function into the namespace, so is used when there are possible name collisions.</p>
+<section id="types" class="level2" data-number="73.1">
+<h2 data-number="73.1" class="anchored" data-anchor-id="types"><span class="header-section-number">73.1</span> Types</h2>
+<p>Objects in <code>Julia</code> are “typed.” Common numeric types are <code>Float64</code>, <code>Int64</code> for floating point numbers and integers. Less used here are types like <code>Rational{Int64}</code>, specifying rational numbers with a numerator and denominator as <code>Int64</code>; or <code>Complex{Float64}</code>, specifying a complex number with floating point components. Julia also has <code>BigFloat</code> and <code>BigInt</code> for arbitrary precision types. Typically, operations use “promotion” to ensure the combination of types is appropriate. Other useful types are <code>Function</code>, an abstract type describing functions; <code>Bool</code> for true and false values; <code>Sym</code> for symbolic values (through <code>SymPy</code>); and <code>Vector{Float64}</code> for vectors with floating point components.</p>
+<p>For the most part the type will not be so important, but it is useful to know that for some function calls the type of the argument will decide what method ultimately gets called. (This allows symbolic types to interact with Julia functions in an idiomatic manner.)</p>
+</section>
+<section id="functions" class="level2" data-number="73.2">
+<h2 data-number="73.2" class="anchored" data-anchor-id="functions"><span class="header-section-number">73.2</span> Functions</h2>
+<section id="definition" class="level3" data-number="73.2.1">
+<h3 data-number="73.2.1" class="anchored" data-anchor-id="definition"><span class="header-section-number">73.2.1</span> Definition</h3>
+<p>Functions can be defined four basic ways:</p>
+<ul>
+<li>one statement functions follow traditional mathematics notation:</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+f(x) = exp(x) * 2x</code></pre>
+<ul>
+<li>multi-statement functions are defined with the <code>function</code> keyword. The <code>end</code> statement ends the definition. The last evaluated command is returned. There is no need for explicit <code>return</code> statement, though it can be useful for control flow.</li>
+</ul>
+<pre class="{julia}"><code>function g(x)
+  a = sin(x)^2
+  a + a^2 + a^3
+end</code></pre>
+<ul>
+<li>Anonymous functions, useful for example, as arguments to other functions or as return values, are defined using an arrow, <code>-&gt;</code>, as follows:</li>
+</ul>
+<pre class="{julia}"><code>fn = x -&gt; sin(2x)
+fn(pi/2)</code></pre>
+<p>In the following, the defined function, <code>Derivative</code>, returns an anonymously defined function that uses a <code>Julia</code> package, loaded with <code>CalculusWithJulia</code>, to take a derivative:</p>
+<pre class="{julia}"><code>Derivatve(f::Function) = x -&gt; ForwardDiff.derivative(f, x)    # ForwardDiff is loaded in CalculusWithJulia</code></pre>
+<p>(The <code>D</code> function of <code>CalculusWithJulia</code> implements something similar.)</p>
+<ul>
+<li>Anonymous function may also be created using the <code>function</code> keyword.</li>
+</ul>
+<p>For mathematical functions <span class="math inline">\(f: R^n \rightarrow R^m\)</span> when <span class="math inline">\(n\)</span> or <span class="math inline">\(m\)</span> is bigger than 1 we have:</p>
+<ul>
+<li>When <span class="math inline">\(n =1\)</span> and <span class="math inline">\(m &gt; 1\)</span> we use a “vector” for the return value</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+r(t) = [sin(t), cos(t), t]</code></pre>
+<p>(An alternative would be to create a vector of functions.)</p>
+<ul>
+<li>When <span class="math inline">\(n &gt; 1\)</span> and <span class="math inline">\(m=1\)</span> we use multiple arguments or pass the arguments in a container. This pattern is common, as it allows both calling styles.</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+f(x, y, z) = x*y + y*z + z*x
+f(v) = f(v...)</code></pre>
+<p>Some functions need to pass in a container of values, for this the last definition is useful to expand the values. Splatting takes a container and treats the values like individual arguments.</p>
+<p>Alternatively, indexing can be used directly, as in:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = x[1]*x[2] + x[2]*x[3] + x[3]*x[1]</code></pre>
+<ul>
+<li>For vector fields (<span class="math inline">\(n,m &gt; 1\)</span>) a combination is used:</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+F(x,y,z) = [-y, x, z]
+F(v) = F(v...)</code></pre>
+</section>
+<section id="calling-a-function" class="level3" data-number="73.2.2">
+<h3 data-number="73.2.2" class="anchored" data-anchor-id="calling-a-function"><span class="header-section-number">73.2.2</span> Calling a function</h3>
+<p>Functions are called using parentheses to group the arguments.</p>
+<pre class="{julia}"><code>#| hold: true
+f(t) = sin(t)*sqrt(t)
+sin(1), sqrt(1), f(1)</code></pre>
+<p>When a function has multiple arguments, yet the value passed in is a container holding the arguments, splatting is used to expand the arguments, as is done in the definition <code>F(v) = F(v...)</code>, above.</p>
+</section>
+<section id="multiple-dispatch" class="level3" data-number="73.2.3">
+<h3 data-number="73.2.3" class="anchored" data-anchor-id="multiple-dispatch"><span class="header-section-number">73.2.3</span> Multiple dispatch</h3>
+<p><code>Julia</code> can have many methods for a single generic function. (E.g., it can have many different implementations of addition when the <code>+</code> sign is encountered.) The <em>type</em>s of the arguments and the number of arguments are used for dispatch.</p>
+<p>Here the number of arguments is used:</p>
+<pre class="{julia}"><code>Area(w, h) = w * h    # area of rectangle
+Area(w) = Area(w, w)  # area of square using area of rectangle definition</code></pre>
+<p>Calling <code>Area(5)</code> will call <code>Area(5,5)</code> which will return <code>5*5</code>.</p>
+<p>Similarly, the definition for a vector field:</p>
+<pre class="{julia}"><code>#| hold: true
+F(x,y,z) = [-y, x, z]
+F(v) = F(v...)</code></pre>
+<p>takes advantage of multiple dispatch to allow either a vector argument or individual arguments.</p>
+<p>Type parameters can be used to restrict the type of arguments that are permitted. The <code>Derivative(f::Function)</code> definition illustrates how the <code>Derivative</code> function, defined above, is restricted to <code>Function</code> objects.</p>
+</section>
+<section id="keyword-arguments" class="level3" data-number="73.2.4">
+<h3 data-number="73.2.4" class="anchored" data-anchor-id="keyword-arguments"><span class="header-section-number">73.2.4</span> Keyword arguments</h3>
+<p>Optional arguments may be specified with keywords, when the function is defined to use them. Keywords are separated from positional arguments using a semicolon, <code>;</code>:</p>
+<pre class="{julia}"><code>circle(x; r=1) = sqrt(r^2 - x^2)
+circle(0.5), circle(0.5, r=10)</code></pre>
+<p>The main (but not sole) use of keyword arguments will be with plotting, where various plot attribute are passed as <code>key=value</code> pairs.</p>
+</section>
+</section>
+<section id="symbolic-objects" class="level2" data-number="73.3">
+<h2 data-number="73.3" class="anchored" data-anchor-id="symbolic-objects"><span class="header-section-number">73.3</span> Symbolic objects</h2>
+<p>The add-on <code>SymPy</code> package allows for symbolic expressions to be used. Symbolic values are defined with <code>@syms</code>, as below.</p>
+<pre class="{julia}"><code>using SymPy</code></pre>
+<pre class="{julia}"><code>@syms x y z
+x^2 + y^3 + z</code></pre>
+<p>Assumptions on the variables can be useful, particularly with simplification, as in</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x::real y::integer z::positive</code></pre>
+<p>Symbolic expressions flow through <code>Julia</code> functions symbolically</p>
+<pre class="{julia}"><code>sin(x)^2 + cos(x)^2</code></pre>
+<p>Numbers are symbolic once <code>SymPy</code> interacts with them:</p>
+<pre class="{julia}"><code>x - x + 1  # 1 is now symbolic</code></pre>
+<p>The number <code>PI</code> is a symbolic <code>pi</code>.</p>
+<pre class="{julia}"><code>sin(PI), sin(pi)</code></pre>
+<p>Use <code>Sym</code> to create symbolic numbers, <code>N</code> to find a <code>Julia</code> number from a symbolic number:</p>
+<pre class="{julia}"><code>1 / Sym(2)</code></pre>
+<pre class="{julia}"><code>N(PI)</code></pre>
+<p>Many generic <code>Julia</code> functions will work with symbolic objects through multiple dispatch (e.g., <code>sin</code>, <code>cos</code>, …). Sympy functions that are not in <code>Julia</code> can be accessed through the <code>sympy</code> object using dot-call notation:</p>
+<pre class="{julia}"><code>sympy.harmonic(10)</code></pre>
+<p>Some Sympy methods belong to the object and a called via the pattern <code>object.method(...)</code>. This too is the case using SymPy with <code>Julia</code>. For example:</p>
+<pre class="{julia}"><code>#| hold: true
+A = [x 1; x 2]
+A.det()   # determinant of symbolic matrix A</code></pre>
+</section>
+<section id="containers" class="level2" data-number="73.4">
+<h2 data-number="73.4" class="anchored" data-anchor-id="containers"><span class="header-section-number">73.4</span> Containers</h2>
+<p>We use a few different containers:</p>
+<ul>
+<li>Tuples. These are objects grouped together using parentheses. They need not be of the same type</li>
+</ul>
+<pre class="{julia}"><code>x1 = (1, "two", 3.0)</code></pre>
+<p>Tuples are useful for programming. For example, they are used to return multiple values from a function.</p>
+<ul>
+<li>Vectors. These are objects of the same type (typically) grouped together using square brackets, values separated by commas:</li>
+</ul>
+<pre class="{julia}"><code>x2 = [1, 2, 3.0]  # 3.0 makes theses all floating point</code></pre>
+<p>Unlike tuples, the expected arithmetic from Linear Algebra is implemented for vectors.</p>
+<ul>
+<li>Matrices. Like vectors, combine values of the same type, only they are 2-dimensional. Use spaces to separate values along a row; semicolons to separate rows:</li>
+</ul>
+<pre class="{julia}"><code>x3 = [1 2 3; 4 5 6; 7 8 9]</code></pre>
+<ul>
+<li>Row vectors. A vector is 1 dimensional, though it may be identified as a column of two dimensional matrix. A row vector is a two-dimensional matrix with a single row:</li>
+</ul>
+<pre class="{julia}"><code>x4 = [1 2 3.0]</code></pre>
+<p>These have <em>indexing</em> using square brackets:</p>
+<pre class="{julia}"><code>x1[1], x2[2], x3[3]</code></pre>
+<p>Matrices are usually indexed by row and column:</p>
+<pre class="{julia}"><code>x3[1,2] # row one column two</code></pre>
+<p>For vectors and matrices - but not tuples, as they are immutable - indexing can be used to change a value in the container:</p>
+<pre class="{julia}"><code>x2[1], x3[1,1] = 2, 2</code></pre>
+<p>Vectors and matrices are arrays. As hinted above, arrays have mathematical operations, such as addition and subtraction, defined for them. Tuples do not.</p>
+<p>Destructuring is an alternative to indexing to get at the entries in certain containers:</p>
+<pre class="{julia}"><code>#| hold: true
+a,b,c = x2</code></pre>
+<section id="structured-collections" class="level3" data-number="73.4.1">
+<h3 data-number="73.4.1" class="anchored" data-anchor-id="structured-collections"><span class="header-section-number">73.4.1</span> Structured collections</h3>
+<p>An arithmetic progression, <span class="math inline">\(a, a+h, a+2h, ..., b\)</span> can be produced <em>efficiently</em> using the range operator <code>a:h:b</code>:</p>
+<pre class="{julia}"><code>5:10:55  # an object that describes 5, 15, 25, 35, 45, 55</code></pre>
+<p>If <code>h=1</code> it can be omitted:</p>
+<pre class="{julia}"><code>1:10     # an object that describes 1,2,3,4,5,6,7,8,9,10</code></pre>
+<p>The <code>range</code> function can <em>efficiently</em> describe <span class="math inline">\(n\)</span> evenly spaced points between <code>a</code> and <code>b</code>:</p>
+<pre class="{julia}"><code>range(0, pi, length=5)  # range(a, stop=b, length=n) for version 1.0</code></pre>
+<p>This is useful for creating regularly spaced values needed for certain plots.</p>
+</section>
+</section>
+<section id="iteration" class="level2" data-number="73.5">
+<h2 data-number="73.5" class="anchored" data-anchor-id="iteration"><span class="header-section-number">73.5</span> Iteration</h2>
+<p>The <code>for</code> keyword is useful for iteration, Here is a traditional for loop, as <code>i</code> loops over each entry of the vector <code>[1,2,3]</code>:</p>
+<pre class="{julia}"><code>for i in [1,2,3]
+  println(i)
+end</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Technical aside: For assignment within a for loop at the global level, a <code>global</code> declaration may be needed to ensure proper scoping.</p>
+</div>
+</div>
+<p>List comprehensions are similar, but are useful as they perform the iteration and collect the values:</p>
+<pre class="{julia}"><code>[i^2 for i in [1,2,3]]</code></pre>
+<p>Comprehesions can also be used to make matrices</p>
+<pre class="{julia}"><code>[1/(i+j) for i in 1:3, j in 1:4]</code></pre>
+<p>(The three rows are for <code>i=1</code>, then <code>i=2</code>, and finally for <code>i=3</code>.)</p>
+<p>Comprehensions apply an <em>expression</em> to each entry in a container through iteration. Applying a function to each entry of a container can be facilitated by:</p>
+<ul>
+<li>Broadcasting. Using <code>.</code> before an operation instructs <code>Julia</code> to match up sizes (possibly extending to do so) and then apply the operation element by element:</li>
+</ul>
+<pre class="{julia}"><code>xs = [1,2,3]
+sin.(xs)   # sin(1), sin(2), sin(3)</code></pre>
+<p>This example pairs off the value in <code>bases</code> and <code>xs</code>:</p>
+<pre class="{julia}"><code>bases = [5,5,10]
+log.(bases, xs)  # log(5, 1), log(5,2), log(10, 3)</code></pre>
+<p>This example broadcasts the scalar value for the base with <code>xs</code>:</p>
+<pre class="{julia}"><code>log.(5, xs)</code></pre>
+<p>Row and column vectors can fill in:</p>
+<pre class="{julia}"><code>ys = [4 5] # a row vector
+g(x,y) = (x,y)
+g.(xs, ys)    # broadcasting a column and row vector makes a matrix, then applies f.</code></pre>
+<p>This should be contrasted to the case when both <code>xs</code> and <code>ys</code> are (column) vectors, as then they pair off (and here cause a dimension mismatch as they have different lengths):</p>
+<pre class="{julia}"><code>#| error: true
+g.(xs, [4,5])</code></pre>
+<ul>
+<li>The <code>map</code> function is similar, it applies a function to each element:</li>
+</ul>
+<pre class="{julia}"><code>map(sin, [1,2,3])</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Many different computer languages implement <code>map</code>, broadcasting is less common. <code>Julia</code>’s use of the dot syntax to indicate broadcasting is reminiscent of MATLAB, but is quite different.</p>
+</div>
+</div>
+</section>
+<section id="plots" class="level2" data-number="73.6">
+<h2 data-number="73.6" class="anchored" data-anchor-id="plots"><span class="header-section-number">73.6</span> Plots</h2>
+<p>The following commands use the <code>Plots</code> package. The <code>Plots</code> package expects a choice of backend. We will use <code>gr</code> unless, but other can be substituted by calling an appropriate command, such as <code>pyplot()</code> or <code>plotly()</code>.</p>
+<pre class="{julia}"><code>using Plots</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <code>plotly</code> backend and <code>gr</code> backends are available by default. The <code>plotly</code> backend is has some interactivity, <code>gr</code> is for static plots. The <code>pyplot</code> package is used for certain surface plots, when <code>gr</code> can not be used.</p>
+</div>
+</div>
+<section id="plotting-a-univariate-function-fr-rightarrow-r" class="level3" data-number="73.6.1">
+<h3 data-number="73.6.1" class="anchored" data-anchor-id="plotting-a-univariate-function-fr-rightarrow-r"><span class="header-section-number">73.6.1</span> Plotting a univariate function <span class="math inline">\(f:R \rightarrow R\)</span></h3>
+<ul>
+<li>using <code>plot(f, a, b)</code></li>
+</ul>
+<pre class="{julia}"><code>plot(sin, 0, 2pi)</code></pre>
+<p>Or</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = exp(-x/2pi)*sin(x)
+plot(f, 0, 2pi)</code></pre>
+<p>Or with an anonymous function</p>
+<pre class="{julia}"><code>plot(x -&gt; sin(x) + sin(2x), 0, 2pi)</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The time to first plot can be lengthy! This can be removed by creating a custom <code>Julia</code> image, but that is not introductory level stuff. As well, standalone plotting packages offer quicker first plots, but the simplicity of <code>Plots</code> is preferred. Subsequent plots are not so time consuming, as the initial time is spent compiling functions so their re-use is speedy.</p>
+</div>
+</div>
+<p>Arguments of interest include</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 77%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Attribute</th>
+<th style="text-align: center;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>legend</code></td>
+<td style="text-align: center;">A boolean, specify <code>false</code> to inhibit drawing a legend</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>aspect_ratio</code></td>
+<td style="text-align: center;">Use <code>:equal</code> to have x and y axis have same scale</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>linewidth</code></td>
+<td style="text-align: center;">Integers greater than 1 will thicken lines drawn</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>color</code></td>
+<td style="text-align: center;">A color may be specified by a symbol (leading <code>:</code>).</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"></td>
+<td style="text-align: center;">E.g., <code>:black</code>, <code>:red</code>, <code>:blue</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>using <code>plot(xs, ys)</code></li>
+</ul>
+<p>The lower level interface to <code>plot</code> involves directly creating x and y values to plot:</p>
+<pre class="{julia}"><code>#| hold: true
+xs = range(0, 2pi, length=100)
+ys = sin.(xs)
+plot(xs, ys, color=:red)</code></pre>
+<ul>
+<li>plotting a symbolic expression</li>
+</ul>
+<p>A symbolic expression of single variable can be plotted as a function is:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x
+plot(exp(-x/2pi)*sin(x), 0, 2pi)</code></pre>
+<ul>
+<li>Multiple functions</li>
+</ul>
+<p>The <code>!</code> Julia convention to modify an object is used by the <code>plot</code> command, so <code>plot!</code> will add to the existing plot:</p>
+<pre class="{julia}"><code>#| hold: true
+plot(sin, 0, 2pi, color=:red)
+plot!(cos, 0, 2pi, color=:blue)
+plot!(zero, color=:green)  # no a, b then inherited from graph.</code></pre>
+<p>The <code>zero</code> function is just 0 (more generally useful when the type of a number is important, but used here to emphasize the <span class="math inline">\(x\)</span> axis).</p>
+</section>
+<section id="plotting-a-parameterized-space-curve-function-fr-rightarrow-rn-n-2-or-3" class="level3" data-number="73.6.2">
+<h3 data-number="73.6.2" class="anchored" data-anchor-id="plotting-a-parameterized-space-curve-function-fr-rightarrow-rn-n-2-or-3"><span class="header-section-number">73.6.2</span> Plotting a parameterized (space) curve function <span class="math inline">\(f:R \rightarrow R^n\)</span>, <span class="math inline">\(n = 2\)</span> or <span class="math inline">\(3\)</span></h3>
+<ul>
+<li>Using <code>plot(xs, ys)</code></li>
+</ul>
+<p>Let <span class="math inline">\(f(t) = e^{t/2\pi} \langle \cos(t), \sin(t)\rangle\)</span> be a parameterized function. Then the <span class="math inline">\(t\)</span> values can be generated as follows:</p>
+<pre class="{julia}"><code>#| hold: true
+ts = range(0, 2pi, length = 100)
+xs = [exp(t/2pi) * cos(t) for t in ts]
+ys = [exp(t/2pi) * sin(t) for t in ts]
+plot(xs, ys)</code></pre>
+<ul>
+<li>using <code>plot(f1, f2, a, b)</code>. If the two functions describing the components are available, then</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+f1(t) = exp(t/2pi) * cos(t)
+f2(t) = exp(t/2pi) * sin(t)
+plot(f1, f2, 0, 2pi)</code></pre>
+<ul>
+<li>Using <code>plot_parametric</code>. If the curve is described as a function of <code>t</code> with a vector output, then the <code>CalculusWithJulia</code> package provides <code>plot_parametric</code> to produce a plot:</li>
+</ul>
+<pre class="{julia}"><code>r(t) = exp(t/2pi) * [cos(t), sin(t)]
+plot_parametric(0..2pi, r)</code></pre>
+<p>The low-level approach doesn’t quite work as easily as desired:</p>
+<pre class="{julia}"><code>#| hold: true
+ts = range(0, 2pi, length = 4)
+vs = r.(ts)</code></pre>
+<p>As seen, the values are a vector of vectors. To plot a reshaping needs to be done:</p>
+<pre class="{julia}"><code>#| hold: true
+ts = range(0, 2pi, length = 100)
+vs = r.(ts)
+xs = [vs[i][1] for i in eachindex(vs)]
+ys = [vs[i][2] for i in eachindex(vs)]
+plot(xs, ys)</code></pre>
+<p>This approach is facilitated by the <code>unzip</code> function in <code>CalculusWithJulia</code> (and used internally by <code>plot_parametric</code>):</p>
+<pre class="{julia}"><code>ts = range(0, 2pi, length = 100)
+plot(unzip(r.(ts))...)</code></pre>
+<ul>
+<li>Plotting an arrow</li>
+</ul>
+<p>An arrow in 2D can be plotted with the <code>quiver</code> command. We show the <code>arrow(p, v)</code> (or <code>arrow!(p,v)</code> function) from the <code>CalculusWithJulia</code> package, which has an easier syntax (<code>arrow!(p, v)</code>, where <code>p</code> is a point indicating the placement of the tail, and <code>v</code> the vector to represent):</p>
+<pre class="{julia}"><code>#| hold: true
+plot_parametric(0..2pi, r)
+t0 = pi/8
+arrow!(r(t0), r'(t0))</code></pre>
+</section>
+<section id="plotting-a-scalar-function-fr2-rightarrow-r" class="level3" data-number="73.6.3">
+<h3 data-number="73.6.3" class="anchored" data-anchor-id="plotting-a-scalar-function-fr2-rightarrow-r"><span class="header-section-number">73.6.3</span> Plotting a scalar function <span class="math inline">\(f:R^2 \rightarrow R\)</span></h3>
+<p>The <code>surface</code> and <code>contour</code> functions are available to visualize a scalar function of <span class="math inline">\(2\)</span> variables:</p>
+<ul>
+<li>A surface plot</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+f(x, y) = 2 - x^2 + y^2
+xs = ys = range(-2,2, length=25)
+surface(xs, ys, f)</code></pre>
+<p>The function generates the <span class="math inline">\(z\)</span> values, this can be done by the user and then passed to the <code>surface(xs, ys, zs)</code> format:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x, y) = 2 - x^2 + y^2
+xs = ys = range(-2,2, length=25)
+surface(xs, ys, f.(xs, ys'))</code></pre>
+<ul>
+<li>A contour plot</li>
+</ul>
+<p>The <code>contour</code> function is like the <code>surface</code> function.</p>
+<pre class="{julia}"><code>#| hold: true
+xs = ys = range(-2,2, length=25)
+f(x, y) = 2 - x^2 + y^2
+contour(xs, ys, f)</code></pre>
+<p>The values can be computed easily enough, being careful where the transpose is needed:</p>
+<pre class="{julia}"><code>#| hold: true
+xs = ys = range(-2,2, length=25)
+f(x, y) = 2 - x^2 + y^2
+contour(xs, ys, f.(xs, ys'))</code></pre>
+<ul>
+<li>An implicit equation. The constraint <span class="math inline">\(f(x,y)=c\)</span> generates an implicit equation. While <code>contour</code> can be used for this type of plot - by adjusting the requested contours - the <code>ImplicitPlots</code> package does this to make a plot of the equations <span class="math inline">\(f(x,y) = 0\)</span>. (The <code>CalculusWithJulia</code> package re-uses the <code>implicit_plot</code> function.)</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = sin(x*y) - cos(x*y)
+implicit_plot(f)</code></pre>
+</section>
+<section id="plotting-a-parameterized-surface-fr2-rightarrow-r3" class="level3" data-number="73.6.4">
+<h3 data-number="73.6.4" class="anchored" data-anchor-id="plotting-a-parameterized-surface-fr2-rightarrow-r3"><span class="header-section-number">73.6.4</span> Plotting a parameterized surface <span class="math inline">\(f:R^2 \rightarrow R^3\)</span></h3>
+<p>The <code>pyplot</code> (and <code>plotly</code>) backends allow plotting of parameterized surfaces. The low-level <code>surface(xs,ys,zs)</code> is used, as illustrated here.</p>
+<pre class="{julia}"><code>#| hold: true
+X(theta, phi) = sin(phi)*cos(theta)
+Y(theta, phi) = sin(phi)*sin(theta)
+Z(theta, phi) = cos(phi)
+thetas = range(0, pi/4, length=20)
+phis = range(0, pi, length=20)
+# surface(X.(thetas, phis'), Y.(thetas, phis'), Z.(thetas, phis'))</code></pre>
+</section>
+<section id="plotting-a-vector-field-fr2-rightarrow-r2." class="level3" data-number="73.6.5">
+<h3 data-number="73.6.5" class="anchored" data-anchor-id="plotting-a-vector-field-fr2-rightarrow-r2."><span class="header-section-number">73.6.5</span> Plotting a vector field <span class="math inline">\(F:R^2 \rightarrow R^2\)</span>.</h3>
+<p>The <code>CalculusWithJulia</code> package provides <code>vectorfieldplot</code>, used as:</p>
+<pre class="{julia}"><code>#| hold: true
+F(x,y) = [-y, x]
+vectorfieldplot(F, xlim=(-2, 2), ylim=(-2,2), nx=10, ny=10)</code></pre>
+<p>There is also <code>vectorfieldplot3d</code>.</p>
+</section>
+</section>
+<section id="limits" class="level2" data-number="73.7">
+<h2 data-number="73.7" class="anchored" data-anchor-id="limits"><span class="header-section-number">73.7</span> Limits</h2>
+<p>Limits can be investigated numerically by forming tables, eg.:</p>
+<pre class="{julia}"><code>#| hold: true
+xs = [1, 1/10, 1/100, 1/1000]
+f(x) = sin(x)/x
+[xs f.(xs)]</code></pre>
+<p>Symbolically, <code>SymPy</code> provides a <code>limit</code> function:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x
+limit(sin(x)/x, x =&gt; 0)</code></pre>
+<p>Or</p>
+<pre class="{julia}"><code>#| hold: true
+@syms h x
+limit((sin(x+h) - sin(x))/h, h =&gt; 0)</code></pre>
+</section>
+<section id="derivatives" class="level2" data-number="73.8">
+<h2 data-number="73.8" class="anchored" data-anchor-id="derivatives"><span class="header-section-number">73.8</span> Derivatives</h2>
+<p>There are numeric and symbolic approaches to derivatives. For the numeric approach we use the <code>ForwardDiff</code> package, which performs automatic differentiation.</p>
+<section id="derivatives-of-univariate-functions" class="level3" data-number="73.8.1">
+<h3 data-number="73.8.1" class="anchored" data-anchor-id="derivatives-of-univariate-functions"><span class="header-section-number">73.8.1</span> Derivatives of univariate functions</h3>
+<p>Numerically, the <code>ForwardDiff.derivative(f, x)</code> function call will find the derivative of the function <code>f</code> at the point <code>x</code>:</p>
+<pre class="{julia}"><code>ForwardDiff.derivative(sin, pi/3) - cos(pi/3)</code></pre>
+<p>The <code>CalculusWithJulia</code> package overrides the <code>'</code> (<code>adjoint</code>) syntax for functions to provide a derivative which takes a function and returns a function, so its usage is familiar</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = sin(x)
+f'(pi/3) - cos(pi/3)  # or just sin'(pi/3) - cos(pi/3)</code></pre>
+<p>Higher order derivatives are possible as well,</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = sin(x)
+f''''(pi/3) - f(pi/3)</code></pre>
+<hr>
+<p>Symbolically, the <code>diff</code> function of <code>SymPy</code> finds derivatives.</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x
+f(x) = exp(-x)*sin(x)
+ex = f(x)  # symbolic expression
+diff(ex, x)   # or just diff(f(x), x)</code></pre>
+<p>Higher order derivatives can be specified as well</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x
+ex = exp(-x)*sin(x)
+
+diff(ex, x, x)</code></pre>
+<p>Or with a number:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x
+ex = exp(-x)*sin(x)
+
+diff(ex, x, 5)</code></pre>
+<p>The variable is important, as this allows parameters to be symbolic</p>
+<pre class="{julia}"><code>#| hold: true
+@syms mu sigma x
+diff(exp(-((x-mu)/sigma)^2/2), x)</code></pre>
+</section>
+<section id="partial-derivatives" class="level3" data-number="73.8.2">
+<h3 data-number="73.8.2" class="anchored" data-anchor-id="partial-derivatives"><span class="header-section-number">73.8.2</span> Partial derivatives</h3>
+<p>There is no direct partial derivative function provided by <code>ForwardDiff</code>, rather we use the result of the <code>ForwardDiff.gradient</code> function, which finds the partial derivatives for each variable. To use this, the function must be defined in terms of a point or vector.</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y,z) = x*y + y*z + z*x
+f(v) = f(v...)               # this is needed for ForwardDiff.gradient
+ForwardDiff.gradient(f, [1,2,3])</code></pre>
+<p>We can see directly that <span class="math inline">\(\partial{f}/\partial{x} = \langle y + z\rangle\)</span>. At the point <span class="math inline">\((1,2,3)\)</span>, this is <span class="math inline">\(5\)</span>, as returned above.</p>
+<hr>
+<p>Symbolically, <code>diff</code> is used for partial derivatives:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x y z
+ex = x*y + y*z + z*x
+diff(ex, x)    # ∂f/∂x</code></pre>
+<blockquote class="blockquote">
+<p>Gradient</p>
+</blockquote>
+<p>As seen, the <code>ForwardDiff.gradient</code> function finds the gradient at a point. In <code>CalculusWithJulia</code>, the gradient is extended to return a function when called with no additional arguments:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y,z) =  x*y + y*z + z*x
+f(v) = f(v...)
+gradient(f)(1,2,3) - gradient(f, [1,2,3])</code></pre>
+<p>The <code>∇</code> symbol, formed by entering <code>\nabla[tab]</code>, is mathematical syntax for the gradient, and is defined in <code>CalculusWithJulia</code>.</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y,z) =  x*y + y*z + z*x
+f(x) = f(x...)
+∇(f)(1,2,3)   # same as gradient(f, [1,2,3])</code></pre>
+<hr>
+<p>In <code>SymPy</code>, there is no gradient function, though finding the gradient is easy through broadcasting:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x y z
+ex = x*y + y*z + z*x
+diff.(ex, [x,y,z])  # [diff(ex, x), diff(ex, y), diff(ex, z)]</code></pre>
+<p>The <code>CalculusWithJulia</code> package provides a method for <code>gradient</code>:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x y z
+ex = x*y + y*z + z*x
+
+gradient(ex, [x,y,z])</code></pre>
+<p>The <code>∇</code> symbol is an alias. It can guess the order of the free symbols, but generally specifying them is needed. This is done with a tuple:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x y z
+ex = x*y + y*z + z*x
+
+∇((ex, [x,y,z]))  # for this, ∇(ex) also works</code></pre>
+</section>
+<section id="jacobian" class="level3" data-number="73.8.3">
+<h3 data-number="73.8.3" class="anchored" data-anchor-id="jacobian"><span class="header-section-number">73.8.3</span> Jacobian</h3>
+<p>The Jacobian of a function <span class="math inline">\(f:R^n \rightarrow R^m\)</span> is a <span class="math inline">\(m\times n\)</span> matrix of partial derivatives. Numerically, <code>ForwardDiff.jacobian</code> can find the Jacobian of a function at a point:</p>
+<pre class="{julia}"><code>#| hold: true
+F(u,v) = [u*cos(v), u*sin(v), u]
+F(v) = F(v...)    # needed for ForwardDiff.jacobian
+pt = [1, pi/4]
+ForwardDiff.jacobian(F , pt)</code></pre>
+<hr>
+<p>Symbolically, the <code>jacobian</code> function is a method of a <em>matrix</em>, so the calling pattern is different. (Of the form <code>object.method(arguments...)</code>.)</p>
+<pre class="{julia}"><code>#| hold: true
+@syms u v
+F(u,v) = [u*cos(v), u*sin(v), u]
+F(v) = F(v...)
+
+ex = F(u,v)
+ex.jacobian([u,v])</code></pre>
+<p>As the Jacobian can be identified as the matrix with rows given by the transpose of the gradient of the component, it can be computed directly, but it is more difficult:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms u::real v::real
+F(u,v) = [u*cos(v), u*sin(v), u]
+F(v) = F(v...)
+
+vcat([diff.(ex, [u,v])' for ex in F(u,v)]...)</code></pre>
+</section>
+<section id="divergence" class="level3" data-number="73.8.4">
+<h3 data-number="73.8.4" class="anchored" data-anchor-id="divergence"><span class="header-section-number">73.8.4</span> Divergence</h3>
+<p>Numerically, the divergence can be computed from the Jacobian by adding the diagonal elements. This is a numerically inefficient, as the other partial derivates must be found and discarded, but this is generally not an issue for these notes. The following uses <code>tr</code> (the trace from the <code>LinearAlgebra</code> package) to find the sum of a diagonal.</p>
+<pre class="{julia}"><code>#| hold: true
+F(x,y,z) = [-y, x, z]
+F(v) = F(v...)
+pt = [1,2,3]
+tr(ForwardDiff.jacobian(F , pt))</code></pre>
+<p>The <code>CalculusWithJulia</code> package provides <code>divergence</code> to compute the divergence and provides the <code>∇ ⋅</code> notation (<code>\nabla[tab]\cdot[tab]</code>):</p>
+<pre class="{julia}"><code>#| hold: true
+F(x,y,z) = [-y, x, z]
+F(v) = F(v...)
+
+divergence(F, [1,2,3])
+(∇⋅F)(1,2,3)    # not ∇⋅F(1,2,3) as that evaluates F(1,2,3) before the divergence</code></pre>
+<hr>
+<p>Symbolically, the divergence can be found directly:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x y z
+ex = [-y, x, z]
+
+sum(diff.(ex, [x,y,z]))    # sum of [diff(ex[1], x), diff(ex[2],y), diff(ex[3], z)]</code></pre>
+<p>The <code>divergence</code> function can be used for symbolic expressions:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x y z
+ex = [-y, x, z]
+
+divergence(ex, [x,y,z])
+∇⋅(ex, [x,y,z])   # For this, ∇ ⋅ F(x,y,z) also works</code></pre>
+</section>
+<section id="curl" class="level3" data-number="73.8.5">
+<h3 data-number="73.8.5" class="anchored" data-anchor-id="curl"><span class="header-section-number">73.8.5</span> Curl</h3>
+<p>The curl can be computed from the off-diagonal elements of the Jacobian. The calculation follows the formula. The <code>CalculusWithJulia</code> package provides <code>curl</code> to compute this:</p>
+<pre class="{julia}"><code>#| hold: true
+F(x,y,z) = [-y, x, 1]
+F(v) = F(v...)
+
+curl(F, [1,2,3])</code></pre>
+<p>As well, if no point is specified, a function is returned for which a point may be specified using 3 coordinates or a vector</p>
+<pre class="{julia}"><code>#| hold: true
+F(x,y,z) = [-y, x, 1]
+F(v) = F(v...)
+
+curl(F)(1,2,3), curl(F)([1,2,3])</code></pre>
+<p>Finally, the <code>∇ ×</code> (<code>\nabla[tab]\times[tab]</code> notation is available)</p>
+<pre class="{julia}"><code>#| ohld: true
+F(x,y,z) = [-y, x, 1]
+F(v) = F(v...)
+
+(∇×F)(1,2,3)</code></pre>
+<p>For symbolic expressions, we have the <code>∇ ×</code> times notation is available <strong>if</strong> the symbolic vector contains all <span class="math inline">\(3\)</span> variables</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x y z
+𝑭 = [-y, x, z]  #  but not [-y, x, 1] which errs; use `curl` with variables specified
+
+curl([-y, x, 1], (x,y,z)),  ∇×𝑭</code></pre>
+</section>
+</section>
+<section id="integrals" class="level2" data-number="73.9">
+<h2 data-number="73.9" class="anchored" data-anchor-id="integrals"><span class="header-section-number">73.9</span> Integrals</h2>
+<p>Numeric integration is provided by the <code>QuadGK</code> package, for univariate integrals, and the <code>HCubature</code> package for higher dimensional integrals.</p>
+<pre class="{julia}"><code>using QuadGK, HCubature</code></pre>
+<section id="integrals-of-univariate-functions" class="level3" data-number="73.9.1">
+<h3 data-number="73.9.1" class="anchored" data-anchor-id="integrals-of-univariate-functions"><span class="header-section-number">73.9.1</span> Integrals of univariate functions</h3>
+<p>A definite integral may be computed numerically using <code>quadgk</code></p>
+<pre class="{julia}"><code>quadgk(sin, 0, pi)</code></pre>
+<p>The answer and an estimate for the worst case error is returned.</p>
+<p>If singularities are avoided, improper integrals are computed as well:</p>
+<pre class="{julia}"><code>quadgk(x-&gt;1/x^(1/2), 0, 1)</code></pre>
+<hr>
+<p>SymPy provides the <code>integrate</code> function to compute both definite and indefinite integrals.</p>
+<pre class="{julia}"><code>#| hold: true
+@syms a::real x::real
+integrate(exp(a*x)*sin(x), x)</code></pre>
+<p>Like <code>diff</code> the variable to integrate is specified.</p>
+<p>Definite integrals use a tuple, <code>(variable, a, b)</code>, to specify the variable and range to integrate over:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms a::real x::real
+integrate(sin(a + x), (x, 0, PI))   #  ∫_0^PI sin(a+x) dx</code></pre>
+</section>
+<section id="d-and-3d-iterated-integrals" class="level3" data-number="73.9.2">
+<h3 data-number="73.9.2" class="anchored" data-anchor-id="d-and-3d-iterated-integrals"><span class="header-section-number">73.9.2</span> 2D and 3D iterated integrals</h3>
+<p>Two and three dimensional integrals over box-like regions are computed numerically with the <code>hcubature</code> function from the <code>HCubature</code> package. If the box is <span class="math inline">\([x_1, y_1]\times[x_2,y_2]\times\cdots\times[x_n,y_n]\)</span> then the limits are specified through tuples of the form <span class="math inline">\((x_1,x_2,\dots,x_n)\)</span> and <span class="math inline">\((y_1,y_2,\dots,y_n)\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = x*y^2
+f(v) = f(v...)
+
+hcubature(f, (0,0), (1, 2))  # computes ∫₀¹∫₀² f(x,y) dy dx</code></pre>
+<p>The calling pattern for more dimensions is identical.</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y,z) = x*y^2*z^3
+f(v) = f(v...)
+
+hcubature(f, (0,0,0), (1, 2,3)) # computes ∫₀¹∫₀²∫₀³ f(x,y,z) dz dy dx</code></pre>
+<p>The box-like region requirement means a change of variables may be necessary. For example, to integrate over the region <span class="math inline">\(x^2 + y^2 \leq 1; x \geq 0\)</span>, polar coordinates can be used with <span class="math inline">\((r,\theta)\)</span> in <span class="math inline">\([0,1]\times[-\pi/2,\pi/2]\)</span>. When changing variables, the Jacobian enters into the formula, through</p>
+<p><span class="math display">\[
+~
+\iint_{G(S)} f(\vec{x}) dV = \iint_S (f \circ G)(\vec{u}) |\det(J_G)(\vec{u})| dU.
+~
+\]</span></p>
+<p>Here we implement this:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = x*y^2
+f(v) = f(v...)
+Phi(r, theta) = r * [cos(theta), sin(theta)]
+Phi(rtheta) = Phi(rtheta...)
+integrand(rtheta) = f(Phi(rtheta)) * det(ForwardDiff.jacobian(Phi, rtheta))
+hcubature(integrand, (0.0,-pi/2), (1.0, pi/2))</code></pre>
+<hr>
+<p>Symbolically, the <code>integrate</code> function allows additional terms to be specified. For example, the above could be done through:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x::real y::real
+integrate(x * y^2, (y, -sqrt(1-x^2), sqrt(1-x^2)), (x, 0, 1))</code></pre>
+</section>
+<section id="line-integrals" class="level3" data-number="73.9.3">
+<h3 data-number="73.9.3" class="anchored" data-anchor-id="line-integrals"><span class="header-section-number">73.9.3</span> Line integrals</h3>
+<p>A line integral of <span class="math inline">\(f\)</span> parameterized by <span class="math inline">\(\vec{r}(t)\)</span> is computed by:</p>
+<p><span class="math display">\[
+~
+\int_a^b (f\circ\vec{r})(t) \| \frac{dr}{dt}\| dt.
+~
+\]</span></p>
+<p>For example, if <span class="math inline">\(f(x,y) = 2 - x^2 - y^2\)</span> and <span class="math inline">\(r(t) = 1/t \langle \cos(t), \sin(t) \rangle\)</span>, then the line integral over <span class="math inline">\([1,2]\)</span> is given by:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = 2 - x^2 - y^2
+f(v) = f(v...)
+r(t) = [cos(t), sin(t)]/t
+
+integrand(t) = (f∘r)(t) * norm(r'(t))
+quadgk(integrand, 1, 2)</code></pre>
+<p>To integrate a line integral through a vector field, say <span class="math inline">\(\int_C F \cdot\hat{T} ds=\int_C F\cdot \vec{r}'(t) dt\)</span> we have, for example,</p>
+<pre class="{julia}"><code>#| hold: true
+F(x,y) = [-y, x]
+F(v) = F(v...)
+r(t) =  [cos(t), sin(t)]/t
+integrand(t) = (F∘r)(t) ⋅ r'(t)
+quadgk(integrand, 1, 2)</code></pre>
+<hr>
+<p>Symbolically, there is no real difference from a 1-dimensional integral. Let <span class="math inline">\(\phi = 1/\|r\|\)</span> and integrate the gradient field over one turn of the helix <span class="math inline">\(\vec{r}(t) = \langle \cos(t), \sin(t), t\rangle\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x::real y::real z::real t::real
+phi(x,y,z) = 1/sqrt(x^2 + y^2 + z^2)
+r(t) = [cos(t), sin(t), t]
+∇phi = diff.(phi(x,y,z), [x,y,z])
+∇phi_r = subs.(∇phi, x.=&gt; r(t)[1], y.=&gt;r(t)[2], z.=&gt;r(t)[3])
+rp = diff.(r(t), t)
+global helix = simplify(∇phi_r ⋅ rp )</code></pre>
+<p>Then</p>
+<pre class="{julia}"><code>@syms t::real
+integrate(helix, (t, 0, 2PI))</code></pre>
+</section>
+<section id="surface-integrals" class="level3" data-number="73.9.4">
+<h3 data-number="73.9.4" class="anchored" data-anchor-id="surface-integrals"><span class="header-section-number">73.9.4</span> Surface integrals</h3>
+<p>The surface integral for a parameterized surface involves a surface element <span class="math inline">\(\|\partial\Phi/\partial{u} \times \partial\Phi/\partial{v}\|\)</span>. This can be computed numerically with:</p>
+<pre class="{julia}"><code>Phi(u,v) = [u*cos(v), u*sin(v), u]
+Phi(v) = Phi(v...)
+
+function SE(Phi, pt)
+   J = ForwardDiff.jacobian(Phi, pt)
+   J[:,1] × J[:,2]
+end
+
+norm(SE(Phi, [1,2]))</code></pre>
+<p>To find the surface integral (<span class="math inline">\(f=1\)</span>) for this surface over <span class="math inline">\([0,1] \times [0,2\pi]\)</span>, we have:</p>
+<pre class="{julia}"><code>hcubature(pt -&gt; norm(SE(Phi, pt)), (0.0,0.0), (1.0, 2pi))</code></pre>
+<p>Symbolically, the approach is similar:</p>
+<pre class="{julia}"><code>@syms u::real v::real
+exₚ = Phi(u,v)
+Jₚ = exₚ.jacobian([u,v])
+SurfEl = norm(Jₚ[:,1] × Jₚ[:,2]) |&gt; simplify</code></pre>
+<p>Then</p>
+<pre class="{julia}"><code>integrate(SurfEl, (u, 0, 1), (v, 0, 2PI))</code></pre>
+<p>Integrating a vector field over the surface, would be similar:</p>
+<pre class="{julia}"><code>#| hold: true
+F(x,y,z) = [x, y, z]
+ex = F(Phi(u,v)...)  ⋅ (Jₚ[:,1] × Jₚ[:,2])
+integrate(ex, (u,0,1), (v, 0, 2PI))</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../misc/unicode.html" class="pagination-link" aria-label="Usages of Unicode symbols">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/misc/quick_notes.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

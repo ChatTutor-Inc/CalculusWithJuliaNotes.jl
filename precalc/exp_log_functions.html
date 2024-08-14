@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>15&nbsp; Exponential and logarithmic functions – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../precalc/trig_functions.html" rel="next">
+<link href="../precalc/rational_functions.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../precalc.html">Precalculus Concepts</a></li><li class="breadcrumb-item"><a href="../precalc/exp_log_functions.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#exponential-functions" id="toc-exponential-functions" class="nav-link active" data-scroll-target="#exponential-functions"><span class="header-section-number">15.1</span> Exponential functions</a></li>
+  <li><a href="#logarithmic-functions" id="toc-logarithmic-functions" class="nav-link" data-scroll-target="#logarithmic-functions"><span class="header-section-number">15.2</span> Logarithmic functions</a>
+  <ul class="collapse">
+  <li><a href="#properties-of-logarithms" id="toc-properties-of-logarithms" class="nav-link" data-scroll-target="#properties-of-logarithms"><span class="header-section-number">15.2.1</span> Properties of logarithms</a></li>
+  </ul></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">15.3</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/precalc/exp_log_functions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../precalc.html">Precalculus Concepts</a></li><li class="breadcrumb-item"><a href="../precalc/exp_log_functions.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses the following add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots; plotly()</code></pre>
+<hr>
+<p>The family of exponential functions is used to model growth and decay. The family of logarithmic functions is defined here as the inverse of the exponential functions, but have reach far outside of that.</p>
+<section id="exponential-functions" class="level2" data-number="15.1">
+<h2 data-number="15.1" class="anchored" data-anchor-id="exponential-functions"><span class="header-section-number">15.1</span> Exponential functions</h2>
+<p>The family of exponential functions is defined by <span class="math inline">\(f(x) = a^x, -\infty&lt; x &lt; \infty\)</span> and <span class="math inline">\(a &gt; 0\)</span>. For <span class="math inline">\(0 &lt; a &lt; 1\)</span> these functions decay or decrease, for <span class="math inline">\(a &gt; 1\)</span> the functions grow or increase, and if <span class="math inline">\(a=1\)</span> the function is constantly <span class="math inline">\(1\)</span>.</p>
+<p>For a given <span class="math inline">\(a\)</span>, defining <span class="math inline">\(a^n\)</span> for positive integers is straightforward, as it means multiplying <span class="math inline">\(n\)</span> copies of <span class="math inline">\(a.\)</span> From this, for <em>integer powers</em>, the key properties of exponents: <span class="math inline">\(a^x \cdot a^y = a^{x+y}\)</span>, and <span class="math inline">\((a^x)^y = a^{x \cdot y}\)</span> are immediate consequences. For example with <span class="math inline">\(x=3\)</span> and <span class="math inline">\(y=2\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+a^3 \cdot a^2 &amp;= (a\cdot a \cdot a) \cdot (a \cdot a) \\
+              &amp;= (a \cdot a \cdot a \cdot a \cdot a) \\
+              &amp;= a^5 = a^{3+2},\\
+(a^3)^2 &amp;= (a\cdot a \cdot a) \cdot (a\cdot a \cdot a)\\
+        &amp;= (a\cdot a \cdot a \cdot a\cdot a \cdot a) \\
+        &amp;= a^6 = a^{3\cdot 2}.
+\end{align*}\]</span></p>
+<p>For <span class="math inline">\(a \neq 0\)</span>, <span class="math inline">\(a^0\)</span> is defined to be <span class="math inline">\(1\)</span>.</p>
+<p>For positive, integer values of <span class="math inline">\(n\)</span>, we have by definition that <span class="math inline">\(a^{-n} = 1/a^n\)</span>.</p>
+<p>For <span class="math inline">\(n\)</span> a positive integer, we can define <span class="math inline">\(a^{1/n}\)</span> to be the unique positive solution to <span class="math inline">\(x^n=a\)</span>.</p>
+<p>Using the key properties of exponents we can extend this to a definition of <span class="math inline">\(a^x\)</span> for any rational <span class="math inline">\(x\)</span>.</p>
+<p>Defining <span class="math inline">\(a^x\)</span> for any real number requires some more sophisticated mathematics.</p>
+<p>One method is to use a <a href="http://tinyurl.com/zk86c8r">theorem</a> that says a <em>bounded</em> monotonically increasing sequence will converge. (This uses the <a href="https://en.wikipedia.org/wiki/Completeness_of_the_real_numbers">Completeness Axiom</a>.) Then for <span class="math inline">\(a &gt; 1\)</span> we have if <span class="math inline">\(q_n\)</span> is a sequence of rational numbers increasing to <span class="math inline">\(x\)</span>, then <span class="math inline">\(a^{q_n}\)</span> will be a bounded sequence of increasing numbers, so will converge to a number defined to be <span class="math inline">\(a^x\)</span>. Something similar is possible for the <span class="math inline">\(0 &lt; a &lt; 1\)</span> case.</p>
+<p>This definition can be done to ensure the rules of exponents hold for <span class="math inline">\(a &gt; 0\)</span>:</p>
+<p><span class="math display">\[
+a^{x + y} = a^x \cdot a^y, \quad (a^x)^y = a^{x \cdot y}.
+\]</span></p>
+<p>In <code>Julia</code> these functions are implemented using <code>^</code>. A special value of the base, <span class="math inline">\(e\)</span>, may be defined as well in terms of a limit. The exponential function <span class="math inline">\(e^x\)</span> is implemented in <code>exp</code>.</p>
+<pre class="{julia}"><code>#| hold: true
+plot(x -&gt; (1/2)^x, -2, 2, label="1/2")
+plot!(x -&gt; 1^x, label="1")
+plot!(x -&gt; 2^x, label="2")
+plot!(x -&gt; exp(x), label="e")</code></pre>
+<p>We see examples of some general properties:</p>
+<ul>
+<li>The domain is all real <span class="math inline">\(x\)</span> and the range is all <em>positive</em> <span class="math inline">\(y\)</span> (provided <span class="math inline">\(a \neq 1\)</span>).</li>
+<li>For <span class="math inline">\(0 &lt; a &lt; 1\)</span> the functions are monotonically decreasing.</li>
+<li>For <span class="math inline">\(a &gt; 1\)</span> the functions are monotonically increasing.</li>
+<li>If <span class="math inline">\(1 &lt; a &lt; b\)</span> and <span class="math inline">\(x &gt; 0\)</span> we have <span class="math inline">\(a^x &lt; b^x\)</span>.</li>
+</ul>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p><a href="http://tinyurl.com/gsy939y">Continuously</a> compounded interest allows an initial amount <span class="math inline">\(P_0\)</span> to grow over time according to <span class="math inline">\(P(t)=P_0e^{rt}\)</span>. Investigate the difference between investing <span class="math inline">\(1,000\)</span> dollars in an account which earns <span class="math inline">\(2\)</span>% as opposed to an account which earns <span class="math inline">\(8\)</span>% over <span class="math inline">\(20\)</span> years.</p>
+<p>The <span class="math inline">\(r\)</span> in the formula is the interest rate, so <span class="math inline">\(r=0.02\)</span> or <span class="math inline">\(r=0.08\)</span>. To compare the differences we have:</p>
+<pre class="{julia}"><code>r2, r8 = 0.02, 0.08
+P0 = 1000
+t = 20
+P0 * exp(r2*t), P0 * exp(r8*t)</code></pre>
+<p>As can be seen, there is quite a bit of difference.</p>
+<p>In <span class="math inline">\(1494\)</span>, <a href="http://tinyurl.com/gsy939y">Pacioli</a> gave the “Rule of <span class="math inline">\(72\)</span>”, stating that to find the number of years it takes an investment to double when continuously compounded one should divide the interest rate into <span class="math inline">\(72\)</span>.</p>
+<p>This formula is not quite precise, but a rule of thumb, the number is closer to <span class="math inline">\(69\)</span>, but <span class="math inline">\(72\)</span> has many divisors which makes this an easy to compute approximation. Let’s see how accurate it is:</p>
+<pre class="{julia}"><code>t2, t8 = 72/2, 72/8
+exp(r2*t2), exp(r8*t8)</code></pre>
+<p>So fairly close - after <span class="math inline">\(72/r\)</span> years the amount is <span class="math inline">\(2.05...\)</span> times more than the initial amount.</p>
+</section>
+<section id="example-1" class="level5">
+<h5 class="anchored" data-anchor-id="example-1">Example</h5>
+<p><a href="https://en.wikipedia.org/wiki/Bacterial_growth">Bacterial growth</a> (according to Wikipedia) is the asexual reproduction, or cell division, of a bacterium into two daughter cells, in a process called binary fission. During the log phase “the number of new bacteria appearing per unit time is proportional to the present population.” The article states that “Under controlled conditions, <em>cyanobacteria</em> can double their population four times a day…”</p>
+<p>Suppose an initial population of <span class="math inline">\(P_0\)</span> bacteria, a formula for the number after <span class="math inline">\(n\)</span> <em>hours</em> is <span class="math inline">\(P(n) = P_0 2^{n/6}\)</span> where <span class="math inline">\(6 = 24/4\)</span>.</p>
+<p>After two days what multiple of the initial amount is present if conditions are appropriate?</p>
+<pre class="{julia}"><code>#| hold: true
+n = 2 * 24
+2^(n/6)</code></pre>
+<p>That would be an enormous growth. Don’t worry: “Exponential growth cannot continue indefinitely, however, because the medium is soon depleted of nutrients and enriched with wastes.”</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The value of <code>2^n</code> and <code>2.0^n</code> is different in <code>Julia</code>. The former remains an integer and is subject to integer overflow for <code>n &gt; 62</code>. As used above, <code>2^(n/6)</code> will not overflow for larger <code>n</code>, as when the exponent is a floating point value, the base is promoted to a floating point value.</p>
+</div>
+</div>
+</section>
+<section id="example-2" class="level5">
+<h5 class="anchored" data-anchor-id="example-2">Example</h5>
+<p>The famous <a href="https://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci</a> numbers are <span class="math inline">\(1,1,2,3,5,8,13,\dots\)</span>, where <span class="math inline">\(F_{n+1}=F_n+F_{n-1}\)</span>. These numbers increase. To see how fast, if we <em>guess</em> that the growth is eventually exponential and assume <span class="math inline">\(F_n \approx c \cdot a^n\)</span>, then our equation is approximately <span class="math inline">\(ca^{n+1} = ca^n + ca^{n-1}\)</span>. Factoring out common terms gives <span class="math inline">\(ca^{n-1} \cdot (a^2 - a - 1) = 0\)</span>. The term <span class="math inline">\(a^{n-1}\)</span> is always positive, so any solution would satisfy <span class="math inline">\(a^2 - a -1 = 0\)</span>. The positive solution is <span class="math inline">\((1 + \sqrt{5})/2 \approx 1.618\)</span></p>
+<p>That is evidence that the <span class="math inline">\(F_n \approx c\cdot 1.618^n\)</span>. (See <a href="https://en.wikipedia.org/wiki/Fibonacci_number#Relation_to_the_golden_ratio">Relation to golden ratio</a> for a related, but more explicit exact formula.</p>
+</section>
+<section id="example-3" class="level5">
+<h5 class="anchored" data-anchor-id="example-3">Example</h5>
+<p>In the previous example, the exponential family of functions is used to describe growth. Polynomial functions also increase. Could these be used instead? If so that would be great, as they are easier to reason about.</p>
+<p>The key fact is that exponential growth is much greater than polynomial growth. That is for large enough <span class="math inline">\(x\)</span> and for any fixed <span class="math inline">\(a&gt;1\)</span> and positive integer <span class="math inline">\(n\)</span> it is true that <span class="math inline">\(a^x \gg x^n\)</span>.</p>
+<p>Later we will see an easy way to certify this statement.</p>
+</section>
+<section id="the-mathematical-constant-e" class="level5">
+<h5 class="anchored" data-anchor-id="the-mathematical-constant-e">The mathematical constant <span class="math inline">\(e\)</span></h5>
+<p>Euler’s number, <span class="math inline">\(e\)</span>, may be defined several ways. One way is to define <span class="math inline">\(e^x\)</span> by the limit <span class="math inline">\((1+x/n)^n\)</span>. Then <span class="math inline">\(e=e^1\)</span>. The value is an irrational number. This number turns up to be the natural base to use for many problems arising in Calculus. In <code>Julia</code> there are a few mathematical constants that get special treatment, so that when needed, extra precision is available. The value <code>e</code> is not immediately assigned to this value, rather <code>ℯ</code> is. This is typed <code>\euler[tab]</code>. The label <code>e</code> is thought too important for other uses to reserve the name for representing a single number. However, users can issue the command <code>using Base.MathConstants</code> and <code>e</code> will be available to represent this number. When the <code>CalculusWithJulia</code> package is loaded, the value <code>e</code> is defined to be the floating point number returned by <code>exp(1)</code>. This loses the feature of arbitrary precision, but has other advantages.</p>
+<p>A <a href="https://www.mathsisfun.com/numbers/e-eulers-number.html">cute</a> appearance of <span class="math inline">\(e\)</span> is in this problem: Let <span class="math inline">\(a&gt;0\)</span>. Cut <span class="math inline">\(a\)</span> into <span class="math inline">\(n\)</span> equal pieces and then multiply them. What <span class="math inline">\(n\)</span> will produce the largest value? Note that the formula is <span class="math inline">\((a/n)^n\)</span> for a given <span class="math inline">\(a\)</span> and <span class="math inline">\(n\)</span>.</p>
+<p>Suppose <span class="math inline">\(a=5\)</span> then for <span class="math inline">\(n=1,2,3\)</span> we get:</p>
+<pre class="{julia}"><code>#| hold: true
+a = 5
+(a/1)^1, (a/2)^2, (a/3)^3</code></pre>
+<p>We’d need to compare more, but at this point <span class="math inline">\(n=2\)</span> is the winner when <span class="math inline">\(a=5\)</span>.</p>
+<p>With calculus, we will be able to see that the function <span class="math inline">\(f(x) = (a/x)^x\)</span> will be maximized at <span class="math inline">\(a/e\)</span>, but for now we approach this in an exploratory manner. Suppose <span class="math inline">\(a=5\)</span>, then we have:</p>
+<pre class="{julia}"><code>#| hold: true
+a = 5
+n = 1:10
+f(n) = (a/n)^n
+@. [n f(n) (a/n - e)]  # @. just allows broadcasting</code></pre>
+<p>We can see more clearly that <span class="math inline">\(n=2\)</span> is the largest value for <span class="math inline">\(f\)</span> and <span class="math inline">\(a/2\)</span> is the closest value to <span class="math inline">\(e\)</span>. This would be the case for any <span class="math inline">\(a&gt;0\)</span>, pick <span class="math inline">\(n\)</span> so that <span class="math inline">\(a/n\)</span> is closest to <span class="math inline">\(e\)</span>.</p>
+</section>
+<section id="example-the-limits-to-growth" class="level5">
+<h5 class="anchored" data-anchor-id="example-the-limits-to-growth">Example: The limits to growth</h5>
+<p>The <span class="math inline">\(1972\)</span> book <a href="https://donellameadows.org/wp-content/userfiles/Limits-to-Growth-digital-scan-version.pdf">The limits to growth</a> by Meadows et. al.&nbsp;discusses the implications of exponential growth. It begins stating their conclusion (emphasis added): “If the present <em>growth</em> trends in world population, industrialization, pollution, food production, and resource depletion continue <em>unchanged</em>, the limits to growth on this planet will be reached sometime in the next <em>one hundred</em> years.” They note it is possible to alter these growth trends. We are now half way into this time period.</p>
+<p>Let’s consider one of their examples, the concentration of carbon dioxide in the atmosphere. In their Figure <span class="math inline">\(15\)</span> they show data from <span class="math inline">\(1860\)</span> onward of CO<span class="math inline">\(_2\)</span> concentration extrapolated out to the year <span class="math inline">\(2000\)</span>. At <a href="https://www.climate.gov/news-features/understanding-climate/climate-change-atmospheric-carbon-dioxide">climate.gov</a> we can see actual measurements from <span class="math inline">\(1960\)</span> to <span class="math inline">\(2020\)</span>. Numbers from each graph are read from the graphs, and plotted in the code below:</p>
+<pre class="{julia}"><code>co2_1970 = [(1860, 293), (1870, 293), (1880, 294), (1890, 295), (1900, 297),
+        (1910, 298), (1920, 300), (1930, 303), (1940, 305), (1950, 310),
+        (1960, 313), (1970, 320), (1980, 330), (1990, 350), (2000, 380)]
+co2_2021 = [(1960, 318), (1970, 325), (1980, 338), (1990, 358), (2000, 370),
+        (2010, 390), (2020, 415)]
+
+xs,ys = unzip(co2_1970)
+plot(xs, ys, legend=false)
+
+𝒙s, 𝒚s = unzip(co2_2021)
+plot!(𝒙s, 𝒚s)
+
+r = 0.002
+x₀, P₀ = 1960, 313
+plot!(x -&gt; P₀ * exp(r * (x - x₀)), 1950, 1990, linewidth=5, alpha=0.25)
+
+𝒓 = 0.005
+𝒙₀, 𝑷₀ = 2000,  370
+plot!(x -&gt; 𝑷₀ * exp(𝒓 * (x - 𝒙₀)), 1960, 2020, linewidth=5, alpha=0.25)</code></pre>
+<p>(The <code>unzip</code> function is from the <code>CalculusWithJulia</code> package and will be explained in a subsequent section.) We can see that the projections from the year <span class="math inline">\(1970\)</span> hold up fairly well.</p>
+<p>On this plot we added two <em>exponential</em> models. at <span class="math inline">\(1960\)</span> we added a <em>roughly</em> <span class="math inline">\(0.2\)</span> percent per year growth (a rate mentioned in an accompanying caption) and at <span class="math inline">\(2000\)</span> a roughly <span class="math inline">\(0.5\)</span> percent per year growth. The former barely keeping up with the data.</p>
+<p>The word <strong>roughly</strong> above could be made exact. Suppose we knew that between <span class="math inline">\(1960\)</span> and <span class="math inline">\(1970\)</span> the rate went from <span class="math inline">\(313\)</span> to <span class="math inline">\(320\)</span>. If this followed an exponential model, then <span class="math inline">\(r\)</span> above would satisfy:</p>
+<p><span class="math display">\[
+P_{1970} = P_{1960} e^{r * (1970 - 1960)}
+\]</span></p>
+<p>or on division <span class="math inline">\(320/313 = e^{r\cdot 10}\)</span>. Solving for <span class="math inline">\(r\)</span> can be done – as explained next – and yields <span class="math inline">\(0.002211\dots\)</span>.</p>
+</section>
+</section>
+<section id="logarithmic-functions" class="level2" data-number="15.2">
+<h2 data-number="15.2" class="anchored" data-anchor-id="logarithmic-functions"><span class="header-section-number">15.2</span> Logarithmic functions</h2>
+<p>As the exponential functions are strictly <em>decreasing</em> when <span class="math inline">\(0 &lt; a &lt; 1\)</span> and strictly <em>increasing</em> when <span class="math inline">\(a&gt;1,\)</span> in both cases an inverse function will exist. (When <span class="math inline">\(a=1\)</span> the function is a constant and is not one-to-one.) The domain of an exponential function is all real <span class="math inline">\(x\)</span> and the range is all <em>positive</em> <span class="math inline">\(x\)</span>, so these are switched around for the inverse function. Explicitly: the inverse function to <span class="math inline">\(f(x)=a^x\)</span> will have domain <span class="math inline">\((0,\infty)\)</span> and range <span class="math inline">\((-\infty, \infty)\)</span> when <span class="math inline">\(a &gt; 0, a \neq 1\)</span>.</p>
+<p>The inverse function will solve for <span class="math inline">\(x\)</span> in the equation <span class="math inline">\(a^x = y\)</span>. The answer, formally, is the logarithm base <span class="math inline">\(a\)</span>, written <span class="math inline">\(\log_a(x)\)</span>.</p>
+<p>That is <span class="math inline">\(a^{\log_a(x)} = x\)</span> for <span class="math inline">\(x &gt; 0\)</span> and <span class="math inline">\(\log_a(a^x) = x\)</span> for all <span class="math inline">\(x\)</span>.</p>
+<p>To see how a logarithm is mathematically defined will have to wait, though the family of functions - one for each <span class="math inline">\(a&gt;0\)</span> - are implemented in <code>Julia</code> through the function <code>log(a,x)</code>. There are special cases requiring just one argument: <code>log(x)</code> will compute the natural log, base <span class="math inline">\(e\)</span> - the inverse of <span class="math inline">\(f(x) = e^x\)</span>; <code>log2(x)</code> will compute the log base <span class="math inline">\(2\)</span> - the inverse of <span class="math inline">\(f(x) = 2^x\)</span>; and <code>log10(x)</code> will compute the log base <span class="math inline">\(10\)</span> - the inverse of <span class="math inline">\(f(x)=10^x\)</span>. (Also <code>log1p</code> computes an accurate value of <span class="math inline">\(\log(1 + p)\)</span> when <span class="math inline">\(p \approx 0\)</span>.)</p>
+<p>To see this in an example, we plot for base <span class="math inline">\(2\)</span> the exponential function <span class="math inline">\(f(x)=2^x\)</span>, its inverse, and the logarithm function with base <span class="math inline">\(2\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = 2^x
+xs = range(-2, stop=2, length=100)
+ys = f.(xs)
+plot(xs, ys,  color=:blue, label="2ˣ")           # plot f
+plot!(ys, xs, color=:red, label="f⁻¹")           # plot f^(-1)
+xs = range(1/4, stop=4, length=100)
+plot!(xs, log2.(xs), color=:green, label="log₂") # plot log2</code></pre>
+<p>Though we made three graphs, only two are seen, as the graph of <code>log2</code> matches that of the inverse function.</p>
+<p>Note that we needed a bit of care to plot the inverse function directly, as the domain of <span class="math inline">\(f\)</span> is <em>not</em> the domain of <span class="math inline">\(f^{-1}\)</span>. Again, in this case the domain of <span class="math inline">\(f\)</span> is all <span class="math inline">\(x\)</span>, but the domain of <span class="math inline">\(f^{-1}\)</span> is only all <em>positive</em> <span class="math inline">\(x\)</span> values.</p>
+<p>Knowing that <code>log2</code> implements an inverse function allows us to solve many problems involving doubling.</p>
+<section id="example-4" class="level5">
+<h5 class="anchored" data-anchor-id="example-4">Example</h5>
+<p>An <a href="https://en.wikipedia.org/wiki/Wheat_and_chessboard_problem">old</a> story about doubling is couched in terms of doubling grains of wheat. To simplify the story, suppose each day an amount of grain is doubled. How many days of doubling will it take <span class="math inline">\(1\)</span> grain to become <span class="math inline">\(1\)</span> million grains?</p>
+<p>The number of grains after one day is <span class="math inline">\(2\)</span>, two days is <span class="math inline">\(4\)</span>, three days is <span class="math inline">\(8\)</span> and so after <span class="math inline">\(n\)</span> days the number of grains is <span class="math inline">\(2^n\)</span>. To answer the question, we need to solve <span class="math inline">\(2^x = 1,000,000\)</span>. The logarithm function yields <span class="math inline">\(20\)</span> days (after rounding up):</p>
+<pre class="{julia}"><code>log2(1_000_000)</code></pre>
+</section>
+<section id="example-5" class="level5">
+<h5 class="anchored" data-anchor-id="example-5">Example</h5>
+<p>The half-life of a radioactive material is the time it takes for half the material to decay. Different materials have quite different half lives with some quite long, and others quite short. See <a href="https://en.wikipedia.org/wiki/List_of_radioactive_isotopes_by_half-life">half lives</a> for some details.</p>
+<p>The carbon <span class="math inline">\(14\)</span> isotope is a naturally occurring isotope on Earth, appearing in trace amounts. Unlike Carbon <span class="math inline">\(12\)</span> and <span class="math inline">\(13\)</span> it decays, in this case with a half life of <span class="math inline">\(5730\)</span> years (plus or minus <span class="math inline">\(40\)</span> years). In a <a href="https://en.wikipedia.org/wiki/Radiocarbon_dating">technique</a> due to Libby, measuring the amount of Carbon 14 present in an organic item can indicate the time since death. The amount of Carbon <span class="math inline">\(14\)</span> at death is essentially that of the atmosphere, and this amount decays over time. So, for example, if roughly half the carbon <span class="math inline">\(14\)</span> remains, then the death occurred about <span class="math inline">\(5730\)</span> years ago.</p>
+<p>A formula for the amount of carbon <span class="math inline">\(14\)</span> remaining <span class="math inline">\(t\)</span> years after death would be <span class="math inline">\(P(t) = P_0 \cdot 2^{-t/5730}\)</span>.</p>
+<p>If <span class="math inline">\(1/10\)</span> of the original carbon <span class="math inline">\(14\)</span> remains, how old is the item? This amounts to solving <span class="math inline">\(2^{-t/5730} = 1/10\)</span>. We have: <span class="math inline">\(-t/5730 = \log_2(1/10)\)</span> or:</p>
+<pre class="{julia}"><code>-5730 * log2(1/10)</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>(Historically) Libby and James Arnold proceeded to test the radiocarbon dating theory by analyzing samples with known ages. For example, two samples taken from the tombs of two Egyptian kings, Zoser and Sneferu, independently dated to <span class="math inline">\(2625\)</span> BC plus or minus <span class="math inline">\(75\)</span> years, were dated by radiocarbon measurement to an average of <span class="math inline">\(2800\)</span> BC plus or minus <span class="math inline">\(250\)</span> years. These results were published in Science in <span class="math inline">\(1949\)</span>. Within <span class="math inline">\(11\)</span> years of their announcement, more than <span class="math inline">\(20\)</span> radiocarbon dating laboratories had been set up worldwide. Source: <a href="http://tinyurl.com/p5msnh6">Wikipedia</a>.</p>
+</div>
+</div>
+</section>
+<section id="properties-of-logarithms" class="level3" data-number="15.2.1">
+<h3 data-number="15.2.1" class="anchored" data-anchor-id="properties-of-logarithms"><span class="header-section-number">15.2.1</span> Properties of logarithms</h3>
+<p>The basic graphs of logarithms (<span class="math inline">\(a &gt; 1\)</span>) are all similar, though as we see larger bases lead to slower growing functions, though all satisfy <span class="math inline">\(\log_a(1) = 0\)</span>:</p>
+<pre class="{julia}"><code>plot(log2, 1/2, 10, label="2")           # base 2
+plot!(log, 1/2, 10, label="e")           # base e
+plot!(log10, 1/2, 10, label="10")        # base 10</code></pre>
+<p>Now, what do the properties of exponents imply about logarithms?</p>
+<p>Consider the sum <span class="math inline">\(\log_a(u) + \log_a(v)\)</span>. If we raise <span class="math inline">\(a\)</span> to this power, we have using the powers of exponents and the inverse nature of <span class="math inline">\(a^x\)</span> and <span class="math inline">\(\log_a(x)\)</span> that:</p>
+<p><span class="math display">\[
+a^{\log_a(u) + \log_a(v)} = a^{\log_a(u)} \cdot a^{\log_a(v)} = u \cdot v.
+\]</span></p>
+<p>Taking <span class="math inline">\(\log_a\)</span> of <em>both</em> sides yields <span class="math inline">\(\log_a(u) + \log_a(v)=\log_a(u\cdot v)\)</span>. That is logarithms turn products into sums (of logs).</p>
+<p>Similarly, the relation <span class="math inline">\((a^{x})^y =a^{x \cdot y}, a &gt; 0\)</span> can be used to see that <span class="math inline">\(\log_a(b^x) = x \cdot\log_a(b)\)</span>. This follows, as applying <span class="math inline">\(a^x\)</span> to each side yields the same answer.</p>
+<p>Due to inverse relationship between <span class="math inline">\(a^x\)</span> and <span class="math inline">\(\log_a(x)\)</span> we have:</p>
+<p><span class="math display">\[
+a^{\log_a(b^x)} = b^x.
+\]</span></p>
+<p>Due to the rules of exponents, we have:</p>
+<p><span class="math display">\[
+a^{x \log_a(b)} = a^{\log_a(b) \cdot x} = (a^{\log_a(b)})^x = b^x.
+\]</span></p>
+<p>Finally, since <span class="math inline">\(a^x\)</span> is one-to-one (when <span class="math inline">\(a&gt;0\)</span> and <span class="math inline">\(a \neq 1\)</span>), if <span class="math inline">\(a^{\log_a(b^x)}=a^{x \log_a(b)}\)</span> it must be that <span class="math inline">\(\log_a(b^x) = x \log_a(b)\)</span>. That is, logarithms turn powers into products.</p>
+<p>Finally, we use the inverse property of logarithms and powers to show that logarithms can be defined for any base. Say <span class="math inline">\(a, b &gt; 0\)</span>. Then <span class="math inline">\(\log_a(x) = \log_b(x)/\log_b(a)\)</span>. Again, to verify this we apply <span class="math inline">\(a^x\)</span> to both sides to see we get the same answer:</p>
+<p><span class="math display">\[
+a^{\log_a(x)} = x,
+\]</span></p>
+<p>this by the inverse property. Whereas, by expressing <span class="math inline">\(a=b^{\log_b(a)}\)</span> we have:</p>
+<p><span class="math display">\[
+a^{(\log_b(x)/\log_b(b))} = (b^{\log_b(a)})^{(\log_b(x)/\log_b(a))} =
+b^{\log_b(a) \cdot \log_b(x)/\log_b(a) } = b^{\log_b(x)} = x.
+\]</span></p>
+<p>In short, we have these three properties of logarithmic functions:</p>
+<p>If <span class="math inline">\(a, b\)</span> are positive bases; <span class="math inline">\(u,v\)</span> are positive numbers; and <span class="math inline">\(x\)</span> is any real number then:</p>
+<p><span class="math display">\[\begin{align*}
+\log_a(uv) &amp;= \log_a(u) + \log_a(v),    \\
+\log_a(u^x) &amp;= x \log_a(u), \text{ and} \\
+\log_a(u) &amp;= \log_b(u)/\log_b(a).
+\end{align*}\]</span></p>
+<section id="example-6" class="level5">
+<h5 class="anchored" data-anchor-id="example-6">Example</h5>
+<p>Before the ubiquity of electronic calculating devices, the need to compute was still present. Ancient civilizations had abacuses to make addition easier. For multiplication and powers a <a href="https://en.wikipedia.org/wiki/Slide_rule">slide rule</a> could be used. It is easy to represent addition physically with two straight pieces of wood - just represent a number with a distance and align the two pieces so that the distances are sequentially arranged. To multiply then was as easy: represent the logarithm of a number with a distance then add the logarithms. The sum of the logarithms is the logarithm of the <em>product</em> of the original two values. Converting back to a number answers the question. The conversion back and forth is done by simply labeling the wood using a logartithmic scale. The slide rule was <a href="http://tinyurl.com/qytxo3e">invented</a> soon after Napier’s initial publication on the logarithm in 1614.</p>
+</section>
+<section id="example-7" class="level5">
+<h5 class="anchored" data-anchor-id="example-7">Example</h5>
+<p>Returning to the Rule of <span class="math inline">\(72\)</span>, what should the exact number be?</p>
+<p>The amount of time to double an investment that grows according to <span class="math inline">\(P_0 e^{rt}\)</span> solves <span class="math inline">\(P_0 e^{rt} = 2P_0\)</span> or <span class="math inline">\(rt = \log_e(2)\)</span>. So we get <span class="math inline">\(t=\log_e(2)/r\)</span>. As <span class="math inline">\(\log_e(2)\)</span> is</p>
+<pre class="{julia}"><code>log(e, 2)</code></pre>
+<p>We get the actual rule should be the “Rule of <span class="math inline">\(69.314...\)</span>.”</p>
+</section>
+</section>
+</section>
+<section id="questions" class="level2" data-number="15.3">
+<h2 data-number="15.3" class="anchored" data-anchor-id="questions"><span class="header-section-number">15.3</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>Suppose every <span class="math inline">\(4\)</span> days, a population doubles. If the population starts with <span class="math inline">\(2\)</span> individuals, what is its size after <span class="math inline">\(4\)</span> weeks?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+n = 4*7/4
+val = 2 * 2^n
+numericq(val)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>A bouncing ball rebounds to a height of <span class="math inline">\(5/6\)</span> of the previous peak height. If the ball is droppet at a height of <span class="math inline">\(3\)</span> feet, how high will it bounce after <span class="math inline">\(5\)</span> bounces?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = 3 * (5/6)^5
+numericq(val)</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>Which is bigger <span class="math inline">\(e^2\)</span> or <span class="math inline">\(2^e\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``e^2``", "``2^e``"]
+answ = e^2 - 2^e &gt; 0 ? 1 : 2
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>Which is bigger <span class="math inline">\(\log_8(9)\)</span> or <span class="math inline">\(\log_9(10)\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [raw"``\log_8(9)``", raw"``\log_9(10)``"]
+answ = log(8,9) &gt; log(9,10) ? 1 : 2
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>If <span class="math inline">\(x\)</span>, <span class="math inline">\(y\)</span>, and <span class="math inline">\(z\)</span> satisfy <span class="math inline">\(2^x = 3^y\)</span> and <span class="math inline">\(4^y = 5^z\)</span>, what is the ratio <span class="math inline">\(x/z\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw"``\frac{\log(3)\log(5)}{\log(2)\log(4)}``",
+raw"``2/5``",
+raw"``\frac{\log(5)\log(4)}{\log(3)\log(2)}``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>Does <span class="math inline">\(12\)</span> satisfy <span class="math inline">\(\log_2(x) + \log_3(x) = \log_4(x)\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+answ = log(2,12) + log(3,12) == log(4, 12)
+yesnoq(answ)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>The <a href="https://en.wikipedia.org/wiki/Richter_magnitude_scale">Richter</a> magnitude is determined from the logarithm of the amplitude of waves recorded by seismographs (Wikipedia). The formula is <span class="math inline">\(M=\log_{10}(A) - \log_{10}(A_0)\)</span> where <span class="math inline">\(A_0\)</span> depends on the epicenter distance. Suppose an event has <span class="math inline">\(A=100\)</span> and <span class="math inline">\(A_0=1/100\)</span>. What is <span class="math inline">\(M\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+A, A0 = 100, 1/100
+val = M = log10(A) - log10(A0)
+numericq(val)</code></pre>
+<p>If the magnitude of one earthquake is <span class="math inline">\(9\)</span> and the magnitude of another earthquake is <span class="math inline">\(7\)</span>, how many times stronger is <span class="math inline">\(A\)</span> if <span class="math inline">\(A_0\)</span> is the same for each?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``1000`` times", "``100`` times", "``10`` times", "the same"]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>The <a href="https://en.wikipedia.org/wiki/Loudest_band">Loudest band</a> can possibly be measured in <a href="https://en.wikipedia.org/wiki/Decibel">decibels</a>. In <span class="math inline">\(1976\)</span> the Who recorded <span class="math inline">\(126\)</span> db and in <span class="math inline">\(1986\)</span> Motorhead recorded <span class="math inline">\(130\)</span> db. Suppose both measurements record power through the formula <span class="math inline">\(db = 10 \log_{10}(P)\)</span>. What is the ratio of the Motorhead <span class="math inline">\(P\)</span> to the <span class="math inline">\(P\)</span> for the Who?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+db_who, db_motorhead = 126, 130
+db2P(db) = 10^(db/10)
+P_who, P_motorhead = db2P.((db_who, db_motorhead))
+val = P_motorhead / P_who
+numericq(val)</code></pre>
+</section>
+<section id="question-8" class="level6">
+<h6 class="anchored" data-anchor-id="question-8">Question</h6>
+<p>Based on this graph:</p>
+<pre class="{julia}"><code>#| hold: true
+plot(log, 1/4, 4, label="log")
+f(x) = x - 1
+plot!(f, 1/4, 4, label="x-1")</code></pre>
+<p>Which statement appears to be true?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    raw"``x \geq 1 + \log(x)``",
+    raw"``x \leq 1 + \log(x)``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-9" class="level6">
+<h6 class="anchored" data-anchor-id="question-9">Question</h6>
+<p>Consider this graph:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = log(1-x)
+g(x) = -x - x^2/2
+plot(f, -3, 3/4, label="f")
+plot!(g, -3, 3/4, label="g")</code></pre>
+<p>What statement appears to be true?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw"``\log(1-x) \geq -x - x^2/2, \text{ when }x \leq 0``",
+raw"``\log(1-x) \leq -x - x^2/2, \text{ when }x \leq 0``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-10" class="level6">
+<h6 class="anchored" data-anchor-id="question-10">Question</h6>
+<p>Suppose <span class="math inline">\(a &gt; 1\)</span>. If <span class="math inline">\(\log_a(x) = y\)</span> what is <span class="math inline">\(\log_{1/a}(x)\)</span>? (The reciprocal property of exponents, <span class="math inline">\(a^{-x} = (1/a)^x\)</span>, is at play here.)</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``-y``", "``1/y``", "``-1/y``"]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>Based on this, the graph of <span class="math inline">\(\log_{1/a}(x)\)</span> is the graph of <span class="math inline">\(\log_a(x)\)</span> under which transformation?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"Flipped over the $x$ axis",
+L"Flipped over the $y$ axis",
+L"Flipped over the line $y=x$"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-11" class="level6">
+<h6 class="anchored" data-anchor-id="question-11">Question</h6>
+<p>Suppose <span class="math inline">\(x &lt; y\)</span>. Then for <span class="math inline">\(a &gt; 0\)</span>, <span class="math inline">\(a^y - a^x\)</span> is equal to:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    raw"``a^x \cdot (a^{y-x} - 1)``",
+    raw"``a^{y-x}``",
+    raw"``a^{y-x} \cdot (a^x - 1)``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>Using <span class="math inline">\(a &gt; 1\)</span> we have:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    L"as $a^{y-x} &gt; 1$ and $y-x &gt; 0$, $a^y &gt; a^x$",
+    L"as $a^x  &gt; 1$, $a^y &gt; a^x$",
+    "``a^{y-x} &gt; 0``"
+]
+answ=1
+radioq(choices, answ)</code></pre>
+<p>If <span class="math inline">\(a &lt; 1\)</span> then:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"as $a^{y-x} &lt; 1$ as $y-x &gt; 0$, $a^y &lt; a^x$",
+L"as $a^x   &lt; 1$, $a^y &lt; a^x$",
+"``a^{y-x} &lt; 0``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../precalc/rational_functions.html" class="pagination-link" aria-label="Rational functions">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../precalc/trig_functions.html" class="pagination-link" aria-label="Trigonometric functions">
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/precalc/exp_log_functions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

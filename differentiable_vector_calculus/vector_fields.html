@@ -1,0 +1,2133 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>58&nbsp; Functions R^n \rightarrow R^m – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../differentiable_vector_calculus/plots_plotting.html" rel="next">
+<link href="../differentiable_vector_calculus/scalar_functions_applications.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../differentiable_vector_calculus.html">Differential vector calculus</a></li><li class="breadcrumb-item"><a href="../differentiable_vector_calculus/vector_fields.html"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#vector-fields" id="toc-vector-fields" class="nav-link active" data-scroll-target="#vector-fields"><span class="header-section-number">58.1</span> Vector fields</a></li>
+  <li><a href="#parametrically-defined-surfaces" id="toc-parametrically-defined-surfaces" class="nav-link" data-scroll-target="#parametrically-defined-surfaces"><span class="header-section-number">58.2</span> Parametrically defined surfaces</a>
+  <ul class="collapse">
+  <li><a href="#plotting-parametrized-surfaces-in-julia" id="toc-plotting-parametrized-surfaces-in-julia" class="nav-link" data-scroll-target="#plotting-parametrized-surfaces-in-julia"><span class="header-section-number">58.2.1</span> Plotting parametrized surfaces in <code>Julia</code></a></li>
+  </ul></li>
+  <li><a href="#the-total-derivative" id="toc-the-total-derivative" class="nav-link" data-scroll-target="#the-total-derivative"><span class="header-section-number">58.3</span> The total derivative</a></li>
+  <li><a href="#the-chain-rule" id="toc-the-chain-rule" class="nav-link" data-scroll-target="#the-chain-rule"><span class="header-section-number">58.4</span> The chain rule</a>
+  <ul class="collapse">
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples"><span class="header-section-number">58.4.1</span> Examples</a></li>
+  </ul></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">58.5</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/differentiable_vector_calculus/vector_fields.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../differentiable_vector_calculus.html">Differential vector calculus</a></li><li class="breadcrumb-item"><a href="../differentiable_vector_calculus/vector_fields.html"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses these add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+plotly()
+using SymPy
+using ForwardDiff
+using LinearAlgebra</code></pre>
+<p>For a scalar function <span class="math inline">\(f: R^n \rightarrow R\)</span>, the gradient of <span class="math inline">\(f\)</span>, <span class="math inline">\(\nabla{f}\)</span>, is a function from <span class="math inline">\(R^n \rightarrow R^n\)</span>. Specializing to <span class="math inline">\(n=2\)</span>, a function that for each point, <span class="math inline">\((x,y)\)</span>, assigns a vector <span class="math inline">\(\vec{v}\)</span>. This is an example of vector field. More generally, we could have a <a href="https://en.wikipedia.org/wiki/Multivariable_calculus">function</a> <span class="math inline">\(f: R^n \rightarrow R^m\)</span>, of which we have discussed many already:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 16%">
+<col style="width: 31%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Mapping</th>
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Visualize with</th>
+<th style="text-align: center;">Notation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(f: R\rightarrow R\)</span></td>
+<td style="text-align: center;">univariate</td>
+<td style="text-align: center;">familiar graph of function</td>
+<td style="text-align: center;"><span class="math inline">\(f\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(f: R\rightarrow R^m\)</span></td>
+<td style="text-align: center;">vector-valued</td>
+<td style="text-align: center;">space curve when n=2 or 3</td>
+<td style="text-align: center;"><span class="math inline">\(\vec{r}\)</span>, <span class="math inline">\(\vec{N}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(f: R^n\rightarrow R\)</span></td>
+<td style="text-align: center;">scalar</td>
+<td style="text-align: center;">a surface when n=2</td>
+<td style="text-align: center;"><span class="math inline">\(f\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(F: R^n\rightarrow R^n\)</span></td>
+<td style="text-align: center;">vector field</td>
+<td style="text-align: center;">a vector field when n=2</td>
+<td style="text-align: center;"><span class="math inline">\(F\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(F: R^n\rightarrow R^m\)</span></td>
+<td style="text-align: center;">multivariable</td>
+<td style="text-align: center;">n=2,m=3 describes a surface</td>
+<td style="text-align: center;"><span class="math inline">\(F\)</span>, <span class="math inline">\(\Phi\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>After an example where the use of a multivariable function is of necessity, we discuss differentiation in general for a multivariable functions.</p>
+<section id="vector-fields" class="level2" data-number="58.1">
+<h2 data-number="58.1" class="anchored" data-anchor-id="vector-fields"><span class="header-section-number">58.1</span> Vector fields</h2>
+<p>We have seen that the gradient of a scalar function, <span class="math inline">\(f:R^2 \rightarrow R\)</span>, takes a point in <span class="math inline">\(R^2\)</span> and associates a vector in <span class="math inline">\(R^2\)</span>. As such <span class="math inline">\(\nabla{f}:R^2 \rightarrow R^2\)</span> is a vector field. A vector field can be visualized by sampling a region and representing the field at those points. The details, as previously mentioned, are in the <code>vectorfieldplot</code> function of <code>CalculusWithJulia</code>.</p>
+<pre class="{julia}"><code>F(u,v) = [-v, u]
+vectorfieldplot(F, xlim=(-5,5), ylim=(-5,5), nx=10, ny=10)</code></pre>
+<p>The optional arguments <code>nx=10</code> and <code>ny=10</code> determine the number of points on the grid that a vector will be plotted. These vectors are scaled to not overlap.</p>
+<p>Vector field plots are useful for visualizing velocity fields, where a velocity vector is associated to each point; or streamlines, curves whose tangents are follow the velocity vector of a flow. Vector fields are used in physics to model the electric field and the magnetic field. These are used to describe forces on objects within the field.</p>
+<p>The three dimensional vector field is one way to illustrate a vector field, but there is an alternate using field lines. Like Euler’s method, imagine starting at some point, <span class="math inline">\(\vec{r}\)</span> in <span class="math inline">\(R^3\)</span>. The field at that point is a vector indicating a direction of motion. Follow that vector for some infinitesimal amount, <span class="math inline">\(d\vec{r}\)</span>. From here repeat. The field curve would satisfy <span class="math inline">\(\vec{r}'(t) = F(\vec{r}(t))\)</span>. Field curves only show direction, to indicate magnitude at a point, the convention is to use denser lines when the field is stronger.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#out download("https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/VFPt_Earths_Magnetic_Field_Confusion.svg/320px-VFPt_Earths_Magnetic_Field_Confusion.svg.png")
+#cp(out, "figures/magnetic-field.png")
+
+imgfile = "figures/magnetic-field.png"
+caption = """
+Illustration of the magnetic field of the earth using field lines to indicate the field. From
+[Wikipedia](https://en.wikipedia.org/wiki/Magnetic_field).
+"""
+# ImageFile(:differentiable_vector_calculus, imgfile, caption)
+nothing</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./figures/magnetic-field.png" class="img-fluid figure-img"></p>
+<figcaption>Illustration of the magnetic field of the earth using field lines to indicate the field. From <a href="https://en.wikipedia.org/wiki/Magnetic_field">Wikipedia</a>.</figcaption>
+</figure>
+</div>
+<hr>
+<p>Vector fields are also useful for other purposes, such as transformations, examples of which are a rotation or the conversion from polar to rectangular coordinates.</p>
+<p>For transformations, a useful visualization is to plot curves where one variables is fixed. Consider the transformation from polar coordinates to cartesian coordinates <span class="math inline">\(F(r, \theta) = r \langle\cos(\theta),\sin(\theta)\rangle\)</span>. The following plot will show in blue fixed values of <span class="math inline">\(r\)</span> (circles) and in red fixed values of <span class="math inline">\(\theta\)</span> (rays).</p>
+<pre class="{julia}"><code>#| hold: true
+F(r,theta) = r*[cos(theta), sin(theta)]
+F(v) = F(v...)
+
+rs = range(0, 2, length=5)
+thetas = range(0, pi/2, length=9)
+
+plot(legend=false, aspect_ratio=:equal)
+plot!(unzip(F.(rs, thetas'))..., color=:red)
+plot!(unzip(F.(rs', thetas))..., color=:blue)
+
+pt = [1, pi/4]
+J = ForwardDiff.jacobian(F, pt)
+arrow!(F(pt...), J[:,1], linewidth=5, color=:red)
+arrow!(F(pt...), J[:,2], linewidth=5, color=:blue)</code></pre>
+<p>To the plot, we added the partial derivatives with respect to <span class="math inline">\(r\)</span> (in red) and with respect to <span class="math inline">\(\theta\)</span> (in blue). These are found with the soon-to-be discussed Jacobian. From the graph, you can see that these vectors are tangent vectors to the drawn curves.</p>
+</section>
+<section id="parametrically-defined-surfaces" class="level2" data-number="58.2">
+<h2 data-number="58.2" class="anchored" data-anchor-id="parametrically-defined-surfaces"><span class="header-section-number">58.2</span> Parametrically defined surfaces</h2>
+<p>For a one-dimensional curve we have several descriptions. For example, as the graph of a function <span class="math inline">\(y=f(x)\)</span>; as a parametrically defined curve <span class="math inline">\(\vec{r}(t) = \langle x(t), y(t)\rangle\)</span>; or as a level curve of a scalar function <span class="math inline">\(f(x,y) = c\)</span>.</p>
+<p>For two-dimensional surfaces in three dimensions, we have discussed describing these in terms of a function <span class="math inline">\(z = f(x,y)\)</span> and as level curves of scalar functions: <span class="math inline">\(c = f(x,y,z)\)</span>. They can also be described parametrically.</p>
+<p>We pick a familiar case, to make this concrete: the unit sphere in <span class="math inline">\(R^3\)</span>. We have</p>
+<ul>
+<li>It is described by two functions through <span class="math inline">\(f(x,y) = \pm \sqrt{1 - (x^2 + y^2)}\)</span>.</li>
+<li>It is described by <span class="math inline">\(f(x,y,z) = 1\)</span>, where <span class="math inline">\(f(x,y,z) = x^2 + y^2 + z^2\)</span>.</li>
+<li>It can be described in terms of <a href="https://en.wikipedia.org/wiki/Spherical_coordinate_system">spherical coordinates</a>:</li>
+</ul>
+<p><span class="math display">\[
+\Phi(\theta, \phi) = \langle \sin(\phi)\cos(\theta), \sin(\phi)\sin(\theta), \cos(\phi) \rangle,
+\]</span></p>
+<p>with <span class="math inline">\(\theta\)</span> the <em>azimuthal</em> angle and <span class="math inline">\(\phi\)</span> the polar angle (measured down from the <span class="math inline">\(z\)</span> axis).</p>
+<p>The function <span class="math inline">\(\Phi\)</span> takes <span class="math inline">\(R^2\)</span> into <span class="math inline">\(R^3\)</span>, so is a multivariable function.</p>
+<p>When a surface is described by a function, <span class="math inline">\(z=f(x,y)\)</span>, then the gradient points (in the <span class="math inline">\(x-y\)</span> plane) in the direction of greatest increase of <span class="math inline">\(f\)</span>. The vector <span class="math inline">\(\langle -f_x, -f_y, 1\rangle\)</span> is a normal.</p>
+<p>When a surface is described as a level curve, <span class="math inline">\(f(x,y,z) = c\)</span>, then the gradient is <em>normal</em> to the surface.</p>
+<p>When a surface is described parametrically, there is no “gradient.” The <em>partial</em> derivatives are of interest, e.g., <span class="math inline">\(\partial{F}/\partial{\theta}\)</span> and <span class="math inline">\(\partial{F}/\partial{\phi}\)</span>, vectors defined componentwise. These will be lie in the tangent plane of the surface, as they can be viewed as tangent vectors for parametrically defined curves on the surface. Their cross product will be <em>normal</em> to the surface. The magnitude of the cross product, which reflects the angle between the two partial derivatives, will be informative as to the surface area.</p>
+<section id="plotting-parametrized-surfaces-in-julia" class="level3" data-number="58.2.1">
+<h3 data-number="58.2.1" class="anchored" data-anchor-id="plotting-parametrized-surfaces-in-julia"><span class="header-section-number">58.2.1</span> Plotting parametrized surfaces in <code>Julia</code></h3>
+<p>Consider the parametrically described surface above. How would it be plotted? Using the <code>Plots</code> package, the process is quite similar to how a surface described by a function is plotted, but the <span class="math inline">\(z\)</span> values must be computed prior to plotting.</p>
+<p>Here we define the parameterization using functions to represent each component:</p>
+<pre class="{julia}"><code>X(theta,phi) = sin(phi) * cos(theta)
+Y(theta,phi) = sin(phi) * sin(theta)
+Z(theta,phi) = cos(phi)</code></pre>
+<p>Then:</p>
+<pre class="{julia}"><code>thetas = range(0, stop=pi/2, length=50)
+phis   = range(0, stop=pi,   length=50)
+
+xs = [X(theta, phi) for theta in thetas, phi in phis]
+ys = [Y(theta, phi) for theta in thetas, phi in phis]
+zs = [Z(theta, phi) for theta in thetas, phi in phis]
+
+surface(xs, ys, zs)  ## see note</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>PyPlot can be used directly to make these surface plots: <code>import PyPlot; PyPlot.plot_surface(xs,ys,zs).</code></p>
+</div>
+</div>
+<p>Instead of the comprehension, broadcasting can be used</p>
+<pre class="{julia}"><code>surface(X.(thetas, phis'), Y.(thetas, phis'), Z.(thetas, phis'))</code></pre>
+<p>If the parameterization is presented as a function, broadcasting can be used to succinctly plot</p>
+<pre class="{julia}"><code>Phi(theta, phi) = [X(theta, phi), Y(theta, phi), Z(theta, phi)]
+
+surface(unzip(Phi.(thetas, phis'))...)</code></pre>
+<p>The partial derivatives of each component, <span class="math inline">\(\partial{\Phi}/\partial{\theta}\)</span> and <span class="math inline">\(\partial{\Phi}/\partial{\phi}\)</span>, can be computed directly:</p>
+<p><span class="math display">\[\begin{align*}
+\partial{\Phi}/\partial{\theta} &amp;= \langle -\sin(\phi)\sin(\theta), \sin(\phi)\cos(\theta),0 \rangle,\\
+\partial{\Phi}/\partial{\phi} &amp;= \langle \cos(\phi)\cos(\theta), \cos(\phi)\sin(\theta), -\sin(\phi) \rangle.
+\end{align*}\]</span></p>
+<p>Using <code>SymPy</code>, we can compute through:</p>
+<pre class="{julia}"><code>@syms theta phi
+out = [diff.(Phi(theta, phi), theta) diff.(Phi(theta, phi), phi)]</code></pre>
+<p>At the point <span class="math inline">\((\theta, \phi) = (\pi/12, \pi/6)\)</span> this evaluates to the following.</p>
+<pre class="{julia}"><code>subs.(out, theta=&gt; PI/12, phi=&gt;PI/6) .|&gt; N</code></pre>
+<p>We found numeric values, so that we can compare to the numerically identical values computed by the <code>jacobian</code> function from <code>ForwardDiff</code>:</p>
+<pre class="{julia}"><code>pt = [pi/12, pi/6]
+out₁ = ForwardDiff.jacobian(v -&gt; Phi(v...), pt)</code></pre>
+<p>What this function computes exactly will be described next, but here we visualize the partial derivatives and see they lie in the tangent plane at the point:</p>
+<pre class="{julia}"><code>#| hold: true
+us, vs = range(0, pi/2, length=25), range(0, pi, length=25)
+xs, ys, zs = unzip(Phi.(us, vs'))
+surface(xs, ys, zs, legend=false)
+arrow!(Phi(pt...), out₁[:,1], linewidth=3)
+arrow!(Phi(pt...), out₁[:,2], linewidth=3)</code></pre>
+</section>
+</section>
+<section id="the-total-derivative" class="level2" data-number="58.3">
+<h2 data-number="58.3" class="anchored" data-anchor-id="the-total-derivative"><span class="header-section-number">58.3</span> The total derivative</h2>
+<p>Informally, the <a href="https://en.wikipedia.org/wiki/Total_derivative">total derivative</a> at <span class="math inline">\(a\)</span> is the best linear approximation of the value of a function, <span class="math inline">\(F\)</span>, near <span class="math inline">\(a\)</span> with respect to its arguments. If it exists, denote it <span class="math inline">\(dF_a\)</span>.</p>
+<p>For a function <span class="math inline">\(F: R^n \rightarrow R^m\)</span> we have the total derivative at <span class="math inline">\(\vec{a}\)</span> (a point or vector in <span class="math inline">\(R^n\)</span>) is a matrix <span class="math inline">\(J\)</span> (a linear transformation) taking vectors in <span class="math inline">\(R^n\)</span> and returning, under multiplication, vectors in <span class="math inline">\(R^m\)</span> (this matrix will be <span class="math inline">\(m \times n\)</span>), such that for some neighborhood of <span class="math inline">\(\vec{a}\)</span>, we have:</p>
+<p><span class="math display">\[
+\lim_{\vec{x} \rightarrow \vec{a}} \frac{\|F(\vec{x}) - F(\vec{a}) - J\cdot(\vec{x}-\vec{a})\|}{\|\vec{x} - \vec{a}\|} = \vec{0}.
+\]</span></p>
+<p>(That is <span class="math inline">\(\|F(\vec{x}) - F(\vec{a}) - J\cdot(\vec{x}-\vec{a})\|=\mathcal{o}(\|\vec{x}-\vec{a}\|)\)</span>.)</p>
+<p>If for some <span class="math inline">\(J\)</span> the above holds, the function <span class="math inline">\(F\)</span> is said to be totally differentiable, and the matrix <span class="math inline">\(J =J_F=dF_a\)</span> is the total derivative.</p>
+<p>For a multivariable function <span class="math inline">\(F:R^n \rightarrow R^m\)</span>, we may express the function in vector-valued form <span class="math inline">\(F(\vec{x}) = \langle f_1(\vec{x}), f_2(\vec{x}),\dots,f_m(\vec{x})\rangle\)</span>, each component a scalar function. Then, if the total derivative exists, it can be expressed by the <a href="https://en.wikipedia.org/wiki/Jacobian_matrix_and_determinant">Jacobian</a>:</p>
+<p><span class="math display">\[
+J =
+\begin{bmatrix}
+\frac{\partial f_1}{\partial x_1} &amp;\quad \frac{\partial f_1}{\partial x_2} &amp;\dots&amp;\quad\frac{\partial f_1}{\partial x_n}\\
+\frac{\partial f_2}{\partial x_1} &amp;\quad \frac{\partial f_2}{\partial x_2} &amp;\dots&amp;\quad\frac{\partial f_2}{\partial x_n}\\
+&amp;&amp;\vdots&amp;\\
+\frac{\partial f_m}{\partial x_1} &amp;\quad \frac{\partial f_m}{\partial x_2} &amp;\dots&amp;\quad\frac{\partial f_m}{\partial x_n}
+\end{bmatrix}.
+\]</span></p>
+<p>This may also be viewed as:</p>
+<p><span class="math display">\[
+J =
+\begin{bmatrix}
+&amp;\nabla{f_1}'\\
+&amp;\nabla{f_2}'\\
+&amp;\quad\vdots\\
+&amp;\nabla{f_m}'
+\end{bmatrix}
+=
+\left[
+\frac{\partial{F}}{\partial{x_1}}\quad
+\frac{\partial{F}}{\partial{x_2}} \cdots
+\frac{\partial{F}}{\partial{x_n}}
+\right].
+\]</span></p>
+<p>The latter representing a matrix of <span class="math inline">\(m\)</span> row vectors, each with <span class="math inline">\(n\)</span> components or as a matrix of <span class="math inline">\(n\)</span> column vectors, each with <span class="math inline">\(m\)</span> components.</p>
+<hr>
+<p>After specializing the total derivative to the cases already discussed, we have:</p>
+<ul>
+<li>Univariate functions. Here <span class="math inline">\(f'(t)\)</span> is also univariate. Identifying <span class="math inline">\(J\)</span> with the <span class="math inline">\(1 \times 1\)</span> matrix with component <span class="math inline">\(f'(t)\)</span>, then the total derivative is just a restatement of the derivative existing.</li>
+<li>Vector-valued functions <span class="math inline">\(\vec{f}(t) = \langle f_1(t), f_2(t), \dots, f_m(t) \rangle\)</span>, each component univariate. Then the derivative, <span class="math inline">\(\vec{f}'(t) = \langle \frac{df_1}{dt}, \frac{df_2}{dt}, \dots, \frac{df_m}{dt} \rangle\)</span>. The total derivative in this case, is a <span class="math inline">\(m \times 1\)</span> vector of partial derivatives, and since there is only <span class="math inline">\(1\)</span> variable, would be written without partials. So the two agree.</li>
+<li>Scalar functions <span class="math inline">\(f(\vec{x}) = a\)</span> of type <span class="math inline">\(R^n \rightarrow R\)</span>. The</li>
+</ul>
+<p>definition of differentiability for <span class="math inline">\(f\)</span> involved existence of the partial derivatives and moreover, the fact that a limit like the above held with <span class="math inline">\(\nabla{f}(C) \cdot \vec{h}\)</span> in place of <span class="math inline">\(J\cdot(\vec{x}-\vec{a})\)</span>. Here <span class="math inline">\(\vec{h}\)</span> and <span class="math inline">\(\vec{x}-\vec{a}\)</span> are vectors in <span class="math inline">\(R^n\)</span>. Were the dot product in <span class="math inline">\(\nabla{f}(C) \cdot \vec{h}\)</span> expressed in matrix multiplication we would have for this case a <span class="math inline">\(1 \times n\)</span> matrix of the correct form:</p>
+<p><span class="math display">\[
+J = [\nabla{f}'].
+\]</span></p>
+<ul>
+<li>For <span class="math inline">\(f:R^2 \rightarrow R\)</span>, the Hessian matrix, was the matrix of <span class="math inline">\(2\)</span>nd partial derivatives. This may be viewed as the total derivative of the the gradient function, <span class="math inline">\(\nabla{f}\)</span>:</li>
+</ul>
+<p><span class="math display">\[
+\text{Hessian} =
+\begin{bmatrix}
+\frac{\partial^2 f}{\partial x^2}          &amp;\quad \frac{\partial^2 f}{\partial x \partial y}\\
+\frac{\partial^2 f}{\partial y \partial x} &amp;\quad \frac{\partial^2 f}{\partial y \partial y}
+\end{bmatrix}
+\]</span></p>
+<p>This is equivalent to:</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+\frac{\partial \frac{\partial f}{\partial x}}{\partial x} &amp;\quad \frac{\partial \frac{\partial f}{\partial x}}{\partial y}\\
+\frac{\partial \frac{\partial f}{\partial y}}{\partial x} &amp;\quad \frac{\partial \frac{\partial f}{\partial y}}{\partial y}\\
+\end{bmatrix}
+.
+\]</span></p>
+<p>As such, the total derivative is a generalization of what we have previously discussed.</p>
+</section>
+<section id="the-chain-rule" class="level2" data-number="58.4">
+<h2 data-number="58.4" class="anchored" data-anchor-id="the-chain-rule"><span class="header-section-number">58.4</span> The chain rule</h2>
+<p>If <span class="math inline">\(G:R^k \rightarrow R^n\)</span> and <span class="math inline">\(F:R^n \rightarrow R^m\)</span>, then the composition <span class="math inline">\(F\circ G\)</span> takes <span class="math inline">\(R^k \rightarrow R^m.\)</span> If all three functions are totally differentiable, then a chain rule will hold (total derivative of <span class="math inline">\(F\circ G\)</span> at point <span class="math inline">\(a\)</span>):</p>
+<p><span class="math display">\[
+d(F\circ G)_a = dF_{G(a)} \cdot dG_a
+\]</span></p>
+<p>If correct, this has the same formulation as the chain rule for the univariate case: derivative of outer at the inner <em>times</em> the derivative of the inner.</p>
+<p>First we check that the dimensions are correct: We have <span class="math inline">\(dF_{G(a)}\)</span> (the total derivative of <span class="math inline">\(F\)</span> at the point <span class="math inline">\(G(a)\)</span>) is an <span class="math inline">\(m \times n\)</span> matrix and <span class="math inline">\(dG_a\)</span> (the total derivative of <span class="math inline">\(G\)</span> at the point <span class="math inline">\(a\)</span>) is a <span class="math inline">\(n \times k\)</span> matrix. The product of a <span class="math inline">\(m \times n\)</span> matrix with a <span class="math inline">\(n \times k\)</span> matrix is defined, and is a <span class="math inline">\(m \times k\)</span> matrix, as is <span class="math inline">\(d(F \circ G)_a\)</span>.</p>
+<p>The proof that the formula is correct uses the definition of totally differentiable written as</p>
+<p><span class="math display">\[
+F(b + \vec{h}) - F(b) - dF_b\cdot \vec{h} = \epsilon(\vec{h}) \vec{h},
+\]</span></p>
+<p>where <span class="math inline">\(\epsilon(h) \rightarrow \vec{0}\)</span> as <span class="math inline">\(h \rightarrow \vec{0}\)</span>.</p>
+<p>We have, using this for <em>both</em> <span class="math inline">\(F\)</span> and <span class="math inline">\(G\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+F(G(a + \vec{h})) - F(G(a)) &amp;=
+F(G(a) + (dG_a \cdot \vec{h} + \epsilon_G \vec{h})) - F(G(a))\\
+&amp;= F(G(a)) + dF_{G(a)} \cdot (dG_a \cdot \vec{h} + \epsilon_G \vec{h}) \\
+&amp;+ \quad\epsilon_F (dG_a \cdot \vec{h} + \epsilon_G \vec{h}) - F(G(a))\\
+&amp;= dF_{G(a)} \cdot (dG_a \cdot \vec{h})  +  dF_{G(a)} \cdot (\epsilon_G \vec{h}) + \epsilon_F (dG_a \cdot \vec{h}) + (\epsilon_F \cdot \epsilon_G\vec{h})
+\end{align*}\]</span></p>
+<p>The last line uses the linearity of <span class="math inline">\(dF\)</span> to isolate <span class="math inline">\(dF_{G(a)} \cdot (dG_a \cdot \vec{h})\)</span>. Factoring out <span class="math inline">\(\vec{h}\)</span> and taking norms gives:</p>
+<p><span class="math display">\[\begin{align*}
+\frac{\| F(G(a+\vec{h})) - F(G(a)) - dF_{G(a)}dG_a \cdot \vec{h} \|}{\| \vec{h} \|} &amp;=
+\frac{\|  dF_{G(a)}\cdot(\epsilon_G\vec{h}) + \epsilon_F (dG_a\cdot \vec{h}) + (\epsilon_F\cdot\epsilon_G\vec{h}) \|}{\| \vec{h} \|} \\
+&amp;\leq \|  dF_{G(a)}\cdot\epsilon_G + \epsilon_F (dG_a) + \epsilon_F\cdot\epsilon_G \|\frac{\|\vec{h}\|}{\| \vec{h} \|}\\
+&amp;\rightarrow 0.
+\end{align*}\]</span></p>
+<section id="examples" class="level3" data-number="58.4.1">
+<h3 data-number="58.4.1" class="anchored" data-anchor-id="examples"><span class="header-section-number">58.4.1</span> Examples</h3>
+<p>Our main use of the total derivative will be the change of variables in integration.</p>
+<section id="example-polar-coordinates" class="level5">
+<h5 class="anchored" data-anchor-id="example-polar-coordinates">Example: polar coordinates</h5>
+<p>A point <span class="math inline">\((a,b)\)</span> in the plane can be described in polar coordinates by a radius <span class="math inline">\(r\)</span> and polar angle <span class="math inline">\(\theta\)</span>. We can express this formally by <span class="math inline">\(F:(a,b) \rightarrow (r, \theta)\)</span> with</p>
+<p><span class="math display">\[
+r(a,b) = \sqrt{a^2 + b^2}, \quad
+\theta(a,b) = \tan^{-1}(b/a),
+\]</span></p>
+<p>the latter assuming the point is in quadrant I or IV (though <code>atan(y,x)</code> will properly handle the other quadrants). The Jacobian of this transformation may be found with</p>
+<pre class="{julia}"><code>@syms a::real b::real
+
+rⱼ = sqrt(a^2 + b^2)
+θⱼ = atan(b/a)
+
+Jac = Sym[diff.(rⱼ, [a,b])';        # [∇f_1'; ∇f_2']
+          diff.(θⱼ, [a,b])']
+
+simplify.(Jac)</code></pre>
+<p><code>SymPy</code> array objects have a <code>jacobian</code> method to make this easier to do. The calling style is Python-like, using <code>object.method(...)</code>:</p>
+<pre class="{julia}"><code>[rⱼ, θⱼ].jacobian([a, b])</code></pre>
+<p>The determinant, of geometric interest, will be</p>
+<pre class="{julia}"><code>det(Jac) |&gt; simplify</code></pre>
+<p>The determinant is of interest, as the linear mapping represented by the Jacobian changes the area of the associated coordinate vectors. The determinant describes how this area changes, as a multiplying factor.</p>
+</section>
+<section id="example-spherical-coordinates" class="level5">
+<h5 class="anchored" data-anchor-id="example-spherical-coordinates">Example Spherical Coordinates</h5>
+<p>In <span class="math inline">\(3\)</span> dimensions a point can be described by (among other ways):</p>
+<ul>
+<li>Cartesian coordinates: three coordinates relative to the <span class="math inline">\(x\)</span>, <span class="math inline">\(y\)</span>, and <span class="math inline">\(z\)</span> axes as <span class="math inline">\((a,b,c)\)</span>.</li>
+<li>Spherical coordinates: a radius, <span class="math inline">\(r\)</span>, an azimuthal angle <span class="math inline">\(\theta\)</span>, and a polar angle</li>
+</ul>
+<p><span class="math display">\[
+\phi
+\]</span></p>
+<p>measured down from the <span class="math inline">\(z\)</span> axes. (We use the mathematics naming convention, the physics one has <span class="math inline">\(\phi\)</span> and <span class="math inline">\(\theta\)</span> reversed.)</p>
+<ul>
+<li>Cylindrical coordinates: a radius, <span class="math inline">\(r\)</span>, a polar angle <span class="math inline">\(\theta\)</span>, and height <span class="math inline">\(z\)</span>.</li>
+</ul>
+<p>Some mappings are:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 39%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Cartesian (x,y,z)</th>
+<th style="text-align: center;">Spherical (<span class="math inline">\(r\)</span>, <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\phi\)</span>)</th>
+<th style="text-align: center;">Cylindrical (<span class="math inline">\(r\)</span>, <span class="math inline">\(\theta\)</span>, <span class="math inline">\(z\)</span>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">(1, 1, 0)</td>
+<td style="text-align: center;"><span class="math inline">\((\sqrt{2}, \pi/4, \pi/2)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\((\sqrt{2},\pi/4, 0)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">(1, 0, 1)</td>
+<td style="text-align: center;"><span class="math inline">\((\sqrt{2}, 0, \pi/4)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\((\sqrt{2}, 0, 1)\)</span></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p>Formulas can be found to convert between the different systems, here are a few written as multivariable functions:</p>
+<pre class="{julia}"><code>function spherical_from_cartesian(x,y,z)
+    r = sqrt(x^2 + y^2 + z^2)
+    theta = atan(y/x)
+    phi = acos(z/r)
+    [r, theta, phi]
+end
+
+function cartesian_from_spherical(r, theta, phi)
+    x = r*sin(phi)*cos(theta)
+    y = r*sin(phi)*sin(theta)
+    z = r*cos(phi)
+    [x, y, z]
+end
+
+function cylindrical_from_cartesian(x, y, z)
+    r = sqrt(x^2 + y^2)
+    theta = atan(y/x)
+    z = z
+    [r, theta, z]
+end
+
+function cartesian_from_cylindrical(r, theta, z)
+    x = r*cos(theta)
+    y = r*sin(theta)
+    z = z
+    [x, y, z]
+end
+
+spherical_from_cartesian(v) = spherical_from_cartesian(v...)
+cartesian_from_spherical(v) = cartesian_from_spherical(v...)
+cylindrical_from_cartesian(v)= cylindrical_from_cartesian(v...)
+cartesian_from_cylindrical(v) = cartesian_from_cylindrical(v...)</code></pre>
+<p>The Jacobian of a transformation can be found from these conversions. For example, the conversion from spherical to cartesian would have Jacobian computed by:</p>
+<pre class="{julia}"><code>@syms r::real
+
+ex1 = cartesian_from_spherical(r, theta, phi)
+J1 = ex1.jacobian([r, theta, phi])</code></pre>
+<p>This has determinant:</p>
+<pre class="{julia}"><code>det(J1) |&gt; simplify</code></pre>
+<p>There is no function to convert from spherical to cylindrical above, but clearly one can be made by <em>composition</em>:</p>
+<pre class="{julia}"><code>cylindrical_from_spherical(r, theta, phi) =
+    cylindrical_from_cartesian(cartesian_from_spherical(r, theta, phi)...)
+cylindrical_from_spherical(v) = cylindrical_from_spherical(v...)</code></pre>
+<p>From this composition, we could compute the Jacobian directly, as with:</p>
+<pre class="{julia}"><code>ex2 = cylindrical_from_spherical(r, theta, phi)
+J2 = ex2.jacobian([r, theta, phi])</code></pre>
+<p>Now to see that this last expression could have been found by the <em>chain rule</em>. To do this we need to find the Jacobian of each function; evaluate them at the proper places; and, finally, multiply the matrices. The <code>J1</code> object, found above, does one Jacobian. We now need to find that of <code>cylindrical_from_cartesian</code>:</p>
+<pre class="{julia}"><code>@syms x::real y::real z::real
+ex3 = cylindrical_from_cartesian(x, y, z)
+J3 = ex3.jacobian([x,y,z])</code></pre>
+<p>The chain rule is not simply <code>J3 * J1</code> in the notation above, as the <code>J3</code> matrix must be evaluated at “<code>G(a)</code>”, which is <code>ex1</code> from above:</p>
+<pre class="{julia}"><code>J3_Ga = subs.(J3, x =&gt; ex1[1], y =&gt; ex1[2], z =&gt; ex1[3]) .|&gt; simplify  # the dots are important</code></pre>
+<p>The chain rule now says this product should be equivalent to <code>J2</code> above:</p>
+<pre class="{julia}"><code>J3_Ga * J1</code></pre>
+<p>The two are equivalent after simplification, as seen here:</p>
+<pre class="{julia}"><code>J3_Ga * J1 - J2 .|&gt; simplify</code></pre>
+</section>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>The above examples were done symbolically. Performing the calculation numerically is quite similar. The <code>ForwardDiff</code> package has a gradient function to find the gradient at a point. The <code>CalculusWithJulia</code> package extends this to take a gradient of a function and return a function, also called <code>gradient</code>. This is defined along the lines of:</p>
+<pre class="{julia}"><code>#| eval: false
+gradient(f::Function) = x -&gt; ForwardDiff.gradient(f, x)</code></pre>
+<p>(though more flexibly, as either vector or a separate arguments can be used.)</p>
+<p>With this, defining a Jacobian function <em>could</em> be done like:</p>
+<pre class="{julia}"><code>#| eval: false
+function Jacobian(F, x)
+    n = length(F(x...))
+    grads = [gradient(x -&gt; F(x...)[i])(x) for i in 1:n]
+    vcat(grads'...)
+end</code></pre>
+<p>But, like <code>SymPy</code>, <code>ForwardDiff</code> provides a <code>jacobian</code> function directly, so we will use that; it requires a function definition where a vector is passed in and is called by <code>ForwardDiff.jacobian</code>. (The <code>ForwardDiff</code> package does not export its methods, they are qualified using the module name.)</p>
+<p>Using the above functions, we can verify the last example at a point:</p>
+<pre class="{julia}"><code>rtp = [1, pi/3, pi/4]
+ForwardDiff.jacobian(cylindrical_from_spherical, rtp)</code></pre>
+<p>The chain rule gives the same answer up to roundoff error:</p>
+<pre class="{julia}"><code>ForwardDiff.jacobian(cylindrical_from_cartesian, cartesian_from_spherical(rtp)) * ForwardDiff.jacobian(cartesian_from_spherical, rtp)</code></pre>
+</section>
+<section id="example-the-inverse-function-theorem" class="level5">
+<h5 class="anchored" data-anchor-id="example-the-inverse-function-theorem">Example: The Inverse Function Theorem</h5>
+<p>For a change of variable problem, <span class="math inline">\(F:R^n \rightarrow R^n\)</span>, the determinant of the Jacobian quantifies how volumes get modified under the transformation. When this determinant is <em>non</em>zero, then more can be said. The <a href="https://en.wikipedia.org/wiki/Inverse_function_theorem">Inverse Function Theorem</a> states</p>
+<blockquote class="blockquote">
+<p>if <span class="math inline">\(F\)</span> is a continuously differentiable function from an open set of <span class="math inline">\(R^n\)</span> into <span class="math inline">\(R^n\)</span>and the total derivative is invertible at a point <span class="math inline">\(p\)</span> (i.e., the Jacobian determinant of <span class="math inline">\(F\)</span> at <span class="math inline">\(p\)</span> is non-zero), then <span class="math inline">\(F\)</span> is invertible near <span class="math inline">\(p\)</span>. That is, an inverse function to <span class="math inline">\(F\)</span> is defined on some neighborhood of <span class="math inline">\(q\)</span>, where <span class="math inline">\(q=F(p)\)</span>. Further, <span class="math inline">\(F^{-1}\)</span> will be continuously differentiable at <span class="math inline">\(q\)</span> with <span class="math inline">\(J_{F^{-1}}(q) = [J_F(p)]^{-1}\)</span>, the latter being the matrix inverse. Taking determinants, <span class="math inline">\(\det(J_{F^{-1}}(q)) = 1/\det(J_F(p))\)</span>.</p>
+</blockquote>
+<p>Assuming <span class="math inline">\(F^{-1}\)</span> exists, we can verify the last part from the chain rule, in an identical manner to the univariate case, starting with <span class="math inline">\(F^{-1} \circ F\)</span> being the identity, we would have:</p>
+<p><span class="math display">\[
+J_{F^{-1}\circ F}(p) = I,
+\]</span></p>
+<p>where <span class="math inline">\(I\)</span> is the <em>identity</em> matrix with entry <span class="math inline">\(a_{ij} = 1\)</span> when <span class="math inline">\(i=j\)</span> and <span class="math inline">\(0\)</span> otherwise.</p>
+<p>But the chain rule then says <span class="math inline">\(J_{F^{-1}}(F(p)) J_F(p) = I\)</span>. This implies the two matrices are inverses to each other, and using the multiplicative mapping property of the determinant will also imply the determinant relationship.</p>
+<p>The theorem is an existential theorem, in that it implies <span class="math inline">\(F^{-1}\)</span> exists, but doesn’t indicate how to find it. When we have an inverse though, we can verify the properties implied.</p>
+<p>The transformation examples have inverses indicated. Using one of these we can verify things at a point, as done in the following:</p>
+<pre class="{julia}"><code>p = [1, pi/3, pi/4]
+q = cartesian_from_spherical(p)
+
+A1 = ForwardDiff.jacobian(spherical_from_cartesian, q)    # J_F⁻¹(q)
+A2 = ForwardDiff.jacobian(cartesian_from_spherical, p)    # J_F(p)
+
+A1 * A2</code></pre>
+<p>Up to roundoff error, this is the identity matrix. As for the relationship between the determinants, up to roundoff error the two are related, as expected:</p>
+<pre class="{julia}"><code>det(A1), 1/det(A2)</code></pre>
+</section>
+<section id="example-implicit-differentiation-the-implicit-function-theorem" class="level5">
+<h5 class="anchored" data-anchor-id="example-implicit-differentiation-the-implicit-function-theorem">Example: Implicit Differentiation, the Implicit Function Theorem</h5>
+<p>The technique of <em>implicit differentiation</em> is a useful one, as it allows derivatives of more complicated expressions to be found. The main idea, expressed here with three variables is if an equation may be viewed as <span class="math inline">\(F(x,y,z) = c\)</span>, <span class="math inline">\(c\)</span> a constant, then <span class="math inline">\(z=\phi(x,y)\)</span> may be viewed as a function of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. Hence, we can use the chain rule to find: <span class="math inline">\(\partial z / \partial x\)</span> and <span class="math inline">\(\partial z /\partial y\)</span>. Let <span class="math inline">\(G(x,y) = \langle x, y, \phi(x,y) \rangle\)</span> and then differentiation <span class="math inline">\((F \circ G)(x,y) = c\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+0 &amp;= dF_{G(x,y)} \circ dG_{\langle x, y\rangle}\\
+&amp;= [\frac{\partial F}{\partial x}\quad \frac{\partial F}{\partial y}\quad \frac{\partial F}{\partial z}](G(x,y)) \cdot
+\begin{bmatrix}
+1 &amp; 0\\
+0 &amp; 1\\
+\frac{\partial \phi}{\partial x} &amp; \frac{\partial \phi}{\partial y}
+\end{bmatrix}.
+\end{align*}\]</span></p>
+<p>Solving yields</p>
+<p><span class="math display">\[
+\frac{\partial \phi}{\partial x} = -\frac{\partial F/\partial x}{\partial F/\partial z},\quad
+\frac{\partial \phi}{\partial y} = -\frac{\partial F/\partial y}{\partial F/\partial z}.
+\]</span></p>
+<p>Where the right hand side of each is evaluated at <span class="math inline">\(G(x,y)\)</span>.</p>
+<p>When can it be reasonably assumed that such a function <span class="math inline">\(z= \phi(x,y)\)</span> exists?</p>
+<p>The <a href="https://en.wikipedia.org/wiki/Implicit_function_theorem">Implicit Function Theorem</a> provides a statement (slightly abridged here):</p>
+<blockquote class="blockquote">
+<p>Let <span class="math inline">\(F:R^{n+m} \rightarrow R^m\)</span> be a continuously differentiable function and let <span class="math inline">\(R^{n+m}\)</span> have (compactly defined) coordinates <span class="math inline">\(\langle \vec{x}, \vec{y} \rangle\)</span>, Fix a point <span class="math inline">\(\langle \vec{a}, \vec{b} \rangle\)</span> with <span class="math inline">\(F(\vec{a}, \vec{b}) = \vec{0}\)</span>. Let <span class="math inline">\(J_{F, \vec{y}}(\vec{a}, \vec{b})\)</span> be the Jacobian restricted to <em>just</em> the <span class="math inline">\(y\)</span> variables. (<span class="math inline">\(J\)</span> is <span class="math inline">\(m \times m\)</span>.) If this matrix has non-zero determinant (it is invertible), then there exists an open set <span class="math inline">\(U\)</span> containing <span class="math inline">\(\vec{a}\)</span> and a <em>unique</em> continuously differentiable function <span class="math inline">\(G: U \subset R^n \rightarrow R^m\)</span> such that <span class="math inline">\(G(\vec{a}) = \vec{b}\)</span>, <span class="math inline">\(F(\vec{x}, G(\vec{x})) = 0\)</span> for <span class="math inline">\(\vec x\)</span> in <span class="math inline">\(U\)</span>. Moreover, the partial derivatives of <span class="math inline">\(G\)</span> are given by the matrix product:</p>
+<p><span class="math inline">\(\frac{\partial G}{\partial x_j}(\vec{x}) = - [J_{F, \vec{y}}(x, F(\vec{x}))]^{-1} \left[\frac{\partial F}{\partial x_j}(x, G(\vec{x}))\right].\)</span></p>
+</blockquote>
+<hr>
+<p>Specializing to our case above, we have <span class="math inline">\(f:R^{2+1}\rightarrow R^1\)</span> and <span class="math inline">\(\vec{x} = \langle a, b\rangle\)</span> and <span class="math inline">\(\phi:R^2 \rightarrow R\)</span>. Then</p>
+<p><span class="math display">\[
+[J_{f, \vec{y}}(x, g(\vec{x}))] = [\frac{\partial f}{\partial z}(a, b, \phi(a,b)],
+\]</span></p>
+<p>a <span class="math inline">\(1\times 1\)</span> matrix, identified as a scalar, so inversion is just the reciprocal. So the formula, becomes, say for <span class="math inline">\(x_1 = x\)</span>:</p>
+<p><span class="math display">\[
+\frac{\partial \phi}{\partial x}(a, b) = - \frac{\frac{\partial{f}}{\partial{x}}(a, b,\phi(a,b))}{\frac{\partial{f}}{\partial{z}}(a, b, \phi(a,b))},
+\]</span></p>
+<p>as expressed above. Here invertibility is simply a non-zero value, and is needed for the division. In general, we see inverse (the <span class="math inline">\(J^{-1}\)</span>) is necessary to express the answer.</p>
+<p>Using this, we can answer questions like the following (as we did before) on a more solid ground:</p>
+<p>Let <span class="math inline">\(x^2/a^2 + y^2/b^2 + z^2/c^2 = 1\)</span> be an equation describing an ellipsoid. Describe the tangent plane at a point on the ellipse.</p>
+<p>We would like to express the tangent plane in terms of <span class="math inline">\(\partial{z}/\partial{x}\)</span> and <span class="math inline">\(\partial{z}/\partial{y}\)</span>, which we can do through:</p>
+<p><span class="math display">\[
+\frac{2x}{a^2} + \frac{2z}{c^2} \frac{\partial{z}}{\partial{x}} = 0, \quad
+\frac{2y}{b^2} + \frac{2z}{c^2} \frac{\partial{z}}{\partial{y}} = 0.
+\]</span></p>
+<p>Solving, we get</p>
+<p><span class="math display">\[
+\frac{\partial{z}}{\partial{x}} = -\frac{2x}{a^2}\frac{c^2}{2z},
+\quad
+\frac{\partial{z}}{\partial{y}} = -\frac{2y}{b^2}\frac{c^2}{2z},
+\]</span></p>
+<p><em>provided</em> <span class="math inline">\(z \neq 0\)</span>. At <span class="math inline">\(z=0\)</span> the tangent plane exists, but we can’t describe it in this manner, as it is vertical. However, the choice of variables to use is not fixed in the theorem, so if <span class="math inline">\(x \neq 0\)</span> we can express <span class="math inline">\(x = x(y,z)\)</span> and express the tangent plane in terms of <span class="math inline">\(\partial{x}/\partial{y}\)</span> and <span class="math inline">\(\partial{x}/\partial{z}\)</span>. The answer is similar to the above, and we won’t repeat. Similarly, should <span class="math inline">\(x = z = 0\)</span>, the <span class="math inline">\(y \neq 0\)</span> and we can use an implicit definition <span class="math inline">\(y = y(x,z)\)</span> and express the tangent plane through <span class="math inline">\(\partial{y}/\partial{x}\)</span> and <span class="math inline">\(\partial{y}/\partial{z}\)</span>.</p>
+</section>
+<section id="example-lagrange-multipliers-in-more-dimensions" class="level5">
+<h5 class="anchored" data-anchor-id="example-lagrange-multipliers-in-more-dimensions">Example: Lagrange multipliers in more dimensions</h5>
+<p>Consider now the problem of maximizing <span class="math inline">\(f:R^n \rightarrow R\)</span> subject to <span class="math inline">\(k &lt; n\)</span> constraints <span class="math inline">\(g_1(\vec{x}) = c_1, g_2(\vec{x}) = c_2, \dots, g_{k}(\vec{x}) = c_{k}\)</span>. For <span class="math inline">\(n=1\)</span> and <span class="math inline">\(2\)</span>, we saw that if all derivatives exist, then a <em>necessary</em> condition to be at a maximum is that <span class="math inline">\(\nabla{f}\)</span> can be written as <span class="math inline">\(\lambda_1 \nabla{g_1}\)</span> (<span class="math inline">\(n=1\)</span>) or <span class="math inline">\(\lambda_1 \nabla{g_1} + \lambda_2 \nabla{g_2}\)</span>. The key observation is that the gradient of <span class="math inline">\(f\)</span> must have no projection on the intersection of the tangent planes found by linearizing <span class="math inline">\(g_i\)</span>.</p>
+<p>The same thing holds in dimension <span class="math inline">\(n &gt; 2\)</span>: Let <span class="math inline">\(\vec{x}_0\)</span> be a point where <span class="math inline">\(f(\vec{x})\)</span> is maximum subject to the <span class="math inline">\(p\)</span> constraints. We want to show that <span class="math inline">\(\vec{x}_0\)</span> must satisfy:</p>
+<p><span class="math display">\[
+\nabla{f}(\vec{x}_0) = \sum \lambda_i \nabla{g_i}(\vec{x}_0).
+\]</span></p>
+<p>By considering <span class="math inline">\(-f\)</span>, the same holds for a minimum.</p>
+<p>We follow the sketch of <a href="https://www.math.wustl.edu/~sawyer/handouts/LagrangeMult.pdf">Sawyer</a>.</p>
+<p>Using Taylor’s theorem, we have <span class="math inline">\(f(\vec{x} + h \vec{y}) = f(\vec{x}) + h \vec{y}\cdot\nabla{f} + h^2\vec{c}\)</span>, for some <span class="math inline">\(\vec{c}\)</span>. If <span class="math inline">\(h\)</span> is small enough, this term can be ignored.</p>
+<p>The tangent “plane” for each constraint, <span class="math inline">\(g_i(\vec{x}) = c_i\)</span>, is orthogonal to the gradient vector <span class="math inline">\(\nabla{g_i}(\vec{x})\)</span>. That is, <span class="math inline">\(\nabla{g_i}(\vec{x})\)</span> is orthogonal to the level-surface formed by the constraint <span class="math inline">\(g_i(\vec{x}) = 0\)</span>. Let <span class="math inline">\(A\)</span> be the set of all <em>linear</em> combinations of <span class="math inline">\(\nabla{g_i}\)</span>, that are possible: <span class="math inline">\(\lambda_1 g_1(\vec{x}) + \lambda_2 g_2(\vec{x}) + \cdots + \lambda_p g_p(\vec{x})\)</span>, as in the statement. Through projection, we can write <span class="math inline">\(\nabla{f}(\vec{x}_0) = \vec{a} + \vec{b}\)</span>, where <span class="math inline">\(\vec{a}\)</span> is in <span class="math inline">\(A\)</span> and <span class="math inline">\(\vec{b}\)</span> is <em>orthogonal</em> to <span class="math inline">\(A\)</span>.</p>
+<p>Let <span class="math inline">\(\vec{r}(t)\)</span> be a parameterization of a path through the intersection of the <span class="math inline">\(p\)</span> tangent planes that goes through <span class="math inline">\(\vec{x}_0\)</span> at <span class="math inline">\(t_0\)</span> <em>and</em> <span class="math inline">\(\vec{b}\)</span> is parallel to <span class="math inline">\(\vec{x}_0'(t_0)\)</span>. (The implicit function theorem would guarantee this path.)</p>
+<p>If we consider <span class="math inline">\(f(\vec{x}_0 + h \vec{b})\)</span> for small <span class="math inline">\(h\)</span>, then unless <span class="math inline">\(\vec{b} \cdot \nabla{f} = 0\)</span>, the function would increase in the direction of <span class="math inline">\(\vec{b}\)</span> due to the <span class="math inline">\(h \vec{b}\cdot\nabla{f}\)</span> term in the approximating Taylor series. That is, <span class="math inline">\(\vec{x}_0\)</span> would not be a maximum on the constraint. So at <span class="math inline">\(\vec{x}_0\)</span> this directional derivative is <span class="math inline">\(0\)</span>.</p>
+<p>Then we have the directional derivative in the direction of <span class="math inline">\(b\)</span> is <span class="math inline">\(\vec{0}\)</span>, as the gradient</p>
+<p><span class="math display">\[
+\vec{0} = \vec{b} \cdot \nabla{f}(\vec{x}_0) = \vec{b} \cdot (\vec{a} + \vec{b}) = \vec{b}\cdot \vec{a} + \vec{b}\cdot\vec{b} = \vec{b}\cdot\vec{b},
+\]</span></p>
+<p>or <span class="math inline">\(\| \vec{b} \| = 0\)</span> and <span class="math inline">\(\nabla{f}(\vec{x}_0)\)</span> must lie in the plane <span class="math inline">\(A\)</span>.</p>
+<hr>
+<p>How does the implicit function theorem guarantee a parameterization of a curve along the constraint in the direction of <span class="math inline">\(b\)</span>?</p>
+<p>A formal proof requires a bit of linear algebra, but here we go. Let <span class="math inline">\(G(\vec{x}) = \langle g_1(\vec{x}), g_2(\vec{x}), \dots, g_k(\vec{x}) \rangle\)</span>. Then <span class="math inline">\(G(\vec{x}) = \vec{c}\)</span> encodes the constraint. The tangent planes are orthogonal to each <span class="math inline">\(\nabla{g_i}\)</span>, so using matrix notation, the intersection of the tangent planes is any vector <span class="math inline">\(\vec{h}\)</span> satisfying <span class="math inline">\(J_G(\vec{x}_0) \vec{h} = 0\)</span>. Let <span class="math inline">\(k = n - 1 - p\)</span>. If <span class="math inline">\(k &gt; 0\)</span>, there will be <span class="math inline">\(k\)</span> vectors <em>orthogonal</em> to each of <span class="math inline">\(\nabla{g_i}\)</span> and <span class="math inline">\(\vec{b}\)</span>. Call these <span class="math inline">\(\vec{v}_j\)</span>. Then define additional constraints <span class="math inline">\(h_j(\vec{x}) = \vec{v}_j \cdot \vec{x} = 0\)</span>. Let <span class="math inline">\(H(x_1, x_2, \dots, x_n) = \langle g_1, g_2, \dots, g_p, h_1, \dots, h_{n-1-p}\rangle\)</span>. <span class="math inline">\(H:R^{1 + (n-1)} \rightarrow R^{n-1}\)</span>. Let <span class="math inline">\(H(x_1, \dots, x_n) = H(x, \vec{y})\)</span> The <span class="math inline">\(H\)</span> <em>restricted</em> to the <span class="math inline">\(\vec{y}\)</span> variables is a function from <span class="math inline">\(R^{n-1}\rightarrow R^{n-1}\)</span>. <em>If</em> this restricted function has a Jacobian with non-zero determinant, then there exists a <span class="math inline">\(\vec\phi(x): R \rightarrow R^{n-1}\)</span> with <span class="math inline">\(H(x, \vec\phi(x)) = \vec{c}\)</span>. Let <span class="math inline">\(\vec{r}(t) = \langle t, \phi_1(t), \dots, \phi_{n-1}(t)\rangle\)</span>. Then <span class="math inline">\((H\circ\vec{r})(t) = \vec{c}\)</span>, so by the chain rule <span class="math inline">\(d_H(\vec{r}) d\vec{r} = 0\)</span>. But <span class="math inline">\(dH = [\nabla{g_1}'; \nabla{g_2}' \dots;\nabla{g_p}', v_1';\dots;v_{n-1-p}']\)</span> (A matrix of row vectors). The condition <span class="math inline">\(dH(\vec{r}) d\vec{r} = \vec{0}\)</span> is equivalent to saying <span class="math inline">\(d\vec{r}\)</span> is <em>orthogonal</em> to the row vectors in <span class="math inline">\(dH\)</span>. A <em>basis</em> for <span class="math inline">\(R^n\)</span> are these vectors and <span class="math inline">\(\vec{b}\)</span>, so <span class="math inline">\(\vec{r}\)</span> and <span class="math inline">\(\vec{b}\)</span> must be parallel.</p>
+</section>
+<section id="example-1" class="level5">
+<h5 class="anchored" data-anchor-id="example-1">Example</h5>
+<p>We apply this to two problems, also from Sawyer. First, let <span class="math inline">\(n &gt; 1\)</span> and <span class="math inline">\(f(x_1, \dots, x_n) = \sum x_i^2\)</span>. Minimize this subject to the constraint <span class="math inline">\(\sum x_i = 1\)</span>. This one constraint means an answer must satisfy <span class="math inline">\(\nabla{L} = \vec{0}\)</span> where</p>
+<p><span class="math display">\[
+L(x_1, \dots, x_n, \lambda) = \sum x_i^2 + \lambda \sum x_i - 1.
+\]</span></p>
+<p>Taking <span class="math inline">\(\partial/\partial{x_i}\)</span> we have <span class="math inline">\(2x_i + \lambda = 0\)</span>, so <span class="math inline">\(x_i = \lambda/2\)</span>, a constant. From the constraint, we see <span class="math inline">\(x_i = 1/n\)</span>. This does not correspond to a maximum, but a minimum. A maximum would be at point on the constraint such as <span class="math inline">\(\langle 1, 0, \dots, 0\rangle\)</span>, which gives a value of <span class="math inline">\(1\)</span> for <span class="math inline">\(f\)</span>, not <span class="math inline">\(n \times 1/n^2 = 1/n\)</span>.</p>
+</section>
+<section id="example-2" class="level5">
+<h5 class="anchored" data-anchor-id="example-2">Example</h5>
+<p>In statistics, there are different ways to define the best estimate for a population parameter based on the data. That is, suppose <span class="math inline">\(X_1, X_2, \dots, X_n\)</span> are random variables. The population parameters of interest here are the mean <span class="math inline">\(E(X_i) = \mu\)</span> and the variance <span class="math inline">\(Var(X_i) = \sigma_i^2\)</span>. (The mean is assumed to be the same for all, but the variance need not be.) What should someone use to <em>estimate</em> <span class="math inline">\(\mu\)</span> using just the sample values <span class="math inline">\(X_1, X_2, \dots, X_n\)</span>? The average, <span class="math inline">\((X_1 + \cdots + X_n)/n\)</span> is a well known estimate, but is it the “best” in some sense for this set up? Here some variables are more variable, should they count the same, more, or less in the weighting for the estimate?</p>
+<p>In Sawyer, we see an example of applying the Lagrange multiplier method to the best linear unbiased estimator (BLUE). The BLUE is a choice of coefficients <span class="math inline">\(a_i\)</span> such that <span class="math inline">\(Var(\sum a_i X_i)\)</span> is smallest subject to the constraint <span class="math inline">\(E(\sum a_i X_i) = \mu\)</span>.</p>
+<p>The BLUE <em>minimizes</em> the <em>variance</em> of the estimator. (This is the <em>B</em>est part of BLUE). The estimator, <span class="math inline">\(\sum a_i X_i\)</span>, is <em>L</em>inear. The constraint is that the estimator has theoretical mean given by <span class="math inline">\(\mu\)</span>. (This is the <em>Un</em>biased part of BLUE.)</p>
+<p>Going from statistics to mathematics, we use formulas for <em>independent</em> random variables to restate this problem mathematically as:</p>
+<p><span class="math display">\[
+\text{Minimize } \sum a_i^2 \sigma_i^2 \text{ subject to } \sum a_i = 1.
+\]</span></p>
+<p>This problem is similar now to the last one, save the sum to minimize includes the sigmas. Set <span class="math inline">\(L = \sum a_i^2 \sigma_i^2  + \lambda\sum a_i - 1\)</span></p>
+<p>Taking <span class="math inline">\(\partial/\partial{a_i}\)</span> gives equations <span class="math inline">\(2a_i\sigma_i^2 + \lambda = 0\)</span>, <span class="math inline">\(a_i = -\lambda/(2\sigma_i^2) = c/\sigma_i^2\)</span>. The constraint implies <span class="math inline">\(c = 1/\sum(1/\sigma_i)^2\)</span>. So variables with <em>more</em> variance, get smaller weights.</p>
+<p>For the special case of a common variance, <span class="math inline">\(\sigma_i=\sigma\)</span>, the above simplifies to <span class="math inline">\(a_i = 1/n\)</span> and the estimator is <span class="math inline">\(\sum X_i/n\)</span>, the familiar sample mean, <span class="math inline">\(\bar{X}\)</span>.</p>
+</section>
+</section>
+</section>
+<section id="questions" class="level2" data-number="58.5">
+<h2 data-number="58.5" class="anchored" data-anchor-id="questions"><span class="header-section-number">58.5</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>The following plots a surface defined by a (hidden) function <span class="math inline">\(F: R^2 \rightarrow R^3\)</span>:</p>
+<pre class="{julia}"><code>#| echo: false
+𝑭(u, v) = [u*cos(v), u*sin(v), 2v]</code></pre>
+<pre class="{julia}"><code>#| hold: true
+us, vs = range(0, 1, length=25), range(0, 2pi, length=25)
+xs, ys, zs = unzip(𝑭.(us, vs'))
+surface(xs, ys, zs)</code></pre>
+<p>Is this the surface generated by <span class="math inline">\(F(u,v) = \langle u\cos(v), u\sin(v), 2v\rangle\)</span>? This function’s surface is termed a helicoid.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(true)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>The following plots a surface defined by a (hidden) function <span class="math inline">\(F: R^2 \rightarrow R^3\)</span> of the form <span class="math inline">\(F(u,v) = \langle r(u)\cos(v), r(u)\sin(v), u\rangle\)</span></p>
+<pre class="{julia}"><code>#| echo: false
+𝓇ad(u) = 1 + u^2
+ℱ(u, v) = [𝓇ad(u)*cos(v), 𝓇ad(u)*sin(v), u]</code></pre>
+<pre class="{julia}"><code>#| hold: true
+us, vs = range(-1, 1, length=25), range(0, 2pi, length=25)
+xs, ys, zs = unzip(ℱ.(us, vs'))
+surface(xs, ys, zs)</code></pre>
+<p>Is this the surface generated by <span class="math inline">\(r(u) = 1+u^2\)</span>? This form of a function is for a surface of revolution about the <span class="math inline">\(z\)</span> axis.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(true)</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>The transformation <span class="math inline">\(F(x, y) = \langle 2x + 3y + 1, 4x + y + 2\rangle\)</span> is an example of an affine transformation. Is this the <em>Jacobian</em> of <span class="math inline">\(F\)</span></p>
+<p><span class="math display">\[
+J =
+\begin{bmatrix}
+2 &amp; 4\\
+3 &amp; 1
+\end{bmatrix}.
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"Yes",
+"No, it is the transpose"
+]
+answ=2
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>Does the transformation <span class="math inline">\(F(u,v) = \langle u^2 - v^2, u^2 + v^2 \rangle\)</span> have Jacobian</p>
+<p><span class="math display">\[
+J =
+\begin{bmatrix}
+2u &amp; -2v\\
+2u &amp; 2v
+\end{bmatrix}?
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"Yes",
+"No, it is the transpose"
+]
+answ=1
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>Fix constants <span class="math inline">\(\lambda_0\)</span> and <span class="math inline">\(\phi_0\)</span> and define a transformation</p>
+<p><span class="math display">\[
+F(\lambda, \phi) = \langle \cos(\phi)\sin(\lambda - \lambda_0),
+\cos(\phi_0)\sin(\phi) - \sin(\phi_0)\cos(\phi)\cos(\lambda - \lambda_0) \rangle
+\]</span></p>
+<p>What does the following <code>SymPy</code> code compute?</p>
+<pre class="{julia}"><code>#| hold: true
+@syms lambda lambda_0 phi phi_0
+F(lambda,phi) = [cos(phi)*sin(lambda-lambda_0), cos(phi_0)*sin(phi) - sin(phi_0)*cos(phi)*cos(lambda-lambda_0)]
+
+out = [diff.(F(lambda, phi), lambda) diff.(F(lambda, phi), phi)]
+det(out) |&gt; simplify</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"The determinant of the Jacobian.",
+"The determinant of the Hessian.",
+"The determinant of the gradient."
+]
+answ = 1
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>What would be a more direct method:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"`det(F(lambda, phi).jacobian([lambda, phi]))`",
+"`det(hessian(F(lambda, phi), [lambda, phi]))`",
+"`det(gradient(F(lambda, phi), [lambda, phi]))`"
+]
+answ=1
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>Let <span class="math inline">\(z\sin(z) = x^3y^2 + z\)</span>. Compute <span class="math inline">\(\partial{z}/\partial{x}\)</span> implicitly.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    raw"`` 3x^2y^2/(z\cos(z) + \sin(z) - 1)``",
+    raw"`` 2x^3y/ (z\cos(z) + \sin(z) + 1)``",
+    raw"`` 3x^2y^2``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>Let <span class="math inline">\(x^4 - y^4 - z^4 + x^2y^2z^2 = 1\)</span>. Compute <span class="math inline">\(\partial{z}/\partial{y}\)</span> implicitly.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    raw"`` \frac{y \left(- x^{2} z^{2}{\left (x,y \right )} + 2 y^{2}\right)}{\left(x^{2} y^{2} - 2 z^{2}{\left (x,y \right )}\right) z{\left (x,y \right )}}``",
+    raw"`` \frac{x \left(2 x^{2} - y^{2} z^{2}{\left (x,y \right )}\right)}{\left(x^{2} y^{2} - 2 z^{2}{\left (x,y \right )}\right) z{\left (x,y \right )}}``",
+    raw"`` \frac{x \left(2 x^{2} - z^{2}{\left (x,y \right )}\right)}{\left(x^{2} - 2 z^{2}{\left (x,y \right )}\right) z{\left (x,y \right )}}``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>Consider the vector field <span class="math inline">\(R:R^2 \rightarrow R^2\)</span> defined by <span class="math inline">\(R(x,y) = \langle x, y\rangle\)</span> and the vector field <span class="math inline">\(S:R^2\rightarrow R^2\)</span> defined by <span class="math inline">\(S(x,y) = \langle -y, x\rangle\)</span>. Let <span class="math inline">\(r = \|R\| = \sqrt{x^2 + y^2}\)</span>. <span class="math inline">\(R\)</span> is a radial field, <span class="math inline">\(S\)</span> a spin field.</p>
+<p>What is <span class="math inline">\(\nabla{r}\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    raw"`` R/r``",
+    raw"`` S/r``",
+    raw"`` R``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>Let <span class="math inline">\(\phi = r^k\)</span>. What is <span class="math inline">\(\nabla{\phi}\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    raw"`` k r^{k-2} R``",
+    raw"`` kr^k R``",
+    raw"`` k r^{k-2} S``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>Based on your last answer, are all radial fields <span class="math inline">\(R/r^n\)</span>, <span class="math inline">\(n\geq 0\)</span> gradients of scalar functions?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(true)</code></pre>
+<p>Let <span class="math inline">\(\phi = \tan^{-1}(y/x)\)</span>. What is <span class="math inline">\(\nabla{\phi}\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    raw"`` S/r^2``",
+    raw"`` S/r``",
+    raw"`` S``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>Express <span class="math inline">\(S/r^n = \langle F_x, F_y\rangle\)</span>. For which <span class="math inline">\(n\)</span> is <span class="math inline">\(\partial{F_y}/\partial{x} - \partial{F_x}/\partial{y} = 0\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"As the left-hand side becomes $(-n+2)r^{-n}$, only $n=2$.",
+L"All $n \geq 0$",
+L"No values of $n$"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>(The latter is of interest, as only when the expression is <span class="math inline">\(0\)</span> will the vector field be the gradient of a scalar function.)</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="pagination-link" aria-label="Applications with scalar functions">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../differentiable_vector_calculus/plots_plotting.html" class="pagination-link" aria-label="2D and 3D plots in Julia with Plots">
+        <span class="nav-page-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/differentiable_vector_calculus/vector_fields.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

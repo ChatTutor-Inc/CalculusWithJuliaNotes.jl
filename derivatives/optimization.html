@@ -1,0 +1,2253 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>26&nbsp; Optimization – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../derivatives/first_second_derivatives.html" rel="next">
+<link href="../derivatives/mean_value_theorem.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../derivatives.html">Derivatives</a></li><li class="breadcrumb-item"><a href="../derivatives/optimization.html"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#fixed-perimeter-and-area" id="toc-fixed-perimeter-and-area" class="nav-link active" data-scroll-target="#fixed-perimeter-and-area"><span class="header-section-number">26.1</span> Fixed perimeter and area</a>
+  <ul class="collapse">
+  <li><a href="#exploiting-polymorphism" id="toc-exploiting-polymorphism" class="nav-link" data-scroll-target="#exploiting-polymorphism"><span class="header-section-number">26.1.1</span> Exploiting polymorphism</a></li>
+  <li><a href="#using-argmax-to-identify-where-a-function-is-maximized" id="toc-using-argmax-to-identify-where-a-function-is-maximized" class="nav-link" data-scroll-target="#using-argmax-to-identify-where-a-function-is-maximized"><span class="header-section-number">26.1.2</span> Using <code>argmax</code> to identify where a function is maximized</a></li>
+  </ul></li>
+  <li><a href="#trigonometry-problems" id="toc-trigonometry-problems" class="nav-link" data-scroll-target="#trigonometry-problems"><span class="header-section-number">26.2</span> Trigonometry problems</a></li>
+  <li><a href="#rate-times-time-problems" id="toc-rate-times-time-problems" class="nav-link" data-scroll-target="#rate-times-time-problems"><span class="header-section-number">26.3</span> Rate times time problems</a>
+  <ul class="collapse">
+  <li><a href="#rate-times-time-the-origin-story" id="toc-rate-times-time-the-origin-story" class="nav-link" data-scroll-target="#rate-times-time-the-origin-story"><span class="header-section-number">26.3.1</span> Rate times time … the origin story</a></li>
+  </ul></li>
+  <li><a href="#unbounded-domains" id="toc-unbounded-domains" class="nav-link" data-scroll-target="#unbounded-domains"><span class="header-section-number">26.4</span> Unbounded domains</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">26.5</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/derivatives/optimization.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../derivatives.html">Derivatives</a></li><li class="breadcrumb-item"><a href="../derivatives/optimization.html"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses these add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+plotly()
+using Roots
+using SymPy</code></pre>
+<hr>
+<p>A basic application of calculus is to answer questions which relate to the largest or smallest a function can be given some constraints.</p>
+<p>For example,</p>
+<blockquote class="blockquote">
+<p>Of all rectangles with perimeter <span class="math inline">\(20\)</span>, which has of the largest area?</p>
+</blockquote>
+<p>The main tool is the extreme value theorem of Bolzano and Fermat’s theorem about critical points, which combined say:</p>
+<blockquote class="blockquote">
+<p>If the function <span class="math inline">\(f(x)\)</span> is continuous on <span class="math inline">\([a,b]\)</span> and differentiable on <span class="math inline">\((a,b)\)</span>, then the extrema exist and must occur at either an end point or a critical point.</p>
+</blockquote>
+<p>Though not all of our problems lend themselves to a description of a continuous function on a closed interval, if they do, we have an algorithmic prescription to find the absolute extrema of a function:</p>
+<ol type="1">
+<li>Find the critical points. For this we can use a root-finding algorithm like <code>find_zero</code>.</li>
+<li>Evaluate the function values at the critical points and at the end points.</li>
+<li>Identify the largest and smallest values.</li>
+</ol>
+<p>With the computer we can take some shortcuts, as we will be able to graph our function to see where the extreme values will be, and in particular if they occur at end points or critical points.</p>
+<section id="fixed-perimeter-and-area" class="level2" data-number="26.1">
+<h2 data-number="26.1" class="anchored" data-anchor-id="fixed-perimeter-and-area"><span class="header-section-number">26.1</span> Fixed perimeter and area</h2>
+<p>The simplest way to investigate the maximum or minimum value of a function over a closed interval is to just graph it and look.</p>
+<p>We began with the question of which rectangles of perimeter <span class="math inline">\(20\)</span> have the largest area? The figure shows a few different rectangles with this perimeter and their respective areas.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+### {{{perimeter_area_graphic}}}
+
+gr()
+function perimeter_area_graphic_graph(n)
+    h = 1 + 2n
+    w = 10-h
+    plt = plot([0,0,w,w,0], [0,h,h,0,0], legend=false, size=fig_size,
+               xlim=(0,10), ylim=(0,10))
+    scatter!(plt, [w], [h], color=:orange, markersize=5)
+    annotate!(plt, [(w/2, h/2, "Area=$(round(w*h,digits=1))")])
+    plt
+end
+
+caption = """
+
+Some possible rectangles that satisfy the constraint on the perimeter and their area.
+
+"""
+n = 6
+anim = @animate for i=1:n
+    perimeter_area_graphic_graph(i-1)
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<p>The basic mathematical approach is to find a function of a single variable to maximize or minimize. In this case we have two variables describing a rectangle: a base <span class="math inline">\(b\)</span> and height <span class="math inline">\(h\)</span>. Our formulas are the area of a rectangle:</p>
+<p><span class="math display">\[
+A = bh,
+\]</span></p>
+<p>and the formula for the perimeter of a rectangle:</p>
+<p><span class="math display">\[
+P = 2b + 2h = 20.
+\]</span></p>
+<p>From this last one, we see that <span class="math inline">\(b\)</span> can be no bigger than <span class="math inline">\(10\)</span> and no smaller than <span class="math inline">\(0\)</span> from the restriction put in place through the perimeter. Solving for <span class="math inline">\(h\)</span> in terms of <span class="math inline">\(b\)</span> then yields this restatement of the problem:</p>
+<p>Maximize <span class="math inline">\(A(b) = b \cdot (10 - b)\)</span> over the interval <span class="math inline">\([0,10]\)</span>.</p>
+<p>This is exactly the form needed to apply our theorem about the existence of extrema (a continuous function on a closed interval). Rather than solve analytically by taking a derivative, we simply graph to find the value:</p>
+<pre class="{julia}"><code>Area(b) = b * (10 - b)
+plot(Area, 0, 10)</code></pre>
+<p>You should see the maximum occurs at <span class="math inline">\(b=5\)</span> by symmetry, so <span class="math inline">\(h=5\)</span> as well, and the maximum area is then <span class="math inline">\(25\)</span>. This gives the satisfying answer that among all rectangles of fixed perimeter, that with the largest area is a square. As well, this indicates a common result: there is often some underlying symmetry in the answer.</p>
+<section id="exploiting-polymorphism" class="level3" data-number="26.1.1">
+<h3 data-number="26.1.1" class="anchored" data-anchor-id="exploiting-polymorphism"><span class="header-section-number">26.1.1</span> Exploiting polymorphism</h3>
+<p>Before moving on, let’s see a slightly different way to do this problem with <code>Julia</code>, where we trade off some algebra for a bit of abstraction. This technique was discussed in the section on <a href="../precalc/functions.html">functions</a>.</p>
+<p>Let’s first write area as a function of both base and height:</p>
+<pre class="{julia}"><code>A(b, h) = b * h</code></pre>
+<p>From the constraint given by the perimeter being a fixed value we can solve for <code>h</code> in terms of <code>b</code>. We write this as a function:</p>
+<pre class="{julia}"><code>h(b) = (20 - 2b) / 2</code></pre>
+<p>To get <code>A(b)</code> we simply need to substitute <code>h(b)</code> into our formula for the area, <code>A</code>. However, instead of doing the substitution ourselves using algebra we let <code>Julia</code> do it through composition of functions:</p>
+<pre class="{julia}"><code>A(b) = A(b, h(b))</code></pre>
+<p>Now we can solve graphically as before, or numerically, such as here where we search for zeros of the derivative:</p>
+<pre class="{julia}"><code>find_zeros(A', 0, 10)   # find_zeros in `Roots`,</code></pre>
+<p>(As a reminder, the notation <code>A'</code> is defined in <code>CalculusWithJulia</code> using the <code>derivative</code> function from the <code>ForwardDiff</code> package.)</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Look at the last definition of <code>A</code>. The function <code>A</code> appears on both sides, though on the left side with one argument and on the right with two. These are two “methods” of a <em>generic</em> function, <code>A</code>. <code>Julia</code> allows multiple definitions for the same name as long as the arguments (their number and type) can disambiguate which to use. In this instance, when one argument is passed in then the last definition is used (<code>A(b,h(b))</code>), whereas if two are passed in, then the method that multiplies both arguments is used. The advantage of multiple dispatch is illustrated: the same concept - area - has one function name, though there may be different ways to compute the area, so there is more than one implementation.</p>
+</div>
+</div>
+<section id="example-norman-windows" class="level4">
+<h4 class="anchored" data-anchor-id="example-norman-windows">Example: Norman windows</h4>
+<p>Here is a similar, though more complicated, example where the analytic approach can be a bit more tedious, but the graphical one mostly satisfying, though we do use a numerical algorithm to find an exact final answer.</p>
+<p>Let a “<a href="https://en.wikipedia.org/wiki/Norman_architecture">Norman</a>” window consist of a rectangular window of top length <span class="math inline">\(x\)</span> and side length <span class="math inline">\(y\)</span> and a half circle on top. The goal is to maximize the area for a fixed value of the perimeter. Again, assume this perimeter is <span class="math inline">\(20\)</span> units.</p>
+<p>This figure shows two such windows, one with base length given by <span class="math inline">\(x=3\)</span>, the other with base length given by <span class="math inline">\(x=4\)</span>. The one with base length <span class="math inline">\(4\)</span> seems to have much bigger area, what value of <span class="math inline">\(x\)</span> will lead to the largest area?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+ts = range(0, stop=pi, length=50)
+x1,y1 = 4, 4.85840
+x2,y2 = 3, 6.1438
+delta = 4
+p = plot(delta .+ x1*[0, 1,1,0], y1*[0,0,1,1],          linetype=:polygon, fillcolor=:blue, legend=false)
+plot!(p, x2*[0, 1,1,0], y2*[0,0,1,1],                linetype=:polygon, fillcolor=:blue)
+
+plot!(p, delta .+ x1/2 .+ x1/2*cos.(ts), y1.+x1/2*sin.(ts), linetype=:polygon, fillcolor=:red)
+plot!(p, x2/2 .+ x2/2*cos.(ts), y2 .+ x2/2*sin.(ts),         linetype=:polygon, fillcolor=:red)
+p</code></pre>
+<p>For this problem, we have two equations.</p>
+<p>The area is the area of the rectangle plus the area of the half circle (<span class="math inline">\(\pi r^2/2\)</span> with <span class="math inline">\(r=x/2\)</span>).</p>
+<p><span class="math display">\[
+A = xy + \pi(x/2)^2/2
+\]</span></p>
+<p>In <code>Julia</code> this is</p>
+<pre class="{julia}"><code>Aᵣ(x, y) = x*y + pi*(x/2)^2 / 2</code></pre>
+<p>The perimeter consists of <span class="math inline">\(3\)</span> sides of the rectangle and the perimeter of half a circle (<span class="math inline">\(\pi r\)</span>, with <span class="math inline">\(r=x/2\)</span>):</p>
+<p><span class="math display">\[
+P = 2y + x + \pi(x/2) = 20
+\]</span></p>
+<p>We solve for <span class="math inline">\(y\)</span> in the first with <span class="math inline">\(y = (20 - x - \pi(x/2))/2\)</span> so that in <code>Julia</code> we have:</p>
+<pre class="{julia}"><code>y(x) = (20 - x - pi * x/2) / 2</code></pre>
+<p>And then we substitute in <code>y(x)</code> for <code>y</code> in the area formula through:</p>
+<pre class="{julia}"><code>Aᵣ(x) = Aᵣ(x, y(x))</code></pre>
+<p>Of course both <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are non-negative. The latter forces <span class="math inline">\(x\)</span> to be no more than <span class="math inline">\(x=20/(1+\pi/2)\)</span>.</p>
+<p>This leaves us the calculus problem of finding an absolute maximum of a continuous function over the closed interval <span class="math inline">\([0, 20/(1+\pi/2)]\)</span>. Our theorem tells us this maximum must occur, we now proceed to find it.</p>
+<p>We begin by simply graphing and estimating the values of the maximum and where it occurs.</p>
+<pre class="{julia}"><code>plot(Aᵣ, 0, 20/(1+pi/2))</code></pre>
+<p>The naked eye sees that maximum value is somewhere around <span class="math inline">\(27\)</span> and occurs at <span class="math inline">\(x\approx 5.6\)</span>. Clearly from the graph, we know the maximum value happens at the critical point and there is only one such critical point.</p>
+<p>As reading the maximum from the graph is more difficult than reading a <span class="math inline">\(0\)</span> of a function, we plot the derivative using our approximate derivative.</p>
+<pre class="{julia}"><code>plot(Aᵣ', 5.5, 5.7)</code></pre>
+<p>We confirm that the critical point is around <span class="math inline">\(5.6\)</span>.</p>
+</section>
+<section id="using-find_zero-to-locate-critical-points." class="level4">
+<h4 class="anchored" data-anchor-id="using-find_zero-to-locate-critical-points.">Using <code>find_zero</code> to locate critical points.</h4>
+<p>Rather than zoom in graphically, we now use a root-finding algorithm, to find a more precise value of the zero of <span class="math inline">\(A'\)</span>. We know that the maximum will occur at a critical point, a zero of the derivative. The <code>find_zero</code> function from the <code>Roots</code> package provides a non-linear root-finding algorithm based on the bisection method. The only thing to keep track of is that solving <span class="math inline">\(f'(x) = 0\)</span> means we use the derivative and not the original function.</p>
+<p>We see from the graph that <span class="math inline">\([0, 20/(1+\pi/2)]\)</span> will provide a bracket, as there is only one relative maximum:</p>
+<pre class="{julia}"><code>x′ = find_zero(Aᵣ', (0, 20/(1+pi/2)))</code></pre>
+<p>This value is the lone critical point, and in this case gives the position of the value that will maximize the function. The value and maximum area are then given by:</p>
+<pre class="{julia}"><code>(x′, Aᵣ(x′))</code></pre>
+<p>(Compare this answer to the previous, is the square the figure of greatest area for a fixed perimeter, or just the figure amongst all rectangles? See <a href="https://en.wikipedia.org/wiki/Isoperimetric_inequality">Isoperimetric inequality</a> for an answer.)</p>
+</section>
+</section>
+<section id="using-argmax-to-identify-where-a-function-is-maximized" class="level3" data-number="26.1.2">
+<h3 data-number="26.1.2" class="anchored" data-anchor-id="using-argmax-to-identify-where-a-function-is-maximized"><span class="header-section-number">26.1.2</span> Using <code>argmax</code> to identify where a function is maximized</h3>
+<p>This value that maximizes a function is sometimes referred to as the <em>argmax</em>, or argument which maximizes the function. In <code>Julia</code> the <code>argmax(f,domain)</code> function is defined to “Return a value <span class="math inline">\(x\)</span> in the domain of <span class="math inline">\(f\)</span> for which <span class="math inline">\(f(x)\)</span> is maximized. If there are multiple maximal values for <span class="math inline">\(f(x)\)</span> then the first one will be found.” The domain is some iterable collection. In the mathematical world this would be an interval <span class="math inline">\([a,b]\)</span>, but on the computer it is an approximation, such as is returned by <code>range</code> below. Without having to take a derivative, as above, but sacrificing some accuracy, the task of identifying <code>x</code> for where <code>A</code> is maximum, could be done with</p>
+<pre class="{julia}"><code>argmax(Aᵣ, range(0, 20/(1+pi/2), length=10000))</code></pre>
+<section id="a-symbolic-approach" class="level4">
+<h4 class="anchored" data-anchor-id="a-symbolic-approach">A symbolic approach</h4>
+<p>We could also do the above problem symbolically with the aid of <code>SymPy</code>. Here are the steps:</p>
+<pre class="{julia}"><code>@syms 𝒘::real 𝒉::real
+
+𝑨₀    = 𝒘 * 𝒉 + pi * (𝒘/2)^2 / 2
+𝑷erim = 2*𝒉 + 𝒘 + pi * 𝒘/2
+𝒉₀    = solve(𝑷erim - 20, 𝒉)[1]
+𝑨₁    = 𝑨₀(𝒉 =&gt; 𝒉₀)
+𝒘₀    = solve(diff(𝑨₁,𝒘), 𝒘)[1]</code></pre>
+<p>We know that <code>𝒘₀</code> is the maximum in this example from our previous work. We shall see soon, that just knowing that the second derivative is negative at <code>𝒘₀</code> would suffice to know this. Here we check that condition:</p>
+<pre class="{julia}"><code>diff(𝑨₁, 𝒘, 𝒘)(𝒘 =&gt; 𝒘₀)</code></pre>
+<p>As an aside, compare the steps involved above for a symbolic solution to those of previous work for a numeric solution:</p>
+<pre class="{julia}"><code>#| hold: true
+Aᵣ(w, h) = w*h + pi*(w/2)^2 / 2
+h(w)     = (20 - w - pi * w/2) / 2
+Aᵣ(w)    =  A(w, h(w))
+find_zero(A', (0, 20/(1+pi/2)))  # 40 / (pi + 4)</code></pre>
+<p>They are similar, except we solved for <code>h0</code> symbolically, rather than by hand, when we solved for <code>h(w)</code>.</p>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+caption = """
+The figure shows a trapezoid inscribed in a circle. By adjusting the point ``P_3 = (x,y)`` on the upper-half circle, the area of the trapezoid changes. What value of ``x`` will produce the maximum area for a given ``r`` (from ``P_4``, which can also be adjusted)? By playing around with different values of ``P_3`` and ``P_4`` the answer can be guessed.
+"""
+
+#JSXGraph(:derivatives, "optimization-trapezoid.js", caption)
+nothing</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+function trapezoid(r)
+    plot(x -&gt; sqrt(1 - x^2), -1, 1, legend=false, aspect_ratio=:equal)
+    plot!([-1,1,r,-r,-1], [0,0,sqrt(1-r^2), sqrt(1-r^2), 0], lw=3, color=:red)
+end
+trapezoid(0.75)</code></pre>
+<p>A trapezoid is <em>inscribed</em> in the upper-half circle of radius <span class="math inline">\(r\)</span>. The trapezoid is found be connecting the points <span class="math inline">\((x,y)\)</span> (in the first quadrant) with <span class="math inline">\((r, 0)\)</span>, <span class="math inline">\((-r,0)\)</span>, and <span class="math inline">\((-x, y)\)</span>. Find the maximum area. (The above figure has <span class="math inline">\(x=0.75\)</span> and <span class="math inline">\(r=1\)</span>.)</p>
+<p>Here the constraint is simply <span class="math inline">\(r^2 = x^2 + y^2\)</span> with <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> being non-negative. The area is then found through the average of the two lengths times the height. Using <code>height</code> for <code>y</code>, we have:</p>
+<pre class="{julia}"><code>@syms x::positive r::positive
+hₜ = sqrt(r^2 - x^2)
+aₜ = (2x + 2r)/2 * hₜ
+possible_sols = solve(diff(aₜ, x) ~ 0, x) # possibly many solutions
+x0 = first(possible_sols)  # only solution is also found from first or [1] indexing</code></pre>
+<p>The other values of interest can be found through substitution. For example:</p>
+<pre class="{julia}"><code>hₜ(x =&gt; x0)</code></pre>
+</section>
+</section>
+</section>
+</section>
+<section id="trigonometry-problems" class="level2" data-number="26.2">
+<h2 data-number="26.2" class="anchored" data-anchor-id="trigonometry-problems"><span class="header-section-number">26.2</span> Trigonometry problems</h2>
+<p>Many maximization and minimization problems involve triangles, which in turn use trigonometry in their description. Here is an example, the “ladder corner problem.” (There are many other <a href="http://www.mathematische-basteleien.de/ladder.htm">ladder</a> problems.)</p>
+<p>A ladder is to be moved through a two-dimensional hallway which has a bend and gets narrower after the bend. The hallway is <span class="math inline">\(8\)</span> feet wide then <span class="math inline">\(5\)</span> feet wide. What is the longest such ladder that can be navigated around the corner?</p>
+<p>The figure shows a ladder of length <span class="math inline">\(l_1 + l_2\)</span> that got stuck - it was too long.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+p = plot([0, 0, 15], [15, 0, 0], color=:blue, legend=false)
+plot!(p, [5, 5, 15], [15, 8, 8], color=:blue)
+plot!(p, [0,14.53402874075368], [12.1954981558864, 0], linewidth=3)
+plot!(p, [0,5], [8,8], color=:orange)
+plot!(p, [5,5], [0,8], color=:orange)
+annotate!(p, [(13, 1/2, "θ"),
+              (2.5, 11, "l₂"), (10, 5, "l₁"), (2.5, 7.0, "l₂ ⋅ cos(θ)"),
+          (5.1, 4, "l₁ ⋅ sin(θ)")])</code></pre>
+<p>We approach this problem in reverse. It is easy to see when a ladder is too long. It gets stuck at some angle <span class="math inline">\(\theta\)</span>. So for each <span class="math inline">\(\theta\)</span> we find that ladder length that is just too long. Then we find the minimum length of all these ladders that are too long. If a ladder is this length or more it will get stuck for some angle. However, if it is less than this length it will not get stuck. So to maximize a ladder length, we minimize a different function. Neat.</p>
+<p>Now, to find the length <span class="math inline">\(l = l_1 + l_2\)</span> as a function of <span class="math inline">\(\theta\)</span>.</p>
+<p>We need to brush off our trigonometry, in particular right triangle trigonometry. We see from the figure that <span class="math inline">\(l_1\)</span> is the hypotenuse of a right triangle with opposite side <span class="math inline">\(8\)</span> and <span class="math inline">\(l_2\)</span> is the hypotenuse of a right triangle with adjacent side <span class="math inline">\(5\)</span>. So, <span class="math inline">\(8/l_1 = \sin\theta\)</span> and <span class="math inline">\(5/l_2 = \cos\theta\)</span>.</p>
+<p>That is, we have</p>
+<pre class="{julia}"><code>l(l1, l2) = l1 + l2
+l1(t) = 8/sin(t)
+l2(t) = 5/cos(t)
+
+l(t) = l(l1(t), l2(t))      # or simply l(t) = 8/sin(t) + 5/cos(t)</code></pre>
+<p>Our goal is to minimize this function for all angles between <span class="math inline">\(0\)</span> and <span class="math inline">\(90\)</span> degrees, or <span class="math inline">\(0\)</span> and <span class="math inline">\(\pi/2\)</span> radians.</p>
+<p>This is not a continuous function on a closed interval - it is undefined at the endpoints. That being said, a quick plot will convince us that the minimum occurs at a critical point and there is only one critical point in <span class="math inline">\((0, \pi/2)\)</span>.</p>
+<pre class="{julia}"><code>delta = 0.2
+plot(l, delta, pi/2 - delta)</code></pre>
+<p>The graph shows the minimum occurs between <span class="math inline">\(0.50\)</span> and <span class="math inline">\(1.00\)</span> radians, a bracket for the derivative. Here we find <span class="math inline">\(x\)</span> and the minimum value:</p>
+<pre class="{julia}"><code>#| hold: true
+x = find_zero(l', (0.5, 1.0))
+x, l(x)</code></pre>
+<p>That is, any ladder less than this length can get around the hallway.</p>
+</section>
+<section id="rate-times-time-problems" class="level2" data-number="26.3">
+<h2 data-number="26.3" class="anchored" data-anchor-id="rate-times-time-problems"><span class="header-section-number">26.3</span> Rate times time problems</h2>
+<p>Ethan Hunt, a top secret spy, has a mission to chase a bad guy. Here is what we know:</p>
+<ul>
+<li>Ethan likes to run. He can run at <span class="math inline">\(10\)</span> miles per hour.</li>
+<li>He can drive a car - usually some concept car by BMW - at <span class="math inline">\(30\)</span> miles per hour, but only on the road.</li>
+</ul>
+<p>For his mission, he needs to go <span class="math inline">\(10\)</span> miles west and <span class="math inline">\(5\)</span> miles north. He can do this by:</p>
+<ul>
+<li>just driving <span class="math inline">\(10\)</span> miles west then <span class="math inline">\(5\)</span> miles north, or</li>
+<li>just running the diagonal distance, or</li>
+<li>driving <span class="math inline">\(0 &lt; x &lt; 10\)</span> miles west, then running on the diagonal</li>
+</ul>
+<p>A quick analysis says:</p>
+<ul>
+<li>It would take <span class="math inline">\((10+5)/30\)</span> hours to just drive</li>
+<li>It would take <span class="math inline">\(\sqrt{10^2 + 5^2}/10\)</span> hours to just run</li>
+</ul>
+<p>Now, if he drives <span class="math inline">\(x\)</span> miles west (<span class="math inline">\(0 &lt; x &lt; 10\)</span>) he would run an amount given by the hypotenuse of a triangle with lengths <span class="math inline">\(5\)</span> and <span class="math inline">\(10-x\)</span>. His time driving would be <span class="math inline">\(x/30\)</span> and his time running would be <span class="math inline">\(\sqrt{5^2+(10-x)^2}/10\)</span> for a total of:</p>
+<p><span class="math display">\[
+T(x) = x/30 + \sqrt{5^2 + (10-x)^2}/10, \quad 0 &lt; x &lt; 10
+\]</span></p>
+<p>With the endpoints given by <span class="math inline">\(T(0) = \sqrt{10^2 + 5^2}/10\)</span> and <span class="math inline">\(T(10) = (10 + 5)/30\)</span>.</p>
+<p>Let’s plot <span class="math inline">\(T(x)\)</span> over the interval <span class="math inline">\((0,10)\)</span> and look:</p>
+<pre class="{julia}"><code>T(x) = x/30 + sqrt(5^2 + (10-x)^2)/10</code></pre>
+<pre class="{julia}"><code>plot(T, 0, 10)</code></pre>
+<p>The minimum happens way out near 8. We zoom in a bit:</p>
+<pre class="{julia}"><code>plot(T, 7, 9)</code></pre>
+<p>It appears to be around <span class="math inline">\(8.3\)</span>. We now use <code>find_zero</code> to refine our guess at the critical point using <span class="math inline">\([7,9]\)</span>:</p>
+<pre class="{julia}"><code>α = find_zero(T', (7, 9))</code></pre>
+<p>Okay, got it. Around<span class="math inline">\(8.23\)</span>. So is our minimum time</p>
+<pre class="{julia}"><code>T(α)</code></pre>
+<p>We know this is a relative minimum, but not that it is the global minimum over the closed time interlal. For that we must also check the endpoints:</p>
+<pre class="{julia}"><code>sqrt(10^2 + 5^2)/10, T(α), (10+5)/30</code></pre>
+<p>Ahh, we see that <span class="math inline">\(T(x)\)</span> is not continuous on <span class="math inline">\([0, 10]\)</span>, as it jumps at <span class="math inline">\(x=10\)</span> down to an even smaller amount of <span class="math inline">\(1/2\)</span>. It may not look as impressive as a miles-long sprint, but Mr.&nbsp;Hunt is advised by Benji to drive the whole way.</p>
+<section id="rate-times-time-the-origin-story" class="level3" data-number="26.3.1">
+<h3 data-number="26.3.1" class="anchored" data-anchor-id="rate-times-time-the-origin-story"><span class="header-section-number">26.3.1</span> Rate times time … the origin story</h3>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+### {{{lhopital_43}}}
+
+imgfile = "figures/fcarc-may2016-fig43-250.gif"
+caption = L"""
+
+Image number $43$ from l'Hospital's calculus book (the first). A
+traveler leaving location $C$ to go to location $F$ must cross two
+regions separated by the straight line $AEB$. We suppose that in the
+region on the side of $C$, he covers distance $a$ in time $c$, and
+that on the other, on the side of $F$, distance $b$ in the same time
+$c$. We ask through which point $E$ on the line $AEB$ he should pass,
+so as to take the least possible time to get from $C$ to $F$? (From
+http://www.ams.org/samplings/feature-column/fc-2016-05.)
+
+
+"""
+#ImageFile(:derivatives, imgfile, caption)
+nothing</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./figures/fcarc-may2016-fig43-250.png" class="img-fluid figure-img"></p>
+<figcaption>Image number <span class="math inline">\(43\)</span> from l’Hospital’s calculus book (the first). A traveler leaving location <span class="math inline">\(C\)</span> to go to location <span class="math inline">\(F\)</span> must cross two regions separated by the straight line <span class="math inline">\(AEB\)</span>. We suppose that in the region on the side of <span class="math inline">\(C\)</span>, he covers distance <span class="math inline">\(a\)</span> in time <span class="math inline">\(c\)</span>, and that on the other, on the side of <span class="math inline">\(F\)</span>, distance <span class="math inline">\(b\)</span> in the same time <span class="math inline">\(c\)</span>. We ask through which point <span class="math inline">\(E\)</span> on the line <span class="math inline">\(AEB\)</span> he should pass, so as to take the least possible time to get from <span class="math inline">\(C\)</span> to <span class="math inline">\(F\)</span>? (From http://www.ams.org/samplings/feature-column/fc-2016-05.)</figcaption>
+</figure>
+</div>
+<p>The last example is a modern day illustration of a problem of calculus dating back to l’Hospital. His parameterization is a bit different. Let’s change his by taking two points <span class="math inline">\((0, a)\)</span> and <span class="math inline">\((L,-b)\)</span>, with <span class="math inline">\(a,b,L\)</span> positive values. Above the <span class="math inline">\(x\)</span> axis travel happens at rate <span class="math inline">\(r_0\)</span>, and below, travel happens at rate <span class="math inline">\(r_1\)</span>, again, both positive. What value <span class="math inline">\(x\)</span> in <span class="math inline">\([0,L]\)</span> will minimize the total travel time?</p>
+<p>We approach this symbolically with <code>SymPy</code>:</p>
+<pre class="{julia}"><code>@syms x::positive a::positive b::positive L::positive r0::positive r1::positive
+
+d0 = sqrt(x^2 + a^2)
+d1 = sqrt((L-x)^2 + b^2)
+
+t = d0/r0 + d1/r1   # time = distance/rate
+dt = diff(t, x)     # look for critical points</code></pre>
+<p>The answer will occur at a critical point or an endpoint, either <span class="math inline">\(x=0\)</span> or <span class="math inline">\(x=L\)</span>.</p>
+<p>The structure of <code>dt</code> is too complicated for simply calling <code>solve</code> to find the critical points. Instead we help <code>SymPy</code> out a bit. We are solving an equation of the form <span class="math inline">\(a/b + c/d = 0\)</span>. These solutions will also be solutions of <span class="math inline">\((a/b)^2 - (c/d)^2=0\)</span> or even <span class="math inline">\(a^2d^2 - c^2b^2 = 0\)</span>. This follows as solutions to <span class="math inline">\(u+v=0\)</span>, also solve <span class="math inline">\((u+v)\cdot(u-v)=0\)</span>, or <span class="math inline">\(u^2 - v^2=0\)</span>. Setting <span class="math inline">\(u=a/b\)</span> and <span class="math inline">\(v=c/d\)</span> completes the comparison.</p>
+<p>We can get these terms - <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>, <span class="math inline">\(c\)</span>, and <span class="math inline">\(d\)</span> - as follows:</p>
+<pre class="{julia}"><code>t1, t2 = dt.args # the `args` property returns the arguments to the outer function (+ in this case)</code></pre>
+<p>The equivalent of <span class="math inline">\(a^2d^2 - c^2 b^2\)</span> is found using the generic functions <code>numerator</code> and <code>denominator</code> to access the numerator and denominator of the fractions:</p>
+<pre class="{julia}"><code>ex = numerator(t1^2)*denominator(t2^2) - denominator(t1^2)*numerator(t2^2)</code></pre>
+<p>This is a polynomial in the <code>x</code> variable of degree <span class="math inline">\(4\)</span>, as seen here where the <code>sympy.Poly</code> function is used to identify the symbols of the polynomial from the parameters:</p>
+<pre class="{julia}"><code>p = sympy.Poly(ex, x) # a0 + a1⋅x + a2⋅x^2 + a3⋅x^3 + a4⋅x^4
+p.coeffs()</code></pre>
+<p>Fourth degree polynomials can be solved. The critical points of the original equation will be among the <span class="math inline">\(4\)</span> solutions given. However, the result is complicated. The <a href="http://www.ams.org/samplings/feature-column/fc-2016-05">article</a> – from which the figure came – states that “In today’s textbooks the problem, usually involving a river, involves walking along one bank and then swimming across; this corresponds to setting <span class="math inline">\(g=0\)</span> in l’Hospital’s example, and leads to a quadratic equation.” Let’s see that case, which we can get in our notation by taking <span class="math inline">\(b=0\)</span>:</p>
+<pre class="{julia}"><code>q = ex(b=&gt;0)
+factor(q)</code></pre>
+<p>We see two terms: one with <span class="math inline">\(x=L\)</span> and another quadratic. For the simple case <span class="math inline">\(r_0=r_1\)</span>, a straight line is the best solution, and this corresponds to <span class="math inline">\(x=L\)</span>, which is clear from the formula above, as we only have one solution to the following:</p>
+<pre class="{julia}"><code>solve(q(r1=&gt;r0), x)</code></pre>
+<p>Well, not so fast. We need to check the other endpoint, <span class="math inline">\(x=0\)</span>:</p>
+<pre class="{julia}"><code>ta = t(b=&gt;0, r1=&gt;r0)
+ta(x=&gt;0), ta(x=&gt;L)</code></pre>
+<p>The value at <span class="math inline">\(x=L\)</span> is smaller, as <span class="math inline">\(L^2 + a^2 \leq (L+a)^2\)</span>. (Well, that was a bit pedantic. The travel rates being identical means the fastest path will also be the shortest path and that is clearly <span class="math inline">\(x=L\)</span> and not <span class="math inline">\(x=0\)</span>.)</p>
+<p>Now, if, say, travel above the line is half as slow as travel along, then <span class="math inline">\(2r_0 = r_1\)</span>, and the critical points will be:</p>
+<pre class="{julia}"><code>out = solve(q(r1 =&gt; 2r0), x)</code></pre>
+<p>It is hard to tell which would minimize time without more work. To check a case (<span class="math inline">\(a=1, L=2, r_0=1\)</span>) we might have</p>
+<pre class="{julia}"><code>x_straight = t(r1 =&gt;2r0, b=&gt;0, x=&gt;out[1], a=&gt;1, L=&gt;2, r0 =&gt; 1)  # for x=L</code></pre>
+<p>Compared to the smaller (<span class="math inline">\(x=\sqrt{3}a/3\)</span>):</p>
+<pre class="{julia}"><code>x_angle = t(r1 =&gt;2r0, b=&gt;0, x=&gt;out[2], a=&gt;1, L=&gt;2, r0 =&gt; 1)</code></pre>
+<p>What about <span class="math inline">\(x=0\)</span>?</p>
+<pre class="{julia}"><code>x_bent = t(r1 =&gt;2r0, b=&gt;0, x=&gt;0, a=&gt;1, L=&gt;2, r0 =&gt; 1)</code></pre>
+<p>The value of <span class="math inline">\(x=\sqrt{3}a/3\)</span> minimizes time:</p>
+<pre class="{julia}"><code>min(x_straight, x_angle, x_bent)</code></pre>
+<p>The traveler in this case is advised to head to the <span class="math inline">\(x\)</span> axis at <span class="math inline">\(x=\sqrt{3}a/3\)</span> and then travel along the <span class="math inline">\(x\)</span> axis.</p>
+<p>Will this approach always be true? Consider different parameters, say we switch the values of <span class="math inline">\(a\)</span> and <span class="math inline">\(L\)</span> so <span class="math inline">\(a &gt; L\)</span>:</p>
+<pre class="{julia}"><code>pts = [0, out...]
+m,i = findmin([t(r1 =&gt;2r0, b=&gt;0, x=&gt;u, a=&gt;2, L=&gt;1, r0 =&gt; 1) for u in pts]) # min, index
+m, pts[i]</code></pre>
+<p>Here traveling directly to the point <span class="math inline">\((L,0)\)</span> is fastest. Though travel is slower, the route is more direct and there is no time saved by taking the longer route with faster travel for part of it.</p>
+</section>
+</section>
+<section id="unbounded-domains" class="level2" data-number="26.4">
+<h2 data-number="26.4" class="anchored" data-anchor-id="unbounded-domains"><span class="header-section-number">26.4</span> Unbounded domains</h2>
+<p>Maximize the function <span class="math inline">\(xe^{-(1/2) x^2}\)</span> over the interval <span class="math inline">\([0, \infty)\)</span>.</p>
+<p>Here the extreme value theorem doesn’t technically apply, as we don’t have a closed interval. However, <strong>if</strong> we can eliminate the endpoints as candidates, then we should be able to convince ourselves the maximum must occur at a critical point of <span class="math inline">\(f(x)\)</span>. (If not, then convince yourself for all sufficiently large <span class="math inline">\(M\)</span> the maximum over <span class="math inline">\([0,M]\)</span> occurs at a critical point, not an endpoint. Then let <span class="math inline">\(M\)</span> go to infinity. In general, for an optimization problem of a continuous function on the interval <span class="math inline">\((a,b)\)</span> if the right limit at <span class="math inline">\(a\)</span> and left limit at <span class="math inline">\(b\)</span> can be ruled out as candidates, the optimal value must occur at a critical point.)</p>
+<p>So to approach this problem we first graph it over a wide interval.</p>
+<pre class="{julia}"><code>f(x) = x * exp(-x^2)
+plot(f, 0, 100)</code></pre>
+<p>Clearly the action is nearer to <span class="math inline">\(1\)</span> than <span class="math inline">\(100\)</span>. We try graphing the derivative near that area:</p>
+<pre class="{julia}"><code>plot(f', 0, 5)</code></pre>
+<p>This shows the value of interest near <span class="math inline">\(0.7\)</span> for a critical point. We use <code>find_zero</code> with <span class="math inline">\([0,1]\)</span> as a bracket</p>
+<pre class="{julia}"><code>c = find_zero(f', (0, 1))</code></pre>
+<p>The maximum is then at</p>
+<pre class="{julia}"><code>f(c)</code></pre>
+<section id="example-minimize-the-surface-area-of-a-can" class="level5">
+<h5 class="anchored" data-anchor-id="example-minimize-the-surface-area-of-a-can">Example: Minimize the surface area of a can</h5>
+<p>For a more applied problem of this type (infinite domain), consider a can of some soft drink that is to contain <span class="math inline">\(355\)</span>ml which is <span class="math inline">\(355\)</span> cubic centimeters. We use metric units, as the relationship between volume (cubic centimeters) and fluid amount (ml) is clear. A can to hold this amount is produced in the shape of cylinder with radius <span class="math inline">\(r\)</span> and height <span class="math inline">\(h\)</span>. The materials involved give the surface area, which would be:</p>
+<p><span class="math display">\[
+SA = h \cdot 2\pi r + 2 \cdot \pi r^2.
+\]</span></p>
+<p>The volume satisfies:</p>
+<p><span class="math display">\[
+V = 355 = h \cdot \pi r^2.
+\]</span></p>
+<p>Find the values of <span class="math inline">\(r\)</span> and <span class="math inline">\(h\)</span> which minimize the surface area.</p>
+<p>First the surface area in both variables is given by</p>
+<pre class="{julia}"><code>SA(h, r) = h * 2pi * r + 2pi * r^2</code></pre>
+<p>Solving from the constraint on the volume for <code>h</code> in terms of <code>r</code> yields:</p>
+<pre class="{julia}"><code>canheight(r) = 355 / (pi * r^2)</code></pre>
+<p>Composing gives a function of <code>r</code> alone:</p>
+<pre class="{julia}"><code>SA(r) = SA(canheight(r), r)</code></pre>
+<p>This is minimized subject to the constraint that <span class="math inline">\(r \geq 0\)</span>. A quick glance shows that as <span class="math inline">\(r\)</span> gets close to <span class="math inline">\(0\)</span>, the can must get infinitely tall to contain that fixed volume, and would have infinite surface area as the <span class="math inline">\(1/r^2\)</span> in the first term implies. On the other hand, as <span class="math inline">\(r\)</span> goes to infinity, the height must go to <span class="math inline">\(0\)</span> to make a really flat can. Again, we would have infinite surface area, as the <span class="math inline">\(r^2\)</span> term at the end indicates. With this observation, we can rule out the endpoints as possible minima, so any minima must occur at a critical point.</p>
+<p>We start by making a graph, making an educated guess that the answer is somewhere near a real life answer, or around <span class="math inline">\(3\)</span>-<span class="math inline">\(5\)</span> cms in radius:</p>
+<pre class="{julia}"><code>plot(SA, 2, 10)</code></pre>
+<p>The minimum looks to be around <span class="math inline">\(4\)</span>cm and is clearly between <span class="math inline">\(2\)</span>cm and <span class="math inline">\(6\)</span>cm. We can use <code>find_zero</code> to zero in on the value of the critical point:</p>
+<pre class="{julia}"><code>rₛₐ = find_zero(SA', (2, 6))</code></pre>
+<p>Okay, <span class="math inline">\(3.837...\)</span> is our answer for <span class="math inline">\(r\)</span>. Use this to get <span class="math inline">\(h\)</span>:</p>
+<pre class="{julia}"><code>canheight(rₛₐ)</code></pre>
+<p>This produces a can which is about square in profile. This is not how most cans look though. Perhaps our model is too simple, or the cans are optimized for some other purpose than minimizing materials.</p>
+</section>
+</section>
+<section id="questions" class="level2" data-number="26.5">
+<h2 data-number="26.5" class="anchored" data-anchor-id="questions"><span class="header-section-number">26.5</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>A geometric figure has area given in terms of two measurements by <span class="math inline">\(A=\pi a b\)</span> and perimeter <span class="math inline">\(P = \pi (a + b)\)</span>. If the perimeter is fixed to be 20 units long, what is the maximal area the figure can be?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+A(a,b) = pi*a*b
+P = 20
+b1(a) = 20/pi - a
+A(a) = A(a, b1(a))
+x = find_zero(A', (0, 10))
+val = A(x)
+numericq(val)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>A geometric figure has area given in terms of two measurements by <span class="math inline">\(A=\pi a b\)</span> and perimeter <span class="math inline">\(P=\pi \cdot \sqrt{a^2 + b^2}/2\)</span>. If the perimeter is 20 units long, what is the maximal area?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+A(a,b) = pi*a*b
+P = 20
+b1(a) = sqrt((P*2/pi)^2 - a^2)
+A(a) = A(a, b1(a))
+x = find_zero(A', (0, 10))
+val = A(x)
+numericq(val)</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>A rancher with <span class="math inline">\(10\)</span> meters of fence wishes to make a pen adjacent to an existing fence. The pen will be a rectangle with one edge using the existing fence. Say that has length <span class="math inline">\(x\)</span>, then <span class="math inline">\(10 = 2y + x\)</span>, with <span class="math inline">\(y\)</span> the other dimension of the pen. What is the maximum area that can be made?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+p = plot(; legend=false, aspect_ratio=:equal, axis=nothing, border=:none)
+plot!([0,10, 10, 0, 0], [0,0,10,10,0]; linewidth=3)
+plot!(p, [10,14,14,10], [2, 2, 8,8]; linewidth = 1)
+annotate!(p, [(15, 5, "x"), (12,1, "y")])
+p</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+Ar(y) = (10-2y)*y;
+val = Ar(find_zero(Ar',  5))
+numericq(val, 1e-3)</code></pre>
+<p>Is there “symmetry” in the answer between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq("no")</code></pre>
+<p>What is you were to do two pens like this back to back, then the answer would involve a rectangle. Is there symmetry in the answer now?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq("yes")</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>A rectangle of sides <span class="math inline">\(w\)</span> and <span class="math inline">\(h\)</span> has fixed area <span class="math inline">\(20\)</span>. What is the <em>smallest</em> perimeter it can have?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+Prim(x,y) = 2x + 2y
+Prim(x) = Prim(x, 20/x)
+xstar = find_zero(Prim', 5)
+val = Prim(xstar)
+numericq(val)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>A rectangle of sides <span class="math inline">\(w\)</span> and <span class="math inline">\(h\)</span> has fixed area <span class="math inline">\(20\)</span>. What is the <em>largest</em> perimeter it can have?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"It can be infinite",
+"It is also 20",
+"``17.888``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>A cardboard box is to be designed with a square base and an open top holding a fixed volume <span class="math inline">\(V\)</span>. What dimensions yield the minimal surface area?</p>
+<p>If this problem were approached symbolically, we might see the following code. First:</p>
+<pre class="{julia}"><code>#| eval: false
+@syms V::positive x::positive z::positive
+SA = 1 * x * x + 4 * x * z</code></pre>
+<p>What does this express?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+radioq((
+"The box has a square base with open top, so `x*x` is the amount of material in the base; the 4 sides each have `x*z` area.",
+"The volume is a fixed amount, so is `x*x*z`, with sides suitably labeled",
+"The surface area of a box is `6x*x`, so this is wrong."
+), 1)</code></pre>
+<p>What does this command express?</p>
+<pre class="{julia}"><code>#| eval: false
+SA = subs(SA, z =&gt; V / x^2)</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+radioq((
+"This command replaces `z` with an expression in `x` using the constraint of  fixed volume `V`",
+"This command replaces `z`, reparameterizing in `V` instead.",
+"This command is merely algebraic simplification"
+), 1)</code></pre>
+<p>What does this command find?</p>
+<pre class="{julia}"><code>#| eval: false
+solve(diff(SA, x) ~ 0, x)</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+radioq((
+"This solves ``SA'=0``, that is it find critical points of a continuously differentiable function",
+"This solves for ``V`` the fixed, but unknown volume",
+"This checks the values of `SA` at the end points of the domain"
+), 1)</code></pre>
+<p>What do these commands do?</p>
+<pre class="{julia}"><code>#| eval: false
+cps = solve(diff(SA, x) ~ 0, x)
+xx = filter(isreal, cps)[1]
+diff(SA, x, x)(xx) &gt; 0</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+radioq((
+"This applies the second derivative test to the lone *real* critical point showing there is a local minimum at that point.",
+"This applies the first derivative test to the lone *real* critical point showing there is a local minimum at that point.",
+"This finds the `4`th derivative of `SA`"
+), 1)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>A rain gutter is constructed from a 30” wide sheet of tin by bending it into thirds. If the sides are bent 90 degrees, then the cross-sectional area would be <span class="math inline">\(100 = 10^2\)</span>. This is not the largest possible amount. For example, if the sides are bent by 45 degrees, the cross sectional area is:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+2 * (1/2 * 10*cos(pi/4) * 10 * sin(pi/4)) + 10*sin(pi/4) * 10</code></pre>
+<p>Find a value in degrees that gives the maximum. (The first task is to write the area in terms of <span class="math inline">\(\theta\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+function Ar(t)
+     opp = 10 * sin(t)
+     adj = 10 * cos(t)
+     2 * opp * adj/2 + opp * 10
+end
+t = find_zero(Ar', pi/4);   ## Has issues with order=8 algorithm, tol &gt; 1e-14 is needed
+val = t * 180/pi;
+numericq(val, 1e-3)</code></pre>
+</section>
+<section id="question-non-norman-windows" class="level6">
+<h6 class="anchored" data-anchor-id="question-non-norman-windows">Question Non-Norman windows</h6>
+<p>Suppose our new “Norman” window has half circular tops at the top and bottom. If the perimeter is fixed at <span class="math inline">\(20\)</span> and the dimensions of the rectangle are <span class="math inline">\(x\)</span> for the width and <span class="math inline">\(y\)</span> for the height.</p>
+<p>What is the value of <span class="math inline">\(y\)</span> that maximizes the area?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+P = 20
+A(x,y) = x*y + pi * (x/2)^2
+y(x) = (P - pi*x)/2 # P = 2y + 2pi*x/2
+A(x) = A(x,y(x))
+x0 = find_zero(D(A), (0, 10))
+val = y(x0)
+numericq(val) # 0</code></pre>
+</section>
+<section id="question-thanks-httpswww.math.ucdavis.edukouba" class="level6">
+<h6 class="anchored" data-anchor-id="question-thanks-httpswww.math.ucdavis.edukouba">Question (Thanks https://www.math.ucdavis.edu/~kouba)</h6>
+<p>A movie screen projects on a wall 20 feet high beginning 10 feet above the floor. This figure shows <span class="math inline">\(\theta\)</span> for <span class="math inline">\(x=30\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+p = plot([0, 30,30], [0,0,10], xlim=(0, 32), color=:blue, legend=false)
+plot!(p, [30, 30], [10, 30], color=:blue, linewidth=4)
+plot!(p, [0, 30,30,0], [0,10,30,0], color=:orange)
+annotate!(p, [(x,y,l) for (x,y,l) in zip([15, 5, 31, 31], [1.5, 3.5, 5, 20], ["x=30", "θ", "10", "20"])])</code></pre>
+<p>What value of <span class="math inline">\(x\)</span> gives the largest angle <span class="math inline">\(\theta\)</span>? (In degrees.)</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+theta(x) = atan(30/x) - atan(10/x)
+val = find_zero(D(theta), 20); ## careful where one starts
+val = theta(val) * 180/pi
+numericq(val, 1e-1)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>A maximum likelihood estimator is a value derived by maximizing a function. For example, if</p>
+<pre class="{julia}"><code>Likhood(t) = t^3 * exp(-3t) * exp(-2t) * exp(-4t) ## 0 &lt;= t &lt;= 10</code></pre>
+<p>Then <code>Likhood(t)</code> is continuous and has single peak, so the maximum occurs at the lone critical point. It turns out that this problem is bit sensitive to an initial condition, so we bracket</p>
+<pre class="{julia}"><code>find_zero(Likhood',  (0.1, 0.5))</code></pre>
+<p>Now if <span class="math inline">\(Likhood(t) = \exp(-3t) \cdot \exp(-2t) \cdot \exp(-4t), \quad 0 \leq t \leq 10\)</span>, by graphing, explain why the same approach won’t work:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices=["It does work and the answer is x = 2.27...",
+     L" $Likhood(t)$ is not continuous on $0$ to $10$",
+         L" $Likhood(t)$ takes its maximum at a boundary point - not a critical point"];
+answ = 3;
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-8" class="level5">
+<h5 class="anchored" data-anchor-id="question-8">Question</h5>
+<p>Let <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, <span class="math inline">\(x_n\)</span> be a set of unspecified numbers in a data set. Form the expression <span class="math inline">\(s(x) = (x-x_1)^2 + \cdots (x-x_n)^2\)</span>. What is the smallest this can be (in <span class="math inline">\(x\)</span>)?</p>
+<p>We approach this using <code>SymPy</code> and <span class="math inline">\(n=10\)</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| eval: false
+@syms x xs[1:10]
+s(x) = sum((x-xi)^2 for xi in xs)
+cps = solve(diff(s(x), x), x)</code></pre>
+<p>Run the above code. Baseed on the critical points found, what do you guess will be the minimum value in terms of the values <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2, \dots\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices=[
+"The mean, or average, of the values",
+"The median, or middle number, of the values",
+L"The square roots of the values squared, $(x_1^2 + \cdots x_n^2)^2$"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<section id="question-9" class="level6">
+<h6 class="anchored" data-anchor-id="question-9">Question</h6>
+<p>Minimize the function <span class="math inline">\(f(x) = 2x + 3/x\)</span> over <span class="math inline">\((0, \infty)\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = 2x + 3/x;
+val = find_zero(f', 1);
+numericq(val, 1e-3)</code></pre>
+</section>
+<section id="question-10" class="level6">
+<h6 class="anchored" data-anchor-id="question-10">Question</h6>
+<p>Of all rectangles of area 4, find the one with smallest perimeter. What is the perimeter?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+# 4 = xy
+Prim(x) = 2x + 2*(4/x);
+val = find_zero(D(Prim), 1);
+numericq(Prim(val), 1e-3)       ## a square!</code></pre>
+</section>
+<section id="question-11" class="level6">
+<h6 class="anchored" data-anchor-id="question-11">Question</h6>
+<p>A running track is in the shape of two straightaways and two half circles. The total distance (perimeter) is 400 meters. Suppose <span class="math inline">\(w\)</span> is the width (twice the radius of the circles) and <span class="math inline">\(h\)</span> is the height. What dimensions minimize the sum <span class="math inline">\(w + h\)</span>?</p>
+<p>You have <span class="math inline">\(P(w, h) = 2\pi \cdot (w/2) + 2\cdot(h-w)\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+Ar(w,h) = w + h
+h(w) = (400 - 2pi*w/2 + 2w) / 2
+Ar(w) = Ar(w, h(w)) ## linear
+val = Ar(0)
+numericq(val)</code></pre>
+</section>
+<section id="question-12" class="level6">
+<h6 class="anchored" data-anchor-id="question-12">Question</h6>
+<p>A cell phone manufacturer wishes to make a rectangular phone with total surface area of 12,000 <span class="math inline">\(mm^2\)</span> and maximal screen area. The screen is surrounded by bezels with sizes of 8<span class="math inline">\(mm\)</span> on the long sides and 32<span class="math inline">\(mm\)</span> on the short sides. (So, for example, the screen width is shorter by <span class="math inline">\(2\cdot 8\)</span> mm than the phone width.)</p>
+<p>What are the dimensions (width and height) that allow the maximum screen area?</p>
+<p>The width is:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#A = w*h = 12000
+w(h) = 12_000 / h
+S(w, h) = (w- 2*8) * (h - 2*32)
+S(h) = S(w(h), h)
+hstar =find_zero(D(S), 500)
+wstar = w(hstar)
+numericq(wstar)</code></pre>
+<p>The height is?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+w(h) = 12_000 / h
+S(w, h) = (w- 2*8) * (h - 2*32)
+S(h) = S(w(h), h)
+hstar =find_zero(D(S), 500)
+numericq(hstar)</code></pre>
+</section>
+<section id="question-13" class="level6">
+<h6 class="anchored" data-anchor-id="question-13">Question</h6>
+<p>Find the value <span class="math inline">\(x &gt; 0\)</span> which minimizes the distance from the graph of <span class="math inline">\(f(x) = \log_e(x) - x\)</span> to the origin <span class="math inline">\((0,0)\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = log(x) - x
+p = plot(f, 0.2, 2, ylim=(-2,0.25), legend=false, linewidth=3)
+plot!(p, [0,0], [-2, 0.25], color=:blue)
+plot!(p, [0,2],[0,0], color=:blue)
+xs = [0,1]; ys = [0, f(1)]
+scatter!(p, xs,ys, color=:orange)
+plot!(p, xs, ys, color=:orange, linewidth=3)
+annotate!(p, [(.75, f(.5)/2, "d = $(round(sqrt(.5^2 + f(.5)^2), digits=2))")])
+p</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+d2(x) = sqrt((0-x)^2 + (0 - f(x))^2)
+xstar = find_zero(D(d2), 1)
+val = d2(xstar)
+numericq(val)</code></pre>
+</section>
+<section id="question-14" class="level6">
+<h6 class="anchored" data-anchor-id="question-14">Question</h6>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+### {{{lhopital_40}}}
+imgfile ="figures/fcarc-may2016-fig40-300.gif"
+caption = L"""
+
+Image number $40$ from l'Hospital's calculus book (the first calculus book). Among all the cones that can be inscribed in a sphere, determine which one has the largest lateral area. (From http://www.ams.org/samplings/feature-column/fc-2016-05)
+
+"""
+#ImageFile(:derivatives, imgfile, caption)
+nothing</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./figures/fcarc-may2016-fig40-300.png" class="img-fluid figure-img"></p>
+<figcaption>Image number <span class="math inline">\(40\)</span> from l’Hospital’s calculus book (the first calculus book). Among all the cones that can be inscribed in a sphere, determine which one has the largest lateral area. (From <a href="http://www.ams.org/samplings/feature-column/fc-2016-05">AMS</a>).</figcaption>
+</figure>
+</div>
+<p>The figure above poses a problem about cones in spheres, which can be reduced to a two-dimensional problem. Take a sphere of radius <span class="math inline">\(r=1\)</span>, and imagine a secant line of length <span class="math inline">\(l\)</span> connecting <span class="math inline">\((-r, 0)\)</span> to another point <span class="math inline">\((x,y)\)</span> with <span class="math inline">\(y&gt;0\)</span>. Rotating that line around the <span class="math inline">\(x\)</span> axis produces a cone and its lateral surface is given by <span class="math inline">\(SA=\pi \cdot y \cdot l\)</span>. Write <span class="math inline">\(SA\)</span> as a function of <span class="math inline">\(x\)</span> and solve.</p>
+<p>The largest lateral surface area is:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+r = 1
+SA(r,l) = pi * r * l
+y(x) = sqrt(1 - x^2)
+l(x) = sqrt((x-(-1))^2 +  y(x)^2)
+SA(x) = SA(y(x), l(x))
+cp = find_zero(SA', (-1/2, 1/2))
+val = SA(cp)
+numericq(val)</code></pre>
+<p>The surface area of a sphere of radius <span class="math inline">\(1\)</span> is <span class="math inline">\(4\pi r^2 = 4 \pi\)</span>. This is how many times greater than that of the largest cone?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["exactly four times",
+L"exactly $\pi$ times",
+L"about $2.6$ times as big",
+"about the same"]
+answ = 3
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-15" class="level6">
+<h6 class="anchored" data-anchor-id="question-15">Question</h6>
+<p>In the examples the functions <code>argmax(f, itr)</code> and <code>findmin(collection)</code> were used. These have mathematical analogs. What is <code>argmax(f,itr)</code> in terms of math notation, where <span class="math inline">\(vs\)</span> is the iterable collection of values:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    raw"``\{v    \mid v \text{ in } vs,   f(v) = \max(f(vs))\}``",
+    raw"``\{f(v) \mid v \text{ in } vs,   f(v) = \max(f(vs))\}``",
+    raw"``\{i    \mid v_i \text{ in } vs, f(v_i) = \max(f(vs))\}``"
+           ]
+radioq(choices, 1)</code></pre>
+<p>The functions are related: <code>findmax</code> returns the maximum value and an index in the collection for which the value will be largest; <code>argmax</code> returns an element of the set for which the function is largest, so <code>argmax(identify, itr)</code> should correspond to the index found by <code>findmax</code> (through <code>itr[findmax(itr)[2]</code>)</p>
+</section>
+<section id="question-16" class="level6">
+<h6 class="anchored" data-anchor-id="question-16">Question</h6>
+<p>Let <span class="math inline">\(f(x) = (a/x)^x\)</span> for <span class="math inline">\(a,x &gt; 0\)</span>. When is this maximized? The following might be helpful</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x::positive a::positive
+diff((a/x)^x, x)</code></pre>
+<p>This can be <code>solve</code>d to discover the answer.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``e``",
+"``a/e``",
+"``e/a``",
+"``a \\cdot e``"
+]
+answ=2
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-17" class="level6">
+<h6 class="anchored" data-anchor-id="question-17">Question</h6>
+<p>The ladder problem has an trigonometry-free solution. We show one attributed to <a href="http://www.mathematische-basteleien.de/ladder.htm">Asma</a>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+plt = plot(; axis=nothing, border=:none, legend=false, aspect_ratio=:equal)
+a,b = 1, 2
+p = 1/2
+x = a/p
+plot!(plt, [0, b*(1+p), 0, 0], [0, 0, a+x, 0])
+plot!(plt, [b,b,0,0],[0,a,a,0])
+annotate!(plt, [(b/2,0, "b"), (0,a/2,"a"), (0,a+x/2,"x"), (b+b*p/2,0,"bp")])
+plt</code></pre>
+<p>Introducing a variable <span class="math inline">\(p\)</span>, we get, following the above figure, the ladder of length <span class="math inline">\(c\)</span> touching the wall at <span class="math inline">\(b+bp\)</span> and <span class="math inline">\(a + x\)</span>.</p>
+<p>Using similar triangles, we have:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms a::positive b::positive p::positive x::positive
+solve(x/b ~ (x+a)/(b + b*p), x)</code></pre>
+<p>With <span class="math inline">\(x = a/p\)</span> we get by Pythagorean’s theorem that</p>
+<p><span class="math display">\[\begin{align*}
+c^2 &amp;= (a + a/p)^2 + (b + bp)^2 \\
+    &amp;= a^2(1 + \frac{1}{p})^2 + b^2(1+p)^2.
+\end{align*}\]</span></p>
+<p>The ladder problem minimizes <span class="math inline">\(c\)</span> or equivalently <span class="math inline">\(c^2\)</span>.</p>
+<p>Why is the following set of commands useful in this task:</p>
+<pre class="{julia}"><code>#| eval: false
+c2 = a^2*(1 + 1/p)^2 + b^2*(1+p)^2
+c2p = diff(c2, p)
+eq = numerator(together(c2p))
+solve(eq ~ 0, p)</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["It finds the critical points",
+    "It finds the minimal value of `c`",
+    "It finds the minimal value of `p`"]
+radioq(choices, 1)</code></pre>
+<p>The polynomial <code>eq</code> is what degree in <code>p</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(4)</code></pre>
+<p>The only positive real solution for <span class="math inline">\(p\)</span> from <span class="math inline">\(eq\)</span> is</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw" ``(a/b)^{2/3}``",
+raw" ``1``",
+raw" ``\sqrt{3}/2 \cdot (a/b)^{2/3}``"
+]
+radioq(choices, 1)</code></pre>
+</section>
+<section id="question-18" class="level6">
+<h6 class="anchored" data-anchor-id="question-18">Question</h6>
+<p>In <a href="https://www.maa.org/sites/default/files/hall03010308158.pdf">Hall</a> we can find a dozen optimization problems related to the following figure of the parabola <span class="math inline">\(y=x^2\)</span> a point <span class="math inline">\(P=(a,a^2)\)</span>, <span class="math inline">\(a &gt; 0\)</span>, and its normal line. We will do two.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+p = plot(; legend=false, aspect_ratio=:equal, axis=nothing, border=:none)
+    b = 2.
+    plot!(p, x -&gt; x^2, -b, b)
+    plot!(p, [-b,b], [0,0])
+    plot!(p, [0,0], [0, b^2])
+    a = 1
+    scatter!(p, [a],[a^2])
+    m = 2a
+    plot!(p, x -&gt; a^2 + m*(x-a), 1/2, b)
+    mₚ = -1/m
+    plot!(p, x -&gt; a^2 + mₚ*(x-a))
+    scatter!(p, [-3/2], [(3/2)^2])
+    annotate!(p, [(1+1/4, 1+1/8, "P"), (-3/2-1/4, (-3/2)^2-1/4, "Q")])
+p</code></pre>
+<p>What do these commands do?</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x::real, a::real
+mₚ = - 1 / diff(x^2, x)(a)
+solve(x^2 - (a^2 + mₚ*(x-a)) ~ 0, x)</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+radioq((
+"It finds the ``x`` value of the intersection points of the normal line and the parabola",
+"It finds the tangent line",
+"It finds the point ``P``"
+), 1)</code></pre>
+<p>Numerically, find the value of <span class="math inline">\(a\)</span> that minimizes the <span class="math inline">\(y\)</span> coordinate of <span class="math inline">\(Q\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+y(a) = (-a - 1/(2a))^2
+a = find_zero(y', 1)
+numericq(a)</code></pre>
+<p>Numerically find the value of <span class="math inline">\(a\)</span> that minimizes the length of the line seqment <span class="math inline">\(PQ\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+let
+    x(a) = -a - 1/(2a)
+    d(a) = (a-x(a))^2 + (a^2 - x(a)^2)^2
+    a = find_zero(d', 1)
+    numericq(a)
+end</code></pre>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../derivatives/mean_value_theorem.html" class="pagination-link" aria-label="The mean value theorem for differentiable functions.">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../derivatives/first_second_derivatives.html" class="pagination-link" aria-label="The first and second derivatives">
+        <span class="nav-page-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/derivatives/optimization.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

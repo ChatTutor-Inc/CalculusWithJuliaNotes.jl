@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>6&nbsp; Ranges and Sets – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../precalc/functions.html" rel="next">
+<link href="../precalc/vectors.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../precalc.html">Precalculus Concepts</a></li><li class="breadcrumb-item"><a href="../precalc/ranges.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#arithmetic-sequences" id="toc-arithmetic-sequences" class="nav-link active" data-scroll-target="#arithmetic-sequences"><span class="header-section-number">6.1</span> Arithmetic sequences</a>
+  <ul class="collapse">
+  <li><a href="#the-colon-operator" id="toc-the-colon-operator" class="nav-link" data-scroll-target="#the-colon-operator"><span class="header-section-number">6.1.1</span> The colon operator</a></li>
+  <li><a href="#the-range-function" id="toc-the-range-function" class="nav-link" data-scroll-target="#the-range-function"><span class="header-section-number">6.1.2</span> The range function</a></li>
+  </ul></li>
+  <li><a href="#modifying-sequences" id="toc-modifying-sequences" class="nav-link" data-scroll-target="#modifying-sequences"><span class="header-section-number">6.2</span> Modifying sequences</a>
+  <ul class="collapse">
+  <li><a href="#filtering" id="toc-filtering" class="nav-link" data-scroll-target="#filtering"><span class="header-section-number">6.2.1</span> Filtering</a></li>
+  <li><a href="#comprehensions" id="toc-comprehensions" class="nav-link" data-scroll-target="#comprehensions"><span class="header-section-number">6.2.2</span> Comprehensions</a></li>
+  <li><a href="#generators" id="toc-generators" class="nav-link" data-scroll-target="#generators"><span class="header-section-number">6.2.3</span> Generators</a></li>
+  <li><a href="#filtering-generated-expressions" id="toc-filtering-generated-expressions" class="nav-link" data-scroll-target="#filtering-generated-expressions"><span class="header-section-number">6.2.4</span> Filtering generated expressions</a></li>
+  </ul></li>
+  <li><a href="#random-numbers" id="toc-random-numbers" class="nav-link" data-scroll-target="#random-numbers"><span class="header-section-number">6.3</span> Random numbers</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">6.4</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/precalc/ranges.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../precalc.html">Precalculus Concepts</a></li><li class="breadcrumb-item"><a href="../precalc/ranges.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<section id="arithmetic-sequences" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="arithmetic-sequences"><span class="header-section-number">6.1</span> Arithmetic sequences</h2>
+<p>Sequences of numbers are prevalent in math. A simple one is just counting by ones:</p>
+<p><span class="math display">\[
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, \dots
+\]</span></p>
+<p>Or counting by sevens:</p>
+<p><span class="math display">\[
+7, 14, 21, 28, 35, 42, 49, \dots
+\]</span></p>
+<p>More challenging for humans is <a href="http://www.psychpage.com/learning/library/assess/mse.htm">counting backwards</a> by 7:</p>
+<p><span class="math display">\[
+100, 93, 86, 79, \dots
+\]</span></p>
+<p>These are examples of <a href="http://en.wikipedia.org/wiki/Arithmetic_progression">arithmetic sequences</a>. The form of the first <span class="math inline">\(n+1\)</span> terms in such a sequence is:</p>
+<p><span class="math display">\[
+a_0, a_0 + h, a_0 + 2h, a_0 + 3h, \dots, a_0 + nh
+\]</span></p>
+<p>The formula for the <span class="math inline">\(a_n\)</span>th term can be written in terms of <span class="math inline">\(a_0\)</span>, or any other <span class="math inline">\(0 \leq m \leq n\)</span> with <span class="math inline">\(a_n = a_m + (n-m)\cdot h\)</span>.</p>
+<p>A typical question might be: The first term of an arithmetic sequence is equal to <span class="math inline">\(200\)</span> and the common difference is equal to <span class="math inline">\(-10\)</span>. Find the value of <span class="math inline">\(a_{20}\)</span>. We could find this using <span class="math inline">\(a_n = a_0 + n\cdot h\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+a0, h, n = 200, -10, 20
+a0 + n * h</code></pre>
+<p>More complicated questions involve an unknown first value, as with: an arithmetic sequence has a common difference equal to <span class="math inline">\(10\)</span> and its <span class="math inline">\(6\)</span>th term is equal to <span class="math inline">\(52\)</span>. Find its <span class="math inline">\(15\)</span>th term, <span class="math inline">\(a_{15}\)</span>. Here we have to answer: <span class="math inline">\(a_0 + 15 \cdot 10\)</span>. Either we could find <span class="math inline">\(a_0\)</span> (using <span class="math inline">\(52 = a_0 + 6\cdot(10)\)</span>) or use the above formula</p>
+<pre class="{julia}"><code>#| hold: true
+a6, h, m, n = 52, 10, 6, 15
+a15 = a6 + (n-m)*h</code></pre>
+<section id="the-colon-operator" class="level3" data-number="6.1.1">
+<h3 data-number="6.1.1" class="anchored" data-anchor-id="the-colon-operator"><span class="header-section-number">6.1.1</span> The colon operator</h3>
+<p>Rather than express sequences by the <span class="math inline">\(a_0\)</span>, <span class="math inline">\(h\)</span>, and <span class="math inline">\(n\)</span>, <code>Julia</code> uses the starting point (<code>a</code>), the difference (<code>h</code>) and a <em>suggested</em> stopping value (<code>b</code>). That is, we need three values to specify these ranges of numbers: a <code>start</code>, a <code>step</code>, and an <code>endof</code>. <code>Julia</code> gives a convenient syntax for this: <code>a:h:b</code>. When the difference is just <span class="math inline">\(1\)</span>, all numbers between the start and end are specified by <code>a:b</code>, as in</p>
+<pre class="{julia}"><code>1:10</code></pre>
+<p>But wait, nothing different printed? This is because <code>1:10</code> is efficiently stored. Basically, a recipe to generate the next number from the previous number is created and <code>1:10</code> just stores the start and end point and that recipe is used to generate the set of all values. To expand the values, you have to ask for them to be <code>collect</code>ed (though this typically isn’t needed in practice):</p>
+<pre class="{julia}"><code>collect(1:10)</code></pre>
+<p>When a non-default step size is needed, it goes in the middle, as in <code>a:h:b</code>. For example, counting by sevens from <span class="math inline">\(1\)</span> to <span class="math inline">\(50\)</span> is achieved by:</p>
+<pre class="{julia}"><code>collect(1:7:50)</code></pre>
+<p>Or counting down from 100:</p>
+<pre class="{julia}"><code>collect(100:-7:1)</code></pre>
+<p>In this last example, we said end with <span class="math inline">\(1\)</span>, but it ended with <span class="math inline">\(2\)</span>. The ending value in the range is a suggestion to go up to, but not exceed. Negative values for <code>h</code> are used to make decreasing sequences.</p>
+</section>
+<section id="the-range-function" class="level3" data-number="6.1.2">
+<h3 data-number="6.1.2" class="anchored" data-anchor-id="the-range-function"><span class="header-section-number">6.1.2</span> The range function</h3>
+<p>For generating points to make graphs, a natural set of points to specify is <span class="math inline">\(n\)</span> evenly spaced points between <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>. We can mimic creating this set with the range operation by solving for the correct step size. We have <span class="math inline">\(a_0=a\)</span> and <span class="math inline">\(a_0 + (n-1) \cdot h = b\)</span>. (Why <span class="math inline">\(n-1\)</span> and not <span class="math inline">\(n\)</span>?) Solving yields <span class="math inline">\(h = (b-a)/(n-1)\)</span>. To be concrete we might ask for <span class="math inline">\(9\)</span> points between <span class="math inline">\(-1\)</span> and <span class="math inline">\(1\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+a, b, n = -1, 1, 9
+h = (b-a)/(n-1)
+collect(a:h:b)</code></pre>
+<p>Pretty neat. If we were doing this many times - such as once per plot - we’d want to encapsulate this into a function, for example:</p>
+<pre class="{julia}"><code>function evenly_spaced(a, b, n)
+    h = (b-a)/(n-1)
+    collect(a:h:b)
+end</code></pre>
+<p>Great, let’s try it out:</p>
+<pre class="{julia}"><code>evenly_spaced(0, 2pi, 5)</code></pre>
+<p>Now, our implementation was straightforward, but only because it avoids somethings. Look at something simple:</p>
+<pre class="{julia}"><code>evenly_spaced(1/5, 3/5, 3)</code></pre>
+<p>It seems to work as expected. But looking just at the algorithm it isn’t quite so clear:</p>
+<pre class="{julia}"><code>1/5 + 2*1/5 # last value</code></pre>
+<p>Floating point roundoff leads to the last value <em>exceeding</em> <code>0.6</code>, so should it be included? Well, here it is pretty clear it <em>should</em> be, but better to have something programmed that hits both <code>a</code> and <code>b</code> and adjusts <code>h</code> accordingly.</p>
+<p>Enter the base function <code>range</code> which solves this seemingly simple - but not really - task. It can use <code>a</code>, <code>b</code>, and <code>n</code>. Like the range operation, this function returns a generator which can be collected to realize the values.</p>
+<p>The number of points is specified with keyword arguments, as in:</p>
+<pre class="{julia}"><code>xs = range(-1, 1, length=9)  # or simply range(-1, 1, 9) as of v"1.7"</code></pre>
+<p>and</p>
+<pre class="{julia}"><code>collect(xs)</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There is also the <code>LinRange(a, b, n)</code> function which can be more performant than <code>range</code>, as it doesn’t try to correct for floating point errors.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="modifying-sequences" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="modifying-sequences"><span class="header-section-number">6.2</span> Modifying sequences</h2>
+<p>Now we concentrate on some more general styles to modify a sequence to produce a new sequence.</p>
+<section id="filtering" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="filtering"><span class="header-section-number">6.2.1</span> Filtering</h3>
+<p>For example, another way to get the values between <span class="math inline">\(0\)</span> and <span class="math inline">\(100\)</span> that are multiples of <span class="math inline">\(7\)</span> is to start with all <span class="math inline">\(101\)</span> values and throw out those that don’t match. To check if a number is divisible by <span class="math inline">\(7\)</span>, we could use the <code>rem</code> function. It gives the remainder upon division. Multiples of <code>7</code> match <code>rem(m, 7) == 0</code>. Checking for divisibility by seven is unusual enough there is nothing built in for that, but checking for division by <span class="math inline">\(2\)</span> is common, and for that, there is a built-in function <code>iseven</code>.</p>
+<p>The act of throwing out elements of a collection based on some condition is called <em>filtering</em>. The <code>filter</code> function does this in <code>Julia</code>; the basic syntax being <code>filter(predicate_function, collection)</code>. The “<code>predicate_function</code>” is one that returns either <code>true</code> or <code>false</code>, such as <code>iseven</code>. The output of <code>filter</code> consists of the new collection of values - those where the predicate returns <code>true</code>.</p>
+<p>To see it used, lets start with the numbers between <code>0</code> and <code>25</code> (inclusive) and filter out those that are even:</p>
+<pre class="{julia}"><code>filter(iseven, 0:25)</code></pre>
+<p>To get the numbers between <span class="math inline">\(1\)</span> and <span class="math inline">\(100\)</span> that are divisible by <span class="math inline">\(7\)</span> requires us to write a function akin to <code>iseven</code>, which isn’t hard (e.g., <code>is_seven(x) = x%7 == 0</code> or if being fancy <code>Base.Fix2(iszero∘rem, 7)</code>), but isn’t something we continue with just yet.</p>
+<p>For another example, here is an inefficient way to list the prime numbers between <span class="math inline">\(100\)</span> and <span class="math inline">\(200\)</span>. This uses the <code>isprime</code> function from the <code>Primes</code> package</p>
+<pre class="{julia}"><code>using Primes</code></pre>
+<pre class="{julia}"><code>filter(isprime, 100:200)</code></pre>
+<p>Illustrating <code>filter</code> at this point is mainly a motivation to illustrate that we can start with a regular set of numbers and then modify or filter them. The function takes on more value once we discuss how to write predicate functions.</p>
+</section>
+<section id="comprehensions" class="level3" data-number="6.2.2">
+<h3 data-number="6.2.2" class="anchored" data-anchor-id="comprehensions"><span class="header-section-number">6.2.2</span> Comprehensions</h3>
+<p>Let’s return to the case of the set of even numbers between <span class="math inline">\(0\)</span> and <span class="math inline">\(100\)</span>. We have many ways to describe this set:</p>
+<ul>
+<li>The collection of numbers <span class="math inline">\(0, 2, 4, 6 \dots, 100\)</span>, or the arithmetic sequence with step size <span class="math inline">\(2\)</span>, which is returned by <code>0:2:100</code>.</li>
+<li>The numbers between <span class="math inline">\(0\)</span> and <span class="math inline">\(100\)</span> that are even, that is <code>filter(iseven, 0:100)</code>.</li>
+<li>The set of numbers <span class="math inline">\(\{2k: k=0, \dots, 50\}\)</span>.</li>
+</ul>
+<p>While <code>Julia</code> has a special type for dealing with sets, we will use a vector for such a set. (Unlike a set, vectors can have repeated values, but as vectors are more widely used, we demonstrate them.) Vectors are described more fully in a previous section, but as a reminder, vectors are constructed using square brackets: <code>[]</code> (a special syntax for <a href="http://docs.julialang.org/en/latest/manual/arrays/#concatenation">concatenation</a>). Square brackets are used in different contexts within <code>Julia</code>, in this case we use them to create a <em>collection</em>. If we separate single values in our collection by commas (or semicolons), we will create a vector:</p>
+<pre class="{julia}"><code>x = [0, 2, 4, 6, 8, 10]</code></pre>
+<p>That is of course only part of the set of even numbers we want. Creating more might be tedious were we to type them all out, as above. In such cases, it is best to <em>generate</em> the values.</p>
+<p>For this simple case, a range can be used, but more generally a <a href="https://docs.julialang.org/en/v1/manual/arrays/#man-comprehensions">comprehension</a> provides this ability using a construct that closely mirrors a set definition, such as <span class="math inline">\(\{2k: k=0, \dots, 50\}\)</span>. The simplest use of a comprehension takes this form (as we described in the section on vectors):</p>
+<p><code>[expr for variable in collection]</code></p>
+<p>The expression typically involves the variable specified after the keyword <code>for</code>. The collection can be a range, a vector, or many other items that are <em>iterable</em>. Here is how the mathematical set <span class="math inline">\(\{2k: k=0, \dots, 50\}\)</span> may be generated by a comprehension:</p>
+<pre class="{julia}"><code>[2k for k in 0:50]</code></pre>
+<p>The expression is <code>2k</code>, the variable <code>k</code>, and the collection is the range of values, <code>0:50</code>. The syntax is basically identical to how the math expression is typically read aloud.</p>
+<p>For some other examples, here is how we can create the first <span class="math inline">\(10\)</span> numbers divisible by <span class="math inline">\(7\)</span>:</p>
+<pre class="{julia}"><code>[7k for k in 1:10]</code></pre>
+<p>Here is how we can square the numbers between <span class="math inline">\(1\)</span> and <span class="math inline">\(10\)</span>:</p>
+<pre class="{julia}"><code>[x^2 for x in 1:10]</code></pre>
+<p>To generate other progressions, such as powers of <span class="math inline">\(2\)</span>, we could do:</p>
+<pre class="{julia}"><code>[2^i for i in 1:10]</code></pre>
+<p>Here are decreasing powers of <span class="math inline">\(2\)</span>:</p>
+<pre class="{julia}"><code>[1/2^i for i in 1:10]</code></pre>
+<p>Sometimes, the comprehension does not produce the type of output that may be expected. This is related to <code>Julia</code>’s more limited abilities to infer types at the command line. If the output type is important, the extra prefix of <code>T[]</code> can be used, where <code>T</code> is the desired type. We will see that this will be needed at times with symbolic math.</p>
+</section>
+<section id="generators" class="level3" data-number="6.2.3">
+<h3 data-number="6.2.3" class="anchored" data-anchor-id="generators"><span class="header-section-number">6.2.3</span> Generators</h3>
+<p>A typical pattern would be to generate a collection of numbers and then apply a function to them. For example, here is one way to sum the powers of <span class="math inline">\(2\)</span>:</p>
+<pre class="{julia}"><code>sum([2^i for i in 1:10])</code></pre>
+<p>Conceptually this is easy to understand, but computationally it is a bit inefficient. The generator syntax allows this type of task to be done more efficiently. To use this syntax, we just need to drop the <code>[]</code>:</p>
+<pre class="{julia}"><code>sum(2^i for i in 1:10)</code></pre>
+<p>(The difference being no intermediate object is created to store the collection of all values specified by the generator.)</p>
+</section>
+<section id="filtering-generated-expressions" class="level3" data-number="6.2.4">
+<h3 data-number="6.2.4" class="anchored" data-anchor-id="filtering-generated-expressions"><span class="header-section-number">6.2.4</span> Filtering generated expressions</h3>
+<p>Both comprehensions and generators allow for filtering through the keyword <code>if</code>. The following shows <em>one</em> way to add the prime numbers in <span class="math inline">\([1,100]\)</span>:</p>
+<pre class="{julia}"><code>sum(p for p in 1:100 if isprime(p))</code></pre>
+<p>The value on the other side of <code>if</code> should be an expression that evaluates to either <code>true</code> or <code>false</code> for a given <code>p</code> (like a predicate function, but here specified as an expression). The value returned by <code>isprime(p)</code> is such.</p>
+<p>In this example, we use the fact that <code>rem(k, 7)</code> returns the remainder found from dividing <code>k</code> by <code>7</code>, and so is <code>0</code> when <code>k</code> is a multiple of <code>7</code>:</p>
+<pre class="{julia}"><code>sum(k for k in 1:100 if rem(k,7) == 0)  ## add multiples of 7</code></pre>
+<p>The same <code>if</code> can be used in a comprehension. For example, this is an alternative to <code>filter</code> for identifying the numbers divisible by <code>7</code> in a range of numbers:</p>
+<pre class="{julia}"><code>[k for k in 1:100 if rem(k,7) == 0]</code></pre>
+<section id="example-making-change" class="level4">
+<h4 class="anchored" data-anchor-id="example-making-change">Example: Making change</h4>
+<p>This example of Stefan Karpinski’s comes from a <a href="http://julialang.org/blog/2016/10/julia-0.5-highlights">blog</a> post highlighting changes to the <code>Julia</code> language with version <code>v"0.5.0"</code>, which added features to comprehensions that made this example possible.</p>
+<p>First, a simple question: using pennies, nickels, dimes, and quarters how many different ways can we generate one dollar? Clearly <span class="math inline">\(100\)</span> pennies, or <span class="math inline">\(20\)</span> nickels, or <span class="math inline">\(10\)</span> dimes, or <span class="math inline">\(4\)</span> quarters will do this, so the answer is at least four, but how much more than four?</p>
+<p>Well, we can use a comprehension to enumerate the possibilities. This example illustrates how comprehensions and generators can involve one or more variable for the iteration.</p>
+<p>First, we either have <span class="math inline">\(0,1,2,3\)</span>, or <span class="math inline">\(4\)</span> quarters, or <span class="math inline">\(0\)</span>, <span class="math inline">\(25\)</span> cents, <span class="math inline">\(50\)</span> cents, <span class="math inline">\(75\)</span> cents, or a dollar’s worth. If we have, say, <span class="math inline">\(1\)</span> quarter, then we need to make up <span class="math inline">\(75\)</span> cents with the rest. If we had <span class="math inline">\(3\)</span> dimes, then we need to make up <span class="math inline">\(45\)</span> cents out of nickels and pennies, if we then had <span class="math inline">\(6\)</span> nickels, we know we must need <span class="math inline">\(15\)</span> pennies.</p>
+<p>The following expression shows how counting this can be done through enumeration. Here <code>q</code> is the amount contributed by quarters, <code>d</code> the amount from dimes, <code>n</code> the amount from nickels, and <code>p</code> the amount from pennies. <code>q</code> ranges over <span class="math inline">\(0, 25, 50, 75, 100\)</span> or <code>0:25:100</code>, etc. If we know that the sum of quarters, dimes, nickels contributes a certain amount, then the number of pennies must round things up to <span class="math inline">\(100\)</span>.</p>
+<pre class="{julia}"><code>ways = [(q, d, n, p) for q = 0:25:100 for d = 0:10:(100 - q) for n = 0:5:(100 - q - d) for p = (100 - q - d - n)]
+length(ways)</code></pre>
+<p>We see <span class="math inline">\(242\)</span> cases, each distinct. The first <span class="math inline">\(3\)</span> are:</p>
+<pre class="{julia}"><code>ways[1:3]</code></pre>
+<p>The generating expression reads naturally. It introduces the use of multiple <code>for</code> statements, each subsequent one depending on the value of the previous (working left to right). Now suppose, we want to ensure that the amount in pennies is less than the amount in nickels, etc. We could use <code>filter</code> somehow to do this for our last answer, but using <code>if</code> allows for filtering while the events are generating. Here our condition is simply expressed: <code>q &gt; d &gt; n &gt; p</code>:</p>
+<pre class="{julia}"><code>[(q, d, n, p) for q = 0:25:100
+ for d = 0:10:(100 - q)
+ for n = 0:5:(100 - q - d)
+ for p = (100 - q - d - n)
+ if q &gt; d &gt; n &gt; p]</code></pre>
+</section>
+</section>
+</section>
+<section id="random-numbers" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="random-numbers"><span class="header-section-number">6.3</span> Random numbers</h2>
+<p>We have been discussing structured sets of numbers. On the opposite end of the spectrum are random numbers. <code>Julia</code> makes them easy to generate, especially random numbers chosen uniformly from <span class="math inline">\([0,1)\)</span>.</p>
+<ul>
+<li>The <code>rand()</code> function returns a randomly chosen number in <span class="math inline">\([0,1)\)</span>.</li>
+<li>The <code>rand(n)</code> function returns a vector of <code>n</code> randomly chosen numbers in <span class="math inline">\([0,1)\)</span>.</li>
+</ul>
+<p>To illustrate, this will command return a single number</p>
+<pre class="{julia}"><code>rand()</code></pre>
+<p>If the command is run again, it is almost certain that a different value will be returned:</p>
+<pre class="{julia}"><code>rand()</code></pre>
+<p>This call will return a vector of <span class="math inline">\(10\)</span> such random numbers:</p>
+<pre class="{julia}"><code>rand(10)</code></pre>
+<p>The <code>rand</code> function is easy to use. The only common source of confusion is the subtle distinction between <code>rand()</code> and <code>rand(1)</code>, as the latter is a vector of <span class="math inline">\(1\)</span> random number and the former just <span class="math inline">\(1\)</span> random number.</p>
+</section>
+<section id="questions" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="questions"><span class="header-section-number">6.4</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>Which of these will produce the odd numbers between <span class="math inline">\(1\)</span> and <span class="math inline">\(99\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+q"1:99",
+q"1:3:99",
+q"1:2:99"
+]
+answ = 3
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>Which of these will create the sequence <span class="math inline">\(2, 9, 16, 23, \dots, 72\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [q"2:7:72", q"2:9:72", q"2:72", q"72:-7:2"]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>How many numbers are in the sequence produced by <code>0:19:1000</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = length(collect(0:19:1000))
+numericq(val)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>The range operation (<code>a:h:b</code>) can also be used to countdown. Which of these will do so, counting down from <code>10</code> to <code>1</code>? (You can call <code>collect</code> to visualize the generated numbers.)</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"`10:-1:1`",
+"`10:1`",
+"`1:-1:10`",
+"`1:10`"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>What is the last number generated by <code>1:4:7</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = (1:4:7)[end]
+numericq(val)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>While the range operation can generate vectors by collecting, do the objects themselves act like vectors?</p>
+<p>Does scalar multiplication work as expected? In particular, is the result of <code>2*(1:5)</code> <em>basically</em> the same as <code>2 * [1,2,3,4,5]</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(true)</code></pre>
+<p>Does vector addition work? as expected? In particular, is the result of <code>(1:4) + (2:5)</code> <em>basically</em> the same as <code>[1,2,3,4]</code> + <code>[2,3,4,5]</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(true)</code></pre>
+<p>What if parentheses are left off? Explain the output of <code>1:4 + 2:5</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["It is just random",
+"Addition happens prior to the use of `:` so this is like `1:(4+2):5`",
+"It gives the correct answer, a generator for the vector `[3,5,7,9]`"
+]
+answ = 2
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>How is <code>a:b-1</code> interpreted:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["as `a:(b-1)`", "as `(a:b) - 1`, which is `(a-1):(b-1)`"]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>Create the sequence <span class="math inline">\(10, 100, 1000, \dots, 1,000,000\)</span> using a list comprehension. Which of these works?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [q"[10^i for i in 1:6]", q"[10^i for i in [10, 100, 1000]]", q"[i^10 for i in [1:6]]"]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-8" class="level6">
+<h6 class="anchored" data-anchor-id="question-8">Question</h6>
+<p>Create the sequence <span class="math inline">\(0.1, 0.01, 0.001, \dots, 0.0000001\)</span> using a list comprehension. Which of these will work:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+q"[10^-i for i in 1:7]",
+q"[(1/10)^i for i in 1:7]",
+q"[i^(1/10) for i in 1:7]"]
+answ = 2
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-9" class="level6">
+<h6 class="anchored" data-anchor-id="question-9">Question</h6>
+<p>Evaluate the expression <span class="math inline">\(x^3 - 2x + 3\)</span> for each of the values <span class="math inline">\(-5, -4, \dots, 4, 5\)</span> using a comprehension. Which of these will work?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [q"[x^3 - 2x + 3 for i in -5:5]", q"[x^3 - 2x + 3 for x in -(5:5)]", q"[x^3 - 2x + 3 for x in -5:5]"]
+answ = 3
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-10" class="level6">
+<h6 class="anchored" data-anchor-id="question-10">Question</h6>
+<p>How many prime numbers are there between <span class="math inline">\(1100\)</span> and <span class="math inline">\(1200\)</span>? (Use <code>filter</code> and <code>isprime</code>)</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = length(filter(isprime, 1100:1200))
+numericq(val)</code></pre>
+</section>
+<section id="question-11" class="level6">
+<h6 class="anchored" data-anchor-id="question-11">Question</h6>
+<p>Which has more prime numbers the range <code>1000:2000</code> or the range <code>11000:12000</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+n1 = length(filter(isprime, 1000:2000))
+n2 = length(filter(isprime, 11_000:12_000))
+booleanq(n1 &gt; n2, labels=[q"1000:2000", q"11000:12000"])</code></pre>
+</section>
+<section id="question-12" class="level6">
+<h6 class="anchored" data-anchor-id="question-12">Question</h6>
+<p>We can easily add an arithmetic progression with the <code>sum</code> function. For example, <code>sum(1:100)</code> will add the numbers <span class="math inline">\(1, 2, ..., 100\)</span>.</p>
+<p>What is the sum of the odd numbers between <span class="math inline">\(0\)</span> and <span class="math inline">\(100\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = sum(1:2:99)
+numericq(val)</code></pre>
+</section>
+<section id="question-13" class="level6">
+<h6 class="anchored" data-anchor-id="question-13">Question</h6>
+<p>The sum of the arithmetic progression <span class="math inline">\(a, a+h, \dots, a+n\cdot h\)</span> has a simple formula. Using a few cases, can you tell if this is the correct one:</p>
+<p><span class="math display">\[
+(n+1)\cdot a + h \cdot n(n+1)/2
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+booleanq(true, labels=["Yes, this is true", "No, this is false"])</code></pre>
+</section>
+<section id="question-14" class="level6">
+<h6 class="anchored" data-anchor-id="question-14">Question</h6>
+<p>A <em>geometric progression</em> is of the form <span class="math inline">\(a^0, a^1, a^2, \dots, a^n\)</span>. These are easily generated by comprehensions of the form <code>[a^i for i in 0:n]</code>. Find the sum of the geometric progression <span class="math inline">\(1, 2^1, 2^2, \dots, 2^{10}\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+as = [2^i for i in 0:10]
+val = sum(as)
+numericq(val)</code></pre>
+<p>Is your answer of the form <span class="math inline">\((1 - a^{n+1}) / (1-a)\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(true)</code></pre>
+</section>
+<section id="question-15" class="level6">
+<h6 class="anchored" data-anchor-id="question-15">Question</h6>
+<p>The <a href="http://en.wikipedia.org/wiki/Arithmetic_progression">product</a> of the terms in an arithmetic progression has a known formula. The product can be found by an expression of the form <code>prod(a:h:b)</code>. Find the product of the terms in the sequence <span class="math inline">\(1,3,5,\dots,19\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = prod(1:2:19)
+numericq(val)</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../precalc/vectors.html" class="pagination-link" aria-label="Vectors">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../precalc/functions.html" class="pagination-link" aria-label="Functions">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/precalc/ranges.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

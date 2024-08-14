@@ -1,0 +1,2641 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>18&nbsp; Limits – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../limits/limits_extensions.html" rel="next">
+<link href="../limits.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+<script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../limits.html">Limits</a></li><li class="breadcrumb-item"><a href="../limits/limits.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#indeterminate-forms" id="toc-indeterminate-forms" class="nav-link active" data-scroll-target="#indeterminate-forms"><span class="header-section-number">18.0.1</span> Indeterminate forms</a></li>
+  <li><a href="#graphical-approaches-to-limits" id="toc-graphical-approaches-to-limits" class="nav-link" data-scroll-target="#graphical-approaches-to-limits"><span class="header-section-number">18.1</span> Graphical approaches to limits</a></li>
+  <li><a href="#numerical-approaches-to-limits" id="toc-numerical-approaches-to-limits" class="nav-link" data-scroll-target="#numerical-approaches-to-limits"><span class="header-section-number">18.2</span> Numerical approaches to limits</a>
+  <ul class="collapse">
+  <li><a href="#issues-with-the-numeric-approach" id="toc-issues-with-the-numeric-approach" class="nav-link" data-scroll-target="#issues-with-the-numeric-approach"><span class="header-section-number">18.2.1</span> Issues with the numeric approach</a></li>
+  <li><a href="#richardson-extrapolation" id="toc-richardson-extrapolation" class="nav-link" data-scroll-target="#richardson-extrapolation"><span class="header-section-number">18.2.2</span> Richardson extrapolation</a></li>
+  </ul></li>
+  <li><a href="#symbolic-approach-to-limits" id="toc-symbolic-approach-to-limits" class="nav-link" data-scroll-target="#symbolic-approach-to-limits"><span class="header-section-number">18.3</span> Symbolic approach to limits</a></li>
+  <li><a href="#rules-for-limits" id="toc-rules-for-limits" class="nav-link" data-scroll-target="#rules-for-limits"><span class="header-section-number">18.4</span> Rules for limits</a>
+  <ul class="collapse">
+  <li><a href="#the-squeeze-theorem" id="toc-the-squeeze-theorem" class="nav-link" data-scroll-target="#the-squeeze-theorem"><span class="header-section-number">18.4.1</span> The squeeze theorem</a></li>
+  </ul></li>
+  <li><a href="#limits-from-the-definition" id="toc-limits-from-the-definition" class="nav-link" data-scroll-target="#limits-from-the-definition"><span class="header-section-number">18.5</span> Limits from the definition</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">18.6</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/limits/limits.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../limits.html">Limits</a></li><li class="breadcrumb-item"><a href="../limits/limits.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses the following add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+plotly()
+using Richardson  # for extrapolation
+using SymPy       # for symbolic limits</code></pre>
+<hr>
+<p>An historic problem in the history of math was to find the area under the graph of <span class="math inline">\(f(x)=x^2\)</span> between <span class="math inline">\([0,1]\)</span>.</p>
+<p>There wasn’t a ready-made formula for the area of this shape, as was known for a triangle or a square. However, <a href="http://en.wikipedia.org/wiki/The_Quadrature_of_the_Parabola">Archimedes</a> found a method to compute areas enclosed by a parabola and line segments that cross the parabola.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+###{{{archimedes_parabola}}}
+gr()
+f(x) = x^2
+colors = [:black, :blue, :orange, :red, :green, :orange, :purple]
+
+## Area of parabola
+function make_triangle_graph(n)
+    title = "Area of parabolic cup ..."
+    n==1 &amp;&amp; (title = "\${Area = }1/2\$")
+    n==2 &amp;&amp; (title = "\${Area = previous }+ 1/8\$")
+    n==3 &amp;&amp; (title = "\${Area = previous }+ 2\\cdot(1/8)^2\$")
+    n==4 &amp;&amp; (title = "\${Area = previous }+ 4\\cdot(1/8)^3\$")
+    n==5 &amp;&amp; (title = "\${Area = previous }+ 8\\cdot(1/8)^4\$")
+    n==6 &amp;&amp; (title = "\${Area = previous }+ 16\\cdot(1/8)^5\$")
+    n==7 &amp;&amp; (title = "\${Area = previous }+ 32\\cdot(1/8)^6\$")
+
+
+
+    plt = plot(f, 0, 1, legend=false, size = fig_size, linewidth=2)
+    annotate!(plt, [(0.05, 0.9, text(title,:left))])  # if in title, it grows funny with gr
+    n &gt;= 1 &amp;&amp; plot!(plt, [1,0,0,1, 0], [1,1,0,1,1], color=colors[1], linetype=:polygon, fill=colors[1], alpha=.2)
+    n == 1 &amp;&amp; plot!(plt, [1,0,0,1, 0], [1,1,0,1,1], color=colors[1], linewidth=2)
+    for k in 2:n
+        xs = range(0,stop=1, length=1+2^(k-1))
+        ys = map(f, xs)
+        k &lt; n &amp;&amp; plot!(plt, xs, ys, linetype=:polygon, fill=:black, alpha=.2)
+        if k == n
+            plot!(plt, xs, ys, color=colors[k], linetype=:polygon, fill=:black, alpha=.2)
+            plot!(plt, xs, ys, color=:black, linewidth=2)
+        end
+    end
+    plt
+end
+
+
+n = 7
+anim = @animate for i=1:n
+    make_triangle_graph(i)
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+
+
+caption = L"""
+The first triangle has area $1/2$, the second has area $1/8$, then $2$ have area $(1/8)^2$, $4$ have area $(1/8)^3$, ...
+With some algebra, the total area then should be $1/2 \cdot (1 + (1/4) + (1/4)^2 + \cdots) = 2/3$.
+"""
+
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<p>The figure illustrates a means to compute the area bounded by the parabola, the line <span class="math inline">\(y=1\)</span> and the line <span class="math inline">\(x=0\)</span> using triangles. It suggests that this area can be found by adding the following sum</p>
+<p><span class="math display">\[
+A = 1/2 + 1/8 + 2 \cdot (1/8)^2 + 4 \cdot (1/8)^3 + \cdots
+\]</span></p>
+<p>This value is <span class="math inline">\(2/3\)</span>, so the area under the curve would be <span class="math inline">\(1/3\)</span>. Forget about this specific value - which through more modern machinery becomes uneventful - and focus for a minute on the method: a problem is solved by a suggestion of an infinite process, in this case the creation of more triangles to approximate the unaccounted for area. This is the so-call method of <a href="http://en.wikipedia.org/wiki/Method_of_exhaustion">exhaustion</a> known since the 5th century BC.</p>
+<p>Archimedes used this method to solve a wide range of area problems related to basic geometric shapes, including a more general statement of what we described above.</p>
+<p>The <span class="math inline">\(\cdots\)</span> in the sum expression are the indication that this process continues and that the answer is at the end of an <em>infinite</em> process. To make this line of reasoning rigorous requires the concept of a limit. The concept of a limit is then an old one, but it wasn’t until the age of calculus that it was formalized.</p>
+<p>Next, we illustrate how Archimedes approximated <span class="math inline">\(\pi\)</span> – the ratio of the circumference of a circle to its diameter – using interior and exterior <span class="math inline">\(n\)</span>-gons whose perimeters could be computed.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+## Archimedes approximation for pi
+gr()
+blue, green, purple, red = :royalblue, :forestgreen, :mediumorchid3, :brown3
+
+
+function archimedes!(p, n, xy=(0,0), radius=1; color=blue)
+
+    x₀,y₀=xy
+    ts = range(0, 2pi, length=100)
+
+
+
+    plot!(p, x₀ .+ sin.(ts), y₀ .+ cos.(ts), linewidth=2)
+
+    α = ((2π)/n)/2
+    αs = (-pi/2 + α):2α:(3pi/2 + α)
+    r = radius/cos(α)
+
+    xs = x₀ .+ r*cos.(αs)
+    ys = y₀ .+ r*sin.(αs)
+
+    plot!(p, xs, ys, linewidth=2, alpha=0.6)
+    plot!(p, xs, ys,
+          fill=true,
+          fillcolor=color,
+          alpha=0.4)
+
+    r = radius
+    xs = x₀ .+ r*cos.(αs)
+    ys = y₀ .+ r*sin.(αs)
+
+    plot!(p, xs, ys, linewidth=2, alpha=0.6)
+    plot!(p, xs, ys,
+          fill=true,
+          fillcolor=color,
+          alpha=0.8)
+
+    p
+end
+
+ns = [4,5,7,9]
+xs = [1, 3.5, 1, 3.5]
+ys = [3.5, 3.5, 1, 1]
+p = plot(;xlims=(-.25, 4.75), ylims=(-0.25, 4.75),
+         axis=nothing,
+         xaxis=false,
+         yaxis=false,
+         legend=false,
+         padding = (0.0, 0.0),
+             background_color = :transparent,
+         foreground_color = :black,
+         aspect_ratio=:equal)
+
+for (x, y, n, col) ∈ zip(xs, ys, ns, (blue, green, purple, red))
+    archimedes!(p, n, (x, y), color=col)
+end
+
+caption = L"""
+The ratio of the circumference of a circle to its diameter, $\pi$, can be approximated from above and below by computing the perimeters of the inscribed $n$-gons. Archimedes computed the perimeters for $n$ being $12$, $24$, $48$, and $96$ to determine that $3~1/7 \leq \pi \leq 3~10/71$.
+"""
+plotly()
+ImageFile(p, caption)</code></pre>
+<p>Here Archimedes uses <em>bounds</em> to constrain an unknown value. Had he been able to compute these bounds for larger and larger <span class="math inline">\(n\)</span> the value of <span class="math inline">\(\pi\)</span> could be more accurately determined. In a “limit” it would be squeezed in to have a specific value, which we now know is an irrational number.</p>
+<p>Continuing these concepts, <a href="http://en.wikipedia.org/wiki/Adequality">Fermat</a> in the 1600s essentially took a limit to find the slope of a tangent line to a polynomial curve. Newton in the late 1600s, exploited the idea in his development of calculus (as did Leibniz). Yet it wasn’t until the 1800s that <a href="http://en.wikipedia.org/wiki/Limit_of_a_function#History">Bolzano</a>, Cauchy and Weierstrass put the idea on a firm footing.</p>
+<p>To make things more precise, we begin by discussing the limit of a univariate function as <span class="math inline">\(x\)</span> approaches <span class="math inline">\(c\)</span>.</p>
+<p>Informally, if a limit exists it is the value that <span class="math inline">\(f(x)\)</span> gets close to as <span class="math inline">\(x\)</span> gets close to - but not equal to - <span class="math inline">\(c\)</span>.</p>
+<p>The modern formulation is due to Weierstrass:</p>
+<blockquote class="blockquote">
+<p>The limit of <span class="math inline">\(f(x)\)</span> as <span class="math inline">\(x\)</span> approaches <span class="math inline">\(c\)</span> is <span class="math inline">\(L\)</span> if for every real <span class="math inline">\(\epsilon &gt; 0\)</span>, there exists a real <span class="math inline">\(\delta &gt; 0\)</span> such that for all real <span class="math inline">\(x\)</span>, <span class="math inline">\(0 &lt; \lvert x − c \rvert &lt; \delta\)</span> implies <span class="math inline">\(\lvert f(x) − L \rvert &lt; \epsilon\)</span>. The notation used is <span class="math inline">\(\lim_{x \rightarrow c}f(x) = L\)</span>.</p>
+</blockquote>
+<p>We comment on this later.</p>
+<p>Cauchy begins his incredibly influential <a href="http://gallica.bnf.fr/ark:/12148/bpt6k90196z/f17.image">treatise</a> on calculus considering two examples, the limit as <span class="math inline">\(x\)</span> goes to <span class="math inline">\(0\)</span> of</p>
+<p><span class="math display">\[
+\frac{\sin(x)}{x} \quad\text{and}\quad (1 + x)^{1/x}.
+\]</span></p>
+<p>These take the indeterminate forms <span class="math inline">\(0/0\)</span> and <span class="math inline">\(1^\infty\)</span>, which are found by just putting <span class="math inline">\(0\)</span> in for <span class="math inline">\(x\)</span>. An expression does not need to be defined at <span class="math inline">\(c\)</span>, as these two aren’t at <span class="math inline">\(c=0\)</span>, to discuss its limit. Cauchy illustrates two methods to approach the questions above. The first is to pull out an inequality:</p>
+<p><span class="math display">\[
+\frac{\sin(x)}{\sin(x)} &gt; \frac{\sin(x)}{x} &gt; \frac{\sin(x)}{\tan(x)}
+\]</span></p>
+<p>which is equivalent to:</p>
+<p><span class="math display">\[
+1 &gt; \frac{\sin(x)}{x} &gt; \cos(x)
+\]</span></p>
+<p>This bounds the expression <span class="math inline">\(\sin(x)/x\)</span> between <span class="math inline">\(1\)</span> and <span class="math inline">\(\cos(x)\)</span> and as <span class="math inline">\(x\)</span> gets close to <span class="math inline">\(0\)</span>, the value of <span class="math inline">\(\cos(x)\)</span> “clearly” goes to <span class="math inline">\(1\)</span>, hence <span class="math inline">\(L\)</span> must be <span class="math inline">\(1\)</span>. This is an application of the squeeze theorem, the same idea Archimedes implied when bounding the value for <span class="math inline">\(\pi\)</span> above and below.</p>
+<p>The above bound comes from this figure, for small <span class="math inline">\(x &gt; 0\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+gr()
+p = plot(x -&gt; sqrt(1 - x^2), 0, 1, legend=false, aspect_ratio=:equal,
+     linewidth=3, color=:black)
+θ = π/6
+y,x = sincos(θ)
+col=RGBA(0.0,0.0,1.0, 0.25)
+plot!(range(0,x, length=2), zero, fillrange=u-&gt;y/x*u, color=col)
+plot!(range(x, 1, length=50), zero, fillrange = u -&gt; sqrt(1 - u^2), color=col)
+plot!([x,x],[0,y], linestyle=:dash, linewidth=3, color=:black)
+plot!([x,1],[y,0], linestyle=:dot, linewidth=3, color=:black)
+plot!([1,1], [0,y/x], linewidth=3, color=:black)
+plot!([0,1], [0,y/x], linewidth=3, color=:black)
+plot!([0,1], [0,0], linewidth=3, color=:black)
+Δ = 0.05
+annotate!([(0,0+Δ,"A"), (x-Δ,y+Δ/4, "B"), (1+Δ/2,y/x, "C"),
+           (1+Δ/2,0+Δ/2,"D")])
+annotate!([(.2*cos(θ/2), 0.2*sin(θ/2), "θ")])
+imgfile = tempname() * ".png"
+savefig(p, imgfile)
+caption = "Triangle ``ABD`` has less area than the shaded wedge, which has less area than triangle ``ACD``. Their respective areas are ``(1/2)\\sin(\\theta)``, ``(1/2)\\theta``, and ``(1/2)\\tan(\\theta)``. The inequality used to show ``\\sin(x)/x`` is bounded below by ``\\cos(x)`` and above by ``1`` comes from a division by ``(1/2) \\sin(x)`` and taking reciprocals.
+"
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<p>To discuss the case of <span class="math inline">\((1+x)^{1/x}\)</span> it proved convenient to assume <span class="math inline">\(x = 1/m\)</span> for integer values of <span class="math inline">\(m\)</span>. At the time of Cauchy, log tables were available to identify the approximate value of the limit. Cauchy computed the following value from logarithm tables:</p>
+<pre class="{julia}"><code>#| hold: true
+x = 1/10000
+(1 + x)^(1/x)</code></pre>
+<p>A table can show the progression to this value:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = (1 + x)^(1/x)
+xs = [1/10^i for i in 1:5]
+[xs f.(xs)]</code></pre>
+<p>This progression can be seen to be increasing. Cauchy, in his treatise, can see this through:</p>
+<p><span class="math display">\[\begin{align*}
+(1 + \frac{1}{m})^n &amp;= 1 + \frac{1}{1} + \frac{1}{1\cdot 2}(1 - \frac{1}{m}) +  \\
+&amp; \frac{1}{1\cdot 2\cdot 3}(1 - \frac{1}{m})(1 -  \frac{2}{m}) + \cdots \\
+&amp;+
+\frac{1}{1 \cdot 2 \cdot \cdots \cdot m}(1 - \frac{1}{m}) \cdot \cdots \cdot (1 - \frac{m-1}{m}).
+\end{align*}\]</span></p>
+<p>These values are clearly increasing as <span class="math inline">\(m\)</span> increases. Cauchy showed the value was bounded between <span class="math inline">\(2\)</span> and <span class="math inline">\(3\)</span> and had the approximate value above. Then he showed the restriction to integers was not necessary. Later we will use this definition for the exponential function:</p>
+<p><span class="math display">\[
+e^x = \lim_{n \rightarrow \infty} (1 + \frac{x}{n})^n,
+\]</span></p>
+<p>with a suitably defined limit.</p>
+<p>These two cases illustrate that though the definition of the limit exists, the computation of a limit is generally found by other means and the intuition of the value of the limit can be gained numerically.</p>
+<section id="indeterminate-forms" class="level3" data-number="18.0.1">
+<h3 data-number="18.0.1" class="anchored" data-anchor-id="indeterminate-forms"><span class="header-section-number">18.0.1</span> Indeterminate forms</h3>
+<p>First it should be noted that for most of the functions encountered, the concepts of a limit at a typical point <span class="math inline">\(c\)</span> is nothing more than just function evaluation at <span class="math inline">\(c\)</span>. This is because, at a typical point, the functions are nicely behaved (what we will soon call “<em>continuous</em>”). However, most questions asked about limits find points that are not typical. For these, the result of evaluating the function at <span class="math inline">\(c\)</span> is typically undefined, and the value comes in one of several <em>indeterminate forms</em>: <span class="math inline">\(0/0\)</span>, <span class="math inline">\(\infty/\infty\)</span>, <span class="math inline">\(0 \cdot \infty\)</span>, <span class="math inline">\(\infty - \infty\)</span>, <span class="math inline">\(0^0\)</span>, <span class="math inline">\(1^\infty\)</span>, and <span class="math inline">\(\infty^0\)</span>.</p>
+<p><code>Julia</code> can help - at times - identify these indeterminate forms, as many such operations produce <code>NaN</code>. For example:</p>
+<pre class="{julia}"><code>0/0, Inf/Inf, 0 * Inf, Inf - Inf</code></pre>
+<p>However, the values with powers generally do not help, as the IEEE standard has <code>0^0</code> evaluating to 1:</p>
+<pre class="{julia}"><code>0^0, 1^Inf, Inf^0</code></pre>
+<p>However, this can be unreliable, as floating point issues may mask the true evaluation. However, as a cheap trick it can work. So, the limit as <span class="math inline">\(x\)</span> goes to <span class="math inline">\(1\)</span> of <span class="math inline">\(\sin(x)/x\)</span> is simply found by evaluation:</p>
+<pre class="{julia}"><code>#| hold: true
+x = 1
+sin(x) / x</code></pre>
+<p>But at <span class="math inline">\(x=0\)</span> we get an indicator that there is an issue with just evaluating the function:</p>
+<pre class="{julia}"><code>#| hold: true
+x = 0
+sin(x) / x</code></pre>
+<p>The above is really just a heuristic. For some functions this is just not true. For example, the <span class="math inline">\(f(x) = \sqrt{x}\)</span> is only defined on <span class="math inline">\([0, \infty)\)</span>. There is technically no limit at <span class="math inline">\(0\)</span>, per se, as the function is not defined around <span class="math inline">\(0\)</span>. Other functions jump at values, and will not have a limit, despite having well defined values. The <code>floor</code> function is the function that rounds down to the nearest integer. At integer values there will be a jump (and hence have no limit), even though the function is defined.</p>
+</section>
+<section id="graphical-approaches-to-limits" class="level2" data-number="18.1">
+<h2 data-number="18.1" class="anchored" data-anchor-id="graphical-approaches-to-limits"><span class="header-section-number">18.1</span> Graphical approaches to limits</h2>
+<p>Let’s return to the function <span class="math inline">\(f(x) = \sin(x)/x\)</span>. This function was studied by Euler as part of his solution to the <a href="http://en.wikipedia.org/wiki/Basel_problem">Basel</a> problem. He knew that near <span class="math inline">\(0\)</span>, <span class="math inline">\(\sin(x) \approx x\)</span>, so the ratio is close to <span class="math inline">\(1\)</span> if <span class="math inline">\(x\)</span> is near <span class="math inline">\(0\)</span>. Hence, the intuition is <span class="math inline">\(\lim_{x \rightarrow 0} \sin(x)/x = 1\)</span>, as Cauchy wrote. We can verify this limit graphically two ways. First, a simple graph shows no issue at <span class="math inline">\(0\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+
+f(x) = sin(x)/x
+plot(f, -pi/2, pi/2;
+     seriestype=[:scatter, :line], # show points and line segments
+     legend=false)</code></pre>
+<p>The <span class="math inline">\(y\)</span> values of the graph seem to go to <span class="math inline">\(1\)</span> as the <span class="math inline">\(x\)</span> values get close to <span class="math inline">\(0\)</span>. (That the graph looks defined at <span class="math inline">\(0\)</span> is due to the fact that the points sampled to graph do not include <span class="math inline">\(0\)</span>.)</p>
+<p>We can also verify Euler’s intuition through this graph:</p>
+<pre class="{julia}"><code>#| hold: true
+plot(sin, -pi/2,  pi/2)
+plot!(identity)    # the function y = x, like how zero is y = 0</code></pre>
+<p>That the two are indistinguishable near <span class="math inline">\(0\)</span> makes it easy to see that their ratio should be going towards <span class="math inline">\(1\)</span>.</p>
+<p>A parametric plot shows the same, we see below the slope at <span class="math inline">\((0,0)\)</span> is <em>basically</em> <span class="math inline">\(1\)</span>, because the two functions are varying at the same rate when they are each near <span class="math inline">\(0\)</span></p>
+<pre class="{julia}"><code>#| hold: true
+plot(sin, identity, -pi/2, pi/2)  # parametric plot</code></pre>
+<p>The graphical approach to limits - plotting <span class="math inline">\(f(x)\)</span> around <span class="math inline">\(c\)</span> and observing if the <span class="math inline">\(y\)</span> values seem to converge to an <span class="math inline">\(L\)</span> value when <span class="math inline">\(x\)</span> get close to <span class="math inline">\(c\)</span> - allows us to gather quickly if a function seems to have a limit at <span class="math inline">\(c\)</span>, though the precise value of <span class="math inline">\(L\)</span> may be hard to identify.</p>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>This example illustrates the same limit a different way. Sliding the <span class="math inline">\(x\)</span> value towards <span class="math inline">\(0\)</span> shows <span class="math inline">\(f(x) = \sin(x)/x\)</span> approaches a value of <span class="math inline">\(1\)</span>.</p>
+<div id="jsxgraph" style="width: 500px; height: 500px;"></div>
+<div class="cell hidden">
+<div class="sourceCode cell-code hidden" id="cb19" data-startfrom="387" data-source-offset="-1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 386;"><span id="cb19-387"><a href="#cb19-387" aria-hidden="true" tabindex="-1"></a>JXG <span class="op">=</span> <span class="pp">require</span>(<span class="st">"jsxgraph"</span>)</span>
+<span id="cb19-388"><a href="#cb19-388" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-389"><a href="#cb19-389" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> JXG<span class="op">.</span><span class="at">JSXGraph</span><span class="op">.</span><span class="fu">initBoard</span>(<span class="st">'jsxgraph'</span><span class="op">,</span> {</span>
+<span id="cb19-390"><a href="#cb19-390" aria-hidden="true" tabindex="-1"></a>    <span class="dt">boundingbox</span><span class="op">:</span> [<span class="op">-</span><span class="dv">6</span><span class="op">,</span> <span class="fl">1.2</span><span class="op">,</span> <span class="dv">6</span><span class="op">,-</span><span class="fl">1.2</span>]<span class="op">,</span> <span class="dt">axis</span><span class="op">:</span><span class="kw">true</span></span>
+<span id="cb19-391"><a href="#cb19-391" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb19-392"><a href="#cb19-392" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-393"><a href="#cb19-393" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">function</span>(x) {<span class="cf">return</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sin</span>(x) <span class="op">/</span> x<span class="op">;</span>}<span class="op">;</span></span>
+<span id="cb19-394"><a href="#cb19-394" aria-hidden="true" tabindex="-1"></a>graph <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">"functiongraph"</span><span class="op">,</span> [f<span class="op">,</span> <span class="op">-</span><span class="dv">6</span><span class="op">,</span> <span class="dv">6</span>])</span>
+<span id="cb19-395"><a href="#cb19-395" aria-hidden="true" tabindex="-1"></a>seg <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">"line"</span><span class="op">,</span> [[<span class="op">-</span><span class="dv">6</span><span class="op">,</span><span class="dv">0</span>]<span class="op">,</span> [<span class="dv">6</span><span class="op">,</span><span class="dv">0</span>]]<span class="op">,</span> {<span class="dt">fixed</span><span class="op">:</span><span class="kw">true</span>})<span class="op">;</span></span>
+<span id="cb19-396"><a href="#cb19-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-397"><a href="#cb19-397" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">"glider"</span><span class="op">,</span> [<span class="dv">2</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> seg]<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span><span class="st">"x"</span><span class="op">,</span> <span class="dt">size</span><span class="op">:</span><span class="dv">4</span>})<span class="op">;</span></span>
+<span id="cb19-398"><a href="#cb19-398" aria-hidden="true" tabindex="-1"></a>P <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">"point"</span><span class="op">,</span> [<span class="kw">function</span>() {<span class="cf">return</span> X<span class="op">.</span><span class="fu">X</span>()}<span class="op">,</span> <span class="kw">function</span>() {<span class="cf">return</span> <span class="fu">f</span>(X<span class="op">.</span><span class="fu">X</span>())}]<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span><span class="st">""</span>})<span class="op">;</span></span>
+<span id="cb19-399"><a href="#cb19-399" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">"point"</span><span class="op">,</span> [<span class="dv">0</span><span class="op">,</span> <span class="kw">function</span>() {<span class="cf">return</span> P<span class="op">.</span><span class="fu">Y</span>()<span class="op">;</span>}]<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span><span class="st">"f(x)"</span>})<span class="op">;</span></span>
+<span id="cb19-400"><a href="#cb19-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-401"><a href="#cb19-401" aria-hidden="true" tabindex="-1"></a>segup <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">"segment"</span><span class="op">,</span> [P<span class="op">,</span>X]<span class="op">,</span> {<span class="dt">dash</span><span class="op">:</span><span class="dv">2</span>})<span class="op">;</span></span>
+<span id="cb19-402"><a href="#cb19-402" aria-hidden="true" tabindex="-1"></a>segover <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">"segment"</span><span class="op">,</span> [P<span class="op">,</span> [<span class="dv">0</span><span class="op">,</span> <span class="kw">function</span>() {<span class="cf">return</span> P<span class="op">.</span><span class="fu">Y</span>()}]]<span class="op">,</span> {<span class="dt">dash</span><span class="op">:</span><span class="dv">2</span>})<span class="op">;</span></span>
+<span id="cb19-403"><a href="#cb19-403" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-404"><a href="#cb19-404" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-405"><a href="#cb19-405" aria-hidden="true" tabindex="-1"></a>txt <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">'text'</span><span class="op">,</span> [<span class="dv">2</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="kw">function</span>() {</span>
+<span id="cb19-406"><a href="#cb19-406" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">"x = "</span> <span class="op">+</span> X<span class="op">.</span><span class="fu">X</span>()<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">4</span>) <span class="op">+</span> <span class="st">", f(x) = "</span> <span class="op">+</span> P<span class="op">.</span><span class="fu">Y</span>()<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">4</span>)<span class="op">;</span></span>
+<span id="cb19-407"><a href="#cb19-407" aria-hidden="true" tabindex="-1"></a>}])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-7" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-8" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-9" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-10" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-11" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="example-1" class="level5">
+<h5 class="anchored" data-anchor-id="example-1">Example</h5>
+<p>Consider now the following limit</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 2} \frac{x^2 - 5x + 6}{x^2 +x - 6}
+\]</span></p>
+<p>Noting that this is a ratio of nice polynomial functions, we first check whether there is anything to do:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = (x^2 - 5x + 6) / (x^2 + x - 6)
+c = 2
+f(c)</code></pre>
+<p>The <code>NaN</code> indicates that this function is indeterminate at <span class="math inline">\(c=2\)</span>. A quick plot gives us an idea that the limit exists and is roughly <span class="math inline">\(-0.2\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+c, delta = 2, 1
+plot(f, c - delta, c + delta)</code></pre>
+<p>The graph looks “continuous.” In fact, the value <span class="math inline">\(c=2\)</span> is termed a <em>removable singularity</em> as redefining <span class="math inline">\(f(x)\)</span> to be <span class="math inline">\(-0.2\)</span> when <span class="math inline">\(x=2\)</span> results in a “continuous” function.</p>
+<p>As an aside, we can redefine <code>f</code> using the “ternary operator”:</p>
+<pre class="{julia}"><code>#| eval: false
+f(x) = x == 2.0 ? -0.2 :  (x^2 - 5x + 6) / (x^2 + x - 6)</code></pre>
+<p>This particular case is a textbook example: one can easily factor <span class="math inline">\(f(x)\)</span> to get:</p>
+<p><span class="math display">\[
+f(x) = \frac{(x-2)(x-3)}{(x-2)(x+3)}
+\]</span></p>
+<p>Written in this form, we clearly see that this is the same function as <span class="math inline">\(g(x) = (x-3)/(x+3)\)</span> when <span class="math inline">\(x \neq 2\)</span>. The function <span class="math inline">\(g(x)\)</span> is “continuous” at <span class="math inline">\(x=2\)</span>. So were one to redefine <span class="math inline">\(f(x)\)</span> at <span class="math inline">\(x=2\)</span> to be <span class="math inline">\(g(2) = (2 - 3)/(2 + 3) = -0.2\)</span> it would be made continuous, hence the term removable singularity.</p>
+</section>
+</section>
+<section id="numerical-approaches-to-limits" class="level2" data-number="18.2">
+<h2 data-number="18.2" class="anchored" data-anchor-id="numerical-approaches-to-limits"><span class="header-section-number">18.2</span> Numerical approaches to limits</h2>
+<p>The investigation of <span class="math inline">\(\lim_{x \rightarrow 0}(1 + x)^{1/x}\)</span> by evaluating the function at <span class="math inline">\(1/10000\)</span> by Cauchy can be done much more easily nowadays. As does a graphical approach, a numerical approach can give insight into a limit and often a good numeric estimate.</p>
+<p>The basic idea is to create a sequence of <span class="math inline">\(x\)</span> values going towards <span class="math inline">\(c\)</span> and then investigate if the corresponding <span class="math inline">\(y\)</span> values are eventually near some <span class="math inline">\(L\)</span>.</p>
+<p>Best, to see by example. Suppose we are asked to investigate</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 25} \frac{\sqrt{x} - 5}{\sqrt{x - 16} - 3}.
+\]</span></p>
+<p>We first define a function and check if there are issues at <span class="math inline">\(25\)</span>:</p>
+<pre class="{julia}"><code>f(x) = (sqrt(x) - 5) / (sqrt(x-16) - 3)</code></pre>
+<pre class="{julia}"><code>c = 25
+f(c)</code></pre>
+<p>So yes, an issue of the indeterminate form <span class="math inline">\(0/0\)</span>. We investigate numerically by making a set of numbers getting close to <span class="math inline">\(c\)</span>. This is most easily done making numbers getting close to <span class="math inline">\(0\)</span> and adding them to or subtracting them from <span class="math inline">\(c\)</span>. Some natural candidates are negative powers of <span class="math inline">\(10\)</span>:</p>
+<pre class="{julia}"><code>hs = [1/10^i for i in 1:8]</code></pre>
+<p>We can add these to <span class="math inline">\(c\)</span> and then evaluate:</p>
+<pre class="{julia}"><code>xs = c .+ hs
+ys = f.(xs)</code></pre>
+<p>To visualize, we can put in a table using <code>[xs ys]</code> notation:</p>
+<pre class="{julia}"><code>[xs ys]</code></pre>
+<p>The <span class="math inline">\(y\)</span>-values seem to be getting near <span class="math inline">\(0.6\)</span>.</p>
+<p>Since limits are defined by the expression <span class="math inline">\(0 &lt; \lvert x-c\rvert &lt; \delta\)</span>, we should also look at values smaller than <span class="math inline">\(c\)</span>. There isn’t much difference (note the <code>.-</code> sign in <code>c .- hs</code>):</p>
+<pre class="{julia}"><code>#| hold: true
+xs = c .- hs
+ys = f.(xs)
+[xs ys]</code></pre>
+<p>Same story. The numeric evidence supports a limit of <span class="math inline">\(L=0.6\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The <code>lim</code> function
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <code>CalculusWithJulia</code> package provides a convenience function <code>lim(f, c)</code> to create tables to showcase limits. The <code>dir</code> keyword can be <code>"+-"</code> (the default) to show values from both the left and the right; <code>"+"</code> to only show values to the right of <code>c</code>; and <code>"-"</code> to only show values to the left of <code>c</code>:</p>
+<p>For example:</p>
+<pre class="{julia}"><code>lim(f, c)</code></pre>
+<p>The numbers are displayed in decreasing order so the values on the left side of <span class="math inline">\(c\)</span> are read from bottom to top:</p>
+<pre class="{julia}"><code>lim(f, c; dir="-")  # or even lim(f, c, -)</code></pre>
+</div>
+</div>
+<section id="example-the-secant-line" class="level5">
+<h5 class="anchored" data-anchor-id="example-the-secant-line">Example: the secant line</h5>
+<p>Let <span class="math inline">\(f(x) = x^x\)</span> and consider the ratio:</p>
+<p><span class="math display">\[
+\frac{f(c + h) - f(c)}{h}
+\]</span></p>
+<p>As <span class="math inline">\(h\)</span> goes to <span class="math inline">\(0\)</span>, this will take the form <span class="math inline">\(0/0\)</span> in most cases, and in the particular case of <span class="math inline">\(f(x) = x^x\)</span> and <span class="math inline">\(c=1\)</span> it will be. The expression has a geometric interpretation of being the slope of the secant line connecting the two points <span class="math inline">\((c,f(c))\)</span> and <span class="math inline">\((c+h, f(c+h))\)</span>.</p>
+<p>To look at the limit in this example, we have (recycling the values in <code>hs</code>):</p>
+<pre class="{julia}"><code>#| hold: true
+c = 1
+f(x) = x^x
+sec_line_slope(h) = (f(c+h) - f(c)) / h
+lim(sec_line_slope, 0)</code></pre>
+<p>The limit looks like <span class="math inline">\(L=1\)</span>.</p>
+</section>
+<section id="issues-with-the-numeric-approach" class="level3" data-number="18.2.1">
+<h3 data-number="18.2.1" class="anchored" data-anchor-id="issues-with-the-numeric-approach"><span class="header-section-number">18.2.1</span> Issues with the numeric approach</h3>
+<p>The numeric approach often gives a good intuition as to the existence of a limit and its value. However, it can be misleading. Consider this limit question:</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 0} \frac{1 - \cos(x)}{x^2}.
+\]</span></p>
+<p>We can see that it is indeterminate of the form <span class="math inline">\(0/0\)</span>:</p>
+<pre class="{julia}"><code>g(x) = (1 - cos(x)) / x^2
+g(0)</code></pre>
+<p>What is the value of <span class="math inline">\(L\)</span>, if it exists? Getting closer to <span class="math inline">\(0\)</span> numerically than the default yields:</p>
+<pre class="{julia}"><code>lim(g, 0; n=9)</code></pre>
+<p>Hmm, the values in <code>ys</code> appear to be going to <span class="math inline">\(0.5\)</span>, but then end up at <span class="math inline">\(0\)</span>. Is the limit <span class="math inline">\(0\)</span> or <span class="math inline">\(1/2\)</span>? The answer is <span class="math inline">\(1/2\)</span>. The last <span class="math inline">\(0\)</span> is an artifact of floating point arithmetic and the last few deviations from <code>0.5</code> due to loss of precision in subtraction. To investigate, we look more carefully at the two ratios:</p>
+<pre class="{julia}"><code>y1s = [1 - cos(x) for x in xs]
+y2s = [x^2 for x in xs]
+[xs y1s y2s]</code></pre>
+<p>Looking at the bottom of the second column reveals the error. The value of <code>1 - cos(1.0e-8)</code> is <code>0</code> and not a value around <code>5e-17</code>, as would be expected from the pattern above it. This is because the smallest floating point value less than <code>1.0</code> is more than <code>5e-17</code> units away, so <code>cos(1e-8)</code> is evaluated to be <code>1.0</code>. There just isn’t enough granularity to get this close to <span class="math inline">\(0\)</span>.</p>
+<p>Not that we needed to. The answer would have been clear if we had stopped with <code>x=1e-6</code> (with <code>n=6</code>) say.</p>
+<p>In general, some functions will frustrate the numeric approach. It is best to be wary of results. At a minimum they should confirm what a quick graph shows, though even that isn’t enough, as this next example shows.</p>
+<section id="example-2" class="level5">
+<h5 class="anchored" data-anchor-id="example-2">Example</h5>
+<p>Let <span class="math inline">\(h(x)\)</span> be defined by</p>
+<p><span class="math display">\[
+h(x) = x^2 + 1 + \log(| 11 \cdot x - 15 |)/99.
+\]</span></p>
+<p>The question is to investigate</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 15/11} h(x)
+\]</span></p>
+<p>A plot shows the answer appears to be straightforward:</p>
+<pre class="{julia}"><code>h(x) = x^2 + 1 + log(abs(11*x - 15))/99
+plot(h, 15/11 - 1, 15/11 + 1)</code></pre>
+<p>Taking values near <span class="math inline">\(15/11\)</span> shows nothing perhaps too unusual:</p>
+<pre class="{julia}"><code>#| hold: true
+c = 15/11
+lim(h, c; n = 16)</code></pre>
+<p>(Though the graph and table do hint at something a bit odd – the graph shows a blip, the table doesn’t show values in the second column going towards a specific value.)</p>
+<p>However the limit in this case is <span class="math inline">\(-\infty\)</span> (or DNE), as there is an aysmptote at <span class="math inline">\(c=15/11\)</span>. The problem is the asymptote due to the logarithm is extremely narrow and happens between floating point values to the left and right of <span class="math inline">\(15/11\)</span>.</p>
+</section>
+</section>
+<section id="richardson-extrapolation" class="level3" data-number="18.2.2">
+<h3 data-number="18.2.2" class="anchored" data-anchor-id="richardson-extrapolation"><span class="header-section-number">18.2.2</span> Richardson extrapolation</h3>
+<p>The <a href="https://github.com/JuliaMath/Richardson.jl"><code>Richardson</code></a> package provides a function to extrapolate a function <code>f(x)</code> to <code>f(x0)</code>, as the numeric limit does. We illustrate its use by example:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = sin(x)/x
+extrapolate(f, 1)</code></pre>
+<p>The answer involves two terms, the second being an estimate for the error in the estimation of <code>f(0)</code>.</p>
+<p>The values the method chooses could be viewed as follows:</p>
+<pre class="{julia}"><code>#| term: true
+extrapolate(1) do x  # using `do` notation for the function
+    @show x
+    sin(x)/x
+end</code></pre>
+<p>The <code>extrapolate</code> function avoids the numeric problems encountered in the following example</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = (1 - cos(x)) / x^2
+extrapolate(f, 1)</code></pre>
+<p>To find limits at a value of <code>c</code> not equal to <code>0</code>, we set the <code>x0</code> argument. For example,</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = (sqrt(x) - 5) / (sqrt(x-16) - 3)
+c = 25
+extrapolate(f, 1, x0=25)</code></pre>
+<p>This value can also be <code>Inf</code>, in anticipation of infinite limits to be discussed in a subsequent section:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = (x^2 - 2x + 1)/(x^3 - 3x^2 + 2x + 1)
+extrapolate(f, 10, x0=Inf)</code></pre>
+<p>(The starting value should be to the right of any zeros of the denominator.)</p>
+</section>
+</section>
+<section id="symbolic-approach-to-limits" class="level2" data-number="18.3">
+<h2 data-number="18.3" class="anchored" data-anchor-id="symbolic-approach-to-limits"><span class="header-section-number">18.3</span> Symbolic approach to limits</h2>
+<p>The <code>SymPy</code> package provides a <code>limit</code> function for finding the limit of an expression in a given variable. It must be loaded, as was done initially. The <code>limit</code> function’s use requires the expression, the variable and a value for <span class="math inline">\(c\)</span>. (Similar to the three things in the notation <span class="math inline">\(\lim_{x \rightarrow c}f(x)\)</span>.)</p>
+<p>For example, the limit at <span class="math inline">\(0\)</span> of <span class="math inline">\((1-\cos(x))/x^2\)</span> is easily handled:</p>
+<pre class="{julia}"><code>@syms x::real
+limit((1 - cos(x)) / x^2, x =&gt; 0)</code></pre>
+<p>The pair notation (<code>x =&gt; 0</code>) is used to indicate the variable and the value it is going to. A <code>dir</code> argument is used to indicate <code>x \rightarrow c+</code> (the default), <code>x \rightarrow c-</code>, and <code>x \rightarrow c</code>.</p>
+<section id="example-3" class="level5">
+<h5 class="anchored" data-anchor-id="example-3">Example</h5>
+<p>We look again at this function which despite having a vertical asymptote at <span class="math inline">\(x=15/11\)</span> has the property that it is positive for all floating point values, making both a numeric and graphical approach impossible:</p>
+<p><span class="math display">\[
+h(x) = x^2 + 1 + \log(| 11 \cdot x - 15 |)/99.
+\]</span></p>
+<p>We find the limit symbolically at <span class="math inline">\(c=15/11\)</span> as follows, taking care to use the exact value <code>15//11</code> and not the <em>floating point</em> approximation returned by <code>15/11</code>:</p>
+<pre class="{julia}"><code>#| hold: true
+h(x) = x^2 + 1 + log(abs(11x - 15))/99
+limit(h(x), x =&gt; 15 // 11)</code></pre>
+</section>
+<section id="example-4" class="level5">
+<h5 class="anchored" data-anchor-id="example-4">Example</h5>
+<p>Find the <a href="http://en.wikipedia.org/wiki/L%27H%C3%B4pital%27s_rule">limits</a>:</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 0} \frac{2\sin(x) - \sin(2x)}{x - \sin(x)}, \quad
+\lim_{x \rightarrow 0} \frac{e^x - 1 - x}{x^2}, \quad
+\lim_{\rho \rightarrow 1} \frac{x^{1-\rho} - 1}{1 - \rho}.
+\]</span></p>
+<p>We have for the first:</p>
+<pre class="{julia}"><code>limit( (2sin(x) - sin(2x)) / (x - sin(x)), x =&gt; 0; dir="+-")</code></pre>
+<p>(The <code>dir = "+-"</code> indicates take both a right and left limit and ensure both exist and are equal.)</p>
+<p>The second is similarly done, though here we define a function for variety:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = (exp(x) - 1 - x) / x^2
+limit(f(x), x =&gt; 0; dir="+-")</code></pre>
+<p>Finally, for the third we define a new variable and proceed:</p>
+<pre class="{julia}"><code>@syms rho::real
+limit( (x^(1-rho) - 1) / (1 - rho), rho =&gt; 1; dir="+-")</code></pre>
+<p>This last limit demonstrates that the <code>limit</code> function of <code>SymPy</code> can readily evaluate limits that involve parameters, though at times some assumptions on the parameters may be needed, as was done through <code>rho::real</code>.</p>
+<p>However, for some cases, the assumptions will not be enough, as they are broad. (E.g., something might be true for some values of the parameter and not others and these values aren’t captured in the assumptions.) So the user must be mindful that when parameters are involved, the answer may not reflect all possible cases.</p>
+</section>
+<section id="example-floating-point-conversion-issues" class="level5">
+<h5 class="anchored" data-anchor-id="example-floating-point-conversion-issues">Example: floating point conversion issues</h5>
+<p>The Gruntz <a href="http://www.cybertester.com/data/gruntz.pdf">algorithm</a> implemented in <code>SymPy</code> for symbolic limits is quite powerful. However, some care must be exercised to avoid undesirable conversions from exact values to floating point values.</p>
+<p>In a previous example, we used <code>15//11</code> and not <code>15/11</code>, as the former converts to an <em>exact</em> symbolic value for use in <code>SymPy</code>, but the latter would be approximated in floating point <em>before</em> this conversion so the exactness would be lost.</p>
+<p>To illustrate further, let’s look at the limit as <span class="math inline">\(x\)</span> goes to <span class="math inline">\(\pi/2\)</span> of <span class="math inline">\(j(x) = \cos(x) / (x - \pi/2)\)</span>. We follow our past practice:</p>
+<pre class="{julia}"><code>j(x) = cos(x) / (x - pi/2)
+j(pi/2)</code></pre>
+<p>The value is not <code>NaN</code>, rather <code>Inf</code>. This is because <code>cos(pi/2)</code> is not exactly <span class="math inline">\(0\)</span> as it should be mathematically, as <code>pi/2</code> is rounded to a floating point number. This minor difference is important. If we try and correct for this by using <code>PI</code> we have:</p>
+<pre class="{julia}"><code>limit(j(x), x =&gt; PI/2)</code></pre>
+<p>The value is not right, as this simple graph suggests the limit is in fact <span class="math inline">\(-1\)</span>:</p>
+<pre class="{julia}"><code>plot(j,  pi/4, 3pi/4)</code></pre>
+<p>The difference between <code>pi</code> and <code>PI</code> can be significant, and though usually <code>pi</code> is silently converted to <code>PI</code>, it doesn’t happen here as the division by <code>2</code> happens first, which turns the symbol into an approximate floating point number. Hence, <code>SymPy</code> is giving the correct answer for the problem it is given, it just isn’t the problem we wanted to look at.</p>
+<p>Trying again, being more aware of how <code>pi</code> and <code>PI</code> differ, we have:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = cos(x) / (x - PI/2)
+limit(f(x), x =&gt; PI/2)</code></pre>
+<p>(The value <code>pi</code> is able to be exactly converted to <code>PI</code> when used in <code>SymPy</code>, as it is of type <code>Irrational</code>, and is not a floating point value. However, the expression <code>pi/2</code> converts <code>pi</code> to a floating point value and then divides by <code>2</code>, hence the loss of exactness when used symbolically.)</p>
+</section>
+<section id="example-left-and-right-limits" class="level5">
+<h5 class="anchored" data-anchor-id="example-left-and-right-limits">Example: left and right limits</h5>
+<p>Right and left limits will be discussed in the next section; here we give an example of the idea. The mathematical convention is to say a limit exists if both the left <em>and</em> right limits exist and are equal. Informally a right (left) limit at <span class="math inline">\(c\)</span> only considers values of <span class="math inline">\(x\)</span> more (less) than <span class="math inline">\(c\)</span>. The <code>limit</code> function of <code>SymPy</code> finds directional limits by default, a right limit, where <span class="math inline">\(x &gt; c\)</span>.</p>
+<p>The left limit can be found by passing the argument <code>dir="-"</code>. Passing <code>dir="+-"</code> (and not <code>"-+"</code>), as done in a few examples above, will compute the mathematical limit, throwing an error in <code>Python</code> if no limit exists.</p>
+<pre class="{julia}"><code>limit(ceil(x), x =&gt; 0), limit(ceil(x), x =&gt; 0, dir="-")</code></pre>
+<p>This accurately shows the limit does not exist mathematically, but <code>limit(ceil(x), x =&gt; 0)</code> does exist (as it finds a right limit).</p>
+</section>
+</section>
+<section id="rules-for-limits" class="level2" data-number="18.4">
+<h2 data-number="18.4" class="anchored" data-anchor-id="rules-for-limits"><span class="header-section-number">18.4</span> Rules for limits</h2>
+<p>The <code>limit</code> function doesn’t compute limits from the definition, rather it applies some known facts about functions within a set of rules. Some of these rules are the following. Suppose the individual limits of <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> always exist (and are finite) below.</p>
+<p><span class="math display">\[\begin{align*}
+\lim_{x \rightarrow c} (a \cdot f(x) + b \cdot g(x)) &amp;= a \cdot
+  \lim_{x \rightarrow c} f(x) + b \cdot \lim_{x \rightarrow c} g(x)
+  &amp;\\
+%%
+\lim_{x \rightarrow c} f(x) \cdot g(x) &amp;= \lim_{x \rightarrow c}
+  f(x) \cdot \lim_{x \rightarrow c} g(x)
+  &amp;\\
+%%
+\lim_{x \rightarrow c} \frac{f(x)}{g(x)} &amp;=
+  \frac{\lim_{x \rightarrow c} f(x)}{\lim_{x \rightarrow c} g(x)}
+  &amp;(\text{provided }\lim_{x \rightarrow c} g(x) \neq 0)\\
+\end{align*}\]</span></p>
+<p>These are verbally described as follows, when the individual limits exist and are finite then:</p>
+<ul>
+<li>Limits involving sums, differences or scalar multiples of functions <em>exist</em> <strong>and</strong> can be <strong>computed</strong> by first doing the individual limits and then combining the answers appropriately.</li>
+<li>Limits of products exist and can be found by computing the limits of the individual factors and then combining.</li>
+<li>Limits of ratios <em>exist</em> and can be found by computing the limit of the individual terms and then dividing <strong>provided</strong> you don’t divide by <span class="math inline">\(0\)</span>. The last part is really important, as this rule is no help with the common indeterminate form <span class="math inline">\(0/0\)</span>.</li>
+</ul>
+<p>In addition, consider the composition:</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow c} f(g(x))
+\]</span></p>
+<p>Suppose that</p>
+<ul>
+<li>The outer limit, <span class="math inline">\(\lim_{x \rightarrow b} f(x) = L\)</span>, exists, and</li>
+<li>the inner limit, <span class="math inline">\(\lim_{x \rightarrow c} g(x) = b\)</span>, exists <strong>and</strong></li>
+<li>for some neighborhood around <span class="math inline">\(c\)</span> (not including <span class="math inline">\(c\)</span>) <span class="math inline">\(g(x)\)</span> is not <span class="math inline">\(b\)</span>,</li>
+</ul>
+<p>Then the limit exists and equals <span class="math inline">\(L\)</span>:</p>
+<p><span class="math inline">\(\lim_{x \rightarrow c} f(g(x)) = \lim_{u \rightarrow b} f(u) = L.\)</span></p>
+<p>An alternative, is to assume <span class="math inline">\(f(x)\)</span> is defined at <span class="math inline">\(b\)</span> and equal to <span class="math inline">\(L\)</span> (which is the definition of continuity), but that isn’t the assumption above, hence the need to exclude <span class="math inline">\(g\)</span> from taking on a value of <span class="math inline">\(b\)</span> (where <span class="math inline">\(f\)</span> may not be defined) near <span class="math inline">\(c\)</span>.</p>
+<p>These rules, together with the fact that our basic algebraic functions have limits that can be found by simple evaluation, mean that many limits are easy to compute.</p>
+<section id="example-composition" class="level5">
+<h5 class="anchored" data-anchor-id="example-composition">Example: composition</h5>
+<p>For example, consider for some non-zero <span class="math inline">\(k\)</span> the following limit:</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 0} \frac{\sin(kx)}{x}.
+\]</span></p>
+<p>This is clearly related to the function <span class="math inline">\(f(x) = \sin(x)/x\)</span>, which has a limit of <span class="math inline">\(1\)</span> as <span class="math inline">\(x \rightarrow 0\)</span>. We see <span class="math inline">\(g(x) = k f(kx)\)</span> is the limit in question. As <span class="math inline">\(kx \rightarrow 0\)</span>, though not taking a value of <span class="math inline">\(0\)</span> except when <span class="math inline">\(x=0\)</span>, the limit above is <span class="math inline">\(k \lim_{x \rightarrow 0} f(kx) = k \lim_{u \rightarrow 0} f(u) = k\)</span>.</p>
+<p>Basically when taking a limit as <span class="math inline">\(x\)</span> goes to <span class="math inline">\(0\)</span> we can multiply <span class="math inline">\(x\)</span> by any constant and figure out the limit for that. (It is as though we “go to” <span class="math inline">\(0\)</span> faster or slower. but are still going to <span class="math inline">\(0\)</span>.</p>
+<p>Similarly,</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 0} \frac{\sin(x^2)}{x^2} = 1,
+\]</span></p>
+<p>as this is the limit of <span class="math inline">\(f(g(x))\)</span> with <span class="math inline">\(f\)</span> as above and <span class="math inline">\(g(x) = x^2\)</span>. We need <span class="math inline">\(x \rightarrow 0\)</span>, <span class="math inline">\(g\)</span> is only <span class="math inline">\(0\)</span> at <span class="math inline">\(x=0\)</span>, which is the case.</p>
+</section>
+<section id="example-products" class="level5">
+<h5 class="anchored" data-anchor-id="example-products">Example: products</h5>
+<p>Consider this more complicated limit found on this <a href="http://en.wikipedia.org/wiki/L%27H%C3%B4pital%27s_rule">Wikipedia</a> page.</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 1/2} \frac{\sin(\pi x)}{\pi x} \cdot \frac{\cos(\pi x)}{1 - (2x)^2}.
+\]</span></p>
+<p>We know the first factor has a limit found by evaluation: <span class="math inline">\(2/\pi\)</span>, so it is really just a constant. The second we can compute:</p>
+<pre class="{julia}"><code>l(x) = cos(PI*x) / (1 - (2x)^2)
+limit(l(x), x =&gt; 1//2)</code></pre>
+<p>Putting together, we would get <span class="math inline">\(1/2\)</span>. Which we could have done directly in this case:</p>
+<pre class="{julia}"><code>limit(sin(PI*x)/(PI*x) * l(x), x =&gt; 1//2)</code></pre>
+</section>
+<section id="example-ratios" class="level5">
+<h5 class="anchored" data-anchor-id="example-ratios">Example: ratios</h5>
+<p>Consider again the limit of <span class="math inline">\(\cos(\pi x) / (1 - (2x)^2)\)</span> at <span class="math inline">\(c=1/2\)</span>. A graph of both the top and bottom functions shows the indeterminate, <span class="math inline">\(0/0\)</span>, form:</p>
+<pre class="{julia}"><code>plot(cos(pi*x), 0.4, 0.6)
+plot!(1 - (2x)^2)</code></pre>
+<p>However, following Euler’s insight that <span class="math inline">\(\sin(x)/x\)</span> will have a limit at <span class="math inline">\(0\)</span> of <span class="math inline">\(1\)</span> as <span class="math inline">\(\sin(x) \approx x\)</span>, and <span class="math inline">\(x/x\)</span> has a limit of <span class="math inline">\(1\)</span> at <span class="math inline">\(c=0\)</span>, we can see that <span class="math inline">\(\cos(\pi x)\)</span> looks like <span class="math inline">\(-\pi\cdot (x - 1/2)\)</span> and <span class="math inline">\((1 - (2x)^2)\)</span> looks like <span class="math inline">\(-4(x-1/2)\)</span> around <span class="math inline">\(x=1/2\)</span>:</p>
+<pre class="{julia}"><code>plot(cos(pi*x), 0.4, 0.6)
+plot!(-pi*(x - 1/2))</code></pre>
+<pre class="{julia}"><code>plot(1 - (2x)^2, 0.4, 0.6)
+plot!(-4(x - 1/2))</code></pre>
+<p>So around <span class="math inline">\(c=1/2\)</span> the ratio should look like <span class="math inline">\(-\pi (x-1/2) / ( -4(x -    1/2)) = \pi/4\)</span>, which indeed it does, as that is the limit.</p>
+<p>This is the basis of L’Hôpital’s rule, which we will return to once the derivative is discussed.</p>
+</section>
+<section id="example-sums" class="level5">
+<h5 class="anchored" data-anchor-id="example-sums">Example: sums</h5>
+<p>If it is known that the following limit exists by some means:</p>
+<p><span class="math display">\[
+L = 0 = \lim_{x \rightarrow 0} \frac{e^{\csc(x)}}{e^{\cot(x)}} - (1 + \frac{1}{2}x  + \frac{1}{8}x^2)
+\]</span></p>
+<p>Then this limit will exist</p>
+<p><span class="math display">\[
+M = \lim_{x \rightarrow 0} \frac{e^{\csc(x)}}{e^{\cot(x)}}
+\]</span></p>
+<p>Why? We can express the function <span class="math inline">\(e^{\csc(x)}/e^{\cot(x)}\)</span> as the above function plus the polynomial <span class="math inline">\(1 + x/2 + x^2/8\)</span>. The above is then the sum of two functions whose limits exist and are finite, hence, we can conclude that <span class="math inline">\(M = 0 + 1\)</span>.</p>
+</section>
+<section id="the-squeeze-theorem" class="level3" data-number="18.4.1">
+<h3 data-number="18.4.1" class="anchored" data-anchor-id="the-squeeze-theorem"><span class="header-section-number">18.4.1</span> The <a href="http://en.wikipedia.org/wiki/Squeeze_theorem">squeeze</a> theorem</h3>
+<p>We note one more limit law. Suppose we wish to compute <span class="math inline">\(\lim_{x \rightarrow c}f(x)\)</span> and we have two other functions, <span class="math inline">\(l\)</span> and <span class="math inline">\(u\)</span>, satisfying:</p>
+<ul>
+<li>for all <span class="math inline">\(x\)</span> near <span class="math inline">\(c\)</span> (possibly not including <span class="math inline">\(c\)</span>) <span class="math inline">\(l(x) \leq f(x) \leq u(x)\)</span>.</li>
+<li>These limits exist and are equal: <span class="math inline">\(L = \lim_{x \rightarrow c} l(x) = \lim_{x \rightarrow c} u(x)\)</span>.</li>
+</ul>
+<p>Then the limit of <span class="math inline">\(f\)</span> must also be <span class="math inline">\(L\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+gr()
+function squeeze_example(x)
+    x₀ = 0.5
+    plot(cos, 0, x₀, label="cos")
+    plot!(x -&gt; sin(x)/x, label = "sin(x)/x")
+    plot!(x -&gt; 1, label = "y=1")
+    plot!([x,x], [ cos(x₀), 1], linestyle=:dash, label="")
+    scatter!([x,x,x], [cos(x), sin(x)/x, 1], label="")
+end
+
+anim = @animate for x ∈ (0.4, 0.3, 0.2, 0.1, 0.05, 0.01)
+    squeeze_example(x)
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+
+
+caption = """
+As ``x`` goes to ``0``, the values of ``\\sin(x)/x`` are squeezed between ``\\cos(x)`` and ``1`` which both converge to ``1``.
+"""
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+</section>
+</section>
+<section id="limits-from-the-definition" class="level2" data-number="18.5">
+<h2 data-number="18.5" class="anchored" data-anchor-id="limits-from-the-definition"><span class="header-section-number">18.5</span> Limits from the definition</h2>
+<p>The formal definition of a limit involves clarifying what it means for <span class="math inline">\(f(x)\)</span> to be “close to <span class="math inline">\(L\)</span>” when <span class="math inline">\(x\)</span> is “close to <span class="math inline">\(c\)</span>”. These are quantified by the inequalities <span class="math inline">\(0 &lt; \lvert x-c\rvert &lt; \delta\)</span> and the <span class="math inline">\(\lvert f(x) - L\rvert &lt; \epsilon\)</span>. The second does not have the restriction that it is greater than <span class="math inline">\(0\)</span>, as indeed <span class="math inline">\(f(x)\)</span> can equal <span class="math inline">\(L\)</span>. The order is important: it says for any idea of close for <span class="math inline">\(f(x)\)</span> to <span class="math inline">\(L\)</span>, an idea of close must be found for <span class="math inline">\(x\)</span> to <span class="math inline">\(c\)</span>.</p>
+<p>The key is identifying a value for <span class="math inline">\(\delta\)</span> for a given value of <span class="math inline">\(\epsilon\)</span>.</p>
+<p>A simple case is the linear case. Consider the function <span class="math inline">\(f(x) = 3x + 2\)</span>. Verify that the limit at <span class="math inline">\(c=1\)</span> is <span class="math inline">\(5\)</span>.</p>
+<p>We show “numerically” that <span class="math inline">\(\delta = \epsilon/3\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = 3x + 2
+c, L = 1, 5
+epsilon = rand()                 # some number in (0,1)
+delta = epsilon / 3
+xs = c .+ delta * rand(100)       # 100 numbers, c &lt; x &lt; c + delta
+as = [abs(f(x) - L) &lt; epsilon for x in xs]
+all(as)                          # are all the as true?</code></pre>
+<p>These lines produce a random <span class="math inline">\(\epsilon\)</span>, the resulting <span class="math inline">\(\delta\)</span>, and then verify for 100 numbers within <span class="math inline">\((c, c+\delta)\)</span> that the inequality <span class="math inline">\(\lvert f(x) - L \rvert &lt; \epsilon\)</span> holds for each. Running them again and again should always produce <code>true</code> if <span class="math inline">\(L\)</span> is the limit and <span class="math inline">\(\delta\)</span> is chosen properly.</p>
+<p>(Of course, we should also verify values to the left of <span class="math inline">\(c\)</span>.)</p>
+<p>(The random numbers are technically in <span class="math inline">\([0,1)\)</span>, so in theory <code>epsilon</code> could be <code>0</code>. So the above approach would be more solid if some guard, such as <code>epsilon = max(eps(), rand())</code>, was used. As the formal definition is the domain of paper-and-pencil, we don’t fuss.)</p>
+<p>In this case, <span class="math inline">\(\delta\)</span> is easy to guess, as the function is linear and has slope <span class="math inline">\(3\)</span>. This basically says the <span class="math inline">\(y\)</span> scale is 3 times the <span class="math inline">\(x\)</span> scale. For non-linear functions, finding <span class="math inline">\(\delta\)</span> for a given <span class="math inline">\(\epsilon\)</span> can be a challenge. For the function <span class="math inline">\(f(x) = x^3\)</span>, illustrated below, a value of <span class="math inline">\(\delta=\epsilon^{1/3}\)</span> is used for <span class="math inline">\(c=0\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+## {{{ limit_e_d }}}
+gr()
+function make_limit_e_d(n)
+    f(x) = x^3
+
+    xs = range(-.9, stop=.9, length=50)
+    ys = map(f, xs)
+
+
+    plt = plot(f, -.9, .9, legend=false, size=fig_size)
+    if n == 0
+        nothing
+    else
+        k = div(n+1,2)
+        epsilon = 1/2^k
+        delta = cbrt(epsilon)
+        if isodd(n)
+            plot!(plt, xs, 0*xs .+ epsilon, color=:orange)
+            plot!(plt, xs, 0*xs .- epsilon, color=:orange)
+        else
+            plot!(delta * [-1,  1], epsilon * [ 1, 1], color=:orange)
+            plot!(delta * [ 1, -1], epsilon * [-1,-1], color=:orange)
+            plot!(delta * [-1, -1], epsilon * [-1, 1], color=:red)
+            plot!(delta * [ 1,  1], epsilon * [-1, 1], color=:red)
+        end
+    end
+    plt
+end
+
+
+n = 11
+anim = @animate for i=1:n
+    make_limit_e_d(i-1)
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+
+
+caption = L"""
+
+Demonstration of $\epsilon$-$\delta$ proof of $\lim_{x \rightarrow 0}
+x^3 = 0$. For any $\epsilon&gt;0$ (the orange lines) there exists a
+$\delta&gt;0$ (the red lines of the box) for which the function $f(x)$
+does not leave the top or bottom of the box (except possibly at the
+edges). In this example $\delta^3=\epsilon$.
+
+"""
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+</section>
+<section id="questions" class="level2" data-number="18.6">
+<h2 data-number="18.6" class="anchored" data-anchor-id="questions"><span class="header-section-number">18.6</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>From the graph, find the limit:</p>
+<p><span class="math display">\[
+L = \lim_{x\rightarrow 1}  \frac{x^2−3x+2}{x^2−6x+5}
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = (x^2 - 3x +2) / (x^2 - 6x + 5)
+plot(f, 0,2)</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+answ = 1/4
+numericq(answ, 1e-1)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>From the graph, find the limit <span class="math inline">\(L\)</span>:</p>
+<p><span class="math display">\[
+L = \lim_{x \rightarrow -2} \frac{x}{x+1} \frac{x^2}{x^2 + 4}
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = x/(x+1)*x^2/(x^2+4)
+plot(f, -3, -1.25)</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = x/(x+1)*x^2/(x^2+4)
+val = f(-2)
+numericq(val, 1e-1)</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>Graphically investigate the limit</p>
+<p><span class="math display">\[
+L = \lim_{x \rightarrow 0} \frac{e^x - 1}{x}.
+\]</span></p>
+<p>What is the value of <span class="math inline">\(L\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = (exp(x) - 1)/x
+p = plot(f, -1, 1)</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = N(limit((exp(x)-1)/x, x =&gt; 0))
+numericq(val, 1e-1)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>Graphically investigate the limit</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 0} \frac{\cos(x) - 1}{x}.
+\]</span></p>
+<p>The limit exists, what is the value?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = 0
+numericq(val, 1e-2)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>Select the graph for which there is no limit at <span class="math inline">\(a\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+gr()
+let
+    p1 = plot(;axis=nothing, legend=false)
+    title!(p1, "(a)")
+    plot!(p1, x -&gt; x^2, 0, 2, color=:black)
+    plot!(p1, zero, linestyle=:dash)
+    annotate!(p1,[(1,0,"a")])
+
+    p2 = plot(;axis=nothing, legend=false)
+    title!(p2, "(b)")
+    plot!(p2, x -&gt; 1/(1-x), 0, .95, color=:black)
+    plot!(p2, x-&gt; -1/(1-x), 1.05, 2, color=:black)
+    plot!(p2, zero, linestyle=:dash)
+    annotate!(p2,[(1,0,"a")])
+
+    p3 = plot(;axis=nothing, legend=false)
+    title!(p3, "(c)")
+    plot!(p3, sinpi, 0, 2, color=:black)
+    plot!(p3, zero, linestyle=:dash)
+    annotate!(p3,[(1,0,"a")])
+
+    p4 = plot(;axis=nothing, legend=false)
+    title!(p4, "(d)")
+    plot!(p4, x -&gt; x^x, 0, 2, color=:black)
+    plot!(p4, zero, linestyle=:dash)
+    annotate!(p4,[(1,0,"a")])
+
+    l = @layout[a b; c d]
+    p = plot(p1, p2, p3, p4, layout=l)
+    imgfile = tempname() * ".png"
+    savefig(p, imgfile)
+    hotspotq(imgfile, (1/2,1), (1/2,1))
+end</code></pre>
+<pre class="{julia}"><code>#| echo: false
+plotly();</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>The following limit is commonly used:</p>
+<p><span class="math display">\[
+\lim_{h \rightarrow 0} \frac{e^{x + h} - e^x}{h} = L.
+\]</span></p>
+<p>Factoring out <span class="math inline">\(e^x\)</span> from the top and using rules of limits this becomes,</p>
+<p><span class="math display">\[
+L = e^x \lim_{h \rightarrow 0} \frac{e^h - 1}{h}.
+\]</span></p>
+<p>What is <span class="math inline">\(L\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``0``", "``1``", "``e^x``"]
+answ = 3
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>The following limit is commonly used:</p>
+<p><span class="math display">\[
+\lim_{h \rightarrow 0} \frac{\sin(x + h) - \sin(x)}{h} = L.
+\]</span></p>
+<p>The answer should depend on <span class="math inline">\(x\)</span>, though it is possible it is a constant. Using a double angle formula and the rules of limits, this can be written as:</p>
+<p><span class="math display">\[
+L = \cos(x) \lim_{h \rightarrow 0}\frac{\sin(h)}{h} + \sin(x) \lim_{h \rightarrow 0}\frac{\cos(h)-1}{h}.
+\]</span></p>
+<p>Using the last result, what is the value of <span class="math inline">\(L\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``\\cos(x)``", "``\\sin(x)``", "``1``", "``0``", "``\\sin(h)/h``"]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>Find the limit as <span class="math inline">\(x\)</span> goes to <span class="math inline">\(2\)</span> of</p>
+<p><span class="math display">\[
+f(x) = \frac{3x^2 - x -10}{x^2 - 4}
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = (3x^2 - x - 10)/(x^2 - 4);
+val = convert(Float64, N(limit(f(x), x =&gt; 2)))
+numericq(val)</code></pre>
+</section>
+<section id="question-8" class="level6">
+<h6 class="anchored" data-anchor-id="question-8">Question</h6>
+<p>Find the limit as <span class="math inline">\(x\)</span> goes to <span class="math inline">\(-2\)</span> of</p>
+<p><span class="math display">\[
+f(x) = \frac{\frac{1}{x} + \frac{1}{2}}{x^3 + 8}
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = ((1/x) + (1/2))/(x^3 + 8)
+numericq(-1/48, .001)</code></pre>
+</section>
+<section id="question-9" class="level6">
+<h6 class="anchored" data-anchor-id="question-9">Question</h6>
+<p>Find the limit as <span class="math inline">\(x\)</span> goes to <span class="math inline">\(27\)</span> of</p>
+<p><span class="math display">\[
+f(x) = \frac{x - 27}{x^{1/3} - 3}
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = (x - 27)/(x^(1//3) - 3)
+val = N(limit(f(x), x =&gt; 27))
+numericq(val)</code></pre>
+</section>
+<section id="question-10" class="level6">
+<h6 class="anchored" data-anchor-id="question-10">Question</h6>
+<p>Find the limit</p>
+<p><span class="math display">\[
+L = \lim_{x \rightarrow \pi/2} \frac{\tan (2x)}{x - \pi/2}
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = tan(2x)/(x-PI/2)
+val = N(limit(f(x), x =&gt; PI/2))
+numericq(val)</code></pre>
+</section>
+<section id="question-11" class="level6">
+<h6 class="anchored" data-anchor-id="question-11">Question</h6>
+<p>The limit of <span class="math inline">\(\sin(x)/x\)</span> at <span class="math inline">\(0\)</span> has a numeric value. This depends upon the fact that <span class="math inline">\(x\)</span> is measured in radians. Try to find this limit: <code>limit(sind(x)/x, x =&gt; 0)</code>. What is the value?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [q"0", q"1", q"pi/180", q"180/pi"]
+answ = 3
+radioq(choices, answ)</code></pre>
+<p>What is the limit <code>limit(sinpi(x)/x, x =&gt; 0)</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [q"0", q"1", q"pi", q"1/pi"]
+answ = 3
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-limit-properties" class="level6">
+<h6 class="anchored" data-anchor-id="question-limit-properties">Question: limit properties</h6>
+<p>There are several properties of limits that allow one to break down more complicated problems into smaller subproblems. For example,</p>
+<p><span class="math display">\[
+\lim (f(x) + g(x)) = \lim f(x) + \lim g(x)
+\]</span></p>
+<p>is notation to indicate that one can take a limit of the sum of two function or take the limit of each first, then add and the answer will be unchanged, provided all the limits in question exist.</p>
+<p>Use one or the either to find the limit of <span class="math inline">\(f(x) = \sin(x) + \tan(x) + \cos(x)\)</span> as <span class="math inline">\(x\)</span> goes to <span class="math inline">\(0\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = sin(x) + tan(x) + cos(x)
+numericq(f(0), 1e-5)</code></pre>
+</section>
+<section id="question-12" class="level6">
+<h6 class="anchored" data-anchor-id="question-12">Question</h6>
+<p>The key assumption made above in being able to write</p>
+<p><span class="math display">\[
+\lim_{x\rightarrow c} f(g(x)) = L,
+\]</span></p>
+<p>when <span class="math inline">\(\lim_{x\rightarrow b} f(x) = L\)</span> and <span class="math inline">\(\lim_{x\rightarrow c}g(x) = b\)</span> is <em>continuity</em>.</p>
+<p>This <a href="https://en.wikipedia.org/wiki/Limit_of_a_function#Limits_of_compositions_of_functions">example</a> shows why it is important.</p>
+<p>Take</p>
+<p><span class="math display">\[
+f(x) = \begin{cases}
+0 &amp; x \neq 0\\
+1 &amp; x = 0
+\end{cases}
+\]</span></p>
+<p>We have <span class="math inline">\(\lim_{x\rightarrow 0}f(x) = 0\)</span>, as <span class="math inline">\(0\)</span> is clearly a removable discontinuity. So were the above applicable we would have <span class="math inline">\(\lim_{x \rightarrow 0}f(f(x)) = 0\)</span>. But this is not true. What is the limit at <span class="math inline">\(0\)</span> of <span class="math inline">\(f(f(x))\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(1)</code></pre>
+</section>
+<section id="question-13" class="level6">
+<h6 class="anchored" data-anchor-id="question-13">Question</h6>
+<p>Does this function have a limit as <span class="math inline">\(h\)</span> goes to <span class="math inline">\(0\)</span> from the right (that is, assume <span class="math inline">\(h&gt;0\)</span>)?</p>
+<p><span class="math display">\[
+\frac{h^h - 1}{h}
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"Yes, the value is `-9.2061`",
+"Yes, the value is `-11.5123`",
+"No, the value heads to negative infinity"
+];
+answ = 3;
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-14" class="level6">
+<h6 class="anchored" data-anchor-id="question-14">Question</h6>
+<p>Compute the limit</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 1} \frac{x}{x-1} - \frac{1}{\ln(x)}.
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = x/(x-1) - 1/log(x)
+val = convert(Float64, N(limit(f(x), x =&gt; 1)))
+numericq(val)</code></pre>
+</section>
+<section id="question-15" class="level6">
+<h6 class="anchored" data-anchor-id="question-15">Question</h6>
+<p>Compute the limit</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 1/2} \frac{1}{\pi} \frac{\cos(\pi x)}{1 - (2x)^2}.
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) =  1/PI * cos(PI*x)/(1 - (2x)^2)
+val = convert(Float64, N(limit(f(x), x =&gt; 1//2)))
+numericq(val)</code></pre>
+</section>
+<section id="question-16" class="level6">
+<h6 class="anchored" data-anchor-id="question-16">Question</h6>
+<p>Compute the limit</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 0} \frac{x\sin(\sin(x)) - \sin^2(x)}{x^6}.
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) =  (x * sin(sin(x))- sin(x)^2)/x^6
+val = convert(Float64, N(limit(f(x), x =&gt; 0)))
+numericq(val)</code></pre>
+</section>
+<section id="question-17" class="level6">
+<h6 class="anchored" data-anchor-id="question-17">Question</h6>
+<p>Compute the limit</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 0} \frac{\tan(x) - 24  \tan(x/2)}{4  \sin(x) - 5  x}.
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = (tan(x) - 24 * tan(x/2)) / (4 * sin(x) - 5 * x)
+val = N(limit(f(x), x =&gt; 0))
+numericq(val)</code></pre>
+</section>
+<section id="question-18" class="level6">
+<h6 class="anchored" data-anchor-id="question-18">Question</h6>
+<p>Some limits involve parameters. For example, suppose we define <code>ex</code> as follows:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms m::real k::real
+ex = (1 + k*x)^(m/x)</code></pre>
+<p>What is <code>limit(ex, x =&gt; 0)</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``e^{km}``", "``e^{k/m}``", "``k/m``", "``m/k``", "``0``"]
+answwer = 1
+radioq(choices, answwer)</code></pre>
+</section>
+<section id="question-19" class="level6">
+<h6 class="anchored" data-anchor-id="question-19">Question</h6>
+<p>For a given <span class="math inline">\(a\)</span>, what is</p>
+<p><span class="math display">\[
+L = \lim_{x \rightarrow 0+} (1 + a\cdot (e^{-x} -1))^{(1/x)}
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``e^{-a}``", "``e^a``", "``a``", "``L`` does not exist"]
+radioq(choices, 1)</code></pre>
+</section>
+<section id="question-20" class="level6">
+<h6 class="anchored" data-anchor-id="question-20">Question</h6>
+<p>For positive integers <span class="math inline">\(m\)</span> and <span class="math inline">\(n\)</span> what is</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 1} \frac{x^{1/m}-1}{x^{1/n}-1}?
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``m/n``", "``n/m``", "``mn``", "The limit does not exist"]
+radioq(choices, 2)</code></pre>
+</section>
+<section id="question-21" class="level6">
+<h6 class="anchored" data-anchor-id="question-21">Question</h6>
+<p>What does <code>SymPy</code> find for the limit of <code>ex</code> (<code>limit(ex, x =&gt; 0)</code>), as defined here:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x a
+ex = (a^x - 1)/x</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``\\log(a)``", "``a``", "``e^a``", "``e^{-a}``"]
+radioq(choices, 1)</code></pre>
+<p>Should <code>SymPy</code> have needed an assumption like</p>
+<pre class="{julia}"><code>@syms a::positive</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq("yes")</code></pre>
+</section>
+<section id="question-22" class="level6">
+<h6 class="anchored" data-anchor-id="question-22">Question</h6>
+<p>The limit</p>
+<p><span class="math display">\[
+L= \lim_{x \rightarrow 0} \left(\frac{a^x - x \log(a)}{b^x - x\log(b)}\right)^{1/x^2}
+\]</span></p>
+<p>For <span class="math inline">\(a=3\)</span> and <span class="math inline">\(b=2\)</span></p>
+<p>Can be computed symbolically <em>two</em> different ways:</p>
+<pre class="{julia}"><code>@syms x
+a, b = 3, 2
+f(x) = ((a^x - x*log(a))/(b^x - x*log(b)))^(1/x^2)
+limit(f(x), x=&gt;0)</code></pre>
+<p><em>or</em></p>
+<pre class="{julia}"><code>@syms x a b
+f(x) = ((a^x - x*log(a))/(b^x - x*log(b)))^(1/x^2)
+L = limit(f(x), x=&gt;0)
+L(a =&gt; 3, b=&gt;2)</code></pre>
+<p>Which is correct?</p>
+<pre class="{julia}"><code>#| echo: false
+choices = ["The first one", "The second one"]
+explanation = """
+The first one is incorrect, as `log(3)` is evaluated numerically, and not symbolically. The difference between a floating point approximation and the symbolic expression is enough to make the first limit infinite, despite the actual limit being finite.
+"""
+buttonq(choices, 2; explanation=explanation)</code></pre>
+</section>
+<section id="question-the-squeeze-theorem" class="level6">
+<h6 class="anchored" data-anchor-id="question-the-squeeze-theorem">Question: The squeeze theorem</h6>
+<p>Let’s look at the function <span class="math inline">\(f(x) = x \sin(1/x)\)</span>. A graph around <span class="math inline">\(0\)</span> can be made with:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = x == 0 ? NaN : x * sin(1/x)
+c, delta = 0, 1/4
+plot(f, c - delta, c + delta)
+plot!(abs)
+plot!(x -&gt; -abs(x))</code></pre>
+<p>This graph clearly oscillates near <span class="math inline">\(0\)</span>. To the graph of <span class="math inline">\(f\)</span>, we added graphs of both <span class="math inline">\(g(x) = \lvert x\rvert\)</span> and <span class="math inline">\(h(x) = - \lvert x\rvert\)</span>. From this graph it is easy to see by the “squeeze theorem” that the limit at <span class="math inline">\(x=0\)</span> is <span class="math inline">\(0\)</span>. Why?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices=[L"""The functions $g$ and $h$ both have a limit of $0$ at $x=0$ and the function $f$ is in
+between both $g$ and $h$, so must to have a limit of $0$.
+""",
+    L"The functions $g$ and $h$ squeeze each other as $g(x) &gt; h(x)$",
+         L"The function $f$ has no limit - it oscillates too much near $0$"]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>(The <a href="https://en.wikipedia.org/wiki/Squeeze_theorem">Wikipedia</a> entry for the squeeze theorem has this unverified, but colorful detail:</p>
+<blockquote class="blockquote">
+<p>In many languages (e.g.&nbsp;French, German, Italian, Hungarian and Russian), the squeeze theorem is also known as the two policemen (and a drunk) theorem, or some variation thereof. The story is that if two policemen are escorting a drunk prisoner between them, and both officers go to a cell, then (regardless of the path taken, and the fact that the prisoner may be wobbling about between the policemen) the prisoner must also end up in the cell.</p>
+</blockquote>
+</section>
+<section id="question-23" class="level6">
+<h6 class="anchored" data-anchor-id="question-23">Question</h6>
+<p>Archimedes, in finding bounds on the value of <span class="math inline">\(\pi\)</span> used <span class="math inline">\(n\)</span>-gons with sides <span class="math inline">\(12, 24, 48,\)</span> and <span class="math inline">\(96\)</span>. This was so the trigonometry involved could be solved exactly for the interior angles (e.g.&nbsp;<span class="math inline">\(n=12\)</span> is an interior angle of <span class="math inline">\(\pi/6\)</span> which has <code>sin</code> and <code>cos</code> computable by simple geometry. See <a href="https://arxiv.org/pdf/2008.07995.pdf">Damini and Abhishek</a>) These exact solutions led to subsequent bounds. A more modern approach to bound the circumference of a circle of radius <span class="math inline">\(r\)</span> using a <span class="math inline">\(n\)</span>-gon with interior angle <span class="math inline">\(\theta\)</span> would be to use the trigonometric functions. An upper bound would be found with (using the triangle with angle <span class="math inline">\(\theta/2\)</span>, opposite side <span class="math inline">\(x\)</span> and adjacent side <span class="math inline">\(r\)</span>:</p>
+<pre class="{julia}"><code>@syms theta::real r::real</code></pre>
+<pre class="{julia}"><code>#| hold: true
+x = r * tan(theta/2)
+n = 2PI/theta     # using PI to avoid floaing point roundoff in 2pi
+# C &lt; n * 2x
+upper = n*2x</code></pre>
+<p>A lower bound would use the triangle with angle <span class="math inline">\(\theta/2\)</span>, hypotenuse <span class="math inline">\(r\)</span> and opposite side <span class="math inline">\(x\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+x = r*sin(theta/2)
+n = 2PI/theta
+# C &gt; n * 2x
+lower = n*2x</code></pre>
+<p>Using the above, find the limit of <code>upper</code> and <code>lower</code>. Are the two equal and equal to a familiar value?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq("yes")</code></pre>
+<p>(If so, then the squeeze theorem would say that <span class="math inline">\(\pi\)</span> is the common limit.)</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlxuSlhHID0gcmVxdWlyZShcImpzeGdyYXBoXCIpXG5cbmIgPSBKWEcuSlNYR3JhcGguaW5pdEJvYXJkKCdqc3hncmFwaCcsIHtcbiAgICBib3VuZGluZ2JveDogWy02LCAxLjIsIDYsLTEuMl0sIGF4aXM6dHJ1ZVxufSk7XG5cbmYgPSBmdW5jdGlvbih4KSB7cmV0dXJuIE1hdGguc2luKHgpIC8geDt9O1xuZ3JhcGggPSBiLmNyZWF0ZShcImZ1bmN0aW9uZ3JhcGhcIiwgW2YsIC02LCA2XSlcbnNlZyA9IGIuY3JlYXRlKFwibGluZVwiLCBbWy02LDBdLCBbNiwwXV0sIHtmaXhlZDp0cnVlfSk7XG5cblggPSBiLmNyZWF0ZShcImdsaWRlclwiLCBbMiwgMCwgc2VnXSwge25hbWU6XCJ4XCIsIHNpemU6NH0pO1xuUCA9IGIuY3JlYXRlKFwicG9pbnRcIiwgW2Z1bmN0aW9uKCkge3JldHVybiBYLlgoKX0sIGZ1bmN0aW9uKCkge3JldHVybiBmKFguWCgpKX1dLCB7bmFtZTpcIlwifSk7XG5RID0gYi5jcmVhdGUoXCJwb2ludFwiLCBbMCwgZnVuY3Rpb24oKSB7cmV0dXJuIFAuWSgpO31dLCB7bmFtZTpcImYoeClcIn0pO1xuXG5zZWd1cCA9IGIuY3JlYXRlKFwic2VnbWVudFwiLCBbUCxYXSwge2Rhc2g6Mn0pO1xuc2Vnb3ZlciA9IGIuY3JlYXRlKFwic2VnbWVudFwiLCBbUCwgWzAsIGZ1bmN0aW9uKCkge3JldHVybiBQLlkoKX1dXSwge2Rhc2g6Mn0pO1xuXG5cbnR4dCA9IGIuY3JlYXRlKCd0ZXh0JywgWzIsIDEsIGZ1bmN0aW9uKCkge1xuICAgIHJldHVybiBcInggPSBcIiArIFguWCgpLnRvRml4ZWQoNCkgKyBcIiwgZih4KSA9IFwiICsgUC5ZKCkudG9GaXhlZCg0KTtcbn1dKTtcbiJ9XX0=
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../limits";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../limits.html" class="pagination-link" aria-label="Limits">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Limits</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../limits/limits_extensions.html" class="pagination-link" aria-label="Limits, issues, extensions of the concept">
+        <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/limits/limits.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -1,0 +1,2352 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>54&nbsp; Vectors and matrices – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../differentiable_vector_calculus/vector_valued_functions.html" rel="next">
+<link href="../differentiable_vector_calculus/polar_coordinates.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../differentiable_vector_calculus.html">Differential vector calculus</a></li><li class="breadcrumb-item"><a href="../differentiable_vector_calculus/vectors.html"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#vector-addition-scalar-multiplication" id="toc-vector-addition-scalar-multiplication" class="nav-link active" data-scroll-target="#vector-addition-scalar-multiplication"><span class="header-section-number">54.1</span> Vector addition, scalar multiplication</a></li>
+  <li><a href="#the-length-and-direction-of-a-vector" id="toc-the-length-and-direction-of-a-vector" class="nav-link" data-scroll-target="#the-length-and-direction-of-a-vector"><span class="header-section-number">54.2</span> The length and direction of a vector</a></li>
+  <li><a href="#visualization-of-vectors" id="toc-visualization-of-vectors" class="nav-link" data-scroll-target="#visualization-of-vectors"><span class="header-section-number">54.3</span> Visualization of vectors</a></li>
+  <li><a href="#aside-review-of-julias-use-of-dots-to-work-with-containers" id="toc-aside-review-of-julias-use-of-dots-to-work-with-containers" class="nav-link" data-scroll-target="#aside-review-of-julias-use-of-dots-to-work-with-containers"><span class="header-section-number">54.4</span> Aside: review of <code>Julia</code>’s use of dots to work with containers</a></li>
+  <li><a href="#the-dot-product" id="toc-the-dot-product" class="nav-link" data-scroll-target="#the-dot-product"><span class="header-section-number">54.5</span> The dot product</a></li>
+  <li><a href="#matrices" id="toc-matrices" class="nav-link" data-scroll-target="#matrices"><span class="header-section-number">54.6</span> Matrices</a>
+  <ul class="collapse">
+  <li><a href="#matrix-multiplication" id="toc-matrix-multiplication" class="nav-link" data-scroll-target="#matrix-multiplication"><span class="header-section-number">54.6.1</span> Matrix multiplication</a></li>
+  <li><a href="#matrices-in-julia" id="toc-matrices-in-julia" class="nav-link" data-scroll-target="#matrices-in-julia"><span class="header-section-number">54.6.2</span> Matrices in Julia</a></li>
+  </ul></li>
+  <li><a href="#cross-product" id="toc-cross-product" class="nav-link" data-scroll-target="#cross-product"><span class="header-section-number">54.7</span> Cross product</a></li>
+  <li><a href="#note-2" id="toc-note-2" class="nav-link" data-scroll-target="#note-2"><span class="header-section-number">54.8</span> Note</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">54.9</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/differentiable_vector_calculus/vectors.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../differentiable_vector_calculus.html">Differential vector calculus</a></li><li class="breadcrumb-item"><a href="../differentiable_vector_calculus/vectors.html"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses these add-on package:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+using LinearAlgebra
+using SymPy</code></pre>
+<hr>
+<p>In <a href="../precalc/vectors.html">vectors</a> we introduced the concept of a vector. For <code>Julia</code>, vectors are a useful storage container and are used to hold, for example, zeros of functions or the coefficients of a polynomial. This section is about their mathematical properties. A <a href="https://en.wikipedia.org/wiki/Euclidean_vector">vector</a> mathematically is a geometric object with two attributes a magnitude and a direction. (The direction is undefined in the case the magnitude is <span class="math inline">\(0\)</span>.) Vectors are typically visualized with an arrow, where the anchoring of the arrow is context dependent and is not particular to a given vector.</p>
+<p>Vectors and points are related, but distinct. They are identified when the tail of the vector is taken to be the origin. Let’s focus on <span class="math inline">\(3\)</span> dimensions. Mathematically, the notation for a point is <span class="math inline">\(p=(x,y,z)\)</span> while the notation for a vector is <span class="math inline">\(\vec{v} = \langle x, y, z \rangle\)</span>. The <span class="math inline">\(i\)</span>th component in a vector is referenced by a subscript: <span class="math inline">\(v_i\)</span>. With this, we may write a typical vector as <span class="math inline">\(\vec{v} = \langle v_1, v_2, \dots, v_n \rangle\)</span> and a vector in <span class="math inline">\(n=3\)</span> as <span class="math inline">\(\vec{v} =\langle v_1, v_2, v_3 \rangle\)</span>. The different grouping notation distinguishes the two objects. As another example, the notation <span class="math inline">\(\{x, y, z\}\)</span> indicates a set. Vectors and points may be <em>identified</em> by anchoring the vector at the origin. Sets are quite different from both, as the order of their entries is not unique.</p>
+<p>In <code>Julia</code>, the notation to define a point and a vector would be identical, using square brackets to group like-type values: <code>[x, y, z]</code>. The notation <code>(x,y,z)</code> would form a <a href="https://en.wikipedia.org/wiki/Euclidean_vector">tuple</a> which though similar in many respects, are different, as tuples do not have the operations associated with a point or a vector defined for them.</p>
+<p>The square bracket constructor has some subtleties:</p>
+<ul>
+<li><code>[x,y,z]</code> calls <code>vect</code> and creates a 1-dimensional array</li>
+<li><code>[x; y; z]</code> calls <code>vcat</code> to <strong>v</strong>ertically con<strong>cat</strong>enate values together. With simple (scalar) values <code>[x,y,z]</code> and <code>[x; y; z]</code> are identical, but not in other cases. (For example, if <code>A</code> is a matrix then <code>[A, A]</code> is a vector of matrices, <code>[A; A]</code> is a matrix combined from the two pieces.</li>
+<li><code>[x y z]</code> calls <code>hcat</code> to <strong>h</strong>orizontally con<strong>cat</strong>enate values together. If <code>x</code>, <code>y</code> are numbers then <code>[x y]</code> is <em>not</em> a vector, but rather a <span class="math inline">\(2\)</span>D array with a single row and two columns.</li>
+<li>finally <code>[w x; y z]</code> calls <code>hvcat</code> to horizontally and vertically concatenate values together to create a container in two dimensions, like a matrix.</li>
+</ul>
+<p>(A vector, mathematically, is a one-dimensional collection of numbers, a matrix a two-dimensional <em>rectangular</em> collection of numbers, and an array an <span class="math inline">\(n\)</span>-dimensional rectangular-like collection of numbers. In <code>Julia</code>, a vector can hold a collection of objects of arbitrary type, though each will be promoted to a common type.)</p>
+<section id="vector-addition-scalar-multiplication" class="level2" data-number="54.1">
+<h2 data-number="54.1" class="anchored" data-anchor-id="vector-addition-scalar-multiplication"><span class="header-section-number">54.1</span> Vector addition, scalar multiplication</h2>
+<p>As seen earlier, vectors have some arithmetic operations defined for them. As a typical use of vectors, mathematically, is to collect the <span class="math inline">\(x\)</span>, <span class="math inline">\(y\)</span>, and <span class="math inline">\(z\)</span> (in <span class="math inline">\(3\)</span>D) components together, operations like addition and subtraction operate component wise. With this, addition can be visualized geometrically: put the tail of <span class="math inline">\(\vec{v}\)</span> at the tip of <span class="math inline">\(\vec{u}\)</span> and draw a vector from the tail of <span class="math inline">\(\vec{u}\)</span> to the tip of <span class="math inline">\(\vec{v}\)</span> and you have <span class="math inline">\(\vec{u}+\vec{v}\)</span>. This is identical by <span class="math inline">\(\vec{v} + \vec{u}\)</span> as vector addition is commutative. Unless <span class="math inline">\(\vec{u}\)</span> and <span class="math inline">\(\vec{v}\)</span> are parallel or one has <span class="math inline">\(0\)</span> length, the addition will create a vector with a different direction from the two.</p>
+<p>Another operation for vectors is <em>scalar</em> multiplication. Geometrically this changes the magnitude, but not the direction of a vector, when the <em>scalar</em> is positive. Scalar multiplication is defined component wise, like addition so the <span class="math inline">\(i\)</span>th component of <span class="math inline">\(c \vec{v}\)</span> is <span class="math inline">\(c\)</span> times the <span class="math inline">\(i\)</span>th component of <span class="math inline">\(\vec{v}\)</span>. When the scalar is negative, the direction is “reversed.”</p>
+<p>To illustrate we define two <span class="math inline">\(3\)</span>-dimensional vectors:</p>
+<pre class="{julia}"><code>u, v = [1, 2, 3], [4, 3, 2]</code></pre>
+<p>The sum is component-wise summation (<code>1+4, 2+3, 3+2</code>):</p>
+<pre class="{julia}"><code>u + v</code></pre>
+<p>For addition, as the components must pair off, the two vectors being added must be the same dimension.</p>
+<p>Scalar multiplication by <code>2</code>, say, multiplies each entry by <code>2</code>:</p>
+<pre class="{julia}"><code>2 * u</code></pre>
+</section>
+<section id="the-length-and-direction-of-a-vector" class="level2" data-number="54.2">
+<h2 data-number="54.2" class="anchored" data-anchor-id="the-length-and-direction-of-a-vector"><span class="header-section-number">54.2</span> The length and direction of a vector</h2>
+<p>If a vector <span class="math inline">\(\vec{v} = \langle v_1, v_2, \dots, v_n\rangle\)</span> then the <em>norm</em> (also Euclidean norm or length) of <span class="math inline">\(\vec{v}\)</span> is defined by:</p>
+<p><span class="math display">\[
+\| \vec{v} \| = \sqrt{ v_1^2 + v_2^2 + \cdots + v_n^2}.
+\]</span></p>
+<p>The definition of a norm leads to a few properties. First, if <span class="math inline">\(c\)</span> is a scalar, <span class="math inline">\(\| c\vec{v} \| = |c| \| \vec{v} \|\)</span> - which says scalar multiplication by <span class="math inline">\(c\)</span> changes the length by <span class="math inline">\(|c|\)</span>. (Sometimes, scalar multiplication is described as “scaling by….”) The other property is an analog of the triangle inequality, in which for any two vectors <span class="math inline">\(\| \vec{v} + \vec{w} \| \leq \| \vec{v} \| + \| \vec{w} \|\)</span>. The right hand side is equal only when the two vectors are parallel.</p>
+<p>A vector with length <span class="math inline">\(1\)</span> is called a <em>unit</em> vector. Dividing a non-zero vector by its norm will yield a unit vector, a consequence of the first property above. Unit vectors are often written with a “hat:” <span class="math inline">\(\hat{v}\)</span>.</p>
+<p>The direction indicated by <span class="math inline">\(\vec{v}\)</span> can be visualized as an angle in <span class="math inline">\(2\)</span>- or <span class="math inline">\(3\)</span>-dimensions, but in higher dimensions, visualization is harder. For <span class="math inline">\(2\)</span>-dimensions, we might associate with a vector, it’s unit vector. This in turn may be identified with a point on the unit circle, which from basic trigonometry can be associated with an angle. Something similar, can be done in <span class="math inline">\(3\)</span> dimensions, using two angles. However, the “direction” of a vector is best thought of in terms of its associated unit vector. With this, we have a decomposition of a non-zero vector <span class="math inline">\(\vec{v}\)</span> into a magnitude and a direction when we write <span class="math inline">\(\vec{v} = \|\vec{v}\| \cdot (\vec{v} / \|\vec{v}\|)=\|\vec{v}\| \hat{v}\)</span>.</p>
+</section>
+<section id="visualization-of-vectors" class="level2" data-number="54.3">
+<h2 data-number="54.3" class="anchored" data-anchor-id="visualization-of-vectors"><span class="header-section-number">54.3</span> Visualization of vectors</h2>
+<p>Vectors may be visualized in <span class="math inline">\(2\)</span> or <span class="math inline">\(3\)</span> dimensions using <code>Plots</code>. In <span class="math inline">\(2\)</span> dimensions, the <code>quiver</code> function may be used. To graph a vector, it must have its tail placed at a point, so two values are needed.</p>
+<p>To plot <code>u=[1,2]</code> from <code>p=[0,0]</code> we have the following usage:</p>
+<pre class="{julia}"><code>quiver([0],[0], quiver=([1],[2]))</code></pre>
+<p>The cumbersome syntax is typical here. We naturally describe vectors and points using <code>[a,b,c]</code> to combine them, but the plotting functions want to plot many such at a time and expect vectors containing just the <code>x</code> values, just the <code>y</code> values, etc. The above usage looks a bit odd, as these vectors of <code>x</code> and <code>y</code> values have only one entry. Converting from the one representation to the other requires reshaping the data. We will use the <code>unzip</code> function from <code>CalculusWithJulia</code> which in turn just uses the the <code>invert</code> function of the <code>SplitApplyCombine</code> package (“return a new nested container by reversing the order of the nested container”) for the bulk of its work.</p>
+<p>This function takes a vector of vectors, and returns a tuple containing the <code>x</code> values, the <code>y</code> values, etc. So if <code>u=[1,2,3]</code> and <code>v=[4,5,6]</code>, then <code>unzip([u,v])</code> becomes <code>([1,4],[2,5],[3,6])</code>, etc. (The <code>zip</code> function in base does essentially the reverse operation, hence the name.) Notationally, <code>A = [u,v]</code> can have the third element of the first vector (<code>u</code>) accessed by <code>A[1][3]</code>, where as <code>unzip(A)[3][1]</code> will do the same. We use <code>unzip([u])</code> in the following, which for this <code>u</code> returns <code>([1],[2],[3])</code>. (Note the <code>[u]</code> to make a vector of a vector.)</p>
+<p>With <code>unzip</code> defined, we can plot a <span class="math inline">\(2\)</span>-dimensional vector <code>v</code> anchored at point <code>p</code> through <code>quiver(unzip([p])..., quiver=unzip([v]))</code>.</p>
+<p>To illustrate, the following defines <span class="math inline">\(3\)</span> vectors (the third through addition), then graphs all three, though in different starting points to emphasize the geometric interpretation of vector addition.</p>
+<pre class="{julia}"><code>#| hold: true
+u = [1, 2]
+v = [4, 2]
+w = u + v
+p = [0,0]
+quiver(unzip([p])..., quiver=unzip([u]))
+quiver!(unzip([u])..., quiver=unzip([v]))
+quiver!(unzip([p])..., quiver=unzip([w]))</code></pre>
+<p>Plotting a <span class="math inline">\(3\)</span>-d vector is not supported in all toolkits with <code>quiver</code>. A line segment may be substituted and can be produced with <code>plot(unzip([p,p+v])...)</code>. To avoid all these details, the <code>CalculusWithJulia</code> provides the <code>arrow!</code> function to <em>add</em> a vector to an existing plot. The function requires a point, <code>p</code>, and the vector, <code>v</code>:</p>
+<p>With this, the above simplifies to:</p>
+<pre class="{julia}"><code>#| hold: true
+u = [1, 2]
+v = [4, 2]
+w = u + v
+p = [0,0]
+plot(legend=false)
+arrow!(p, u)
+arrow!(u, v)
+arrow!(p, w)</code></pre>
+<p>The distinction between a point and a vector within <code>Julia</code> is only mental. We use the same storage type. Mathematically, we can <strong>identify</strong> a point and a vector, by considering the vector with its tail placed at the origin. In this case, the tip of the arrow is located at the point. But this is only an identification, though a useful one. It allows us to “add” a point and a vector (e.g., writing <span class="math inline">\(P + \vec{v}\)</span>) by imagining the point as a vector anchored at the origin.</p>
+<p>To see that a unit vector has the same “direction” as the vector, we might draw them with different widths:</p>
+<pre class="{julia}"><code>#| hold: true
+v = [2, 3]
+u = v / norm(v)
+p = [0, 0]
+plot(legend=false)
+arrow!(p, v)
+arrow!(p, u, linewidth=5)</code></pre>
+<p>The <code>norm</code> function is in the standard library, <code>LinearAlgebra</code>, which must be loaded first through the command <code>using LinearAlgebra</code>. (Though here it is redundant, as that package is loaded and reexported when the <code>CalculusWithJulia</code> package is loaded.)</p>
+</section>
+<section id="aside-review-of-julias-use-of-dots-to-work-with-containers" class="level2" data-number="54.4">
+<h2 data-number="54.4" class="anchored" data-anchor-id="aside-review-of-julias-use-of-dots-to-work-with-containers"><span class="header-section-number">54.4</span> Aside: review of <code>Julia</code>’s use of dots to work with containers</h2>
+<p><code>Julia</code> makes use of the dot, “<code>.</code>”, in a few ways to simplify usage when containers, such as vectors, are involved:</p>
+<ul>
+<li><strong>Splatting</strong>. The use of three dots, “<code>...</code>”, to “splat” the values from a container like a vector (or tuple) into <em>arguments</em> of a function can be very convenient. It was used above in the definition for the <code>arrow!</code> function: essentially <code>quiver!(unzip([p])..., quiver=unzip([v]))</code>. The <code>quiver</code> function expects <span class="math inline">\(2\)</span> (or <span class="math inline">\(3\)</span>) arguments describing the <code>xs</code> and <code>ys</code> (and sometimes <code>zs</code>). The <code>unzip</code> function returns these in a container, so splatting is used to turn the values in the container into distinct arguments of the function. Whereas the <code>quiver</code> argument expects a tuple of vectors, so no splatting is used for that part of the definition. Another use of splatting we will see is with functions of vectors. These can be defined in terms of the vector’s components or the vector as a whole, as below:</li>
+</ul>
+<pre class="{julia}"><code>f(x, y, z) = x^2 + y^2 + z^2
+f(v) = v[1]^2 + v[2]^2 + v[3]^2</code></pre>
+<p>The first uses the components and is arguably, much easier to read. The second uses indexing in the function body to access the components. It has an advantage, as it can more easily handle different length vectors (e.g.&nbsp;using <code>sum(v.^2)</code>). Both uses have their merits, though the latter is more idiomatic throughout <code>Julia</code>.</p>
+<p>If a function is easier to write in terms of its components, but an interface expects a vector of components as it argument, then splatting can be useful, to go from one style to another, similar to this:</p>
+<pre class="{julia}"><code>g(x, y, z) = x^2 + y^2 + z^2
+g(v) = g(v...)</code></pre>
+<p>The splatting will mean <code>g(v)</code> eventually calls <code>g(x, y, z)</code> through <code>Julia</code>’s multiple dispatch machinery when <code>v = [x, y, z]</code>.</p>
+<p>(The three dots can also appear in the definition of the arguments to a function, but there the usage is not splatting but rather a specification of a variable number of arguments.)</p>
+<ul>
+<li><strong>Broadcasting</strong>. For a univariate function, <code>f</code>, and vector, <code>xs</code>, the call <code>f.(xs)</code> <em>broadcasts</em> <code>f</code> over each value of <code>xs</code> and returns a container holding all the values. This is a compact alternative to a comprehension when a function is defined. When <code>f</code> depends on more than one value, broadcasting can still be used: <code>f.(xs, ys)</code> will broadcast <code>f</code> over values formed from <em>both</em> <code>xs</code> and <code>ys</code>. Broadcasting has the extra feature (over <code>map</code>) of attempting to match up the shapes of <code>xs</code> and <code>ys</code> when they are not identical. (See the help page for <code>broadcast</code> for more details.)</li>
+</ul>
+<p>For example, if <code>xs</code> is a vector and <code>ys</code> a scalar, then the value in <code>ys</code> is repeated many times to match up with the values of <code>xs</code>. Or if <code>xs</code> and <code>ys</code> have different dimensions, the values of one will be repeated. Consider this:</p>
+<pre class="{julia}"><code>f(x,y) = x + y</code></pre>
+<pre class="{julia}"><code>#| hold: true
+xs = ys = [0, 1]
+f.(xs, ys)</code></pre>
+<p>This matches <code>xs</code> and <code>ys</code> to pass <code>(0,0)</code> and then <code>(1,1)</code> to <code>f</code>, returning <code>0</code> and <code>2</code>. Now consider</p>
+<pre class="{julia}"><code>#| hold: true
+xs = [0, 1]; ys = [0 1]  # xs is a column vector, ys a row vector
+f.(xs, ys)</code></pre>
+<p>The two dimensions are different so for each value of <code>xs</code> the vector of <code>ys</code> is broadcast. This returns a matrix now. This will be important for some plotting usages where a grid (matrix) of values is needed.</p>
+<p>At times using the “apply” notation: <code>x |&gt; f</code>, in place of using <code>f(x)</code> is useful, as it can move the wrapping function to the right of the expression. To broadcast, <code>.|&gt;</code> is available.</p>
+</section>
+<section id="the-dot-product" class="level2" data-number="54.5">
+<h2 data-number="54.5" class="anchored" data-anchor-id="the-dot-product"><span class="header-section-number">54.5</span> The dot product</h2>
+<p>There is no concept of multiplying two vectors, or for that matter dividing two vectors. However, there are two operations between vectors that are somewhat similar to multiplication, these being the dot product and the cross product. Each has an algebraic definition, but their geometric properties are what motivate their usage. We begin by discussing the dot product.</p>
+<p>The dot product between two vectors can be viewed algebraically in terms of the following product. If <span class="math inline">\(\vec{v} = \langle v_1, v_2, \dots, v_n\rangle\)</span> and <span class="math inline">\(\vec{w} = \langle w_1, w_2, \dots, w_n\rangle\)</span>, then the <em>dot product</em> of <span class="math inline">\(\vec{v}\)</span> and <span class="math inline">\(\vec{w}\)</span> is defined by:</p>
+<p><span class="math display">\[
+\vec{v} \cdot \vec{w} = v_1 w_1 + v_2 w_2 + \cdots + v_n w_n.
+\]</span></p>
+<p>From this, we can see the relationship between the norm, or Euclidean length of a vector: <span class="math inline">\(\vec{v} \cdot \vec{v} = \| \vec{v} \|^2\)</span>. We can also see that the dot product is commutative, that is <span class="math inline">\(\vec{v} \cdot \vec{w} = \vec{w} \cdot \vec{v}\)</span>.</p>
+<p>The dot product has an important geometrical interpolation. Two (non-parallel) vectors will lie in the same “plane”, even in higher dimensions. Within this plane, there will be an angle between them within <span class="math inline">\([0, \pi]\)</span>. Call this angle <span class="math inline">\(\theta\)</span>. (This means the angle between the two vectors is the same regardless of their order of consideration.) Then</p>
+<p><span class="math display">\[
+\vec{v} \cdot \vec{w} = \|\vec{v}\| \|\vec{w}\| \cos(\theta).
+\]</span></p>
+<p>If we denoted <span class="math inline">\(\hat{v} = \vec{v} / \| \vec{v} \|\)</span>, the unit vector in the direction of <span class="math inline">\(\vec{v}\)</span>, then by dividing, we see that <span class="math inline">\(\cos(\theta) = \hat{v} \cdot \hat{w}\)</span>. That is the angle does not depend on the magnitude of the vectors involved.</p>
+<p>The dot product is computed in <code>Julia</code> by the <code>dot</code> function, which is in the <code>LinearAlgebra</code> package of the standard library. This must be loaded (as above) before its use either directly or through the <code>CalculusWithJulia</code> package:</p>
+<pre class="{julia}"><code>u = [1, 2]
+v = [2, 1]
+dot(u, v)</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In <code>Julia</code>, the unicode operator entered by <code>\cdot[tab]</code> can also be used to mirror the math notation:</p>
+</div>
+</div>
+<pre class="{julia}"><code>u ⋅ v   # u \cdot[tab] v</code></pre>
+<p>Continuing, to find the angle between <span class="math inline">\(\vec{u}\)</span> and <span class="math inline">\(\vec{v}\)</span>, we might do this:</p>
+<pre class="{julia}"><code>cos_theta = dot(u/norm(u), v/norm(v))
+acos(cos_theta)</code></pre>
+<p>The cosine of <span class="math inline">\(\pi/2\)</span> is <span class="math inline">\(0\)</span>, so two vectors which are at right angles to each other will have a dot product of <span class="math inline">\(0\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+u = [1, 2]
+v = [2, -1]
+u ⋅ v</code></pre>
+<p>In two dimensions, we learn that a perpendicular line to a line with slope <span class="math inline">\(m\)</span> will have slope <span class="math inline">\(-1/m\)</span>. From a <span class="math inline">\(2\)</span>-dimensional vector, say <span class="math inline">\(\vec{u} = \langle u_1, u_2 \rangle\)</span>, the slope is <span class="math inline">\(u_2/u_1\)</span> so a perpendicular vector to <span class="math inline">\(\vec{u}\)</span> will be <span class="math inline">\(\langle u_2, -u_1 \rangle\)</span>, as above. For higher dimensions, where the angle is harder to visualize, the dot product defines perpendicularness, or <em>orthogonality</em>.</p>
+<p>For example, these two vectors are orthogonal, as their dot product is <span class="math inline">\(0\)</span>, even though we can’t readily visualize them:</p>
+<pre class="{julia}"><code>#| hold: true
+u = [1, 2, 3, 4, 5]
+v = [-30, 4, 3, 2, 1]
+u ⋅ v</code></pre>
+<section id="projection" class="level4">
+<h4 class="anchored" data-anchor-id="projection">Projection</h4>
+<p>From right triangle trigonometry, we learn that <span class="math inline">\(\cos(\theta) = \text{adjacent}/\text{hypotenuse}\)</span>. If we use a vector, <span class="math inline">\(\vec{h}\)</span> for the hypotenuse, and <span class="math inline">\(\vec{a} = \langle 1, 0 \rangle\)</span>, we have this picture:</p>
+<pre class="{julia}"><code>#| hold: true
+h = [2, 3]
+a = [1, 0]  # unit vector
+h_hat = h / norm(h)
+theta = acos(h_hat ⋅ a)
+
+plot(legend=false)
+arrow!([0,0], h)
+arrow!([0,0], norm(h) * cos(theta) * a)
+arrow!([0,0], a, linewidth=3)</code></pre>
+<p>We used vectors to find the angle made by <code>h</code>, and from there, using the length of the hypotenuse is <code>norm(h)</code>, we can identify the length of the adjacent side, it being the length of the hypotenuse times the cosine of <span class="math inline">\(\theta\)</span>. Geometrically, we call the vector <code>norm(h) * cos(theta) * a</code> the <em>projection</em> of <span class="math inline">\(\vec{h}\)</span> onto <span class="math inline">\(\vec{a}\)</span>, the word coming from the shadow <span class="math inline">\(\vec{h}\)</span> would cast on the direction of <span class="math inline">\(\vec{a}\)</span> were there light coming perpendicular to <span class="math inline">\(\vec{a}\)</span>.</p>
+<p>The projection can be made for any pair of vectors, and in any dimension <span class="math inline">\(n &gt; 1\)</span>. The projection of <span class="math inline">\(\vec{u}\)</span> on <span class="math inline">\(\vec{v}\)</span> would be a vector of length <span class="math inline">\(\vec{u}\)</span> (the hypotenuse) times the cosine of the angle in the direction of <span class="math inline">\(\vec{v}\)</span>. In dot-product notation:</p>
+<p><span class="math display">\[
+proj_{\vec{v}}(\vec{u}) = \| \vec{u} \| \frac{\vec{u}\cdot\vec{v}}{\|\vec{u}\|\|\vec{v}\|} \frac{\vec{v}}{\|\vec{v}\|}.
+\]</span></p>
+<p>This can simplify. After cancelling, and expressing norms in terms of dot products, we have:</p>
+<p><span class="math display">\[
+proj_{\vec{v}}(\vec{u}) = \frac{\vec{u} \cdot \vec{v}}{\vec{v} \cdot \vec{v}} \vec{v} = (\vec{u} \cdot \hat{v}) \hat{v},
+\]</span></p>
+<p>where <span class="math inline">\(\hat{v}\)</span> is the unit vector in the direction of <span class="math inline">\(\vec{v}\)</span>.</p>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>A pendulum, a bob on a string, swings back and forth due to the force of gravity. When the bob is displaced from rest by an angle <span class="math inline">\(\theta\)</span>, then the tension force of the string on the bob is directed along the string and has magnitude given by the <em>projection</em> of the force due to gravity.</p>
+<p>A <a href="https://en.wikipedia.org/wiki/Free_body_diagram">force diagram</a> is a useful visualization device of physics to illustrate the applied forces involved in a scenario. In this case the bob has two forces acting on it: a force due to tension in the string of unknown magnitude, but in the direction of the string; and a force due to gravity. The latter is in the downward direction and has magnitude <span class="math inline">\(mg\)</span>, <span class="math inline">\(g=9.8m/sec^2\)</span> being the gravitational constant.</p>
+<pre class="{julia}"><code>theta = pi/12
+mass, gravity = 1/9.8, 9.8
+
+R = [-sin(theta), cos(theta)]
+p = -R
+Fg = [0, -mass * gravity]
+plot(legend=false)
+arrow!(p, R)
+arrow!(p, Fg)
+scatter!(p[1:1], p[2:2], markersize=5)</code></pre>
+<p>The magnitude of the tension force is exactly that of the force of gravity projected onto <span class="math inline">\(\vec{l}\)</span>, as the bob is not accelerating in that direction. The component of the gravity force in the perpendicular direction is the part of the gravitational force that causes acceleration in the pendulum. Here we find the projection onto <span class="math inline">\(\vec{l}\)</span> and visualize the two components of the gravitational force.</p>
+<pre class="{julia}"><code>plot(legend=false, aspect_ratio=:equal)
+arrow!(p, R)
+arrow!(p, Fg)
+scatter!(p[1:1], p[2:2], markersize=5)
+
+proj = (Fg ⋅ R) / (R ⋅ R) * R   # force of gravity in direction of tension
+porth = Fg - proj              # force of gravity perpendicular to tension
+
+arrow!(p, proj)
+arrow!(p, porth, linewidth=3)</code></pre>
+</section>
+<section id="example-1" class="level5">
+<h5 class="anchored" data-anchor-id="example-1">Example</h5>
+<p>Starting with three vectors, we can create three orthogonal vectors using projection and subtraction. The creation of <code>porth</code> above is the pattern we will exploit.</p>
+<p>Let’s begin with three vectors in <span class="math inline">\(R^3\)</span>:</p>
+<pre class="{julia}"><code>u = [1, 2, 3]
+v = [1, 1, 2]
+w = [1, 2, 4]</code></pre>
+<p>We can find a vector from <code>v</code> orthogonal to <code>u</code> using:</p>
+<pre class="{julia}"><code>unit_vec(u) = u / norm(u)
+projection(u, v) = (u ⋅ unit_vec(v)) * unit_vec(v)
+
+vₚ = v - projection(v, u)
+wₚ = w - projection(w, u) - projection(w, vₚ)</code></pre>
+<p>We can verify the orthogonality through:</p>
+<pre class="{julia}"><code>u ⋅ vₚ, u ⋅ wₚ, vₚ ⋅ wₚ</code></pre>
+<p>This only works when the three vectors do not all lie in the same plane. In general, this is the beginning of the <a href="https://en.wikipedia.org/wiki/Gram-Schmidt_process">Gram-Schmidt</a> process for creating <em>orthogonal</em> vectors from a collection of vectors.</p>
+</section>
+</section>
+<section id="algebraic-properties" class="level4">
+<h4 class="anchored" data-anchor-id="algebraic-properties">Algebraic properties</h4>
+<p>The dot product is similar to multiplication, but different, as it is an operation defined between vectors of the same dimension. However, many algebraic properties carry over:</p>
+<ul>
+<li>commutative: <span class="math inline">\(\vec{u} \cdot \vec{v} = \vec{v} \cdot \vec{u}\)</span></li>
+<li>scalar multiplication: <span class="math inline">\((c\vec{u})\cdot\vec{v} = c(\vec{u}\cdot\vec{v})\)</span>.</li>
+<li>distributive <span class="math inline">\(\vec{u} \cdot (\vec{v} + \vec{w}) = \vec{u} \cdot \vec{v} + \vec{u} \cdot \vec{w}\)</span></li>
+</ul>
+<p>The last two can be combined: <span class="math inline">\(\vec{u}\cdot(s \vec{v} + t \vec{w}) = s(\vec{u}\cdot\vec{v}) + t (\vec{u}\cdot\vec{w})\)</span>.</p>
+<p>But the associative property does not make sense, as <span class="math inline">\((\vec{u} \cdot \vec{v}) \cdot \vec{w}\)</span> does not make sense as two dot products: the result of the first is not a vector, but a scalar.</p>
+</section>
+</section>
+<section id="matrices" class="level2" data-number="54.6">
+<h2 data-number="54.6" class="anchored" data-anchor-id="matrices"><span class="header-section-number">54.6</span> Matrices</h2>
+<p>Algebraically, the dot product of two vectors - pair off by components, multiply these, then add - is a common operation. Take for example, the general equation of a line, or a plane:</p>
+<p><span class="math display">\[
+ax + by  = c, \quad ax + by + cz = d.
+\]</span></p>
+<p>The left hand sides are in the form of a dot product, in this case <span class="math inline">\(\langle a,b \rangle \cdot \langle x, y\rangle\)</span> and <span class="math inline">\(\langle a,b,c \rangle \cdot \langle x, y, z\rangle\)</span> respectively. When there is a system of equations, something like:</p>
+<p><span class="math display">\[\begin{align*}
+3x  &amp;+ 4y  &amp;- 5z &amp;= 10\\
+3x  &amp;- 5y  &amp;+ 7z &amp;= 11\\
+-3x &amp;+ 6y  &amp;+ 9z &amp;= 12,
+\end{align*}\]</span></p>
+<p>Then we might think of <span class="math inline">\(3\)</span> vectors <span class="math inline">\(\langle 3,4,-5\rangle\)</span>, <span class="math inline">\(\langle 3,-5,7\rangle\)</span>, and <span class="math inline">\(\langle -3,6,9\rangle\)</span> being dotted with <span class="math inline">\(\langle x,y,z\rangle\)</span>. Mathematically, matrices and their associated algebra are used to represent this. In this example, the system of equations above would be represented by a matrix and two vectors:</p>
+<p><span class="math display">\[
+M =
+\begin{bmatrix}
+3 &amp; 4 &amp; -5\\
+5 &amp;-5 &amp;  7\\
+-3&amp; 6 &amp; 9
+\end{bmatrix},\quad
+\vec{x} = \langle x, y , z\rangle,\quad
+\vec{b} = \langle 10, 11, 12\rangle,
+\]</span></p>
+<p>and the expression <span class="math inline">\(M\vec{x} = \vec{b}\)</span>. The matrix <span class="math inline">\(M\)</span> is a rectangular collection of numbers or expressions arranged in rows and columns with certain algebraic definitions. There are <span class="math inline">\(m\)</span> rows and <span class="math inline">\(n\)</span> columns in an <span class="math inline">\(m\times n\)</span> matrix. In this example <span class="math inline">\(m=n=3\)</span>, and in such a case the matrix is called square. A vector, like <span class="math inline">\(\vec{x}\)</span> is usually identified with the <span class="math inline">\(n \times 1\)</span> matrix (a column vector). Were that done, the system of equations would be written <span class="math inline">\(Mx=b\)</span>.</p>
+<p>If we refer to a matrix <span class="math inline">\(M\)</span> by its components, a convention is to use <span class="math inline">\((M)_{ij}\)</span> or <span class="math inline">\(m_{ij}\)</span> to denote the entry in the <span class="math inline">\(i\)</span>th <em>row</em> and <span class="math inline">\(j\)</span>th <em>column</em>. Following <code>Julia</code>’s syntax, we would use <span class="math inline">\(m_{i:}\)</span> to refer to <em>all</em> entries in the <span class="math inline">\(i\)</span>th row, and <span class="math inline">\(m_{:j}\)</span> to denote <em>all</em> entries in the <span class="math inline">\(j\)</span> column.</p>
+<p>In addition to square matrices, there are some other common types of matrices worth naming: square matrices with <span class="math inline">\(0\)</span> entries below the diagonal are called upper triangular; square matrices with <span class="math inline">\(0\)</span> entries above the diagonal are called lower triangular matrices; square matrices which are <span class="math inline">\(0\)</span> except possibly along the diagonal are diagonal matrices; and a diagonal matrix whose diagonal entries are all <span class="math inline">\(1\)</span> is called an <em>identity matrix</em>.</p>
+<p>Matrices, like vectors, have scalar multiplication defined for them. then scalar multiplication of a matrix <span class="math inline">\(M\)</span> by <span class="math inline">\(c\)</span> just multiplies each entry by <span class="math inline">\(c\)</span>, so the new matrix would have components defined by <span class="math inline">\(cm_{ij}\)</span>.</p>
+<p>Matrices of the same size, like vectors, have addition defined for them. As with scalar multiplication, addition is defined component wise. So <span class="math inline">\(A+B\)</span> is the matrix with <span class="math inline">\(ij\)</span> entry <span class="math inline">\(A_{ij} + B_{ij}\)</span>.</p>
+<section id="matrix-multiplication" class="level3" data-number="54.6.1">
+<h3 data-number="54.6.1" class="anchored" data-anchor-id="matrix-multiplication"><span class="header-section-number">54.6.1</span> Matrix multiplication</h3>
+<p>Matrix multiplication may be viewed as a collection of dot product operations. First, matrix multiplication is only defined between <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, as <span class="math inline">\(AB\)</span>, if the size of <span class="math inline">\(A\)</span> is <span class="math inline">\(m\times n\)</span> and the size of <span class="math inline">\(B\)</span> is <span class="math inline">\(n \times k\)</span>. That is the number of columns of <span class="math inline">\(A\)</span> must match the number of rows of <span class="math inline">\(B\)</span> for the left multiplication of <span class="math inline">\(AB\)</span> to be defined. If this is so, then we have the <span class="math inline">\(ij\)</span> entry of <span class="math inline">\(AB\)</span> is:</p>
+<p><span class="math display">\[
+(AB)_{ij} = A_{i:} \cdot B_{:j}.
+\]</span></p>
+<p>That is, if we view the <span class="math inline">\(i\)</span>th row of <span class="math inline">\(A\)</span> and the <span class="math inline">\(j\)</span>th column of B as <em>vectors</em>, then the <span class="math inline">\(ij\)</span> entry is the dot product.</p>
+<p>This is why <span class="math inline">\(M\)</span> in the example above, has the coefficients for each equation in a row and not a column, and why <span class="math inline">\(\vec{x}\)</span> is thought of as a <span class="math inline">\(n\times 1\)</span> matrix (a column vector) and not as a row vector.</p>
+<p>Matrix multiplication between <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> is not, in general, commutative. Not only may the sizes not permit <span class="math inline">\(BA\)</span> to be found when <span class="math inline">\(AB\)</span> may be, there is just no guarantee when the sizes match that the components will be the same.</p>
+<hr>
+<p>Matrices have other operations defined on them. We mention three here:</p>
+<ul>
+<li>The <em>transpose</em> of a matrix flips the difference between row and column, so the <span class="math inline">\(ij\)</span> entry of the transpose is the <span class="math inline">\(ji\)</span> entry of the matrix. This means the transpose will have size <span class="math inline">\(n \times m\)</span> when <span class="math inline">\(M\)</span> has size <span class="math inline">\(m \times n\)</span>. Mathematically, the transpose is denoted <span class="math inline">\(M^t\)</span>.</li>
+<li>The <em>determinant</em> of a <em>square</em> matrix is a number that can be used to characterize the matrix. The determinant may be computed different ways, but its <a href="https://en.wikipedia.org/wiki/Leibniz_formula_for_determinants">definition</a> by the Leibniz formula is common. Two special cases are all we need. The <span class="math inline">\(2\times 2\)</span> case and the <span class="math inline">\(3 \times 3\)</span> case:</li>
+</ul>
+<p><span class="math display">\[
+\begin{vmatrix}
+a&amp;b\\
+c&amp;d
+\end{vmatrix}
+=
+ad - bc, \quad
+\begin{vmatrix}
+a&amp;b&amp;c\\
+d&amp;e&amp;f\\
+g&amp;h&amp;i
+\end{vmatrix}
+=
+a
+\begin{vmatrix}
+e&amp;f\\
+h&amp;i
+\end{vmatrix}
+- b
+\begin{vmatrix}
+d&amp;f\\
+g&amp;i
+\end{vmatrix}
++c
+\begin{vmatrix}
+d&amp;e\\
+g&amp;h
+\end{vmatrix}
+\]</span></p>
+<p>The <span class="math inline">\(3\times 3\)</span> case shows how determinants may be <a href="https://en.wikipedia.org/wiki/Determinant#Definition">computed recursively</a>, using “cofactor” expansion.</p>
+<ul>
+<li>The <em>inverse</em> of a square matrix. If <span class="math inline">\(M\)</span> is a square matrix and its determinant is non-zero, then there is an <em>inverse</em> matrix, denoted <span class="math inline">\(M^{-1}\)</span>, with the properties that <span class="math inline">\(MM^{-1} = M^{-1}M = I\)</span>, where <span class="math inline">\(I\)</span> is the diagonal matrix of all <span class="math inline">\(1\)</span>s called the identify matrix.</li>
+</ul>
+</section>
+<section id="matrices-in-julia" class="level3" data-number="54.6.2">
+<h3 data-number="54.6.2" class="anchored" data-anchor-id="matrices-in-julia"><span class="header-section-number">54.6.2</span> Matrices in Julia</h3>
+<p>As mentioned previously, a matrix in <code>Julia</code> is defined component by component with <code>[]</code>. We separate row entries with spaces and columns with semicolons:</p>
+<pre class="{julia}"><code>M = [3 4 -5; 5 -5 7; -3 6 9]</code></pre>
+<p>Space is the separator, which means computing a component during definition (i.e., writing <code>2 + 3</code> in place of <code>5</code>) can be problematic, as no space can be used in the computation, lest it be parsed as a separator.</p>
+<p>Vectors are defined similarly. As they are identified with <em>column</em> vectors, we use a semicolon (or a comma with simple numbers) to separate:</p>
+<pre class="{julia}"><code>𝒷 = [10, 11, 12]   # not 𝒷 = [10 11 12], which would be a row vector.</code></pre>
+<p>In <code>Julia</code>, entries in a matrix (or a vector) are stored in a container with a type wide enough accommodate each entry. In this example, the type is SymPy’s <code>Sym</code> type:</p>
+<pre class="{julia}"><code>@syms xs[1:3]</code></pre>
+<p>Matrices may also be defined from blocks. This example shows how to make two column vectors into a matrix:</p>
+<pre class="{julia}"><code>u = [10, 11, 12]
+v = [13, 14, 15]
+[u v]   # horizontally combine</code></pre>
+<p>Vertically combining the two will stack them:</p>
+<pre class="{julia}"><code>[u; v]</code></pre>
+<p>Scalar multiplication will just work as expected:</p>
+<pre class="{julia}"><code>2 * M</code></pre>
+<p>Matrix addition is also straightforward:</p>
+<pre class="{julia}"><code>M + M</code></pre>
+<p>Matrix addition expects matrices of the same size. An error will otherwise be thrown. However, if addition is <em>broadcasted</em> then the sizes need only be commensurate. For example, this will add <code>1</code> to each entry of <code>M</code>:</p>
+<pre class="{julia}"><code>M .+ 1</code></pre>
+<p>Matrix multiplication is defined by <code>*</code>:</p>
+<pre class="{julia}"><code>M * M</code></pre>
+<p>We can then see how the system of equations is represented with matrices:</p>
+<pre class="{julia}"><code>M * xs - 𝒷</code></pre>
+<p>Here we use <code>SymPy</code> to verify the above:</p>
+<pre class="{julia}"><code>A = [symbols("A$i$j", real=true) for i in 1:3, j in 1:2]
+B = [symbols("B$i$j", real=true) for i in 1:2, j in 1:2]</code></pre>
+<p>The matrix product has the expected size: the number of rows of <code>A</code> (<span class="math inline">\(3\)</span>) by the number of columns of <code>B</code> (<span class="math inline">\(2\)</span>):</p>
+<pre class="{julia}"><code>A * B</code></pre>
+<p>This confirms how each entry (<code>(A*B)[i,j]</code>) is from a dot product (<code>A[i,:]  ⋅ B[:,j]</code>):</p>
+<pre class="{julia}"><code>[ (A * B)[i,j] == A[i,:] ⋅ B[:,j] for i in 1:3, j in 1:2]</code></pre>
+<p>When the multiplication is broadcasted though, with <code>.*</code>, the operation will be component wise:</p>
+<pre class="{julia}"><code>M .* M   # component wise (Hadamard product)</code></pre>
+<hr>
+<p>The determinant is found by <code>det</code> provided by the <code>LinearAlgebra</code> package:</p>
+<pre class="{julia}"><code>det(M)</code></pre>
+<hr>
+<p>The transpose of a matrix is found through <code>transpose</code> which doesn’t create a new object, but rather an object which knows to switch indices when referenced:</p>
+<pre class="{julia}"><code>transpose(M)</code></pre>
+<p>For matrices with <em>real</em> numbers, the transpose can be performed with the postfix operation <code>'</code>:</p>
+<pre class="{julia}"><code>M'</code></pre>
+<p>(However, this is not true for matrices with complex numbers as <code>'</code> is the “adjoint,” that is, the transpose of the matrix <em>after</em> taking complex conjugates.)</p>
+<p>With <code>u</code> and <code>v</code>, vectors from above, we have:</p>
+<pre class="{julia}"><code>[u' v']   # [u v] was a 3 × 2 matrix, above</code></pre>
+<p>and</p>
+<pre class="{julia}"><code>[u'; v']</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The adjoint is defined <em>recursively</em> in <code>Julia</code>. In the <code>CalculusWithJulia</code> package, we overload the <code>'</code> notation for <em>functions</em> to yield a univariate derivative found with automatic differentiation. This can lead to problems: if we have a matrix of functions, <code>M</code>, and took the transpose with <code>M'</code>, then the entries of <code>M'</code> would be the derivatives of the functions in <code>M</code> - not the original functions. This is very much likely to not be what is desired. The <code>CalculusWithJulia</code> package commits <strong>type piracy</strong> here <em>and</em> abuses the generic idea for <code>'</code> in Julia. In general type piracy is very much frowned upon, as it can change expected behaviour. It is defined in <code>CalculusWithJulia</code>, as that package is intended only to act as a means to ease users into the wider package ecosystem of <code>Julia</code>.</p>
+</div>
+</div>
+<hr>
+<p>The dot product and matrix multiplication are related, and mathematically identified through the relation: <span class="math inline">\(\vec{u} \cdot \vec{v} = u^t v\)</span>, where the right hand side identifies <span class="math inline">\(\vec{u}\)</span> and <span class="math inline">\(\vec{v}\)</span> with a <span class="math inline">\(n\times 1\)</span> column matrix, and <span class="math inline">\(u^t\)</span> is the transpose, or a <span class="math inline">\(1\times n\)</span> row matrix. However, mathematically the left side is a scalar, but the right side a <span class="math inline">\(1\times 1\)</span> matrix. While distinct, the two are identified as the same. This is similar to the useful identification of a point and a vector. Within <code>Julia</code>, these identifications are context dependent. <code>Julia</code> stores vectors as <span class="math inline">\(1\)</span>-dimensional arrays, transposes as <span class="math inline">\(1\)</span>-dimensional objects, and matrices as <span class="math inline">\(2\)</span>-dimensional arrays. The product of a transpose and a vector is a scalar:</p>
+<pre class="{julia}"><code>#| hold: true
+u, v = [1,1,2], [3,5,8]
+u' * v   # a scalar</code></pre>
+<p>But if we make <code>u</code> a matrix (here by “<code>reshape</code>ing” in a matrix with <span class="math inline">\(1\)</span> row and <span class="math inline">\(3\)</span> columns), we will get a matrix (actually a vector) in return:</p>
+<pre class="{julia}"><code>#| hold: true
+u, v = [1,1,2], [3,5,8]
+reshape(u,(1,3)) * v</code></pre>
+</section>
+</section>
+<section id="cross-product" class="level2" data-number="54.7">
+<h2 data-number="54.7" class="anchored" data-anchor-id="cross-product"><span class="header-section-number">54.7</span> Cross product</h2>
+<p>In three dimensions, there is a another operation between vectors that is similar to multiplication, though we will see with many differences.</p>
+<p>Let <span class="math inline">\(\vec{u}\)</span> and <span class="math inline">\(\vec{v}\)</span> be two <span class="math inline">\(3\)</span>-dimensional vectors, then the <em>cross</em> product, <span class="math inline">\(\vec{u} \times \vec{v}\)</span>, is defined as a vector with length:</p>
+<p><span class="math display">\[
+\| \vec{u} \times \vec{v} \| = \| \vec{u} \| \| \vec{v} \| \sin(\theta),
+\]</span></p>
+<p>with <span class="math inline">\(\theta\)</span> being the angle in <span class="math inline">\([0, \pi]\)</span> between <span class="math inline">\(\vec{u}\)</span> and <span class="math inline">\(\vec{v}\)</span>. Consequently, <span class="math inline">\(\sin(\theta) \geq 0\)</span>.</p>
+<p>The direction of the cross product is such that it is <em>orthogonal</em> to <em>both</em> <span class="math inline">\(\vec{u}\)</span> and <span class="math inline">\(\vec{v}\)</span>. There are two such directions, to identify which is correct, the <a href="https://en.wikipedia.org/wiki/Cross_product#Definition">right-hand rule</a> is used. This rule points the right hand fingers in the direction of <span class="math inline">\(\vec{u}\)</span> and curls them towards <span class="math inline">\(\vec{v}\)</span> (so that the angle between the two vectors is in <span class="math inline">\([0, \pi]\)</span>). The thumb will point in the direction. Call this direction <span class="math inline">\(\hat{n}\)</span>, a normal unit vector. Then the cross product can be defined by:</p>
+<p><span class="math display">\[
+\vec{u} \times \vec{v} =  \| \vec{u} \| \| \vec{v} \| \sin(\theta) \hat{n}.
+\]</span></p>
+</section>
+<section id="note-2" class="level2 {callout-note}" data-number="54.8">
+<h2 data-number="54.8" class="anchored" data-anchor-id="note-2"><span class="header-section-number">54.8</span> Note</h2>
+<p>The right-hand rule is also useful to understand how standard household screws will behave when twisted with a screwdriver. If the right hand fingers curl in the direction of the twisting screwdriver, then the screw will go in or out following the direction pointed to by the thumb.</p>
+</section>
+<p>The right-hand rule depends on the order of consideration of the vectors. If they are reversed, the opposite direction is determined. A consequence is that the cross product is <strong>anti</strong>-commutative, unlike multiplication:</p>
+<p><span class="math display">\[
+\vec{u} \times \vec{v} = - \vec{v} \times \vec{u}.
+\]</span></p>
+<p>Mathematically, the definition in terms of its components is a bit involved:</p>
+<p><span class="math display">\[
+\vec{u} \times \vec{v} = \langle u_2 v_3 - u_3 v_2, u_3 v_1 - u_1 v_3, u_1 v_2 - u_2 v_1 \rangle.
+\]</span></p>
+<p>There is a matrix notation that can simplify this computation. If we <em>formally</em> define <span class="math inline">\(\hat{i}\)</span>, <span class="math inline">\(\hat{j}\)</span>, and <span class="math inline">\(\hat{k}\)</span> to represent unit vectors in the <span class="math inline">\(x\)</span>, <span class="math inline">\(y\)</span>, and <span class="math inline">\(z\)</span> direction, then a vector <span class="math inline">\(\langle u_1, u_2, u_3 \rangle\)</span> could be written <span class="math inline">\(u_1\hat{i} + u_2\hat{j} + u_3\hat{k}\)</span>. With this the cross product of <span class="math inline">\(\vec{u}\)</span> and <span class="math inline">\(\vec{v}\)</span> is the vector associated with the <em>determinant</em> of the matrix</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+\hat{i} &amp; \hat{j} &amp; \hat{k}\\
+u_1   &amp; u_2   &amp; u_3\\
+v_1   &amp; v_2   &amp; v_3
+\end{bmatrix}
+\]</span></p>
+<p>From the <span class="math inline">\(\sin(\theta)\)</span> term in the definition, we see that <span class="math inline">\(\vec{u}\times\vec{u}=0\)</span>. In fact, the cross product is <span class="math inline">\(0\)</span> only if the two vectors involved are parallel or there is a zero vector.</p>
+<p>In <code>Julia</code>, the <code>cross</code> function from the <code>LinearAlgebra</code> package implements the cross product. For example:</p>
+<pre class="{julia}"><code>a = [1, 2, 3]
+b = [4, 2, 1]
+cross(a, b)</code></pre>
+<p>There is also the <em>infix</em> unicode operator <code>\times[tab]</code> that can be used for similarity to traditional mathematical syntax.</p>
+<pre class="{julia}"><code>a × b</code></pre>
+<p>We can see the cross product is anti-commutative by comparing the last answer with:</p>
+<pre class="{julia}"><code>b × a</code></pre>
+<p>Using vectors of size different than <span class="math inline">\(n=3\)</span> produces a dimension mismatch error:</p>
+<pre class="{julia}"><code>#| error: true
+[1, 2] × [3, 4]</code></pre>
+<p>(It can prove useful to pad <span class="math inline">\(2\)</span>-dimensional vectors into <span class="math inline">\(3\)</span>-dimensional vectors by adding a <span class="math inline">\(0\)</span> third component. We will see this in the discussion on curvature in the plane.)</p>
+<p>Let’s see that the matrix definition will be identical (after identifications) to <code>cross</code>:</p>
+<pre class="{julia}"><code>@syms î ĵ k̂
+M = [î ĵ k̂; 3 4 5; 3 6 7]
+det(M) |&gt; simplify</code></pre>
+<p>Compare with</p>
+<pre class="{julia}"><code>M[2,:] × M[3,:]</code></pre>
+<hr>
+<p>Consider this extended picture involving two vectors <span class="math inline">\(\vec{u}\)</span> and <span class="math inline">\(\vec{v}\)</span> drawn in two dimensions:</p>
+<pre class="{julia}"><code>u₁ = [1, 2]
+v₁ = [2, 1]
+p₁ = [0,0]
+
+plot(aspect_ratio=:equal)
+arrow!(p₁, u₁)
+arrow!(p₁, v₁)
+arrow!(u₁, v₁)
+arrow!(v₁, u₁)
+
+puv₁ = (u₁ ⋅ v₁) / (v₁ ⋅ v₁) * v₁
+porth₁ = u₁ - puv₁
+arrow!(puv₁, porth₁)</code></pre>
+<p>The enclosed shape is a parallelogram. To this we added the projection of <span class="math inline">\(\vec{u}\)</span> onto <span class="math inline">\(\vec{v}\)</span> (<code>puv</code>) and then the <em>orthogonal</em> part (<code>porth</code>).</p>
+<p>The <em>area</em> of a parallelogram is the length of one side times the perpendicular height. The perpendicular height could be found from <code>norm(porth)</code>, so the area is:</p>
+<pre class="{julia}"><code>norm(v₁) * norm(porth₁)</code></pre>
+<p>However, from trigonometry we have the height would also be the norm of <span class="math inline">\(\vec{u}\)</span> times <span class="math inline">\(\sin(\theta)\)</span>, a value that is given through the length of the cross product of <span class="math inline">\(\vec{u}\)</span> and <span class="math inline">\(\hat{v}\)</span>, the unit vector, were these vectors viewed as <span class="math inline">\(3\)</span> dimensional by adding a <span class="math inline">\(0\)</span> third component. In formulas, this is also the case:</p>
+<p><span class="math display">\[
+\text{area of the parallelogram} = \| \vec{u} \times \hat{v} \| \| \vec{v} \| = \| \vec{u} \times \vec{v} \|.
+\]</span></p>
+<p>We have, for our figure, after extending <code>u</code> and <code>v</code> to be three dimensional the area of the parallelogram:</p>
+<pre class="{julia}"><code>u₂ = [1, 2, 0]
+v₂ = [2, 1, 0]
+norm(u₂ × v₂)</code></pre>
+<hr>
+<p>This analysis can be extended to the case of 3 vectors, which - when not co-planar - will form a <em>parallelepiped</em>.</p>
+<pre class="{julia}"><code>u₃, v₃, w₃ = [1,2,3], [2,1,0], [1,1,2]
+plot()
+p₃ = [0,0,0]
+
+plot(legend=false)
+arrow!(p₃, u₃); arrow!(p₃, v₃); arrow!(p₃, w₃)
+arrow!(u₃, v₃); arrow!(u₃, w₃)
+arrow!(v₃, u₃); arrow!(v₃, w₃)
+arrow!(w₃, u₃); arrow!(w₃, v₃)
+arrow!(u₃ + v₃, w₃); arrow!(u₃ + w₃, v₃); arrow!(v₃ + w₃, u₃)</code></pre>
+<p>The volume of a parallelepiped is the area of a base parallelogram times the height of a perpendicular. If <span class="math inline">\(\vec{u}\)</span> and <span class="math inline">\(\vec{v}\)</span> form the base parallelogram, then the perpendicular will have height <span class="math inline">\(\|\vec{w}\| \cos(\theta)\)</span> where the angle is the one made by <span class="math inline">\(\vec{w}\)</span> with the normal, <span class="math inline">\(\vec{n}\)</span>. Since <span class="math inline">\(\vec{u} \times \vec{v} = \| \vec{u} \times \vec{v}\|  \hat{n} = \hat{n}\)</span> times the area of the base parallelogram, we have if we dot this answer with <span class="math inline">\(\vec{w}\)</span>:</p>
+<p><span class="math display">\[
+(\vec{u} \times \vec{v}) \cdot \vec{w} =
+\|\vec{u} \times \vec{v}\| (\vec{n} \cdot \vec{w}) =
+\|\vec{u} \times \vec{v}\| \| \vec{w}\| \cos(\theta),
+\]</span></p>
+<p>that is, the area of the parallelepiped. Wait, what about <span class="math inline">\((\vec{v}\times\vec{u})\cdot\vec{w}\)</span>? That will have an opposite sign. Yes, in the above, there is an assumption that <span class="math inline">\(\vec{n}\)</span> and <span class="math inline">\(\vec{w}\)</span> have a an angle between them within <span class="math inline">\([0, \pi/2]\)</span>, otherwise an absolute value must be used, as volume is non-negative.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Orientation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The triple-scalar product, <span class="math inline">\(\vec{u}\cdot(\vec{v}\times\vec{w})\)</span>, gives the volume of the parallelepiped up to sign. If the sign of this is positive, the <span class="math inline">\(3\)</span> vectors are said to have a <em>positive</em> orientation, if the triple-scalar product is negative, the vectors have a <em>negative</em> orientation.</p>
+</div>
+</div>
+<section id="algebraic-properties-1" class="level4">
+<h4 class="anchored" data-anchor-id="algebraic-properties-1">Algebraic properties</h4>
+<p>The cross product has many properties, some different from regular multiplication:</p>
+<ul>
+<li>scalar multiplication: <span class="math inline">\((c\vec{u})\times\vec{v} = c(\vec{u}\times\vec{v})\)</span></li>
+<li>distributive over addition: <span class="math inline">\(\vec{u} \times (\vec{v} + \vec{w}) = \vec{u}\times\vec{v} + \vec{u}\times\vec{w}\)</span>.</li>
+<li><em>anti</em>-commutative: <span class="math inline">\(\vec{u} \times \vec{v} = - \vec{v} \times \vec{u}\)</span></li>
+<li><em>not</em> associative: that is there is no guarantee that <span class="math inline">\((\vec{u}\times\vec{v})\times\vec{w}\)</span> will be equivalent to <span class="math inline">\(\vec{u}\times(\vec{v}\times\vec{w})\)</span>.</li>
+<li>The triple cross product <span class="math inline">\((\vec{u}\times\vec{v}) \times \vec{w}\)</span> must be orthogonal to <span class="math inline">\(\vec{u}\times\vec{v}\)</span> so lies in a plane with this as a normal vector. But, <span class="math inline">\(\vec{u}\)</span> and <span class="math inline">\(\vec{v}\)</span> will generate this plane, so it should be possible to express this triple product in terms of a sum involving <span class="math inline">\(\vec{u}\)</span> and <span class="math inline">\(\vec{v}\)</span> and indeed:</li>
+</ul>
+<p><span class="math display">\[
+(\vec{u}\times\vec{v})\times\vec{w} = (\vec{u}\cdot\vec{w})\vec{v} - (\vec{v}\cdot\vec{w})\vec{u}.
+\]</span></p>
+<hr>
+<p>The following shows the algebraic properties stated above hold for symbolic vectors. First the linearity of the dot product:</p>
+<pre class="{julia}"><code>@syms s₄ t₄ u₄[1:3]::real v₄[1:3]::real w₄[1:3]::real
+
+u₄ ⋅ (s₄ * v₄ + t₄ * w₄) - (s₄ * (u₄ ⋅ v₄) + t₄ * (u₄ ⋅ w₄)) |&gt; simplify</code></pre>
+<p>This shows the dot product is commutative:</p>
+<pre class="{julia}"><code>(u₄ ⋅ v₄) - (v₄ ⋅ u₄) |&gt; simplify</code></pre>
+<p>This shows the linearity of the cross product over scalar multiplication and vector addition:</p>
+<pre class="{julia}"><code>u₄ × (s₄* v₄ + t₄ * w₄) - (s₄ * (u₄ × v₄) + t₄ * (u₄ × w₄)) .|&gt; simplify</code></pre>
+<p>(We use <code>.|&gt;</code> to broadcast <code>simplify</code> over each component.)</p>
+<p>The cross product is anti-commutative:</p>
+<pre class="{julia}"><code>u₄ × v₄ + v₄ × u₄ .|&gt; simplify</code></pre>
+<p>but not associative:</p>
+<pre class="{julia}"><code>u₄ × (v₄ × w₄) - (u₄ × v₄) × w₄ .|&gt; simplify</code></pre>
+<p>Finally we verify the decomposition of the triple cross product:</p>
+<pre class="{julia}"><code>(u₄ × v₄) × w₄ - ( (u₄ ⋅ w₄) * v₄ - (v₄ ⋅ w₄) * u₄) .|&gt; simplify</code></pre>
+<hr>
+<p>This table shows common usages of the symbols for various multiplication types: <code>*</code>, <span class="math inline">\(\cdot\)</span>, and <span class="math inline">\(\times\)</span>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Symbol</th>
+<th style="text-align: left;">inputs</th>
+<th style="text-align: left;">output</th>
+<th style="text-align: left;">type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>*</code></td>
+<td style="text-align: left;">scalar, scalar</td>
+<td style="text-align: left;">scalar</td>
+<td style="text-align: left;">regular multiplication</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>*</code></td>
+<td style="text-align: left;">scalar, vector</td>
+<td style="text-align: left;">vector</td>
+<td style="text-align: left;">scalar multiplication</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>*</code></td>
+<td style="text-align: left;">vector, vector</td>
+<td style="text-align: left;"><em>undefined</em></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(\cdot\)</span></td>
+<td style="text-align: left;">scalar, scalar</td>
+<td style="text-align: left;">scalar</td>
+<td style="text-align: left;">regular multiplication</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(\cdot\)</span></td>
+<td style="text-align: left;">scalar, vector</td>
+<td style="text-align: left;">vector</td>
+<td style="text-align: left;">scalar multiplication</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(\cdot\)</span></td>
+<td style="text-align: left;">vector, vector</td>
+<td style="text-align: left;">scalar</td>
+<td style="text-align: left;">dot product</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(\times\)</span></td>
+<td style="text-align: left;">scalar, scalar</td>
+<td style="text-align: left;">scalar</td>
+<td style="text-align: left;">regular multiplication</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(\times\)</span></td>
+<td style="text-align: left;">scalar, vector</td>
+<td style="text-align: left;">undefined</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(\times\)</span></td>
+<td style="text-align: left;">vector, vector</td>
+<td style="text-align: left;">vector</td>
+<td style="text-align: left;">cross product (<span class="math inline">\(3\)</span>D)</td>
+</tr>
+</tbody>
+</table>
+<section id="example-lines-and-planes" class="level5">
+<h5 class="anchored" data-anchor-id="example-lines-and-planes">Example: lines and planes</h5>
+<p>A line in two dimensions satisfies the equation <span class="math inline">\(ax + by = c\)</span>. Suppose <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are non-zero. This can be represented in vector form, as the collection of all points associated to the vectors: <span class="math inline">\(p + t \vec{v}\)</span> where <span class="math inline">\(p\)</span> is a point on the line, say <span class="math inline">\((0,c/b)\)</span>, and v is the vector <span class="math inline">\(\langle b, -a \rangle\)</span>. We can verify, this for values of <code>t</code> as follows:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms a b c x y t
+
+eq = c - (a*x + b*y)
+
+p = [0, c/b]
+v = [-b, a]
+li = p + t * v
+
+eq(x=&gt;li[1], y=&gt;li[2]) |&gt; simplify</code></pre>
+<p>Let <span class="math inline">\(\vec{n} = \langle a , b \rangle\)</span>, taken from the coefficients in the equation. We can see directly that <span class="math inline">\(\vec{n}\)</span> is orthogonal to <span class="math inline">\(\vec{v}\)</span>. The line may then be seen as the collection of all vectors that are orthogonal to <span class="math inline">\(\vec{n}\)</span> that have their tail at the point <span class="math inline">\(p\)</span>.</p>
+<p>In three dimensions, the equation of a plane is <span class="math inline">\(ax + by + cz = d\)</span>. Suppose, <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>, and <span class="math inline">\(c\)</span> are non-zero, for simplicity. Setting <span class="math inline">\(\vec{n} = \langle a,b,c\rangle\)</span> by comparison, it can be seen that plane is identified with the set of all vectors orthogonal to <span class="math inline">\(\vec{n}\)</span> that are anchored at <span class="math inline">\(p\)</span>.</p>
+<p>First, let <span class="math inline">\(p = (0, 0, d/c)\)</span> be a point on the plane. We find two vectors <span class="math inline">\(u = \langle -b, a, 0 \rangle\)</span> and <span class="math inline">\(v = \langle 0, c, -b \rangle\)</span>. Then any point on the plane may be identified with the vector <span class="math inline">\(p + s\vec{u} + t\vec{v}\)</span>. We can verify this algebraically through:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms a b c d x y z s t
+
+eq = d - (a*x + b*y + c * z)
+
+p = [0, 0, d/c]
+u, v = [-b, a, 0], [0, c, -b]
+pl = p + t * u + s * v
+
+subs(eq, x=&gt;pl[1], y=&gt;pl[2], z=&gt;pl[3]) |&gt; simplify</code></pre>
+<p>The above viewpoint can be reversed:</p>
+<blockquote class="blockquote">
+<p>a plane is determined by two (non-parallel) vectors and a point.</p>
+</blockquote>
+<p>The parameterized version of the plane would be <span class="math inline">\(p + t \vec{u} + s \vec{v}\)</span>, as used above.</p>
+<p>The equation of the plane can be given from <span class="math inline">\(\vec{u}\)</span> and <span class="math inline">\(\vec{v}\)</span>. Let <span class="math inline">\(\vec{n} = \vec{u} \times \vec{v}\)</span>. Then <span class="math inline">\(\vec{n} \cdot \vec{u} = \vec{n} \cdot \vec{v} = 0\)</span>, from the properties of the cross product. As such, <span class="math inline">\(\vec{n} \cdot (s \vec{u} + t \vec{v}) = 0\)</span>. That is, the cross product is orthogonal to any <em>linear</em> combination of the two vectors. This figure shows one such linear combination:</p>
+<pre class="{julia}"><code>#| hold: true
+u = [1,2,3]
+v = [2,3,1]
+n = u × v
+p = [0,0,1]
+
+plot(legend=false)
+
+arrow!(p, u)
+arrow!(p, v)
+arrow!(p + u, v)
+arrow!(p + v, u)
+arrow!(p, n)
+
+s, t = 1/2, 1/4
+arrow!(p, s*u + t*v)</code></pre>
+<p>So if <span class="math inline">\(\vec{n} \cdot p = d\)</span> (identifying the point <span class="math inline">\(p\)</span> with a vector so the dot product is defined), we will have for any vector <span class="math inline">\(\vec{v} = \langle x, y, z \rangle = s \vec{u} + t \vec{v}\)</span> that</p>
+<p><span class="math display">\[
+\vec{n} \cdot (p + s\vec{u} + t \vec{v}) = \vec{n} \cdot p + \vec{n} \cdot (s \vec{u} + t \vec{v}) = d + 0 = d,
+\]</span></p>
+<p>But if <span class="math inline">\(\vec{n} = \langle a, b, c \rangle\)</span>, then this says <span class="math inline">\(d = ax + by + cz\)</span>, so from <span class="math inline">\(\vec{n}\)</span> and <span class="math inline">\(p\)</span> the equation of the plane is given.</p>
+<p>In summary:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Object</th>
+<th style="text-align: center;">Equation</th>
+<th style="text-align: left;">vector equation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Line</td>
+<td style="text-align: center;"><span class="math inline">\(ax + by = c\)</span></td>
+<td style="text-align: left;">line: <span class="math inline">\(p + t\vec{u}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Plane</td>
+<td style="text-align: center;"><span class="math inline">\(ax + by + cz = d\)</span></td>
+<td style="text-align: left;">plane: <span class="math inline">\(p + s\vec{u} + t\vec{v}\)</span></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="example-2" class="level5">
+<h5 class="anchored" data-anchor-id="example-2">Example</h5>
+<p>You are given that the vectors <span class="math inline">\(\vec{u} =\langle 6, 3, 1 \rangle\)</span> and <span class="math inline">\(\vec{v} = \langle 3, 2, 1 \rangle\)</span> describe a plane through the point <span class="math inline">\(p=[1,1,2]\)</span>. Find the equation of the plane.</p>
+<p>The key is to find the normal vector to the plane, <span class="math inline">\(\vec{n} = \vec{u} \times \vec{v}\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+u, v, p = [6,3,1], [3,2,1], [1,1,2]
+n = u × v
+a, b, c = n
+d = n ⋅ p
+"equation of plane: $a x + $b y + $c z = $d"</code></pre>
+</section>
+</section>
+<section id="questions" class="level2" data-number="54.9">
+<h2 data-number="54.9" class="anchored" data-anchor-id="questions"><span class="header-section-number">54.9</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>Let <code>u=[1,2,3]</code>, <code>v=[4,3,2]</code>, and <code>w=[5,2,1]</code>.</p>
+<p>Find <code>u ⋅ v</code>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+u,v,w = [1,2,3], [4,3,2], [5,2,1]
+numericq(dot(u,v))</code></pre>
+<p>Are <code>v</code> and <code>w</code> orthogonal?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+u,v,w = [1,2,3], [4,3,2], [5,2,1]
+answ = dot(v,w) == 0
+yesnoq(answ)</code></pre>
+<p>Find the angle between <code>u</code> and <code>w</code>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+u,v,w = [1,2,3], [4,3,2], [5,2,1]
+ctheta = (u ⋅ w)/norm(u)/norm(w)
+val = acos(ctheta)
+numericq(val)</code></pre>
+<p>Find <code>u ×  v</code>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"`[-5, 10, -5]`",
+"`[-1, 6, -7]`",
+"`[-4, 14, -8]`"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>Find the area of the parallelogram formed by <code>v</code> and <code>w</code></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+u,v,w = [1,2,3], [4,3,2], [5,2,1]
+val = norm(v  × w)
+numericq(val)</code></pre>
+<p>Find the volume of the parallelepiped formed by <code>u</code>, <code>v</code>, and <code>w</code>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+u,v,w = [1,2,3], [4,3,2], [5,2,1]
+val = abs((u × v) ⋅ w)
+numericq(val)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>The dot product of two vectors may be described in words: pair off the corresponding values, multiply them, then add. In <code>Julia</code> the <code>zip</code> command will pair off two iterable objects, like vectors, so it seems like this command: <code>sum(prod.(zip(u,v)))</code> will find a dot product. Investigate if it is does or doesn’t by testing the following command and comparing to the dot product:</p>
+<pre class="{julia}"><code>#| hold: true
+#| eval: false
+u,v = [1,2,3], [5,4,2]
+sum(prod.(zip(u,v)))</code></pre>
+<p>Does this return the same answer:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(true)</code></pre>
+<p>What does command <code>zip(u,v)</code> return?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"An object of type `Base.Iterators.Zip` that is only realized when used",
+"A vector of values `[(1, 5), (2, 4), (3, 2)]`"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>What does <code>prod.(zip(u,v))</code> return?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"A vector of values `[5, 8, 6]`",
+"An object of type `Base.Iterators.Zip` that when realized will produce a vector of values"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>Let <span class="math inline">\(\vec{u}\)</span> and <span class="math inline">\(\vec{v}\)</span> be 3-dimensional <strong>unit</strong> vectors. What is the value of</p>
+<p><span class="math display">\[
+(\vec{u} \times \vec{v}) \cdot (\vec{u} \times \vec{v}) + (\vec{u} \cdot \vec{v})^2?
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``1``",
+"``0``",
+"Can't say in general"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>Consider the projection of <span class="math inline">\(\langle 1, 2, 3\rangle\)</span> on <span class="math inline">\(\langle 3, 2, 1\rangle\)</span>. What is its length?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+u,v = [1,2,3], [3,2,1]
+val = (u ⋅ v)/norm(v)
+numericq(val)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>Let <span class="math inline">\(\vec{u} = \langle 1, 2, 3 \rangle\)</span> and <span class="math inline">\(\vec{v} = \langle 3, 2, 1 \rangle\)</span>. Describe the plane created by these two non-parallel vectors going through the origin.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``-4x + 8y - 4z = 0``",
+"``x + 2y + z = 0``",
+"``x + 2y + 3z = 6``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>A plane <span class="math inline">\(P_1\)</span> is <em>orthogonal</em> to <span class="math inline">\(\vec{n}_1\)</span>, a plane <span class="math inline">\(P_2\)</span> is <em>orthogonal</em> to <span class="math inline">\(\vec{n}_2\)</span>. Explain why vector <span class="math inline">\(\vec{v} = \vec{n}_1 \times \vec{n}_2\)</span> is parallel to the <em>intersection</em> of <span class="math inline">\(P_1\)</span> and <span class="math inline">\(P_2\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+" ``\\vec{v}`` is in plane ``P_1``, as it is orthogonal to ``\\vec{n}_1`` and ``P_2`` as it is orthogonal to ``\\vec{n}_2``, hence it is parallel to both planes.",
+" ``\\vec{n}_1`` and ``\\vec{n_2}`` are unit vectors, so the cross product gives the projection, which must be orthogonal to each vector, hence in the intersection"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>(From Strang). For an (analog) clock draw vectors from the center out to each of the 12 hours marked on the clock. What is the vector sum of these 12 vectors?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``\\vec{0}``",
+"``\\langle 12, 12 \\rangle``",
+"``12 \\langle 1, 0 \\rangle``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>If the vector to 3 o’clock is removed, (call this <span class="math inline">\(\langle 1, 0 \rangle\)</span>) what expresses the sum of <em>all</em> the remaining vectors?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``\\langle -1, 0 \\rangle``",
+"``\\langle 1, 0 \\rangle``",
+"``\\langle 11, 11 \\rangle``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>Let <span class="math inline">\(\vec{u}\)</span> and <span class="math inline">\(\vec{v}\)</span> be unit vectors. Let <span class="math inline">\(\vec{w} = \vec{u} + \vec{v}\)</span>. Then <span class="math inline">\(\vec{u} \cdot \vec{w} = \vec{v} \cdot \vec{w}\)</span>. What is the value?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``1 + \\vec{u}\\cdot\\vec{v}``",
+"``\\vec{u} + \\vec{v}``",
+"``\\vec{u}\\cdot\\vec{v} + \\vec{v}\\cdot \\vec{v}``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>As the two are equal, which interpretation is true?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"The angle they make with ``\\vec{w}`` is the same",
+"The vector ``\\vec{w}`` must also be a unit vector",
+"the two are orthogonal"
+]
+answ=1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-8" class="level6">
+<h6 class="anchored" data-anchor-id="question-8">Question</h6>
+<p>Suppose <span class="math inline">\(\| \vec{u} + \vec{v} \|^2 = \|\vec{u}\|^2 + \|\vec{v}\|^2\)</span>. What is <span class="math inline">\(\vec{u}\cdot\vec{v}\)</span>?</p>
+<p>We have <span class="math inline">\((\vec{u} + \vec{v})\cdot(\vec{u} + \vec{v}) = \vec{u}\cdot \vec{u} + 2 \vec{u}\cdot\vec{v} + \vec{v}\cdot\vec{v}\)</span>. From this, we can infer that:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``\\vec{u}\\cdot\\vec{v} = 0``",
+"``\\vec{u}\\cdot\\vec{v} = 2``",
+"``\\vec{u}\\cdot\\vec{v} = -(\\vec{u}\\cdot\\vec{u} \\vec{v}\\cdot\\vec{v})``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-9" class="level6">
+<h6 class="anchored" data-anchor-id="question-9">Question</h6>
+<p>Give a geometric reason for this identity:</p>
+<p><span class="math display">\[
+\vec{u} \cdot (\vec{v} \times \vec{w}) =
+\vec{v} \cdot (\vec{w} \times \vec{u}) =
+\vec{w} \cdot (\vec{u} \times \vec{v})
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"The triple product describes a volume up to sign, this combination preserves the sign",
+"The vectors are *orthogonal*, so these are all zero",
+"The vectors are all unit lengths, so these are all 1"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-10" class="level6">
+<h6 class="anchored" data-anchor-id="question-10">Question</h6>
+<p>Snell’s law in planar form is <span class="math inline">\(n_1\sin(\theta_1) = n_2\sin(\theta_2)\)</span> where <span class="math inline">\(n_i\)</span> is a constant depending on the medium.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(t) = sin(t)
+p = plot(ylim=(.2,1.5), xticks=nothing, yticks=nothing, border=:none, legend=false, aspect_ratio=:equal)
+plot!(f, pi/6, pi/2, linewidth=4, color=:blue)
+t0 = pi/3
+p0 = [t0, f(t0)]
+Normal = [f'(t0), -t0]
+arrow!(p0, .5 * Normal, linewidth=4, color=:red )
+incident = (Normal + [.5, 0]) * .5
+arrow!(p0 - incident, incident, linewidth=4, color=:black)
+out = -incident + [.1,0]
+arrow!(p0, -out, linewidth=4, color=:black)
+annotate!([(0.8, 1.0, L"\hat{v}_1"),
+        (.6, .75, L"n_1"),
+        (1.075, 0.7, L"\hat{N}"),
+        (1.25, 0.7, L"\hat{v}_2"),
+        (1.5, .75, L"n_2")
+        ])
+
+p</code></pre>
+<p>In vector form, we can express it using <em>unit</em> vectors through:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``n_1 (\\hat{v_1}\\times\\hat{N}) = n_2  (\\hat{v_2}\\times\\hat{N})``",
+"``n_1 (\\hat{v_1}\\times\\hat{N}) = -n_2  (\\hat{v_2}\\times\\hat{N})``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-11" class="level6">
+<h6 class="anchored" data-anchor-id="question-11">Question</h6>
+<p>The Jacobi relationship show that for <em>any</em> <span class="math inline">\(3\)</span> randomly chosen vectors:</p>
+<p><span class="math display">\[
+\vec{a}\times(\vec{b}\times\vec{c})+
+\vec{b}\times(\vec{c}\times\vec{a})+
+\vec{c}\times(\vec{a}\times\vec{b})
+\]</span></p>
+<p>simplifies. To what? (Use <code>SymPy</code> or randomly generated vectors to see.)</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``\\vec{0}``",
+"``\\vec{a}``",
+"``\\vec{a} + \\vec{b} + \\vec{c}``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../differentiable_vector_calculus/polar_coordinates.html" class="pagination-link" aria-label="Polar Coordinates and Curves">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="pagination-link" aria-label="Vector-valued functions, $f:R \rightarrow R^n$">
+        <span class="nav-page-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/differentiable_vector_calculus/vectors.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

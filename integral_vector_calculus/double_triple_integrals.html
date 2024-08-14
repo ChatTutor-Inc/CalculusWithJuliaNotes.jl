@@ -1,0 +1,2734 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>60&nbsp; Multi-dimensional integrals – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../integral_vector_calculus/line_integrals.html" rel="next">
+<link href="../integral_vector_calculus.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../integral_vector_calculus.html">Integral vector calculus</a></li><li class="breadcrumb-item"><a href="../integral_vector_calculus/double_triple_integrals.html"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#integration-theory" id="toc-integration-theory" class="nav-link active" data-scroll-target="#integration-theory"><span class="header-section-number">60.1</span> Integration theory</a>
+  <ul class="collapse">
+  <li><a href="#hcubature" id="toc-hcubature" class="nav-link" data-scroll-target="#hcubature"><span class="header-section-number">60.1.1</span> HCubature</a></li>
+  </ul></li>
+  <li><a href="#integrals-over-more-general-regions" id="toc-integrals-over-more-general-regions" class="nav-link" data-scroll-target="#integrals-over-more-general-regions"><span class="header-section-number">60.2</span> Integrals over more general regions</a></li>
+  <li><a href="#fubinis-theorem" id="toc-fubinis-theorem" class="nav-link" data-scroll-target="#fubinis-theorem"><span class="header-section-number">60.3</span> Fubini’s theorem</a>
+  <ul class="collapse">
+  <li><a href="#sympys-integrate" id="toc-sympys-integrate" class="nav-link" data-scroll-target="#sympys-integrate"><span class="header-section-number">60.3.1</span> <code>SymPy</code>’s <code>integrate</code></a></li>
+  <li><a href="#a-fubini-function" id="toc-a-fubini-function" class="nav-link" data-scroll-target="#a-fubini-function"><span class="header-section-number">60.3.2</span> A “Fubini” function</a></li>
+  </ul></li>
+  <li><a href="#triple-integrals" id="toc-triple-integrals" class="nav-link" data-scroll-target="#triple-integrals"><span class="header-section-number">60.4</span> Triple integrals</a></li>
+  <li><a href="#change-of-variables" id="toc-change-of-variables" class="nav-link" data-scroll-target="#change-of-variables"><span class="header-section-number">60.5</span> Change of variables</a>
+  <ul class="collapse">
+  <li><a href="#two-dimensional-change-of-variables" id="toc-two-dimensional-change-of-variables" class="nav-link" data-scroll-target="#two-dimensional-change-of-variables"><span class="header-section-number">60.5.1</span> Two dimensional change of variables</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples"><span class="header-section-number">60.5.2</span> Examples</a></li>
+  <li><a href="#three-dimensional-change-of-variables" id="toc-three-dimensional-change-of-variables" class="nav-link" data-scroll-target="#three-dimensional-change-of-variables"><span class="header-section-number">60.5.3</span> Three dimensional change of variables</a></li>
+  </ul></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">60.6</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/integral_vector_calculus/double_triple_integrals.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../integral_vector_calculus.html">Integral vector calculus</a></li><li class="breadcrumb-item"><a href="../integral_vector_calculus/double_triple_integrals.html"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses these add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+plotly()
+using QuadGK
+using SymPy
+using HCubature</code></pre>
+<hr>
+<p>The definition of the definite integral, <span class="math inline">\(\int_a^b f(x)dx\)</span>, is based on Riemann sums.</p>
+<p>We review, using a more general form than <a href="../integrals/area.html">previously</a>. Consider a bounded function <span class="math inline">\(f\)</span> over <span class="math inline">\([a,b]\)</span>. A partition, <span class="math inline">\(P\)</span>, is based on <span class="math inline">\(a = x_0 &lt; x_1 &lt; \cdots &lt; x_n = b\)</span>. For each subinterval <span class="math inline">\([x_{i-1}, x_{i}]\)</span> take <span class="math inline">\(m_i(f) = \inf_{u \text{ in } [x_{i-1},x_i]} f(u)\)</span> and <span class="math inline">\(M_i(f) = \sup_{u \text{ in } [x_{i-1},x_i]} f(u)\)</span>. (When <span class="math inline">\(f\)</span> is continuous, <span class="math inline">\(m_i\)</span> and <span class="math inline">\(M_i\)</span> are realized at points of <span class="math inline">\([x_{i-1},x_i]\)</span>, though that isn’t assumed here. The use of “<span class="math inline">\(\sup\)</span>” and “<span class="math inline">\(\inf\)</span>” is a mathematically formal means to replace this in general.) Let <span class="math inline">\(\Delta x_i = x_i - x_{i-1}\)</span>. Form the sums <span class="math inline">\(m(f, P) = \sum_i m_i(f) \Delta x_i\)</span> and <span class="math inline">\(M(f, P) = \sum_i M_i(f) \Delta x_i\)</span>. These are the <em>lower</em> and <em>upper</em> Riemann sums for a partition. A general Riemann sum would be formed by selecting <span class="math inline">\(c_i\)</span> from <span class="math inline">\([x_{i-1}, x_i]\)</span> and forming <span class="math inline">\(S(f,P) = \sum f(c_i) \Delta x_i\)</span>. It will be the case that <span class="math inline">\(m(f,P) \leq S(f,P) \leq M(f,P)\)</span>, as this is true for <em>each</em> sub-interval of the partition.</p>
+<p>If, as the largest diameter (<span class="math inline">\(\Delta x_i\)</span>) of the partition <span class="math inline">\(P\)</span> goes to <span class="math inline">\(0\)</span>, the upper and lower sums converge to the same limit, then <span class="math inline">\(f\)</span> is called Riemann integrable over <span class="math inline">\([a,b]\)</span>. If <span class="math inline">\(f\)</span> is Riemann integrable, any Riemann sum will converge to the definite integral as the partitioning shrinks.</p>
+<p>Continuous functions are known to be Riemann integrable, as are functions with only finitely many discontinuities, though this isn’t the most general case of integrable functions, which will be stated below.</p>
+<p>In practice, we don’t typically compute integrals using a limit of a partition, though the approach may provide direction to numeric answers, as the Fundamental Theorem of Calculus relates the definite integral with an antiderivative of the integrand.</p>
+<p>The multidimensional case will prove to be similar where a Riemann sum is used to define the value being discussed, but a theorem of Fubini will allow the computation of integrals using the Fundamental Theorem of Calculus.</p>
+<hr>
+<section id="integration-theory" class="level2" data-number="60.1">
+<h2 data-number="60.1" class="anchored" data-anchor-id="integration-theory"><span class="header-section-number">60.1</span> Integration theory</h2>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+imgfile = "figures/chrysler-building-in-new-york.jpg"
+caption = """How to estimate the volume contained within the Chrysler Building? One way might be to break the building up into tall vertical blocks based on its skyline;  compute the volume of each block using the formula of volume as area of the base times the height; and, finally, adding up the computed volumes. This is the basic idea of finding volumes under surfaces using Riemann integration."""
+#ImageFile(:integral_vector_calculus, imgfile, caption)
+nothing</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./figures/chrysler-building-in-new-york.jpg" class="img-fluid figure-img"></p>
+<figcaption>How to estimate the volume contained within the Chrysler Building? One way might be to break the building up into tall vertical blocks based on its skyline; compute the volume of each block using the formula of volume as area of the base times the height; and, finally, adding up the computed volumes This is the basic idea of finding volumes under surfaces using Riemann integration.</figcaption>
+</figure>
+</div>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+imgfile ="figures/chrysler-nano-block.png"
+caption = """
+Computing the volume of a nano-block construction of the Chrysler building is easier than trying to find an actual tree at the Chrysler building, as we can easily compute the volume of columns of equal-sized blocks. Riemann sums are similar.
+"""
+
+#ImageFile(:integral_vector_calculus, imgfile, caption)
+nothing</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./figures/chrysler-nano-block.png" class="img-fluid figure-img"></p>
+<figcaption>Computing the volume of a nano-block construction of the Chrysler building is easier than trying to find an actual tree at the Chrysler building, as we can easily compute the volume of columns of equal-sized blocks. Riemann sums are similar.</figcaption>
+</figure>
+</div>
+<p>The definition of the multi-dimensional integral is more involved than the one-dimensional case due to the possibly increased complexity of the region. This will require additional <a href="https://math.okstate.edu/people/lebl/osu4153-s16/chapter10-ver1.pdf">steps</a>. The basic approach is as follows.</p>
+<p>First, let <span class="math inline">\(R = [a_1, b_1] \times [a_2, b_2] \times \cdots \times [a_n, b_n]\)</span> be a closed rectangular region. If <span class="math inline">\(n=2\)</span>, this is a rectangle, and if <span class="math inline">\(n=3\)</span>, a box. We begin by defining integration over closed rectangular regions. For each side, a partition <span class="math inline">\(P_i\)</span> is chosen based on <span class="math inline">\(a_i = x_{i0} &lt; x_{i1} &lt; \cdots &lt; x_{ik} = b_i\)</span>. Then a sub-rectangular region would be of the form <span class="math inline">\(R' = P_{1j_1} \times P_{2j_2} \times \cdots \times P_{nj_n}\)</span>, where <span class="math inline">\(P_{ij_i}\)</span> is one of the partitioning sub intervals of <span class="math inline">\([a_i, b_i]\)</span>. Set <span class="math inline">\(\Delta R' = \Delta P_{1j_1} \cdot \Delta P_{2j_2} \cdot\cdots\cdot\Delta P_{nj_n}\)</span> to be the <span class="math inline">\(n\)</span>-dimensional volume of the sub-rectangular region.</p>
+<p>For each sub-rectangular region, we can define <span class="math inline">\(m(f,R')\)</span> to be <span class="math inline">\(\inf_{u \text{ in } R'} f(u)\)</span> and <span class="math inline">\(M(f, R') = \sup_{u \text{ in } R'} f(u)\)</span>. If we enumerate all the sub-rectangular regions, we can define <span class="math inline">\(m(f, P) = \sum_i m(f, R_i) \Delta R_i\)</span> and <span class="math inline">\(M(f,P) = \sum_i M(f, R_i)\Delta R_i\)</span>, as in the one-dimensional case. These are upper and lower sums, and, as before, would bound the Riemann sum formed by choosing any <span class="math inline">\(c_i\)</span> in <span class="math inline">\(R_i\)</span> and computing <span class="math inline">\(S(f,P) = \sum_i f(c_i) \Delta R_i\)</span>.</p>
+<p>As with the one-dimensional case, <span class="math inline">\(f\)</span> is Riemann integrable over <span class="math inline">\(R\)</span> if the limits of <span class="math inline">\(m(f,P)\)</span> and <span class="math inline">\(M(f,P)\)</span> exist and are identical as the diameter of the partition (defined as the largest diameter of each side) goes to <span class="math inline">\(0\)</span>. If the limits are equal, then so is the limit of any Riemann sum.</p>
+<p>When <span class="math inline">\(f\)</span> is Riemann integrable over a rectangular region <span class="math inline">\(R\)</span>, we denote the limit by any of:</p>
+<p><span class="math display">\[
+\iint_R f(x) dV, \quad \iint_R fdV, \quad \iint_R f(x_1, \dots, x_n) dx_1 \cdot\cdots\cdot dx_n, \quad\iint_R f(\vec{x}) d\vec{x}.
+\]</span></p>
+<p>A key fact, requiring proof, is:</p>
+<blockquote class="blockquote">
+<p>Any continuous function, <span class="math inline">\(f\)</span>, is Riemann integrable over a closed, bounded rectangular region.</p>
+</blockquote>
+<hr>
+<p>As with one-dimensional integrals, from the Riemann sum definition, several familiar properties for integrals follow. Let <span class="math inline">\(V(R)\)</span> be the volume of <span class="math inline">\(R\)</span> found by multiplying the side-lengths together.</p>
+<p><strong>Constants:</strong></p>
+<ul>
+<li>A constant is Riemann integrable and: <span class="math inline">\(\iint_R c dV = c V(R)\)</span>.</li>
+</ul>
+<p><strong>Linearity:</strong></p>
+<ul>
+<li>For integrable <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> and constants <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>:</li>
+</ul>
+<p><span class="math display">\[
+\iint_R (af(x) + bg(x))dV = a\iint_R f(x)dV + b\iint_R g(x) dV.
+\]</span></p>
+<p><strong>Disjoint:</strong></p>
+<ul>
+<li>If <span class="math inline">\(R\)</span> and <span class="math inline">\(R'\)</span> are <em>disjoint</em> rectangular regions (possibly sharing a boundary), then the integral over the union is defined by linearity:</li>
+</ul>
+<p><span class="math display">\[
+\iint_{R \cup R'} f(x) dV = \iint_R f(x)dV + \iint_{R'} f(x) dV.
+\]</span></p>
+<p><strong>Monotonicity:</strong></p>
+<ul>
+<li>As <span class="math inline">\(f\)</span> is bounded, let <span class="math inline">\(m \leq f(x) \leq M\)</span> for all <span class="math inline">\(x\)</span> in <span class="math inline">\(R\)</span>. Then</li>
+</ul>
+<p><span class="math display">\[
+m V(R) \leq \iint_R f(x) dV \leq MV(R).
+\]</span></p>
+<ul>
+<li>If <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> are integrable <em>and</em> <span class="math inline">\(f(x) \leq g(x)\)</span>, then the integrals have the same property, namely <span class="math inline">\(\iint_R f dV \leq \iint_R gdV\)</span>.</li>
+<li>If <span class="math inline">\(S \subset R\)</span>, both closed rectangles, then if <span class="math inline">\(f\)</span> is integrable over <span class="math inline">\(R\)</span> it will be also over <span class="math inline">\(S\)</span> and, when <span class="math inline">\(f\geq 0\)</span>, <span class="math inline">\(\iint_S f dV \leq \iint_R fdV\)</span>.</li>
+</ul>
+<p><strong>Triangle inequality:</strong></p>
+<ul>
+<li>If <span class="math inline">\(f\)</span> is bounded and integrable, then <span class="math inline">\(|\iint_R fdV| \leq \iint_R |f| dV\)</span>.</li>
+</ul>
+<section id="hcubature" class="level3" data-number="60.1.1">
+<h3 data-number="60.1.1" class="anchored" data-anchor-id="hcubature"><span class="header-section-number">60.1.1</span> HCubature</h3>
+<p>To numerically compute multidimensional integrals over rectangular regions in <code>Julia</code> is efficiently done with the <code>HCubature</code> package. The <code>hcubature</code> function is defined for <span class="math inline">\(n\)</span>-dimensional integrals, so the integrand is specified through a function which takes a vector as an input. The region to integrate over is of rectangular form. It is specified by a tuple of left endpoints and a tuple of right endpoints. The order is in terms of the order of the vector.</p>
+<p>To elaborate, if we think of <span class="math inline">\(f(\vec{x}) = f(x_1, x_2, \dots, x_n)\)</span> and we are integrating over <span class="math inline">\([a_1, b_1] \times \cdots \times [a_n, b_n]\)</span>, then the region would be specified through two tuples: <code>(a1, a2, ..., an)</code> and <code>(b1, b2, ..., bn)</code>.</p>
+<p>To illustrate, to integrate the function <span class="math inline">\(f(x,y) = x^2 + 5y^2\)</span> over the region <span class="math inline">\([0,1] \times [0,2]\)</span> using <code>HCubature</code>’s <code>hcubature</code> function, we would proceed as follows:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = x^2 + 5y^2
+f(v) = f(v...)  # f accepts a vector
+a0, b0 = 0, 1
+a1, b1 = 0, 2
+hcubature(f, (a0, a1), (b0, b1))</code></pre>
+<p>The computed value and a worst case estimate for the error is returned, in a manner similar to the <code>quadgk</code> function (from the <code>QuadGK</code> package) used previously for one-dimensional numeric integrals.</p>
+<p>The order above is <code>x</code> then <code>y</code>, which is clear from the first definition of <code>f</code> and as belabored in the tuples passed to <code>hcubature</code>. A more convenient use is to just put the constants into the function call, as in <code>hcubature(f, (0,0), (1,2))</code>.</p>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>Let’s verify the numeric approach works for figures where an answer is known from the geometry of the problem.</p>
+<ul>
+<li>A constant function <span class="math inline">\(c=f(x,y)\)</span>. In this case, the volume is simply a box, so the volume will come from multiplying the three dimensions. Here is an example:</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = 3
+f(v) = f(v...)
+a0, b0 = 0, 4
+a1, b1 = 0, 5  # R is area 20, so V = 60 = 3 ⋅ 20
+hcubature(f, (a0, a1), (b0, b1))</code></pre>
+<ul>
+<li>A wedge. Let <span class="math inline">\(f(x,y) = x\)</span> and <span class="math inline">\(R= [0,1] \times [0,1]\)</span>. The the volume is a wedge, and should be half the value of the unit cube, or simply <span class="math inline">\(1/2\)</span>:</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = x
+f(v) = f(v...)
+a0, b0 = 0, 1
+a1, b1 = 0, 1
+hcubature(f, (a0, a1), (b0, b1))</code></pre>
+<ul>
+<li>The volume of a right square pyramid is <span class="math inline">\(V=(1/3)a^2 h\)</span>, or a third of an enclosing box. We computed this area previously using the method of <a href="../integrals/volumes_slice.html">slices</a>. Here we do it thinking of the pyramid as the volume formed by the surface over the region <span class="math inline">\([-a,a] \times [-a,a]\)</span> generated by <span class="math inline">\(f(x,y) = h \cdot (l(x,y) - d(x,y))/l(x,y)\)</span> where <span class="math inline">\(d(x,y)\)</span> is the distance to the origin, or <span class="math inline">\(\sqrt{x^2 + y^2}\)</span> and <span class="math inline">\(l(x,y)\)</span> is the length of the line segment from the origin to the boundary of <span class="math inline">\(R\)</span> that goes through <span class="math inline">\((x,y)\)</span>.</li>
+</ul>
+<p>Identifying a formula for this is a bit tricky. Here we use a brute force approach; later we will simplify this. Using polar coordinates, we know <span class="math inline">\(r\cos(\theta) = a\)</span> describes the line <span class="math inline">\(x=a\)</span> and <span class="math inline">\(r\sin(\theta)=a\)</span> describes the line <span class="math inline">\(y=a\)</span>. Using the square, we have to alternate between these depending on where <span class="math inline">\(\theta\)</span> is (e.g., between <span class="math inline">\(-\pi/4\)</span> and <span class="math inline">\(\pi/4\)</span> it would be <span class="math inline">\(r\cos(\theta)=a\)</span> or <span class="math inline">\(a/\cos(\theta)\)</span> is <span class="math inline">\(l(x,y)\)</span>. We write a function for this:</p>
+<pre class="{julia}"><code>d(x, y)  = sqrt(x^2 + y^2)
+function l(x, y, a)
+    theta = atan(y,x)
+    atheta = abs(theta)
+    if (pi/4 &lt;= atheta &lt; 3pi/4) # this is the y=a or y=-a case
+        (a/2)/sin(atheta)
+    else
+        (a/2)/abs(cos(atheta))
+    end
+end</code></pre>
+<p>And then</p>
+<pre class="{julia}"><code>f(x,y,a,h) = h * (l(x,y,a) - d(x,y))/l(x,y,a)
+𝒂, 𝒉 = 2, 3
+f(x,y) = f(x, y, 𝒂, 𝒉)   # fix a and h
+f(v) = f(v...)</code></pre>
+<p>We can visualize the volume to be computed, as follows:</p>
+<pre class="{julia}"><code>#| hold: true
+xs = ys = range(-1, 1, length=20)
+surface(xs, ys, f)</code></pre>
+<p>Trying this, we have:</p>
+<pre class="{julia}"><code>hcubature(f, (-𝒂/2, -𝒂/2), (𝒂/2, 𝒂/2))</code></pre>
+<p>The answer agrees with that known from the formula, <span class="math inline">\(4 = (1/3)a^2 h\)</span>, but the answer takes a long time to be produce. The <code>hcubature</code> function is slow with functions defined in terms of conditions. For this problem, volumes by <a href="../integrals/volumes_slice.html">slicing</a> is more direct. But also symmetry can be used, were we able to compute the volume above the triangular region formed by the <span class="math inline">\(x\)</span>-axis, the line <span class="math inline">\(x=a/2\)</span> and the line <span class="math inline">\(y=x\)</span>, which would be <span class="math inline">\(1/8\)</span>th the total volume. (As then <span class="math inline">\(l(x,y,a) = (a/2)/\sin(\tan^{-1}(y,x))\)</span>.).</p>
+<ul>
+<li>The volume of a sphere is <span class="math inline">\(4/3 \pi r^3\)</span>. We could verify this by integrating <span class="math inline">\(z = f(x,y) = \sqrt{r^2 - (x^2 + y^2)}\)</span> over <span class="math inline">\(R = \{(x,y): x^2 + y^2 \leq r^2\}\)</span>. <em>However</em>, this is not a <em>rectangular</em> region, so we couldn’t directly proceed.</li>
+</ul>
+<p>We might try integrating a function with a condition:</p>
+<pre class="{julia}"><code>#| hold: true
+function f(x, y, r)
+    if x^2 + y^2 &lt; r^2
+        sqrt(r^2 - (x^2 + y^2))
+    else
+        0.0
+    end
+end</code></pre>
+<p><strong>But</strong> <code>hcubature</code> is <strong>very</strong> slow to integrate such functions. We will see our instincts are good – this is the approach taken to discuss integrals over general regions – but this is not practical here. There are two alternative approaches to be discussed: approach the integral <em>iteratively</em> or <em>transform</em> the circular region into a rectangular region and integrate. Before doing so, we discuss how the integral is developed for more general regions.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The approach above takes a nice smooth function and makes it non smooth at the boundary. In general this is not a good idea for numeric solutions, as many algorithms work better with assumptions of smoothness.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <code>Quadrature</code> package provides a uniform interface for <code>QuadGK</code>, <code>HCubature</code>, and other numeric integration routines available in <code>Julia</code>.</p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="integrals-over-more-general-regions" class="level2" data-number="60.2">
+<h2 data-number="60.2" class="anchored" data-anchor-id="integrals-over-more-general-regions"><span class="header-section-number">60.2</span> Integrals over more general regions</h2>
+<p>To proceed further, it is necessary to discuss certain types of sets that will be used to describe the boundaries of regions that can be integrated over, though we don’t dig into the details.</p>
+<p>Let the <em>measure</em> of a rectangular region be its volume and for any subset of <span class="math inline">\(S \subset R^n\)</span>, define the <em>outer</em> measure of <span class="math inline">\(S\)</span> by <span class="math inline">\(m^*(S) = \inf\sum_{j=1}^\infty V(R_j)\)</span> where the infimum is taken over all closed, countable, rectangles with <span class="math inline">\(S \subset \cup_{j=1}^\infty R_j\)</span>.</p>
+<p>In two dimensions, if <span class="math inline">\(S\)</span> is viewed on a grid, then this would be <em>area</em> of the smallest collection of cells that contain any part of <span class="math inline">\(S\)</span>. This is the smallest this value takes as the grid becomes infinite.</p>
+<p>For the following graph, there are <span class="math inline">\(100\)</span> cells each of area <span class="math inline">\(8/100\)</span>. Their are 48 cells covering the curve and its interior. So the outer measure is less than <span class="math inline">\(48\cdot 8/100\)</span>, as this is just one possible covering.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+function cassini(theta)
+    a, b = .75, 1
+    A = 1; B = -2a^2*cos(2theta)
+    C = a^4 - b^4
+    (-B - sqrt(B^2 - 4*A*C))/(2A)
+end
+
+polar_plot(r, a, b) = plot(t -&gt; r(t)*cos(t), t-&gt;r(t)*sin(t), a, b, legend=false, linewidth=3)
+p = polar_plot(cassini, 0, 8pi)
+n=10
+a1,b1 = -1, 1
+a2, b2 = -2, 2
+for a in range(a1, b1, length=n+1)
+    for b in range(a2, b2, length=n+1)
+        plot!(p, [a,a],[a2, b2], alpha=0.75)
+        plot!(p, [a1,b1],[b,b], alpha=0.75)
+    end
+end
+p</code></pre>
+<p>A set has measure <span class="math inline">\(0\)</span> if the outer measure is <span class="math inline">\(0\)</span>. An alternate definition, among other characterizations, is a set has measure <span class="math inline">\(0\)</span> if for any <span class="math inline">\(\epsilon &gt; 0\)</span> there exists rectangular regions <span class="math inline">\(R_1, R_2, \dots, R_n\)</span> (for some <span class="math inline">\(n\)</span>) with <span class="math inline">\(\sum V(R_i) &lt; \epsilon\)</span>. Measure zero sets have many properties not discussed here.</p>
+<p>For now, let’s see that graph of <span class="math inline">\(y=f(x)\)</span> over <span class="math inline">\([a,b]\)</span>, as a two dimensional set, has measure zero when <span class="math inline">\(f(x)\)</span> has a bounded derivative (<span class="math inline">\(|f'|\)</span> bounded by <span class="math inline">\(M\)</span>). Fix some <span class="math inline">\(\epsilon&gt;0\)</span>. Take <span class="math inline">\(n\)</span> with <span class="math inline">\(2M(b-a)^2/n &lt; \epsilon\)</span>, then divide <span class="math inline">\([a,b]\)</span> into <span class="math inline">\(n\)</span> equal length intervals (of length <span class="math inline">\(\delta = (b-a)/n)\)</span>. For each interval, we consider the box <span class="math inline">\([a_i, b_i] \times [f(a_i)-\delta M, f(a_i) + \delta M]\)</span>. By the mean value theorem, we have <span class="math inline">\(|f(x) - f(a_i)| \leq |b_i-a_i|M\)</span> so <span class="math inline">\(f(a_i) - \delta M \leq f(x) \leq f(a_i) + \delta M\)</span>, so the curve will stay in the boxes. These boxes have total area <span class="math inline">\(n \cdot \delta \cdot 2\delta M = 2M(b-a)^2/n\)</span>, an area less than <span class="math inline">\(\epsilon\)</span>.</p>
+<p>The above can be extended to any graph of a continuous function over <span class="math inline">\([a,b]\)</span>.</p>
+<p>For a function <span class="math inline">\(f\)</span> the set of discontinuities in <span class="math inline">\(R\)</span> is all points where <span class="math inline">\(f\)</span> is not continuous. A formal definition is often given in terms of oscillation. Let <span class="math inline">\(o(f, \vec{x}, \delta) = \sup_{\{\vec{y} : \| \vec{y}-\vec{x}\| &lt; \delta\}}f(\vec{y}) - \inf_{\{\vec{y}: \|\vec{y}-\vec{x}\|&lt;\delta\}}f(\vec{y})\)</span>. A function is discontinuous at <span class="math inline">\(\vec{x}\)</span> if the limit as <span class="math inline">\(\delta \rightarrow 0+\)</span> (which must exist) is not <span class="math inline">\(0\)</span>.</p>
+<p>With this, we can state the Riemann-Lebesgue theorem on integrable functions:</p>
+<blockquote class="blockquote">
+<p>Let <span class="math inline">\(R\)</span> be a closed, rectangular region, and <span class="math inline">\(f:R^n \rightarrow R\)</span> a bounded function. Then <span class="math inline">\(f\)</span> is Riemann integrable over <span class="math inline">\(R\)</span> if and only if the set of discontinuities is a set of measure <span class="math inline">\(0\)</span>.</p>
+</blockquote>
+<p>It was said at the outset we would generalize the regions we can integrate over, but this theorem generalizes the functions. We can tie the two together as follows. Define the integral over any <em>bounded</em> set <span class="math inline">\(S\)</span> with boundary of measure <span class="math inline">\(0\)</span>. Bounded means <span class="math inline">\(S\)</span> is contained in some bounded rectangle <span class="math inline">\(R\)</span>. Let <span class="math inline">\(f\)</span> be defined on <span class="math inline">\(S\)</span> and extend it to be <span class="math inline">\(0\)</span> on points in <span class="math inline">\(R\)</span> that are not in <span class="math inline">\(S\)</span>. If this extended function is integrable over <span class="math inline">\(R\)</span>, then we can define the integral over <span class="math inline">\(S\)</span> in terms of that. This is why the <em>boundary</em> of <span class="math inline">\(S\)</span> must have measure zero, as in general it is among the set of discontinuities of the extend function <span class="math inline">\(f\)</span>. Such regions are also called Jordan regions.</p>
+</section>
+<section id="fubinis-theorem" class="level2" data-number="60.3">
+<h2 data-number="60.3" class="anchored" data-anchor-id="fubinis-theorem"><span class="header-section-number">60.3</span> Fubini’s theorem</h2>
+<p>Consider again this figure</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+function cassini(theta)
+    a, b = .75, 1
+    A = 1; B = -2a^2*cos(2theta)
+    C = a^4 - b^4
+    (-B - sqrt(B^2 - 4*A*C))/(2A)
+end
+
+polar_plot(r, a, b) = plot(t -&gt; r(t)*cos(t), t-&gt;r(t)*sin(t), a, b, legend=false, linewidth=3)
+p = polar_plot(cassini, 0, 8pi)
+n=10
+a1,b1 = -1, 1
+a2, b2 = -2, 2
+for a in range(a1, b1, length=n+1)
+    for b in range(a2, b2, length=n+1)
+        plot!(p, [a,a],[a2, b2], alpha=0.75)
+        plot!(p, [a1,b1],[b,b], alpha=0.75)
+    end
+end
+p</code></pre>
+<p>Let <span class="math inline">\(C_i\)</span> enumerate all the cells shown, assume <span class="math inline">\(f\)</span> is extended to be <span class="math inline">\(0\)</span> outside the region, and let <span class="math inline">\(c_i\)</span> be a point in the cell. Then the Riemann sum <span class="math inline">\(\sum_i f(c_i) V(C_i)\)</span> can be visualized three identical ways:</p>
+<ul>
+<li>as a linear sum over the indices <span class="math inline">\(i\)</span>, as written, leading to <span class="math inline">\(\iint_R f(x) dV\)</span>.</li>
+<li>by indexing the cells by row (<span class="math inline">\(i\)</span>) and column (<span class="math inline">\(j\)</span>) and summing as <span class="math inline">\(\sum_i (\sum_j f(x_{ij}, y_{ij}) \Delta y_j) \Delta x_i\)</span>.</li>
+<li>by indexing the cells by row (<span class="math inline">\(i\)</span>) and column (<span class="math inline">\(j\)</span>) and summing as <span class="math inline">\(\sum_j (\sum_i f(x_{ij}, y_{ij}) \Delta x_i) \Delta y_j\)</span>.</li>
+</ul>
+<p>The last two suggest that their limit will be <em>iterated</em> integrals of the form <span class="math inline">\(\int_{-1}^1 (\int_{-2}^2 f(x,y) dy) dx\)</span> and <span class="math inline">\(\int_{-2}^2 (\int_{-1}^1 f(x,y) dx) dy\)</span>.</p>
+<p>By “iterated” we mean performing two different definite integrals. For example, to compute <span class="math inline">\(\int_{-1}^1 (\int_{-2}^2 f(x,y) dy) dx\)</span> the first task would be to compute <span class="math inline">\(I(x) =  \int_{-2}^2 f(x,y) dy\)</span>. Like partial derivatives, this integrates in <span class="math inline">\(y\)</span> while treating <span class="math inline">\(x\)</span> as a constant. Once the interior integral is computed, then the integral <span class="math inline">\(\int_{-1}^1 I(x) dx\)</span> would be computed to find the answer.</p>
+<p>The question then: under what conditions will the three integrals be equal?</p>
+<blockquote class="blockquote">
+<p><a href="https://math.okstate.edu/people/lebl/osu4153-s16/chapter10-ver1.pdf">Fubini</a>. Let <span class="math inline">\(R \times S\)</span> be a closed rectangular region in <span class="math inline">\(R^n \times R^m\)</span>. Suppose <span class="math inline">\(f\)</span> is bounded. Define <span class="math inline">\(f_x(y) = f(x,y)\)</span> and <span class="math inline">\(f^y(x) = f(x,y)\)</span> where <span class="math inline">\(x\)</span> is in <span class="math inline">\(R^n\)</span> and <span class="math inline">\(y\)</span> in <span class="math inline">\(R^m\)</span>. <em>If</em> <span class="math inline">\(f_x\)</span> and <span class="math inline">\(f^y\)</span> are integrable then</p>
+<p><span class="math display">\[
+\iint_{R\times S}fdV = \iint_R \left(\iint_S f_x(y) dy\right) dx
+= \iint_S \left(\iint_R f^y(x) dx\right) dy.
+\]</span></p>
+</blockquote>
+<p>Similarly, if <span class="math inline">\(f^y\)</span> is integrable for all <span class="math inline">\(y\)</span>, then <span class="math inline">\(\iint_{R\times S}fdV =\iint_S \iint_R f(x,y) dx dy\)</span>.</p>
+<p>An immediate corollary is that the above holds for continuous functions when <span class="math inline">\(R\)</span> and <span class="math inline">\(S\)</span> are bounded, the case described here.</p>
+<p>The case of continuous functions was known to <a href="https://en.wikipedia.org/wiki/Fubini%27s_theorem#History">Euler</a>, Lebesgue (1904) discussed bounded functions, as in our statement, and Fubini and Tonnelli (1907 and 1909) generalized the statement to more general functions than continuous functions, thereby earning naming rights.</p>
+<p>In <a href="https://doi.org/10.2307/2687130">Ferzola</a> we can read a summary of Euler’s thinking of 1769 when trying to understand the integral of a function <span class="math inline">\(f(x,y)\)</span> over a bounded domain <span class="math inline">\(R\)</span> enclosed by arcs in the <span class="math inline">\(x\)</span>-<span class="math inline">\(y\)</span> plane. (That is, the area below <span class="math inline">\(g(x)\)</span> and above <span class="math inline">\(h(x)\)</span> over the interval <span class="math inline">\([a,b]\)</span>.) Euler wrote the answer as <span class="math inline">\(\int_a^b dx (\int_{g(x)}^{h(x)} f(x,y)dy)\)</span>. Ferzola writes that Euler saw this integral yielding a <em>volume</em> as the integral <span class="math inline">\(\int_{g(x)}^{h(x)} f(x,y)dy\)</span> gives the area of a slice (parallel to the <span class="math inline">\(y\)</span> axis) and integrating in <span class="math inline">\(x\)</span> adds these slices to give a volume. This is the typical usage of Fubini’s theorem today.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+imgfile ="figures/strang-slicing.png"
+caption = L"""Figure 14.2 of Strang illustrating the slice when either $x$ is fixed or $y$ is fixed. The inner integral computes the shaded area, the outer integral adds the areas up to compute volume."""
+
+# ImageFile(:integral_vector_calculus, imgfile, caption)
+nothing</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./figures/strang-slicing.png" class="img-fluid figure-img"></p>
+<figcaption>Figure 14.2 of Strang illustrating the slice when either <span class="math inline">\(x\)</span> is fixed or <span class="math inline">\(y\)</span> is fixed. The inner integral computes the shared area, the outer integral adds the areas up to compute volume.</figcaption>
+</figure>
+</div>
+<p>In <a href="../integrals/volumes_slice.html">Volumes</a> the formula for a volume with a known cross-sectional area is given by <span class="math inline">\(V = \int_a^b CA(x) dx\)</span>. The inner integral, <span class="math inline">\(\int_{R_x} f(x,y) dy\)</span> is a function depending on <span class="math inline">\(x\)</span> that yields the area of the slice (where <span class="math inline">\(R_x\)</span> is the region sliced by the line of constant <span class="math inline">\(x\)</span> value). This is consistent with Euler’s view of the iterated integral.</p>
+<p>A domain, as described above, is known as a <a href="https://en.wikipedia.org/wiki/Multiple_integral#Normal_domains_on_R2">normal</a> domain. Using Fubini’s theorem to integrate iteratively, employing the fundamental theorem of calculus at each step, is the standard approach.</p>
+<p>For example, we return to the problem of a square pyramid, only now using symmetry, we integrate only over the triangular region between <span class="math inline">\(0 \leq x \leq a/2\)</span> and <span class="math inline">\(0 \leq y \leq x\)</span>. The answer is then (the <span class="math inline">\(8\)</span> by symmetry)</p>
+<p><span class="math display">\[
+V = 8 \int_0^{a/2} \int_0^x h \cdot (l(x,y) - d(x,y))/l(x,y) dy dx.
+\]</span></p>
+<p>But, using similar triangles, we have <span class="math inline">\(d/x = l/(a/2)\)</span> so <span class="math inline">\((l-d)/l = 1 - 2x/a\)</span>. Continuing, our answer becomes</p>
+<p><span class="math display">\[
+V = 8 \int_0^{a/2} (\int_0^x h \cdot (1-\frac{2x}{a}) dy) dx =
+8 \int_0^{a/2} (h \cdot (1-2x/a) \cdot x) dx =
+8 h \cdot (\frac{x^2}{2} \big\lvert_{0}^{a/2} - \frac{2}{a}\frac{x^3}{3}\big\lvert_0^{a/2})=
+8 h \cdot (\frac{a^2}{8} - \frac{2}{24}a^2) = \frac{a^2h}{3}.
+\]</span></p>
+<section id="sympys-integrate" class="level3" data-number="60.3.1">
+<h3 data-number="60.3.1" class="anchored" data-anchor-id="sympys-integrate"><span class="header-section-number">60.3.1</span> <code>SymPy</code>’s <code>integrate</code></h3>
+<p>The <code>integrate</code> function of <code>SymPy</code> uses various algorithms to symbolically integrate definite (and indefinite) integrals. In the section on <a href="../integrals/ftc.html">integrals</a> its use for one-dimensional integrals was shown. For multi-dimensional integrals the usage is similar, the syntax following, somewhat, the Fubini-like notation.</p>
+<p>For example, to perform the integral</p>
+<p><span class="math display">\[
+\int_a^b \int_{h(x)}^{g(x)} f(x,y) dy dx
+\]</span></p>
+<p>the call would look like:</p>
+<pre class="{julia}"><code>#| eval: false
+integrate(f(x,y), (y, h(x), g(x)), (x, a, b))</code></pre>
+<p>That is, the variable to integrate and the endpoints are passed as tuples. (Unlike <code>hcubature</code> which always uses two tuples to specify the bounds, <code>integrate</code> uses <span class="math inline">\(n\)</span> tuples to specify an <span class="math inline">\(n\)</span>-dimensional integral.) The iteration happens from left to right, so in the above the <code>y</code> integral is done (and, as seen, may depend on the variable <code>x</code>) and then the <code>x</code> integral is performed. The above uses <code>f(x,y)</code>, <code>h(x)</code> and <code>g(x)</code>, but these may be simple symbolic expressions and not function calls using symbolic variables.</p>
+<p>We define <code>x</code> and <code>y</code> below for use throughout:</p>
+<pre class="{julia}"><code>@syms x::real y::real z::real</code></pre>
+<section id="example-1" class="level5">
+<h5 class="anchored" data-anchor-id="example-1">Example</h5>
+<p>For example, the last integral to compute the volume of a square pyramid, could be computed through</p>
+<pre class="{julia}"><code>#| hold: true
+@syms a height
+8 * integrate(height * (1 - 2x/a), (y, 0, x), (x, 0, a/2))</code></pre>
+</section>
+<section id="example-2" class="level5">
+<h5 class="anchored" data-anchor-id="example-2">Example</h5>
+<p>Find the integral <span class="math inline">\(\int_0^1\int_{y^2}^1 y \sin(x^2) dx dy\)</span>.</p>
+<p>Without concerning ourselves with what or why, we just translate:</p>
+<pre class="{julia}"><code>#| hold: true
+integrate( y * sin(x^2), (x, y^2, 1), (y, 0, 1))</code></pre>
+</section>
+<section id="example-3" class="level5">
+<h5 class="anchored" data-anchor-id="example-3">Example</h5>
+<p>Find the volume enclosed by <span class="math inline">\(y = x^2\)</span>, <span class="math inline">\(y = 5\)</span>, <span class="math inline">\(z = x^2\)</span>, and <span class="math inline">\(z = 0\)</span>.</p>
+<p>The limits on <span class="math inline">\(z\)</span> say this is the volume under the surface <span class="math inline">\(f(x,y) = x^2\)</span>, over the region defined by <span class="math inline">\(y=5\)</span> and <span class="math inline">\(y = x^2\)</span>. The region is a parabola with <span class="math inline">\(y\)</span> running from <span class="math inline">\(x^2\)</span> to <span class="math inline">\(5\)</span>, while <span class="math inline">\(x\)</span> ranges from <span class="math inline">\(-\sqrt{5}\)</span> to <span class="math inline">\(\sqrt{5}\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+f(x, y) = x^2
+h(x) = x^2
+g(x) = 5
+integrate(f(x,y), (y, h(x), g(x)), (x, -sqrt(Sym(5)), sqrt(Sym(5))))</code></pre>
+</section>
+<section id="example-4" class="level5">
+<h5 class="anchored" data-anchor-id="example-4">Example</h5>
+<p>Find the volume above the <span class="math inline">\(x\)</span>-<span class="math inline">\(y\)</span> plane when a cylinder, <span class="math inline">\(x^2 + y^2 = 2^2\)</span> is intersected by a plane <span class="math inline">\(3x + 4y + 5z = 6\)</span>.</p>
+<p>We solve for <span class="math inline">\(z = (1/5)\cdot(6 - 3x - 4y)\)</span> and take <span class="math inline">\(R\)</span> as the disk at the origin of radius <span class="math inline">\(2\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = 6 - 3x - 4y
+g(x) = sqrt(2^2 - x^2)
+h(x) = -sqrt(2^2 - x^2)
+(1//5) * integrate(f(x,y), (y, h(x), g(x)), (x, -2, 2))</code></pre>
+</section>
+<section id="example-5" class="level5">
+<h5 class="anchored" data-anchor-id="example-5">Example</h5>
+<p>Find the volume:</p>
+<ul>
+<li>in the first octant</li>
+<li>bounded by <span class="math inline">\(x+y+z = 10\)</span>, <span class="math inline">\(2x + 3y = 20\)</span>, and <span class="math inline">\(x + 3y = 10\)</span></li>
+</ul>
+<p>The first plane can be expressed as <span class="math inline">\(z = f(x,y) = 10 - x - y\)</span> and the volume is that below the surface of <span class="math inline">\(f\)</span> over the region <span class="math inline">\(R\)</span> formed by the two lines and the <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> axes. Plotting that we have:</p>
+<pre class="{julia}"><code>#| hold: true
+g1(x) = (20 - 2x)/3
+g2(x) = (10 - x)/3
+plot(g1, 0, 20)
+plot!(g2, 0, 20)</code></pre>
+<p>We see the intersection is when <span class="math inline">\(x=10\)</span>, so this becomes</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = 10 - x - y
+h(x) = (10 - x)/3
+g(x) = (20 - 3x)/3
+integrate(f(x,y), (y, h(x), g(x)), (x, 0, 10))</code></pre>
+</section>
+<section id="example-6" class="level5">
+<h5 class="anchored" data-anchor-id="example-6">Example</h5>
+<p>Let <span class="math inline">\(r=1\)</span> and define three cylinders along the <span class="math inline">\(x\)</span>, <span class="math inline">\(y\)</span>, and <span class="math inline">\(z\)</span> axes by: <span class="math inline">\(y^2+z^2 = r^2\)</span>, <span class="math inline">\(x^2 + z^2 = r^2\)</span>, and <span class="math inline">\(x^2 + y^2 = r^2\)</span>. What is the enclosed <a href="http://mathworld.wolfram.com/SteinmetzSolid.html">volume</a>?</p>
+<p>Using the cylinder along the <span class="math inline">\(z\)</span> axis, we have the volume sits above and below the disk <span class="math inline">\(R = x^2 + y^2 \leq r^2\)</span>. By symmetry, we can double the volume that sits above the disk to answer the question.</p>
+<p>Using symmetry, we can tell that the wedge between <span class="math inline">\(y=0\)</span>, <span class="math inline">\(y=x\)</span>, and <span class="math inline">\(x^2 + y^2 \leq 1\)</span> (corresponding to a polar angle in <span class="math inline">\([0,\pi/4]\)</span> in <span class="math inline">\(R\)</span> contains <span class="math inline">\(1/8\)</span> the volume of the top, so <span class="math inline">\(1/16\)</span> of the total.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+rad(theta) = 1
+plot(t -&gt; rad(t)*cos(t), t -&gt; rad(t)*sin(t), 0, pi/4, legend=false, linewidth=3)
+plot!([0,cos(pi/4)], [0, sin(pi/4)], linewidth=3)
+plot!([0, 1], [0, 0], linewidth=3)
+plot!([cos(pi/4), cos(pi/4)], [0, sin(pi/4)], linewidth=3)</code></pre>
+<p>Over this wedge the height is given by the cylinder along the <span class="math inline">\(y\)</span> axis, <span class="math inline">\(x^2 + z^2 = r^2\)</span>. We <em>could</em> break this wedge into a triangle and a semicircle to integrate piece by piece. However, from the figure we can integrate in the <span class="math inline">\(y\)</span> direction on the outside, and use only one intergral:</p>
+<pre class="{julia}"><code>#| hold: true
+r = 1 # if using r as a symbolic variable specify `positive=true`
+f(x,y) = sqrt(r^2 - x^2)
+16 * integrate(f(x,y), (x, y, sqrt(r^2-y^2)), (y, 0, r*cos(PI/4)))</code></pre>
+</section>
+<section id="example-7" class="level5">
+<h5 class="anchored" data-anchor-id="example-7">Example</h5>
+<p>Find the volume under <span class="math inline">\(f(x,y) = xy\)</span> in the cone swept out by <span class="math inline">\(r(\theta) = 1\)</span> as <span class="math inline">\(\theta\)</span> goes between <span class="math inline">\([0, \pi/4]\)</span>.</p>
+<p>The region <span class="math inline">\(R\)</span>, the same as the last one. As seen, it can be described in two pieces as a function of <span class="math inline">\(x\)</span>, but needs only <span class="math inline">\(1\)</span> as a function of <span class="math inline">\(y\)</span>, so we use that below:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = x*y
+g(y) = sqrt(1 - y^2)
+h(y) = y
+integrate(f(x,y), (x, h(y), g(y)), (y, 0, sin(PI/4)))</code></pre>
+</section>
+<section id="example-average-value" class="level5">
+<h5 class="anchored" data-anchor-id="example-average-value">Example: Average value</h5>
+<p>The average value of a function, <span class="math inline">\(f(x,y)\)</span>, over a region <span class="math inline">\(R\)</span> is the integral of <span class="math inline">\(f\)</span> over <span class="math inline">\(R\)</span> divided by the area of <span class="math inline">\(R\)</span>. It can be computed through two integrals, as below.</p>
+<p>let <span class="math inline">\(R\)</span> be the region in the first quadrant bounded by <span class="math inline">\(x - y = 0\)</span> and <span class="math inline">\(f(x,y) = x^2 + y^2\)</span>. Find the average value.</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = x^2 + y^2
+g(x) = x  # solve x - y = 0 for y
+h(x) = 0
+A = integrate(f(x,y), (y, h(x), g(x)), (x, 0, 1))
+B = integrate(Sym(1), (y, h(x), g(x)), (x, 0, 1))
+A/B</code></pre>
+<p>(We integrate <code>Sym(1)</code> and not just <code>1</code>, as we either need to have a symbolic value for the first argument or use the <code>sympy.integrate</code> method directly.)</p>
+</section>
+<section id="example-density" class="level5">
+<h5 class="anchored" data-anchor-id="example-density">Example: Density</h5>
+<p>The area of a region <span class="math inline">\(R\)</span> can be computed by <span class="math inline">\(\iint_R 1 dA\)</span>. If the region is physical, say a disc, then its mass can be of interest. If the mass is uniform with density <span class="math inline">\(\rho\)</span>, then the mass would be <span class="math inline">\(\iint_R \rho dA\)</span>. If the mass is non uniform, say it is a function <span class="math inline">\(\rho(x,y)\)</span>, then the integral to find the mass becomes <span class="math inline">\(\iint_R \rho(x,y) dA\)</span>. (In a Riemann sum, the term <span class="math inline">\(\rho(c_{ij}) \Delta x_i\Delta y_j\)</span> would be the mass of a constant-density solid, the integral just adds these up to find total mass.)</p>
+<p>Find the mass of a disc bounded by the two parabolas <span class="math inline">\(y=2 - x^2\)</span> and <span class="math inline">\(y = -3 + 2x^2\)</span> with density function given by <span class="math inline">\(\rho(x,y) = x^2y^2\)</span>.</p>
+<p>First we need the intersection points of the two parabolas. Solving <span class="math inline">\(2-x^2 = -3 + 2x^2\)</span> for <span class="math inline">\(x\)</span> yields: <span class="math inline">\(5 = 3x^2\)</span>.</p>
+<p>So we get a mass of:</p>
+<pre class="{julia}"><code>#| hold: true
+rho(x,y) = x^2*y^2
+g(x) = 2 - x^2
+h(x) = -3 + 2x^2
+a = sqrt(Sym(5//3))
+integrate(rho(x,y), (y, h(x), g(x)), (x, -a, a))</code></pre>
+</section>
+<section id="example-strang" class="level5">
+<h5 class="anchored" data-anchor-id="example-strang">Example (Strang)</h5>
+<p>Integrate <span class="math inline">\(\int_0^1 \int_y^1 \cos(x^2) dx dy\)</span> avoiding the <em>impossible</em> integral of <span class="math inline">\(\cos(x^2)\)</span>. As the integrand is continuous, Fubini’s Theorem allows the interchange of the variable of integraton. The region, <span class="math inline">\(R\)</span>, is a triangle in the first quadrant below the line <span class="math inline">\(y=x\)</span> and left of the line <span class="math inline">\(x=1\)</span>. So we have:</p>
+<p><span class="math display">\[
+\int_0^1 \int_0^x \cos(x^2) dy dx
+\]</span></p>
+<p>We can integrate this, as the interior integral leaves <span class="math inline">\(x \cos(x^2)\)</span> to integrate:</p>
+<pre class="{julia}"><code>integrate(cos(x^2), (y, 0, x), (x, 0, 1))</code></pre>
+</section>
+</section>
+<section id="a-fubini-function" class="level3" data-number="60.3.2">
+<h3 data-number="60.3.2" class="anchored" data-anchor-id="a-fubini-function"><span class="header-section-number">60.3.2</span> A “Fubini” function</h3>
+<p>The computationally efficient way to perform multiple integrals numerically would be to use <code>hcubature</code>. However, this function is defined only for <em>rectangular</em> regions. In the event of non-rectangular regions, the suggested performant way would be to find a suitable transformation (below).</p>
+<p>However, for simple problems, where ease of expressing a region is preferred to computational efficiency, something can be implemented using repeated uses of <code>quadgk</code>. Again, this isn’t recommended, save for its relationship to how iteration is approached algebraically.</p>
+<p>For these notes, we define three operations using Unicode operators entered with <code>\int[tab]</code>, <code>\iint[tab]</code>, <code>\iiint[tab]</code>.</p>
+<pre class="{julia}"><code># adjust endpoints when expressed as a functions of outer variables
+callf(f::Number, x) = f
+callf(f, x) = f(x...)
+endpoints(ys, x) = callf.(ys, Ref(x))
+
+# integrate f(x) dx
+∫(@nospecialize(f), xs) = quadgk(f, xs...)[1] # @nospecialize is not necessary, but offers a speed boost
+
+# integrate int_a^b int_h(x)^g(y) f(x,y) dy dx
+∬(f, ys, xs) = ∫(x -&gt; ∫(y -&gt; f(x,y), endpoints(ys, x)), xs)
+
+# integrate f(x,y,z) dz dy dx
+∭(f, zs, ys, xs) = ∫(
+    x -&gt; ∫(
+        y -&gt; ∫(
+            z -&gt; f(x,y,z),
+            endpoints(zs, (x,y))),
+        endpoints(ys,x)),
+    xs)</code></pre>
+<p>The one issue with the above is the tolerances should increase for each outer integration. Otherwise, a certain precision is expected for a noisier integrand. This isn’t an issue for many integrands, but can become one.</p>
+<section id="example-8" class="level5">
+<h5 class="anchored" data-anchor-id="example-8">Example</h5>
+<p>Compare the integral of <span class="math inline">\(f(x,y) = \exp(-x^2 -2y^2)\)</span> over the region <span class="math inline">\(R=[0,3]\times[0,3]\)</span> using <code>hcubature</code> and the above.</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = exp(-x^2 - 2y^2)
+f(v) = f(v...)
+hcubature(f, (0,0), (3,3))  # (a0, a1), (b0, b1)</code></pre>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = exp(-x^2 - 2y^2)
+∬(f, (0,3), (0,3))     # (a1, b1), (a0, b0)</code></pre>
+</section>
+<section id="example-9" class="level5">
+<h5 class="anchored" data-anchor-id="example-9">Example</h5>
+<p>Show the area of the unit circle is <span class="math inline">\(\pi\)</span> using the “Fubini” function.</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = 1
+a = ∬(f, (x-&gt; -sqrt(1-x^2), x-&gt; sqrt(1-x^2)), (-1, 1))
+a, a - pi   # answer and error</code></pre>
+<p>(The error is similar to that returned by <code>quadgk(x -&gt; 2sqrt(1-x^2), -1, 1)</code>.)</p>
+</section>
+<section id="example-10" class="level5">
+<h5 class="anchored" data-anchor-id="example-10">Example</h5>
+<p>Show the volume of a sphere of radius <span class="math inline">\(1\)</span> is <span class="math inline">\(4/3\pi = 4/3\pi\cdot 1^3\)</span> by doubling the integral of <span class="math inline">\(f(x,y) = \sqrt{1-x^2-y^2}\)</span> over <span class="math inline">\(R\)</span>, the unit disk.</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = sqrt(1 - x^2 - y^2)
+a = 2 * ∬(f, (x-&gt; -sqrt(1-x^2), x-&gt; sqrt(1-x^2)), (-1, 1))
+a, a - 4/3*pi</code></pre>
+</section>
+<section id="example-11" class="level5">
+<h5 class="anchored" data-anchor-id="example-11">Example</h5>
+<p>Numeric integrals don’t need to worry about integrands without antiderivatives. Their concerns are highly oscillatory integrands. Here we compute <span class="math inline">\(\int_0^1 \int_y^1 \cos(x^2) dx dy\)</span> directly. The limits are in a different order than the “Fubini” function expects, so we switch the variables:</p>
+<pre class="{julia}"><code>∬((y,x) -&gt; cos(x^2), (y -&gt; y, 1), (0, 1))</code></pre>
+<p>Compare to</p>
+<pre class="{julia}"><code>sin(1)/2</code></pre>
+</section>
+</section>
+</section>
+<section id="triple-integrals" class="level2" data-number="60.4">
+<h2 data-number="60.4" class="anchored" data-anchor-id="triple-integrals"><span class="header-section-number">60.4</span> Triple integrals</h2>
+<p>Triple integrals are identical in theory to double integrals, though the computations can be more involved and the regions more complicated to describe. The main regions (emphasized by Strang) to understand are: box, prism, cylinder, cone, tetrahedron, and sphere.</p>
+<pre class="{julia}"><code>#| echo: false
+let
+    ts = range(0, pi/2, length=50)
+    O = [0,0,0]
+    bx, by,bz = [1, 0, 0], [0,2,0], [0,0,3]
+
+    p = plot(unzip([O])..., legend=false, title="box",
+        axis=nothing)
+    arrow!(p, O, bx), arrow!(p, O, by), arrow!(p, O, bz)
+    arrow!(p, bx, bz), arrow!(p, bx, by)
+    arrow!(p, by, bx), arrow!(p, by, bz)
+    arrow!(p, bz, bx), arrow!(p, bz, by)
+    arrow!(p, bx+by, bz),
+    arrow!(p, bx+by+bz, -bx), arrow!(p, bx+by+bz, -by)
+    ps = [p]
+
+    p = plot(unzip([O])..., legend=false, title="prism",
+        axis=nothing)
+    arrow!(p, O, bx), arrow!(p, O, by),
+    arrow!(p, bx, by), arrow!(p, by, bx),
+    arrow!(p, O, bz), arrow!(p, by, bz)
+    arrow!(p, bz, by)
+    arrow!(p, bx, bz-bx), arrow!(p, bx + by, by+bz - (bx + by))
+    push!(ps, p)
+
+    p = plot(unzip([O])..., legend=false, title="tetrahedron",
+        axis=nothing)
+    arrow!(p, O, bx), arrow!(p, O, by), arrow!(p, O, bz)
+    arrow!(p, bx, by-bx)
+    arrow!(p, bx, bz-bx), arrow!(p, by, bz-by)
+    push!(ps, p)
+
+    p = plot(unzip([O])..., legend=false, title="cone",
+        camera=(70,20), axis=nothing)
+    arrow!(p, O, bx), arrow!(p, O, by/2), arrow!(p, O, bz)
+    arrow!(p, bx, bz-bx), arrow!(p, by/2, bz-by/2)
+
+    for h in range(0.1, 0.9, length=5)
+        z = 3*h
+        r = 1 - h
+        plot!(p, r*cos.(ts), r*sin.(ts), z .+ 0*ts)
+    end
+    push!(ps, p)
+
+    p = plot(unzip([O])..., legend=false, title="sphere",
+        camera=(70,20), axis=nothing)
+    Os = 0 * ts
+    plot!(p, cos.(ts), sin.(ts), Os)
+    plot!(p, cos.(ts), Os, sin.(ts))
+    plot!(p, Os, cos.(ts), sin.(ts))
+    for h in .2:.2:.8
+        r = sqrt(1 - h^2)
+        plot!(p, r*cos.(ts), r*sin.(ts), h .+ Os)
+    end
+    push!(ps, p)
+
+    l = @layout [a b; c d; e]
+    plot(ps..., layout=l)
+end</code></pre>
+<p>Here we compute the volumes of these using a triple integral of the form <span class="math inline">\(\iiint_R 1 dV\)</span>.</p>
+<ul>
+<li>Box. Consider the box-like, or “rectangular,” region <span class="math inline">\([0,a]\times [0,b] \times [0,c]\)</span>. This has volume <span class="math inline">\(abc\)</span> which we see here using Fubini’s theorem:</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+@syms a b c
+f(x,y,z) = Sym(1)   # need to integrate a symbolic object in integrand or call `sympy.integrate`
+integrate(f(x,y,z), (x, 0, a), (y, 0, b), (z, 0, c))</code></pre>
+<ul>
+<li>Prism. Consider a prism or wedge formed by <span class="math inline">\(ay + bz = 1\)</span> with <span class="math inline">\(a,b &gt; 0\)</span> and over the region in the first quadrant <span class="math inline">\(0 \leq x \leq c\)</span>. Find its area.</li>
+</ul>
+<p>The function to integrate is <span class="math inline">\(f(x,y) = (1 - ay)/b\)</span> over the region bounded by <span class="math inline">\([0,c] \times [0,1/a]\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms a b c
+f(x,y,z) = Sym(1)
+integrate(f(x,y,z), (z, 0, (1 - a*y)/b), (y, 0, 1/a), (x, 0, c))</code></pre>
+<p>Which, as expected, is half the volume of the box <span class="math inline">\([0,c] \times [0, 1/a] \times [0, 1/b]\)</span>.</p>
+<ul>
+<li>Tetrahedron. Consider the volume formed by <span class="math inline">\(x,y,z \geq 0\)</span> and bounded by <span class="math inline">\(ax+by+cz = 1\)</span> where <span class="math inline">\(a,b,c \geq 0\)</span>. The volume is a tetrahedron. The base in the <span class="math inline">\(x\)</span>-<span class="math inline">\(y\)</span> plane is a triangle with vertices <span class="math inline">\((1/a, 0, 0)\)</span> and <span class="math inline">\((0, 1/b, 0)\)</span>.</li>
+</ul>
+<p>(The third easy-to-find point is <span class="math inline">\((0, 0, 1/c)\)</span>). The line connecting the points in the <span class="math inline">\(x\)</span>-<span class="math inline">\(y\)</span> plane is <span class="math inline">\(ax + by = 1\)</span>. With this, the integral to compute the volume is</p>
+<pre class="{julia}"><code>#| hold: true
+@syms a b c
+f(x,y,z) = Sym(1)
+integrate(f(x,y,z), (z, 0, (1 - a*x - b*y)/c), (y, 0, (1 - a*x)/b), (x, 0, 1/a))</code></pre>
+<p>This is <span class="math inline">\(1/6\)</span>th the volume of the box.</p>
+<ul>
+<li>Cone. Consider a cone formed by the function <span class="math inline">\(z = f(x,y) = a - b(x^2+y^2)^{1/2}\)</span> (<span class="math inline">\(a,b &gt; 0\)</span>) and the <span class="math inline">\(x\)</span>-<span class="math inline">\(y\)</span> plane. This will have radius <span class="math inline">\(r = a/b\)</span> and height <span class="math inline">\(a\)</span>. The volume is given by this integral:</li>
+</ul>
+<p><span class="math display">\[
+\int_{x=-r}^r \int_{y=-\sqrt{r^2 - x^2}}^{\sqrt{r^2-x^2}} \int_0^{a - b(x^2 + y^2)^{1/2}} 1 dz dy dx.
+\]</span></p>
+<p>This integral is doable, but <code>SymPy</code> has trouble with it. We will return to this when cylindrical coordinates are defined.</p>
+<ul>
+<li>Sphere. The sphere <span class="math inline">\(x^2 + y^2 + z^2 \leq 1\)</span> has a known volume. Can we compute it using integration? In Cartesian coordinates, we can describe the region <span class="math inline">\(x^2 + y^2 \leq 1\)</span> and then the <span class="math inline">\(z\)</span>-limits will follow:</li>
+</ul>
+<p><span class="math display">\[
+\int_{x=-1}^1 \int_{y=-\sqrt{1-x^2}}^{\sqrt{1-x^2}} \int_{z=-\sqrt{1 - x^2 - y^2}}^{\sqrt{1-x^2 - y^2}} 1 dz dy dx.
+\]</span></p>
+<p>This integral is doable, but <code>SymPy</code> has trouble with it. We will return to this when spherical coordinates are defined.</p>
+</section>
+<section id="change-of-variables" class="level2" data-number="60.5">
+<h2 data-number="60.5" class="anchored" data-anchor-id="change-of-variables"><span class="header-section-number">60.5</span> Change of variables</h2>
+<p>The change of variables, or substitution, formula from first-semester calculus is expressed, under assumptions, by:</p>
+<p><span class="math display">\[
+\int_{g(R)} f(x) dx = \int_R (f\circ g)(u)g'(u) du.
+\]</span></p>
+<p>The derivation comes from reversing the chain rule. When using it, we start on the right hand side and typically write <span class="math inline">\(x = g(u)\)</span> and from here derive an expression involving differentials: <span class="math inline">\(dx = g'(u) du\)</span> and the rest follows. In practice, this is used to simplify the integrand in the search for an antiderivative, as <span class="math inline">\((f\circ g)\)</span> is generally more complicated than <span class="math inline">\(f\)</span> alone.</p>
+<p>In higher dimensions, we will see that change of variables can not only simplify the integrand, but is also of great use to simplify the region to integrate over. We mentioned, for example, that to use <code>hcubature</code> efficiently over a non-rectangular region, a transformation–-or change of variables–-is needed. The key to the multi-dimensional formula is understanding what should replace <span class="math inline">\(dx = g'(u) du\)</span>. We take a bit of a circuitous route to get there.</p>
+<p>In <a href="http://www.jstor.org/stable/2689856">Katz</a> a review of the history of “change of variables” from Euler to Cartan is given. We follow Lagrange’s formal analysis to derive the change of variable formula in two dimensions.</p>
+<p>We view <span class="math inline">\(R\)</span> in two coordinate systems <span class="math inline">\((x,y)\)</span> and <span class="math inline">\((u,v)\)</span>. We have that</p>
+<p><span class="math display">\[\begin{align*}
+dx &amp;= A du + B dv\\
+dy &amp;= C du + D dv,
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(A = \partial{x}/\partial{u}\)</span>, <span class="math inline">\(B = \partial{x}/\partial{v}\)</span>, <span class="math inline">\(C= \partial{y}/\partial{u}\)</span>, and <span class="math inline">\(D = \partial{y}/\partial{v}\)</span>. Lagrange, following Euler, first sets <span class="math inline">\(x\)</span> to be constant (as is done in iterated integration). Hence, <span class="math inline">\(dx = 0\)</span> and so <span class="math inline">\(du = -(B/A) dv\)</span> and, after substitution, <span class="math inline">\(dy = (D-C(B/A))dv\)</span>. Then Lagrange set <span class="math inline">\(y\)</span> to be a constant, so <span class="math inline">\(dy = 0\)</span> and hence <span class="math inline">\(dv=0\)</span> so <span class="math inline">\(dx = Adu\)</span>. The area “element” <span class="math inline">\(dx dy = A du \cdot (D - C(B/A)) dv = (AD - BC) du dv\)</span>. Since areas and volumes are non-negative, the absolute value is used. With this, we have “<span class="math inline">\(dxdy = |AD-BC|du dv\)</span>” as the analog of <span class="math inline">\(dx = g'(u) du\)</span>.</p>
+<p>The expression <span class="math inline">\(AD - BC\)</span> was also derived by Euler, by related means. Lagrange extended the analysis to 3 dimensions. Before doing so, it is helpful to understand the problem from a geometric perspective. Euler was attempting to understand the effects of the following change of variable:</p>
+<p><span class="math display">\[\begin{align*}
+x &amp;= a + mt + \sqrt{1-m^2} v\\
+y &amp; = b + \sqrt{1-m^2}t -mv
+\end{align*}\]</span></p>
+<p>Euler knew this to be a clockwise <em>rotation</em> by an angle <span class="math inline">\(\theta\)</span> with <span class="math inline">\(\cos(\theta) = m\)</span>, a <em>reflection</em> through the <span class="math inline">\(x\)</span> axis, and a translation by <span class="math inline">\(\langle a, b\rangle\)</span>. All these <em>should</em> preserve the area represented by <span class="math inline">\(dx dy\)</span>, so he was <em>expecting</em> <span class="math inline">\(dx dy = dt dv\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+imgfile ="figures/euler-rotation.png"
+caption = "Figure from Katz showing rotation of Euler."
+# ImageFile(:integral_vector_calculus, imgfile, caption)
+nothing</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/euler-rotation.png" class="img-fluid figure-img"></p>
+<figcaption>Figure from Katz showing rotation of Euler.</figcaption>
+</figure>
+</div>
+<p>The figure, taken from Katz, shows the translation, and rotation that should preserve area on a differential scale.</p>
+<p>However Euler knew <span class="math inline">\(dx = (\partial{g_1}/\partial{t}) dt + (\partial{g_1}/\partial{v}) dv\)</span> and <span class="math inline">\(dy = (\partial{g_2}/{\partial{t}}) dt + (\partial{g_2}/\partial{v}) dv\)</span>. Just multiplying gives <span class="math inline">\(dx dy = m\sqrt{1-m^2} dt dt + (1-m^2) dv dt -m^2 dt dv -m\sqrt{1-m^2} dv dv\)</span>, a result that didn’t make sense physically as <span class="math inline">\(dt dt\)</span> and <span class="math inline">\(dv dv\)</span> have no meaning in integration and <span class="math inline">\(1 - m^2 - m^2\)</span> is not <span class="math inline">\(1\)</span> as expected. Euler, like Lagrange, used a formal trick to proceed, but the geometric insight that the incremental areas for a change of variable should be related and for this change of variable identical is correct.</p>
+<p>The following illustrates the polar-coordinate transformation <span class="math inline">\(\langle x,y\rangle = G(r, \theta) = r \langle \cos\theta, \sin\theta\rangle\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+G(u, v) = u * [cos(v), sin(v)]
+
+G(v) = G(v...)
+J(v) = ForwardDiff.jacobian(G, v)  # [∇g1', ∇g2']
+
+n = 6
+us = range(0, 1, length=3n)     # radius
+vs = range(0, 2pi, length=3n)   # angle
+
+plot(unzip(G.(us', vs))..., legend = false, aspect_ratio=:equal)  # plots constant u lines
+plot!(unzip(G.(us, vs'))...)                                      # plots constant v lines
+
+pt = [us[n],vs[n]]
+
+
+arrow!(G(pt), J(pt)*[1,0], color=:blue)
+arrow!(G(pt), J(pt)*[0,1], color=:blue)</code></pre>
+<p>This graphic shows the image of the box <span class="math inline">\([0,1] \times [0, 2\pi]\)</span> under the transformation. The <code>plot</code> commands draw lines for values of constant <code>u</code> or constant <code>v</code>. If <span class="math inline">\(G(u,v) = \langle g_1(u,v), g_2(u,v)\rangle\)</span>, then the Taylor expansion for <span class="math inline">\(g_i\)</span> is <span class="math inline">\(g_i(u+du, v+dv) \approx g_i(u,v) + (\nabla{g_i})^T \cdot \langle du, dv \rangle\)</span> and combining <span class="math inline">\(G(u+du, v+dv) \approx G(u,v) + J_G(u,v) \langle du, dv \rangle\)</span>. The vectors added above represent the images when <span class="math inline">\(u\)</span> is constant (so <span class="math inline">\(du=0\)</span>) and when <span class="math inline">\(v\)</span> is constant (so <span class="math inline">\(dv=0\)</span>). The two arrows define a parallelogram whose area gives the change of area undergone by the unit square under the transformation. The area is <span class="math inline">\(|\det(J_G)|\)</span>, the absolute value of the determinant of the Jacobian.</p>
+<pre class="{julia}"><code>#| echo: false
+function showG(G, a=1, b=1;a0=0, b0=0, an = 3, bn=3, n=5, lambda=1/2, k1=1, k2=1)
+
+J(v) = ForwardDiff.jacobian(v -&gt; G(v...), v)  # [∇g1', ∇g2']
+
+us = range(0, a, length=an*n)     # radius
+vs = range(0, b, length=bn*n)   # angle
+
+p = plot(unzip(G.(us', vs))..., legend = false, aspect_ratio=:equal)  # plots constant u lines
+plot!(p,unzip(G.(us, vs'))...)                                      # plots constant v lines
+
+pt = [us[k1 * n],vs[k2*n]]
+P, U, V = G(pt...), lambda * J(pt)*[1,0], lambda *  J(pt)*[0,1]
+arrow!(P, U, color=:blue, linewidth=2)
+arrow!(P+V, U, color=:red, linewidth=1)
+arrow!(P, V, color=:blue, linewidth=2)
+arrow!(P+U, V, color=:red, linewidth=1)
+p
+end
+
+</code></pre>
+<p>The transformation to elliptical coordinates, <span class="math inline">\(G(u,v) = \langle \cosh(u)\cos(v), \sinh(u)\sin(v)\rangle\)</span>, may be viewed similarly:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+G(u,v) = [cosh(u)*cos(v), sinh(u)*sin(v)]
+showG(G, 1, 2pi)</code></pre>
+<p>The transformation <span class="math inline">\(G(u,v) = v \langle e^u, e^{-u} \rangle\)</span> uses hyperbolic coordinates:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+G(u,v) = v * [exp(u), exp(-u)]
+showG(G, 1, 2pi, bn = 6, k2=4)</code></pre>
+<p>The transformation <span class="math inline">\(G(u,v) = \langle u^2-v^2, u\cdot v \rangle\)</span> yields a partition of the plane:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+G(u,v) = [u^2 - v^2, u*v]
+showG(G, 1, 1)</code></pre>
+<p>The arrows are the images of the standard unit vectors. We see some transformations leave these <em>orthogonal</em> and some change the respective lengths. The area of the associated parallelogram can be found using the determinant of an accompanying matrix. For two dimensions, using the cross product formulation on the embedded vectors, the area is</p>
+<p><span class="math display">\[
+\| \det\left(
+\begin{bmatrix}
+\hat{i} &amp; \hat{j} &amp; \hat{k}\\
+u_1 &amp; u_2 &amp; 0\\
+v_1 &amp; v_2 &amp; 0
+\end{bmatrix}
+\right) \|
+=
+\| \hat{k} \det\left(
+\begin{bmatrix}
+u_1 &amp; u_2\\
+v_1 &amp; v_2
+\end{bmatrix}
+\right) \|
+= | \det\left(
+\begin{bmatrix}
+u_1 &amp; u_2\\
+v_1 &amp; v_2
+\end{bmatrix}
+\right)|.
+\]</span></p>
+<p>Using the fact that the two vectors involved are columns in the Jacobian of the transformation, this is just <span class="math inline">\(|\det(J_G)|\)</span>. For <span class="math inline">\(3\)</span> dimensions, the determinant gives the volume of the 3-dimensional parallelepiped in the same manner. This holds for higher dimensions.</p>
+<p>The absolute value of the determinant of the Jacobian is the multiplying factor that is seen in the change of variable formula for all dimensions:</p>
+<blockquote class="blockquote">
+<p><a href="https://en.wikipedia.org/wiki/Integration_by_substitution#Substitution_for_multiple_variables">Change of variable</a> Let <span class="math inline">\(U\)</span> be an open set in <span class="math inline">\(R^n\)</span>, <span class="math inline">\(G:U \rightarrow R^n\)</span> be an <em>injective</em> differentiable function with <em>continuous</em> partial derivatives. If <span class="math inline">\(f\)</span> is continuous and compactly supported, then</p>
+<p><span class="math display">\[
+\iint_{G(S)} f(\vec{x}) dV = \iint_S (f \circ G)(\vec{u}) |\det(J_G)(\vec{u})| dU.
+\]</span></p>
+</blockquote>
+<p>For the one-dimensional case, there is no absolute value, but there the interval is reversed, producing “negative” area. This is not the case here, where <span class="math inline">\(S\)</span> is parameterized to give positive volume.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The term “functional determinant” is found for the value <span class="math inline">\(\det(J_G)\)</span>, as is the notation <span class="math inline">\(\partial(x_1, x_2, \dots x_n)/\partial(u_1, u_2, \dots, u_n)\)</span>.</p>
+</div>
+</div>
+<section id="two-dimensional-change-of-variables" class="level3" data-number="60.5.1">
+<h3 data-number="60.5.1" class="anchored" data-anchor-id="two-dimensional-change-of-variables"><span class="header-section-number">60.5.1</span> Two dimensional change of variables</h3>
+<p>Now we see several examples of two-dimensional transformations.</p>
+<section id="polar-integrals" class="level4">
+<h4 class="anchored" data-anchor-id="polar-integrals">Polar integrals</h4>
+<p>We have <a href="../differentiable_vector_calculus/polar_coordinates.html">seen</a> how to compute area in polar coordinates through the formula <span class="math inline">\(A = \int (1/2) r^2(\theta) d\theta\)</span>. This formula can be derived as follows. Consider a region <span class="math inline">\(R\)</span> parameterized in polar coordinates by <span class="math inline">\(r(\theta)\)</span> for <span class="math inline">\(a \leq \theta \leq b\)</span>. The area of this region would be <span class="math inline">\(\iint_R 1dA\)</span>. Let <span class="math inline">\(G(r, \theta) = r \langle \cos\theta, \sin\theta\rangle\)</span>. Then</p>
+<p><span class="math display">\[
+J_G =
+\begin{bmatrix}
+\cos(\theta) &amp; - r\sin(\theta)\\
+\sin(\theta) &amp; r\cos(\theta)
+\end{bmatrix},
+\]</span></p>
+<p>with determinant <span class="math inline">\(r\)</span>.</p>
+<p>That is, for <em>polar coordinates</em> <span class="math inline">\(dx dy = r dr d\theta\)</span> (<span class="math inline">\(r \geq 0\)</span>).</p>
+<p>So by the change of variable formula, we have:</p>
+<p><span class="math display">\[
+A = \iint_R 1 dx dy = \int_a^b \int_0^{r(\theta)} 1 r dr d\theta = \int_a^b \frac{r^2(\theta)}{2} d\theta.
+\]</span></p>
+<p>The key is noting that the region, <span class="math inline">\(S\)</span>, described by <span class="math inline">\(\theta\)</span> running from <span class="math inline">\(a\)</span> to <span class="math inline">\(b\)</span> and <span class="math inline">\(r\)</span> running from <span class="math inline">\(0\)</span> to <span class="math inline">\(r(\theta)\)</span>, maps onto <span class="math inline">\(R\)</span> through the change of variables. As polar coordinates is just a renaming, this is clear to see.</p>
+<hr>
+<p>Now consider finding the volume of a sphere using polar coordinates. We have, with <span class="math inline">\(\rho\)</span> being the radius:</p>
+<p><span class="math display">\[
+V = 2 \iint_R \sqrt{\rho^2 - x^2 - y^2} dy dx,
+\]</span></p>
+<p>where <span class="math inline">\(R\)</span> is the disc of radius <span class="math inline">\(\rho\)</span>. Using polar coordinates, we have <span class="math inline">\(x^2 + y^2 = r^2\)</span> and the expression becomes:</p>
+<p><span class="math display">\[
+V = 2 \int_0^{2\pi} \int_0^\rho \sqrt{\rho^2 - r^2} r dr d\theta = 2 \int_0^{2\pi} -(\rho^2 - r^2)^{3/2}\frac{1}{3} \mid_0^\rho d\theta = 2\int_0^{2\pi} \frac{\rho^3}{3}d\theta = \frac{4\pi\rho^3}{3}.
+\]</span></p>
+<section id="linear-transformations" class="level5">
+<h5 class="anchored" data-anchor-id="linear-transformations">Linear transformations</h5>
+<p>Some <a href="https://en.wikipedia.org/wiki/Transformation_matrix#Examples_in_2D_computer_graphics">transformations</a> from <span class="math inline">\(2\)</span>D computer graphics are represented in matrix notation:</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+x\\
+y
+\end{bmatrix}
+=
+\begin{bmatrix}
+a &amp; b\\
+c &amp; d
+\end{bmatrix}
+\begin{bmatrix}
+u\\
+v
+\end{bmatrix}
+,
+\]</span></p>
+<p>or <span class="math inline">\(G(u,v) = \langle au+bv, cu+dv\rangle\)</span>. The Jacobian of this <em>linear</em> transformation is the matrix itself.</p>
+<p>Some common transformations are:</p>
+<ul>
+<li><strong>Stretching</strong> or <span class="math inline">\(G(u,v) = \langle ku, v \rangle\)</span> or <span class="math inline">\(G(u,v) = \langle u, kv\rangle\)</span> for some <span class="math inline">\(k &gt;0\)</span>. The former stretching the <span class="math inline">\(x\)</span> axis, the latter the <span class="math inline">\(y\)</span>. These have Jacobian determinant <span class="math inline">\(k\)</span></li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+k = 2
+G(u,v) = [k*u, v]
+showG(G, 1, 1)</code></pre>
+<ul>
+<li><strong>Rotation</strong>. Let <span class="math inline">\(\theta\)</span> be a clockwise rotation parameter, then <span class="math inline">\(G(u,v) = \langle\cos\theta u + \sin\theta v, -\sin\theta u + \cos\theta v\rangle\)</span> will be the transform. The Jacobian is <span class="math inline">\(1\)</span>. This figure rotates by <span class="math inline">\(\pi/6\)</span>:</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+theta = pi/6
+G(u,v) = [cos(theta)*u + sin(theta)*v, -sin(theta)*u + cos(theta)*v]
+showG(G, 1, 1)</code></pre>
+<ul>
+<li><strong>Shearing</strong>. Let <span class="math inline">\(k &gt; 0\)</span> and <span class="math inline">\(G(u,v) = \langle u + kv, v \rangle\)</span>. This transformation is shear parallel to the <span class="math inline">\(x\)</span> axis. (Use <span class="math inline">\(G(u,v) = \langle u, ku+v\rangle\)</span> for the <span class="math inline">\(y\)</span> axis). A shear has Jacobian <span class="math inline">\(1\)</span>.</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+k = 2
+G(u, v) = [u + 2v, v]
+showG(G)</code></pre>
+<ul>
+<li><strong>Reflection</strong> If <span class="math inline">\(\vec{l} = \langle l_x, l_y \rangle\)</span> with norm <span class="math inline">\(\|\vec{l}\|\)</span>. The reflection through the line in the direction of <span class="math inline">\(\vec{l}\)</span> through the origin is defined, using a matrix, by:</li>
+</ul>
+<p><span class="math display">\[
+\frac{1}{\| \vec{l} \|^2}
+\begin{bmatrix}
+l_x^2 - l_y^2 &amp; 2 l_x l_y\\
+2l_x l_y &amp; l_y^2 - l_x^2
+\end{bmatrix}
+\]</span></p>
+<p>For some simple cases: <span class="math inline">\(\langle l_x, l_y \rangle = \langle 1, 1\rangle\)</span>, the diagonal, this is <span class="math inline">\(G(u,v) = (1/2) \langle 2v, 2u \rangle\)</span>; <span class="math inline">\(\langle l_x, l_y \rangle = \langle 0, 1\rangle\)</span> (the <span class="math inline">\(y\)</span>-axis) this is <span class="math inline">\(G(u,v) = \langle -u, v\rangle\)</span>.</p>
+<ul>
+<li>A translation by <span class="math inline">\(\langle a ,b \rangle\)</span> would be given by <span class="math inline">\(G(u,v) = \langle u+a, v+b \rangle\)</span> and would have Jacobian determinant <span class="math inline">\(1\)</span>.</li>
+</ul>
+<p>As an example, consider the transformation of reflecting through the line <span class="math inline">\(x = 1/2\)</span>. Let <span class="math inline">\(\vec{ab} = \langle 1/2, 0\rangle\)</span>. This would be found by translating by <span class="math inline">\(-\vec{ab}\)</span> then reflecting through the <span class="math inline">\(y\)</span> axis, then translating by <span class="math inline">\(\vec{ab}\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+T(u, v, a, b) = [u+a, v+b]
+G(u, v) = [-u, v]
+@syms u v
+a,b = 1//2, 0
+x1, y1 = T(u,v, -a, -b)
+x2, y2 = G(x1, y1)
+x, y = T(x2, y2, a, b)</code></pre>
+</section>
+<section id="triangle" class="level5">
+<h5 class="anchored" data-anchor-id="triangle">Triangle</h5>
+<p>Consider the problem of integrating <span class="math inline">\(f(x,y)\)</span> over the triangular region bounded by <span class="math inline">\(y=x\)</span>, <span class="math inline">\(y=0\)</span>, and <span class="math inline">\(x=1\)</span>. Such an integral may be computed through Fubini’s theorem through <span class="math inline">\(\int_0^1 \int_0^x f(x,y) dy dx\)</span> or <span class="math inline">\(\int_0^1 \int_y^1 f(x,y) dx dy\)</span>, but <em>if</em> these can not be computed, and a numeric option is preferred, a transformation so that the integral is over a rectangle is preferred.</p>
+<p>For this, the transformation <span class="math inline">\(x = u\)</span>, <span class="math inline">\(y=uv\)</span> for <span class="math inline">\((u,v)\)</span> in <span class="math inline">\([0,1] \times [0,1]\)</span> is possible:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+G(u,v) = [u,u*v]
+showG(G, lambda=1/3)</code></pre>
+<p>The determinant of the Jacobian is</p>
+<p><span class="math display">\[
+\det(J_G) = \det\left(
+\begin{bmatrix}
+1 &amp; 0\\
+v &amp; u
+\end{bmatrix}
+\right) = u.
+\]</span></p>
+<p>So, <span class="math inline">\(\iint_R f(x,y) dA = \int_0^1\int_0^1 f(u, uv) u du dv\)</span>. Here we illustrate with a generic monomial:</p>
+<pre class="{julia}"><code>@syms x y n::positive m::positive
+monomial(x,y) = x^n*y^m
+integrate(monomial(x,y), (y, 0, x), (x, 0, 1))</code></pre>
+<p>And compare with:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms u v
+integrate(monomial(u, u*v)*u, (u,0,1), (v,0,1))</code></pre>
+<section id="composition-of-transformations" class="level6">
+<h6 class="anchored" data-anchor-id="composition-of-transformations">Composition of transformations</h6>
+<p>What about other triangles, say the triangle bounded by <span class="math inline">\(x=0\)</span>, <span class="math inline">\(y=0\)</span> and <span class="math inline">\(y-x=1\)</span>?</p>
+<p>This can be seen as a reflection through the line <span class="math inline">\(x=1/2\)</span> of the triangle above. If <span class="math inline">\(G_1\)</span> represents the mapping from <span class="math inline">\(U [0,1]\times[0,1]\)</span> into the triangle of the last problem, and <span class="math inline">\(G_2\)</span> represents the reflection through the line <span class="math inline">\(x=1/2\)</span>, then the transformation <span class="math inline">\(G_2 \circ G_1\)</span> will map the box <span class="math inline">\(U\)</span> into the desired region. By the chain rule, we have:</p>
+<p><span class="math display">\[\begin{align*}
+\int_{(G_2\circ G_1)(U)} f dx &amp;= \int_U (f\circ G_2 \circ G_1) |\det(J_{G_2 \circ G_1})| du \\
+&amp;=
+\int_U (f\circ G_2 \circ G_1) |\det(J_{G_2}(G_1(u)))||\det(J_{G_1}(u))| du.
+\end{align*}\]</span></p>
+<p>(In <a href="http://www.jstor.org/stable/2689856">Katz</a> it is mentioned that Jacobi showed this in 1841.)</p>
+<p>The flip through the <span class="math inline">\(x=1/2\)</span> line was done above and is <span class="math inline">\(\langle u, v\rangle \rightarrow \langle 1-u, v\rangle\)</span> which has Jacobian determinant <span class="math inline">\(-1\)</span>.</p>
+<p>We compare now using and <code>hcubature</code> and our “Fubini” function:</p>
+<pre class="{julia}"><code>#| hold: true
+G1(u,v) = [u, u*v]
+G1(v) = G1(v...)
+G2(u,v) = [1-u, v]
+G2(v) = G2(v...)
+f(x,y) = x^2*y^3
+f(v) = f(v...)
+A = ∬((y,x) -&gt; f(x,y), (0, x -&gt; 1 - x), (0, 1))
+B = hcubature(v -&gt; (f∘G2∘G1)(v) * v[1] * 1, (0,0), (1, 1))
+A, B[1], A - B[1]</code></pre>
+</section>
+</section>
+<section id="hyperbolic-transformation" class="level5">
+<h5 class="anchored" data-anchor-id="hyperbolic-transformation">Hyperbolic transformation</h5>
+<p>Consider the region, <span class="math inline">\(R\)</span>, bounded by <span class="math inline">\(y=0\)</span>, <span class="math inline">\(x=e^{-n}\)</span>, <span class="math inline">\(x=e^n\)</span>, and <span class="math inline">\(y=1/x\)</span>. An integral over this region may be computed with the help of the transform <span class="math inline">\(G(u,v) = v \langle e^u, e^{-u}\rangle\)</span> which takes the box <span class="math inline">\([-n, n] \times [0,1]\)</span> onto <span class="math inline">\(R\)</span>.</p>
+<p>With this, we compute <span class="math inline">\(\iint_R x^2 y^3 dA\)</span> using <code>SymPy</code> to compute the Jacobian:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms u v n
+G(u,v) = v * [exp(u), exp(-u)]
+Jac = G(u,v).jacobian([u,v])
+f(x,y) = x^2 * y^3
+f(v) = f(v...)
+integrate(f(G(u,v)) * abs(det(Jac)), (u, -n, n), (v, 0, 1))</code></pre>
+<hr>
+<p>This collection shows a summary of the above <span class="math inline">\(2\)</span>D transformations:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+transform(u,v) = [u+2, v+3]
+ps = [showG(transform)]
+xlabel!(ps[end], "transformation")
+
+rotation(u,v, θ=pi/3) = [cos(θ) sin(θ); -sin(θ) cos(θ)]*[u,v]
+push!(ps, showG(rotation))
+xlabel!(ps[end], "rotation")
+
+shear(u,v) = [u+v, v]
+push!(ps, showG(shear))
+xlabel!(ps[end], "shear")
+
+triangle(u,v) =  [u, u*v]
+push!(ps, showG(triangle))
+xlabel!(ps[end], "triangle")
+
+shear(v) = shear(v...)
+push!(ps, showG(shear ∘ triangle))
+xlabel!(ps[end], "shear ∘ triangle")
+
+circle(u, v) = v*[sin(2pi*u), cos(2pi*u)]
+push!(ps, showG(circle))
+xlabel!(ps[end], "polar")
+
+
+ellipse(u, v) = [cosh(u)*cos(v), sinh(u)*sin(v)]
+push!(ps, showG(ellipse))
+xlabel!(ps[end], "ellipse")
+
+
+hyperbolic(u, v) = v * [exp(u), exp(-u)]
+push!(ps, showG(hyperbolic))
+xlabel!(ps[end], "hyperbolic")
+
+partition(u,v) = [ u^2-v^2, u*v ]
+push!(ps, showG(partition))
+xlabel!(ps[end], "partition")
+
+lyt = @layout [a b c;
+             d e f;
+             g h i]
+
+plot(ps..., layout=lyt)</code></pre>
+</section>
+</section>
+</section>
+<section id="examples" class="level3" data-number="60.5.2">
+<h3 data-number="60.5.2" class="anchored" data-anchor-id="examples"><span class="header-section-number">60.5.2</span> Examples</h3>
+<section id="centroid" class="level5">
+<h5 class="anchored" data-anchor-id="centroid">Centroid:</h5>
+<p>The center of mass is a balancing point of a region with density <span class="math inline">\(\rho(x,y)\)</span>. In two dimensions it is a point <span class="math inline">\(\langle \bar{x}, \bar{y}\rangle\)</span>. These are found by the following formulas:</p>
+<p><span class="math display">\[
+A = \iint_R \rho(x,y) dA, \quad \bar{x} = \frac{1}{A} \iint_R x \rho(x,y) dA, \quad
+\bar{y} = \frac{1}{A} \iint_R y \rho(x,y) dA.
+\]</span></p>
+<p>The <span class="math inline">\(x\)</span> value can be seen in terms of Fubini by integrating in <span class="math inline">\(y\)</span> first:</p>
+<p><span class="math display">\[
+\iint_R x \rho(x,y) dA = \int_{x=a}^b x (\int_{y=h(x)}^{g(x)} \rho(x,y) dy) dx.
+\]</span></p>
+<p>The inner integral is the mass of a slice at a value along the <span class="math inline">\(x\)</span> axis. The center of mass is formed then by the mass times the distance from the origin. The center of mass is a “balance” point, in the sense that <span class="math inline">\(\iint_R (x - \bar{x}) dA = 0\)</span> and <span class="math inline">\(\iint_R (y-\bar{y})dA = 0\)</span>.</p>
+<p>For example, the center of mass of the upper half <em>unit</em> disc will have a centroid with <span class="math inline">\(\bar{x} = 0\)</span>, by symmetry. We can see this by integrating in <em>Cartesian</em> coordinates, as follows</p>
+<p><span class="math display">\[
+\iint_R x dA = \int_{y=0}^1 \int_{x=-\sqrt{1-y^2}}^{\sqrt{1 - y^2}} x dx dy.
+\]</span></p>
+<p>The inner integral is <span class="math inline">\(0\)</span> as it an integral of an <em>odd</em> function over an interval symmetric about <span class="math inline">\(0\)</span>.</p>
+<p>The value of <span class="math inline">\(\bar{y}\)</span> is found using polar coordinate transformation from:</p>
+<p><span class="math display">\[
+\iint_R y dA = \int_{r=0}^1 \int_{\theta=0}^{\pi} (r\sin(\theta))r d\theta dr =
+\int_{r=0}^1 r^2 dr \int_{\theta=0}^{\pi}\sin(\theta) d\theta = \frac{1}{3} \cdot 2.
+\]</span></p>
+<p>The third equals sign uses separability. The answer for <span class="math inline">\(\bar{y}\)</span> is this value divided by the area, or <span class="math inline">\(4/(3\pi)\)</span>.</p>
+</section>
+<section id="example-moment-of-inertia" class="level5">
+<h5 class="anchored" data-anchor-id="example-moment-of-inertia">Example: Moment of inertia</h5>
+<p>The moment of <a href="https://en.wikipedia.org/wiki/Moment_of_inertia">inertia</a> of a point mass about an axis is <span class="math inline">\(I = mr^2\)</span> where <span class="math inline">\(m\)</span> is the mass and <span class="math inline">\(r\)</span> the distance to the axis. The moment of inertia of a body is the sum of the moment of inertia of each piece. If <span class="math inline">\(R\)</span> is a region in the <span class="math inline">\(x\)</span>-<span class="math inline">\(y\)</span> plane with density <span class="math inline">\(\rho(x,y)\)</span> and the axis is the <span class="math inline">\(y\)</span> axis, then an approximate moment of inertia would be <span class="math inline">\(\sum (x_i)^2\rho(x_i, y_i)\Delta x_i \Delta y_i\)</span> which would lead to <span class="math inline">\(I = \iint_R x^2\rho(x,y) dA\)</span>.</p>
+<p>Let <span class="math inline">\(R\)</span> be the half disc contained by <span class="math inline">\(x^2 + y^2 = 1\)</span> and <span class="math inline">\(x \geq 0\)</span>. Let <span class="math inline">\(\rho(x,y) = xy^2\)</span>. Find the moment of inertia.</p>
+<p><span class="math display">\[
+R
+\]</span></p>
+<p>is best described in polar coordinates, so we try to compute</p>
+<p><span class="math display">\[
+\int_0^1 \int_{-\pi/2}^{\pi/2} (r\cos(\theta))^2 (r\cos(\theta))(r\sin(\theta))^2 r d\theta dr.
+\]</span></p>
+<p>That requires integrating <span class="math inline">\(\sin^2(\theta)\cos^3(\theta)\)</span>, a doable task, but best left to SymPy:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms r theta
+x = r*cos(theta)
+y = r*sin(theta)
+rho(x,y) = x*y^2
+integrate(x^2 * rho(x, y), (theta, -PI/2, PI/2), (r, 0, 1))</code></pre>
+</section>
+<section id="example-12" class="level5">
+<h5 class="anchored" data-anchor-id="example-12">Example</h5>
+<p>(Strang) Find the moment of inertia about the <span class="math inline">\(y\)</span> axis of the unit square tilted <em>counter</em>-clockwise an angle <span class="math inline">\(0 \leq \alpha \leq \pi/2\)</span>.</p>
+<p>The counterclockwise rotation of the unit square is <span class="math inline">\(G(u,v) = \langle \cos(\alpha)u-\sin(\alpha)v, \sin(\alpha)u + \cos(\alpha) v\rangle\)</span>. This comes from the above formula for clockwise rotation using <span class="math inline">\(-\alpha\)</span>. This transformation has Jacobian determinant <span class="math inline">\(1\)</span>, as the area is not deformed. With this, we have</p>
+<p><span class="math display">\[
+\iint_R x^2 dA = \iint_{G(U)} (f\circ G)(u) |\det(J_G(u))| dU,
+\]</span></p>
+<p>which is computed with:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms u v alpha
+f(x,y) = x^2
+G(u,v) = [cos(alpha)*u - sin(alpha)*v, sin(alpha)*u + cos(alpha)*v]
+Jac = det(G(u,v).jacobian([u,v])) |&gt; simplify
+integrate(f(G(u,v)...) * Jac , (u,  0, 1), (v, 0, 1))</code></pre>
+</section>
+<section id="example-13" class="level5">
+<h5 class="anchored" data-anchor-id="example-13">Example</h5>
+<p>Let <span class="math inline">\(R\)</span> be a ring with inner radius <span class="math inline">\(4\)</span> and outer radius <span class="math inline">\(5\)</span>. Find its moment of inertia about the <span class="math inline">\(y\)</span> axis.</p>
+<p>The integral to compute is:</p>
+<p><span class="math display">\[
+\iint_R x^2 dA,
+\]</span></p>
+<p>with domain that is easy to describe in polar coordinates:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms r theta
+x = r*cos(theta)
+integrate(x^2 * r, (r, 4, 5), (theta, 0, 2PI))</code></pre>
+</section>
+</section>
+<section id="three-dimensional-change-of-variables" class="level3" data-number="60.5.3">
+<h3 data-number="60.5.3" class="anchored" data-anchor-id="three-dimensional-change-of-variables"><span class="header-section-number">60.5.3</span> Three dimensional change of variables</h3>
+<p>The change of variables formula is no different between dimensions <span class="math inline">\(2\)</span> and <span class="math inline">\(3\)</span> (or higher), but the question of suitable transformation is more involved as the dimensions increase. We stick here to a few widely used ones.</p>
+<section id="cylindrical-coordinates" class="level4">
+<h4 class="anchored" data-anchor-id="cylindrical-coordinates">Cylindrical coordinates</h4>
+<p>Polar coordinates describe the <span class="math inline">\(x\)</span>-<span class="math inline">\(y\)</span> plane in terms of a radius <span class="math inline">\(r\)</span> and angle <span class="math inline">\(\theta\)</span>. <em>Cylindrical</em> coordinates describe the <span class="math inline">\(x-y-z\)</span> plane in terms of <span class="math inline">\(r, \theta\)</span>, and <span class="math inline">\(z\)</span>. A transformation is:</p>
+<p><span class="math display">\[
+G(r,\theta, z) = \langle r\cos(\theta), r\sin(\theta), z\rangle.
+\]</span></p>
+<p>This has Jacobian determinant <span class="math inline">\(r\)</span>, similar to polar coordinates.</p>
+<section id="example-14" class="level5">
+<h5 class="anchored" data-anchor-id="example-14">Example</h5>
+<p>Returning to the volume of a cone above the <span class="math inline">\(x\)</span>-<span class="math inline">\(y\)</span> plane under <span class="math inline">\(z = a - b(x^2 + y^2)^{1/2}\)</span>. This yielded the integral in Cartesian coordinates:</p>
+<p><span class="math display">\[
+\int_{x=-r}^r \int_{y=-\sqrt{r^2 - x^2}}^{\sqrt{r^2-x^2}} \int_0^{a - b(x^2 + y^2)^{1/2}} 1 dz dy dx,
+\]</span></p>
+<p>where <span class="math inline">\(r=a/b\)</span>. This is <em>much</em> simpler in Cylindrical coordinates, as the region is described by the rectangle in <span class="math inline">\((r, \theta)\)</span>: <span class="math inline">\([0, a/b] \times [0, 2\pi]\)</span> and the <span class="math inline">\(z\)</span> range is from <span class="math inline">\(0\)</span> to <span class="math inline">\(a - b r\)</span>.</p>
+<p>The volume then is:</p>
+<p><span class="math display">\[
+\int_{theta=0}^{2\pi} \int_{r=0}^{a/b} \int_{z=0}^{a - br} 1 r dz dr d\theta =
+2\pi \int_{r=0}^{a/b} (a-br)r dr = \frac{\pi a^3}{3b^2}.
+\]</span></p>
+<p>This is in agreement with <span class="math inline">\(\pi r^2 h/3\)</span>.</p>
+<hr>
+<p>Find the centroid for the cone. First in the <span class="math inline">\(x\)</span> direction, <span class="math inline">\(\iint_R x dV\)</span> is found by:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms r theta z a b
+f(x,y,z) = x
+x = r*cos(theta)
+y = r*sin(theta)
+Jac = r
+integrate(f(x,y,z) * Jac, (z, 0, a - b*r), (r, 0, a/b), (theta, 0, 2PI))</code></pre>
+<p>That this is <span class="math inline">\(0\)</span> is no surprise. The same will be true for the <span class="math inline">\(y\)</span> direction, as the figure is symmetric about the plane <span class="math inline">\(y=0\)</span> and <span class="math inline">\(x=0\)</span>. However, the <span class="math inline">\(z\)</span> direction is different:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms r theta z a b
+f(x,y,z) = z
+x = r*cos(theta)
+y = r*sin(theta)
+Jac = r
+A = integrate(f(x,y,z) * Jac, (z, 0, a - b*r), (r, 0, a/b), (theta, 0, 2PI))
+B = integrate(1 * Jac, (z, 0, a - b*r), (r, 0, a/b), (theta, 0, 2PI))
+A, B, A/B</code></pre>
+<p>The answer depends on the height through <span class="math inline">\(a\)</span>, but <em>not</em> the size of the base, parameterized by <span class="math inline">\(b\)</span>. To finish, the centroid is <span class="math inline">\(\langle 0, 0, a/4\rangle\)</span>.</p>
+</section>
+<section id="example-15" class="level5">
+<h5 class="anchored" data-anchor-id="example-15">Example</h5>
+<p>A sphere of radius <span class="math inline">\(2\)</span> is intersected by a cylinder of radius <span class="math inline">\(1\)</span> along the <span class="math inline">\(z\)</span> axis. Find the volume of the intersection.</p>
+<p>We have <span class="math inline">\(x^2 + y^2 + z^2 = 4\)</span> or <span class="math inline">\(z^2 = 4 - r^2\)</span> in cylindrical coordinates. The integral then is:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms r::real theta::real z::real
+integrate(1 * r, (z, -sqrt(4-r^2), sqrt(4-r^2)), (r, 0, 1), (theta, 0, 2PI))</code></pre>
+<p>If instead of a fixed radius of <span class="math inline">\(1\)</span> we use <span class="math inline">\(0 \leq a \leq 2\)</span> we have:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms a r theta
+integrate(1 * r, (z, -sqrt(4-r^2), sqrt(4-r^2)), (r, 0, a), (theta,0, 2PI))</code></pre>
+</section>
+</section>
+<section id="spherical-integrals" class="level4">
+<h4 class="anchored" data-anchor-id="spherical-integrals">Spherical integrals</h4>
+<p>Spherical coordinates describe a point in space by a radius from the origin, <span class="math inline">\(r\)</span> or <span class="math inline">\(\rho\)</span>; a azimuthal angle <span class="math inline">\(\theta\)</span> in <span class="math inline">\([0, 2\pi]\)</span> and an <em>inclination</em> angle <span class="math inline">\(\phi\)</span> (also called polar angle) in <span class="math inline">\([0, \pi]\)</span>. The <span class="math inline">\(z\)</span> axis is the direction of the zenith and gives a reference line to define the inclination angle. The <span class="math inline">\(x\)</span>-<span class="math inline">\(y\)</span> plane is the reference plane, with the <span class="math inline">\(x\)</span> axis giving a reference direction for the azimuth measurement.</p>
+<p>The exact formula to relate <span class="math inline">\((\rho, \theta, \phi)\)</span> to <span class="math inline">\((x,y,z)\)</span> is given by</p>
+<p><span class="math display">\[
+G(\rho, \theta, \phi) = \rho \langle
+\sin(\phi)\cos(\theta),
+\sin(\phi)\sin(\theta),
+\cos(\phi)
+\rangle.
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+imgfile = "figures/spherical-coordinates.png"
+caption = "Figure showing the parameterization by spherical coordinates. (Wikipedia)"
+
+# ImageFile(:integral_vector_calculus, imgfile, caption)
+nothing</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./figures/spherical-coordinates.png" class="img-fluid figure-img"></p>
+<figcaption>Figure showing the parameterization by spherical coordinates. (Wikipedia)</figcaption>
+</figure>
+</div>
+<p>The Jacobian can be computed to be <span class="math inline">\(\rho^2\sin(\phi)\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+@syms ρ theta phi
+G(ρ, theta, phi) = ρ * [sin(phi)*cos(theta), sin(phi)*sin(theta), cos(phi)]
+det(G(ρ, theta, phi).jacobian([ρ, theta, phi])) |&gt; simplify |&gt; abs</code></pre>
+<section id="example-16" class="level5">
+<h5 class="anchored" data-anchor-id="example-16">Example</h5>
+<p>Computing the volume of a sphere is a challenge (for SymPy) in Cartesian coordinates, but a breeze in spherical coordinates. Using <span class="math inline">\(r^2\sin(\phi)\)</span> as the multiplying factor, the volume is simply:</p>
+<p><span class="math display">\[
+\int_{\theta=0}^{2\pi} \int_{\phi=0}^{\pi} \int_{r=0}^R 1 \cdot r^2 \sin(\phi) dr d\phi d\theta =
+\int_{\theta=0}^{2\pi} d\theta \int_{\phi=0}^{\pi} \sin(\phi)d\phi \int_{r=0}^R  r^2 dr = (2\pi)(2)\frac{R^3}{3} = \frac{4\pi R^3}{3}.
+\]</span></p>
+</section>
+<section id="example-17" class="level5">
+<h5 class="anchored" data-anchor-id="example-17">Example</h5>
+<p>Compute the volume of the ellipsoid, <span class="math inline">\(R\)</span>, described by <span class="math inline">\((x/a)^2 + (y/b)^2 + (z/c)^2 \leq 1\)</span>.</p>
+<p>We first change variables via <span class="math inline">\(G(u,v,w) = \langle ua, vb, wc \rangle\)</span>. This maps the unit sphere, <span class="math inline">\(S\)</span>, given by <span class="math inline">\(u^2 + v^2 + w^2 \leq 1\)</span> into the ellipsoid. Then</p>
+<p><span class="math display">\[
+\iint_R 1 dV = \iint_S 1 |\det(J_G)| dU
+\]</span></p>
+<p>But the Jacobian is a constant:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms u v w a b c
+G(u,v,w) = [u*a, v*b, w*c]
+det(G(u,v,w).jacobian([u,v,w]))</code></pre>
+<p>So the answer is <span class="math inline">\(abc V(S) = 4\pi abc/3\)</span></p>
+</section>
+</section>
+</section>
+</section>
+<section id="questions" class="level2" data-number="60.6">
+<h2 data-number="60.6" class="anchored" data-anchor-id="questions"><span class="header-section-number">60.6</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>Suppose <span class="math inline">\(f(x,y) = f_1(x)f_2(y)\)</span> and <span class="math inline">\(R = [a_1, b_1] \times [a_2,b_2]\)</span> is a rectangular region. Is this true?</p>
+<p><span class="math display">\[
+\iint_R f dA = (\int_{a_1}^{b_1} f_1(x) dx) \cdot (\int_{a_2}^{b_2} f_2(y) dy).
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"Yes. As an inner integral $\int_{a^2}^{b_2} f(x,y) dy = f_1(x) \int_{a_2}^{b_2} f_2(y) dy$.",
+"No."
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>Which integrals of the following are <span class="math inline">\(0\)</span> by symmetry? Let <span class="math inline">\(R\)</span> be the unit disc.</p>
+<p><span class="math display">\[
+a = \iint_R x dA, \quad b = \iint_R (x^2 + y^2) dA, \quad c = \iint_R xy dA
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"Both $a$ and $b$",
+L"Both $a$ and $c$",
+L"Both $b$ and $c$"
+]
+answ = 2
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>Let <span class="math inline">\(R\)</span> be the unit disc. Which integrals can be found from common geometric formulas (e.g., known formulas for the sphere, cone, pyramid, ellipse, …)</p>
+<p><span class="math display">\[
+a = \iint_R (1 - (x^2+y^2)) dA, \quad
+b = \iint_R (1 - \sqrt{x^2 + y^2}) dA, \quad
+c = \iint_R (1 - (x^2 + y^2)^2 dA
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"Both $a$ and $b$",
+L"Both $a$ and $c$",
+L"Both $b$ and $c$"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>Let the region <span class="math inline">\(R\)</span> be described by: in the first quadrant and bounded by <span class="math inline">\(x^3 + y^3 = 1\)</span>. What integral below will <strong>not</strong> find the area of <span class="math inline">\(R\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw" ``\int_0^1 \int_0^{(1-x^3)^{1/3}} 1\cdot dy dx``",
+raw" ``\int_0^1 \int_0^{(1-y^3)^{1/3}} 1\cdot dx dy``",
+raw" ``\int_0^1 \int_0^{(1-y^3)^{1/3}} 1\cdot dy dx``"
+]
+answ = 3
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>Let <span class="math inline">\(R\)</span> be a triangular region with vertices <span class="math inline">\((0,0), (2,0), (1, b)\)</span> where <span class="math inline">\(b \geq 0\)</span>. What integral below computes the area of <span class="math inline">\(R\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw" ``\int_0^b\int_{y/b}^{2-y/b} dx dy``",
+raw" ``\int_0^2\int_0^{bx} dy dx``",
+raw" ``\int_0^2 \int_0^{2b - bx} dy dx``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>Let <span class="math inline">\(f(x) \geq 0\)</span> be an integrable function. The area under <span class="math inline">\(f(x)\)</span> over <span class="math inline">\([a,b]\)</span>, <span class="math inline">\(\int_a^b f(x) dx\)</span>, is equivalent to?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw" ``\int_a^b \int_0^{f(x)} dy dx``",
+raw" ``\int_a^b \int_0^{f(x)} dx dy``",
+raw" ``\int_0^{f(x)} \int_a^b dx dy``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>The region <span class="math inline">\(R\)</span> contained within <span class="math inline">\(|x| + |y| = 1\)</span> is square, but not rectangular (in the sense of integration). What transformation of <span class="math inline">\(S = [-1/2,1/2] \times [-1/2,1/2]\)</span> will have <span class="math inline">\(G(S) = R\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw" ``G(u,v) = \langle u-v, u+v \rangle``",
+raw" ``G(u,v) = \langle u^2-v^2, u^2+v^2 \rangle``",
+raw" ``G(u,v) = \langle u-v, u \rangle``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>Let <span class="math inline">\(G(u,v) = \langle \cosh(u)\cos(v), \sinh(u)\sin(v) \rangle\)</span>. Using <code>ForwardDiff</code> find the determinant of the Jacobian at <span class="math inline">\([1,2]\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+G(u,v) = [cosh(u)*cos(v), sinh(u)*sin(v)]
+pt = [1,2]
+val = det(ForwardDiff.jacobian(v -&gt; G(v...), [1,2]))
+numericq(val)</code></pre>
+</section>
+<section id="question-8" class="level6">
+<h6 class="anchored" data-anchor-id="question-8">Question</h6>
+<p>Let <span class="math inline">\(G(u, v) = \langle \cosh(u)\cos(v), \sinh(u)\sin(v) \rangle\)</span>. Compute the determinant of the Jacobian symbolically:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw" ``\sin^{2}{\left (v \right )} \cosh^{2}{\left (u \right )} + \cos^{2}{\left (v \right )} \sinh^{2}{\left (u \right )}``",
+raw" ``1``",
+raw" ``\sinh(u)\cosh(v)``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-9" class="level6">
+<h6 class="anchored" data-anchor-id="question-9">Question</h6>
+<p>Compute the determinant of the Jacobian of the composition of a clockwise rotation by <span class="math inline">\(\theta\)</span>, a reflection through the <span class="math inline">\(x\)</span> axis, and then a translation by <span class="math inline">\(\langle a,b\rangle\)</span>, using the fact that the Jacobian determinant of <em>compositions</em> can be written as product of determinants of the individual Jacobians.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"It is $1$, as each is area preserving",
+L"It is $r$, as the rotation uses polar coordinates",
+L"It is $r^2 \sin(\phi)$, as the rotations use spherical coordinates"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-10" class="level6">
+<h6 class="anchored" data-anchor-id="question-10">Question</h6>
+<p>A wedge, <span class="math inline">\(R\)</span>, is specified by <span class="math inline">\(0 \leq r \leq a\)</span>, <span class="math inline">\(0 \leq \theta \leq b\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+@syms r theta a b
+x = r*cos(theta)
+y = r*sin(theta)
+A = integrate(r, (r, 0, a), (theta, 0, b))
+B = integrate(x * r, (r, 0, a), (theta, 0, b))
+C = integrate(y * r, (r, 0, a), (theta, 0, b))</code></pre>
+<p>What does <code>A</code> compute?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"The area of $R$",
+L"The value $\bar{x}$ of the centroid",
+L"The value $\bar{y}$ of the centroid",
+L"The moment of inertia of $R$ about the $x$ axis"
+]
+answ = 1
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>What does <span class="math inline">\(B/A\)</span> compute?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"The area of $R$",
+L"The value $\bar{x}$ of the centroid",
+L"The value $\bar{y}$ of the centroid",
+L"The moment of inertia of $R$ about the $x$ axis"
+]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-11" class="level6">
+<h6 class="anchored" data-anchor-id="question-11">Question</h6>
+<p>According to <a href="http://www.jstor.org/stable/2689856">Katz</a> in 1899 Cartan formalized the subject of differential forms (elements such as <span class="math inline">\(dx\)</span> or <span class="math inline">\(du\)</span>). Using the rules <span class="math inline">\(dtdt = 0 = dvdv\)</span> and <span class="math inline">\(dv dt = - dt dv\)</span>, what is the product of <span class="math inline">\(dx=mdt + dv\sqrt{1-m^2}\)</span> and <span class="math inline">\(dy=dt\sqrt{1-m^2}-mdv\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw" ``dvdt``",
+raw" ``(1-2m^2)dt dv``",
+raw" ``m\sqrt{1-m^2}dt^2+(1-2m^2)dtdv -m\sqrt{1-m^2}dv^2``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../integral_vector_calculus.html" class="pagination-link" aria-label="Integral vector calculus">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Integral vector calculus</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../integral_vector_calculus/line_integrals.html" class="pagination-link" aria-label="Line and Surface Integrals">
+        <span class="nav-page-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/integral_vector_calculus/double_triple_integrals.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

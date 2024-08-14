@@ -1,0 +1,2215 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>7&nbsp; Functions – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../precalc/plotting.html" rel="next">
+<link href="../precalc/ranges.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../precalc.html">Precalculus Concepts</a></li><li class="breadcrumb-item"><a href="../precalc/functions.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#defining-simple-mathematical-functions" id="toc-defining-simple-mathematical-functions" class="nav-link active" data-scroll-target="#defining-simple-mathematical-functions"><span class="header-section-number">7.1</span> Defining simple mathematical functions</a>
+  <ul class="collapse">
+  <li><a href="#the-domain-of-a-function" id="toc-the-domain-of-a-function" class="nav-link" data-scroll-target="#the-domain-of-a-function"><span class="header-section-number">7.1.1</span> The domain of a function</a></li>
+  <li><a href="#equations-functions-calling-a-function" id="toc-equations-functions-calling-a-function" class="nav-link" data-scroll-target="#equations-functions-calling-a-function"><span class="header-section-number">7.1.2</span> Equations, functions, calling a function</a></li>
+  <li><a href="#cases" id="toc-cases" class="nav-link" data-scroll-target="#cases"><span class="header-section-number">7.1.3</span> Cases</a></li>
+  </ul></li>
+  <li><a href="#functions-defined-with-the-function-keyword" id="toc-functions-defined-with-the-function-keyword" class="nav-link" data-scroll-target="#functions-defined-with-the-function-keyword"><span class="header-section-number">7.2</span> Functions defined with the “function” keyword</a></li>
+  <li><a href="#parameters-function-context-scope-keyword-arguments" id="toc-parameters-function-context-scope-keyword-arguments" class="nav-link" data-scroll-target="#parameters-function-context-scope-keyword-arguments"><span class="header-section-number">7.3</span> Parameters, function context (scope), keyword arguments</a>
+  <ul class="collapse">
+  <li><a href="#the-fxp-style-for-parameterization" id="toc-the-fxp-style-for-parameterization" class="nav-link" data-scroll-target="#the-fxp-style-for-parameterization"><span class="header-section-number">7.3.1</span> The <code>f(x,p)</code> style for parameterization</a></li>
+  </ul></li>
+  <li><a href="#multiple-dispatch" id="toc-multiple-dispatch" class="nav-link" data-scroll-target="#multiple-dispatch"><span class="header-section-number">7.4</span> Multiple dispatch</a></li>
+  <li><a href="#other-types-of-functions" id="toc-other-types-of-functions" class="nav-link" data-scroll-target="#other-types-of-functions"><span class="header-section-number">7.5</span> Other types of functions</a>
+  <ul class="collapse">
+  <li><a href="#anonymous-functions" id="toc-anonymous-functions" class="nav-link" data-scroll-target="#anonymous-functions"><span class="header-section-number">7.5.1</span> Anonymous functions</a></li>
+  <li><a href="#the-do-notation" id="toc-the-do-notation" class="nav-link" data-scroll-target="#the-do-notation"><span class="header-section-number">7.5.2</span> The <code>do</code> notation</a></li>
+  </ul></li>
+  <li><a href="#function-application" id="toc-function-application" class="nav-link" data-scroll-target="#function-application"><span class="header-section-number">7.6</span> Function application</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">7.7</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/precalc/functions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../precalc.html">Precalculus Concepts</a></li><li class="breadcrumb-item"><a href="../precalc/functions.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section will use the following add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia, Plots
+plotly()</code></pre>
+<hr>
+<p>A mathematical <a href="http://en.wikipedia.org/wiki/Function_(mathematics)">function</a> is defined abstractly by:</p>
+<blockquote class="blockquote">
+<p><strong>Function:</strong> A function is a <em>relation</em> which assigns to each element in the domain a <em>single</em> element in the range. A <strong>relation</strong> is a set of ordered pairs, <span class="math inline">\((x,y)\)</span>. The set of first coordinates is the domain, the set of second coordinates the range of the relation.</p>
+</blockquote>
+<p>That is, a function gives a correspondence between values in its domain with values in its range.</p>
+<p>This definition is abstract, as functions can be very general. With single-variable calculus, we generally specialize to real-valued functions of a single variable (<em>univariate, scalar functions</em>). These typically have the correspondence given by a rule, such as <span class="math inline">\(f(x) = x^2\)</span> or <span class="math inline">\(f(x) = \sqrt{x}\)</span>. The function’s domain may be implicit (as in all <span class="math inline">\(x\)</span> for which the rule is defined) or may be explicitly given as part of the rule. The function’s range is then the image of its domain, or the set of all <span class="math inline">\(f(x)\)</span> for each <span class="math inline">\(x\)</span> in the domain (<span class="math inline">\(\{f(x): x \in \text{ domain}\}\)</span>).</p>
+<p>Some examples of mathematical functions are:</p>
+<p><span class="math display">\[
+f(x) = \cos(x), \quad g(x) = x^2 - x, \quad h(x) = \sqrt{x}, \quad
+s(x) = \begin{cases} -1 &amp; x &lt; 0\\1&amp;x&gt;0\end{cases}.
+\]</span></p>
+<p>For these examples, the domain of both <span class="math inline">\(f(x)\)</span> and <span class="math inline">\(g(x)\)</span> is all real values of <span class="math inline">\(x\)</span>, where as for <span class="math inline">\(h(x)\)</span> it is implicitly just the set of non-negative numbers, <span class="math inline">\([0, \infty)\)</span>. Finally, for <span class="math inline">\(s(x)\)</span>, we can see that the domain is defined for every <span class="math inline">\(x\)</span> but <span class="math inline">\(0\)</span>.</p>
+<p>In general the range is harder to identify than the domain, and this is the case for these functions too. For <span class="math inline">\(f(x)\)</span> we may know the <span class="math inline">\(\cos\)</span> function is trapped in <span class="math inline">\([-1,1]\)</span> and it is intuitively clear than all values in that set are possible. The function <span class="math inline">\(h(x)\)</span> would have range <span class="math inline">\([0,\infty)\)</span>. The <span class="math inline">\(s(x)\)</span> function is either <span class="math inline">\(-1\)</span> or <span class="math inline">\(1\)</span>, so only has two possible values in its range. What about <span class="math inline">\(g(x)\)</span>? It is a parabola that opens upward, so any <span class="math inline">\(y\)</span> values below the <span class="math inline">\(y\)</span> value of its vertex will not appear in the range. In this case, the symmetry indicates that the vertex will be at <span class="math inline">\((1/2, -1/4)\)</span>, so the range is <span class="math inline">\([-1/4, \infty)\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Thanks to Euler (1707-1783):</strong> The formal idea of a function is a relatively modern concept in mathematics. According to <a href="http://www.maa.org/sites/default/files/pdf/upload_library/22/Ford/dunham1.pdf">Dunham</a>,</p>
+</div>
+</div>
+<p>Euler defined a function as an “analytic expression composed in any way whatsoever of the variable quantity and numbers or constant quantities.” He goes on to indicate that as Euler matured, so did his notion of function, ending up closer to the modern idea of a correspondence not necessarily tied to a particular formula or “analytic expression.” He finishes by saying: “It is fair to say that we now study functions in analysis because of him.”</p>
+<p>We will see that defining functions within <code>Julia</code> can be as simple a concept as Euler started with, but that the more abstract concept has a great advantage that is exploited in the design of the language.</p>
+<section id="defining-simple-mathematical-functions" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="defining-simple-mathematical-functions"><span class="header-section-number">7.1</span> Defining simple mathematical functions</h2>
+<p>The notation <code>Julia</code> uses to define simple mathematical functions could not be more closely related to how they are written mathematically. For example, the functions <span class="math inline">\(f(x)\)</span>, <span class="math inline">\(g(x)\)</span>, and <span class="math inline">\(h(x)\)</span> above may be defined by:</p>
+<pre class="{julia}"><code>f(x) = cos(x)
+g(x) = x^2 - x
+h(x) = sqrt(x)</code></pre>
+<p>The left-hand side of the equals sign is an assignment. In this use, a function with a given signature is defined and attached to a method table for the given function name. The right-hand side is simply <code>Julia</code> code to compute the <em>rule</em> corresponding to the function.</p>
+<p>Calling the function also follows standard math notation:</p>
+<pre class="{julia}"><code>f(pi), g(2), h(4)</code></pre>
+<p>For typical cases like the three above, there isn’t really much new to learn.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The equals sign in <code>Julia</code> always indicates either an assignment or a mutation of the object on the left side. The definition of a function above is an <em>assignment</em>, in that a function is added (or modified) in a table holding the methods associated with the function’s name.</p>
+<p>The equals sign restricts the expressions available on the <em>left</em>-hand side to a) a variable name, for assignment; b) mutating an object at an index, as in <code>xs[1]</code>; c) mutating a property of a struct; or d) a function assignment following this form <code>function_name(args...)</code>.</p>
+<p>Whereas function definitions and usage in <code>Julia</code> mirrors standard math notation; equations in math are not so mirrored in <code>Julia</code>. In mathematical equations, the left-hand of an equation is typically a complicated algebraic expression. Not so with <code>Julia</code>, where the left hand side of the equals sign is prescribed and quite limited.</p>
+</div>
+</div>
+<section id="the-domain-of-a-function" class="level3" data-number="7.1.1">
+<h3 data-number="7.1.1" class="anchored" data-anchor-id="the-domain-of-a-function"><span class="header-section-number">7.1.1</span> The domain of a function</h3>
+<p>Functions in <code>Julia</code> have an implicit domain, just as they do mathematically. In the case of <span class="math inline">\(f(x)\)</span> and <span class="math inline">\(g(x)\)</span>, the right-hand side is defined for all real values of <span class="math inline">\(x\)</span>, so the domain is all <span class="math inline">\(x\)</span>. For <span class="math inline">\(h(x)\)</span> this isn’t the case, of course. Trying to call <span class="math inline">\(h(x)\)</span> when <span class="math inline">\(x &lt; 0\)</span> will give an error:</p>
+<pre class="{julia}"><code>#| error: true
+h(-1)</code></pre>
+<p>The <code>DomainError</code> is one of many different error types <code>Julia</code> has, in this case it is quite apt: the value <span class="math inline">\(-1\)</span> is not in the domain of the function.</p>
+</section>
+<section id="equations-functions-calling-a-function" class="level3" data-number="7.1.2">
+<h3 data-number="7.1.2" class="anchored" data-anchor-id="equations-functions-calling-a-function"><span class="header-section-number">7.1.2</span> Equations, functions, calling a function</h3>
+<p>Mathematically we tend to blur the distinction between the equation</p>
+<p><span class="math display">\[
+y = 5/9 \cdot (x - 32)
+\]</span></p>
+<p>and the function</p>
+<p><span class="math display">\[
+f(x) = 5/9 \cdot (x - 32)
+\]</span></p>
+<p>In fact, the graph of a function <span class="math inline">\(f(x)\)</span> is simply defined as the graph of the equation <span class="math inline">\(y=f(x)\)</span>. There is a distinction in <code>Julia</code> as a command such as</p>
+<pre class="{julia}"><code>x = -40
+y = 5/9 * (x - 32)</code></pre>
+<p>will evaluate the right-hand side with the value of <code>x</code> bound at the time of assignment to <code>y</code>, whereas assignment to a function</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = 5/9 * (x - 32)
+f(72)               ## room temperature</code></pre>
+<p>will create a function object with a value of <code>x</code> determined at a later time - the time the function is called. So the value of <code>x</code> defined when the function is created is not important here (as the value of <code>x</code> used by <code>f</code> is passed in as an argument).</p>
+<p>Within <code>Julia</code>, we make note of the distinction between a function object versus a function call. In the definition <code>f(x)=cos(x)</code>, the variable <code>f</code> refers to a function object, whereas the expression <code>f(pi)</code> is a function call. This mirrors the math notation where an <span class="math inline">\(f\)</span> is used when properties of a function are being emphasized (such as <span class="math inline">\(f \circ g\)</span> for composition) and <span class="math inline">\(f(x)\)</span> is used when the values related to the function are being emphasized (such as saying “the plot of the equation <span class="math inline">\(y=f(x)\)</span>).</p>
+<p>Distinguishing these three related but different concepts (equations, function objects, and function calls) is important when modeling on the computer.</p>
+</section>
+<section id="cases" class="level3" data-number="7.1.3">
+<h3 data-number="7.1.3" class="anchored" data-anchor-id="cases"><span class="header-section-number">7.1.3</span> Cases</h3>
+<p>The definition of <span class="math inline">\(s(x)\)</span> above has two cases:</p>
+<p><span class="math display">\[
+s(x) = \begin{cases} -1 &amp; s &lt; 0\\ 1 &amp; s &gt; 0. \end{cases}
+\]</span></p>
+<p>We learn to read this as: when <span class="math inline">\(s\)</span> is less than <span class="math inline">\(0\)</span>, then the answer is <span class="math inline">\(-1\)</span>. If <span class="math inline">\(s\)</span> is greater than <span class="math inline">\(0\)</span> the answer is <span class="math inline">\(1.\)</span> Often - but not in this example - there is an “otherwise” case to catch those values of <span class="math inline">\(x\)</span> that are not explicitly mentioned. As there is no such “otherwise” case here, we can see that this function has no definition when <span class="math inline">\(x=0\)</span>. This function is often called the “sign” function and is also defined by <span class="math inline">\(\lvert x\rvert/x\)</span>. (<code>Julia</code>’s <code>sign</code> function actually defines <code>sign(0)</code> to be <code>0</code>.)</p>
+<p>How do we create conditional statements in <code>Julia</code>? Programming languages generally have “if-then-else” constructs to handle conditional evaluation. In <code>Julia</code>, the following code will handle the above condition:</p>
+<pre class="{julia}"><code>#| eval: false
+if x &lt; 0
+  -1
+elseif x &gt; 0
+   1
+end</code></pre>
+<p>The “otherwise” case would be caught with an <code>else</code> addition. So, for example, this would implement <code>Julia</code>’s definition of <code>sign</code> (which also assigns <span class="math inline">\(0\)</span> to <span class="math inline">\(0\)</span>):</p>
+<pre class="{julia}"><code>#| eval: false
+if x &lt; 0
+  -1
+elseif x &gt; 0
+   1
+else
+   0
+end</code></pre>
+<p>The conditions for the <code>if</code> statements are expressions that evaluate to either <code>true</code> or <code>false</code>, such as generated by the Boolean operators <code>&lt;</code>, <code>&lt;=</code>, <code>==</code>, <code>!=</code>, <code>&gt;=</code>, and <code>&gt;</code>.</p>
+<p>If familiar with <code>if</code> conditions, they are natural to use. However, for simpler cases of “if-else” <code>Julia</code> provides the more convenient <em>ternary</em> operator: <code>cond ? if_true : if_false</code>. (The name comes from the fact that there are three arguments specified.) The ternary operator checks the condition and if true returns the first expression, whereas if the condition is false the second condition is returned. (Another useful control flow construct is <a href="https://docs.julialang.org/en/v1/manual/control-flow/#Short-Circuit-Evaluation">short-circuit</a> evaluation.)</p>
+<p>For example, here is one way to define an absolute value function:</p>
+<pre class="{julia}"><code>abs_val(x) = x &gt;= 0 ? x : -x</code></pre>
+<p>The condition is <code>x &gt;= 0</code> - or is <code>x</code> non-negative? If so, the value <code>x</code> is used, otherwise <code>-x</code> is used.</p>
+<p>Here is a means to implement a function which takes the larger of <code>x</code> or <code>10</code>:</p>
+<pre class="{julia}"><code>bigger_10(x) = x &gt; 10 ? x : 10.0</code></pre>
+<p>(This could also utilize the <code>max</code> function: <code>f(x) = max(x, 10.0)</code>.)</p>
+<p>Or similarly, a function to represent a cell phone plan where the first <span class="math inline">\(500\)</span> minutes are <span class="math inline">\(20\)</span> dollars and every additional minute is <span class="math inline">\(5\)</span> cents:</p>
+<pre class="{julia}"><code>cellplan(x) = x &lt; 500 ? 20.0 : 20.0 + 0.05 * (x-500)</code></pre>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Type stability. These last two definitions used <code>10.0</code> and <code>20.0</code> instead of the integers <code>10</code> and <code>20</code> for the answer. Why the extra typing? When <code>Julia</code> can predict the type of the output from the type of inputs, it can be more efficient. So when possible, we help out and ensure the output is always the same type.</p>
+</div>
+</div>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>The <code>ternary</code> operator can be used to define an explicit domain. For example, a falling body might have height given by <span class="math inline">\(h(t) = 10 - 16t^2\)</span>. This model only applies for non-negative <span class="math inline">\(t\)</span> and non-negative <span class="math inline">\(h\)</span> values. So, in particular <span class="math inline">\(0 \leq t \leq \sqrt{10/16}\)</span>. To implement this function we might have:</p>
+<pre class="{julia}"><code>h(t) = 0 &lt;= t &lt;= sqrt(10/16) ? 10.0 - 16t^2 : error("t is not in the domain")</code></pre>
+</section>
+<section id="nesting-ternary-operators" class="level4">
+<h4 class="anchored" data-anchor-id="nesting-ternary-operators">Nesting ternary operators</h4>
+<p>The function <code>s(x)</code> isn’t quite so easy to implement, as there isn’t an “otherwise” case. We could use an <code>if</code> statement, but instead illustrate using a second, nested ternary operator:</p>
+<pre class="{julia}"><code>s(x) = x &lt; 0 ? -1 :
+    x &gt; 0 ? 1 : error("0 is not in the domain")</code></pre>
+<p>With nested ternary operators, the advantage over the <code>if</code> condition is not always compelling, but for simple cases the ternary operator is quite useful.</p>
+</section>
+</section>
+</section>
+<section id="functions-defined-with-the-function-keyword" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="functions-defined-with-the-function-keyword"><span class="header-section-number">7.2</span> Functions defined with the “function” keyword</h2>
+<p>For more complicated functions, say one with a few steps to compute, an alternate form for defining a function can be used:</p>
+<pre class="{verbatim}"><code>function function_name(function_arguments)
+  ...function_body...
+end</code></pre>
+<p>The last value computed is returned unless the <code>function_body</code> contains an explicit <code>return</code> statement.</p>
+<p>For example, the following is a more verbose way to define <span class="math inline">\(sq(x) = x^2\)</span>:</p>
+<pre class="{julia}"><code>function sq(x)
+  return x^2
+end</code></pre>
+<p>The line <code>return x^2</code>, could have just been <code>x^2</code> as it is the last (and) only line evaluated.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <code>return</code> keyword is not a function, so is not called with parentheses. An empty <code>return</code> statement will return a value of <code>nothing</code>.</p>
+</div>
+</div>
+<section id="example-1" class="level5">
+<h5 class="anchored" data-anchor-id="example-1">Example</h5>
+<p>Imagine we have the following complicated function related to the trajectory of a <a href="http://www.researchgate.net/publication/230963032_On_the_trajectories_of_projectiles_depicted_in_early_ballistic_woodcuts">projectile</a> with wind resistance:</p>
+<p><span class="math display">\[
+    f(x) = \left(\frac{g}{k v_0\cos(\theta)} + \tan(\theta) \right) x + \frac{g}{k^2}\ln\left(1 - \frac{k}{v_0\cos(\theta)} x \right)
+\]</span></p>
+<p>Here <span class="math inline">\(g\)</span> is the gravitational constant <span class="math inline">\(9.8\)</span> and <span class="math inline">\(v_0\)</span>, <span class="math inline">\(\theta\)</span> and <span class="math inline">\(k\)</span> parameters, which we take to be <span class="math inline">\(200\)</span>, <span class="math inline">\(45\)</span> degrees and <span class="math inline">\(1/2\)</span> respectively. With these values, the above function can be computed when <span class="math inline">\(x=100\)</span> with:</p>
+<pre class="{julia}"><code>function trajectory(x)
+  g, v0, theta, k = 9.8, 200, 45*pi/180, 1/2
+  a = v0 * cos(theta)
+
+  (g/(k*a) + tan(theta))* x + (g/k^2) * log(1 - k/a*x)
+end</code></pre>
+<pre class="{julia}"><code>trajectory(100)</code></pre>
+<p>By using a multi-line function our work is much easier to look over for errors.</p>
+</section>
+<section id="example-the-secant-method-for-finding-a-solution-to-fx-0." class="level5">
+<h5 class="anchored" data-anchor-id="example-the-secant-method-for-finding-a-solution-to-fx-0.">Example: the secant method for finding a solution to <span class="math inline">\(f(x) = 0\)</span>.</h5>
+<p>This next example, shows how using functions to collect a set of computations for simpler reuse can be very helpful.</p>
+<p>An old method for finding a zero of an equation is the <a href="https://en.wikipedia.org/wiki/Secant_method">secant method</a>. We illustrate the method with the function <span class="math inline">\(f(x) = x^2 - 2\)</span>. In an upcoming example we see how to create a function to evaluate the secant line between <span class="math inline">\((a,f(a))\)</span> and <span class="math inline">\((b, f(b))\)</span> at any point. In this example, we define a function to compute the <span class="math inline">\(x\)</span> coordinate of where the secant line crosses the <span class="math inline">\(x\)</span> axis. This can be defined as follows:</p>
+<pre class="{julia}"><code>function secant_intersection(f, a, b)
+   # solve 0 = f(b) + m * (x-b) where m is the slope of the secant line
+   # x = b - f(b) / m
+   m = (f(b) - f(a)) / (b - a)
+   b - f(b) / m
+end</code></pre>
+<p>We utilize this as follows. Suppose we wish to solve <span class="math inline">\(f(x) = 0\)</span> and we have two “rough” guesses for the answer. In our example, we wish to solve <span class="math inline">\(q(x) = x^2 - 2\)</span> and our “rough” guesses are <span class="math inline">\(1\)</span> and <span class="math inline">\(2\)</span>. Call these values <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>. We <em>improve</em> our rough guesses by finding a value <span class="math inline">\(c\)</span> which is the intersection point of the secant line.</p>
+<pre class="{julia}"><code>q(x) = x^2 - 2
+𝒂, 𝒃 = 1, 2
+𝒄 = secant_intersection(q, 𝒂, 𝒃)</code></pre>
+<p>In our example, we see that in trying to find an answer to <span class="math inline">\(f(x) = 0\)</span> ( <span class="math inline">\(\sqrt{2}\approx 1.414\dots\)</span>) our value found from the intersection point is a better guess than either <span class="math inline">\(a=1\)</span> or <span class="math inline">\(b=2\)</span>:</p>
+<pre class="{julia}"><code>#| echo: false
+plot(q, 𝒂, 𝒃, linewidth=5, legend=false)
+plot!(zero, 𝒂, 𝒃)
+plot!([𝒂, 𝒃], q.([𝒂, 𝒃]))
+scatter!([𝒄], [q(𝒄)])</code></pre>
+<p>Still, <code>q(𝒄)</code> is not really close to <span class="math inline">\(0\)</span>:</p>
+<pre class="{julia}"><code>q(𝒄)</code></pre>
+<p><em>But</em> it is much closer than either <span class="math inline">\(q(a)\)</span> or <span class="math inline">\(q(b)\)</span>, so it is an improvement. This suggests renaming <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> with the old <span class="math inline">\(b\)</span> and <span class="math inline">\(c\)</span> values and trying again we might do better still:</p>
+<pre class="{julia}"><code>#| hold: true
+𝒂, 𝒃 = 𝒃, 𝒄
+𝒄 = secant_intersection(q, 𝒂, 𝒃)
+q(𝒄)</code></pre>
+<p>Yes, now the function value at this new <span class="math inline">\(c\)</span> is even closer to <span class="math inline">\(0\)</span>. Trying a few more times we see we just get closer and closer. Here we start again to see the progress</p>
+<pre class="{julia}"><code>#| hold: true
+𝒂,𝒃 = 1, 2
+for step in 1:6
+    𝒂, 𝒃 = 𝒃, secant_intersection(q, 𝒂, 𝒃)
+    current = (c=𝒃, qc=q(𝒃))
+    @show current
+end</code></pre>
+<p>Now our guess <span class="math inline">\(c\)</span> is basically the same as <code>sqrt(2)</code>. Repeating the above leads to only a slight improvement in the guess, as we are about as close as floating point values will allow.</p>
+<p>Here we see a visualization with all these points. As can be seen, it quickly converges at the scale of the visualization, as we can’t see much closer than <code>1e-2</code>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = x^2 - 2
+a, b = 1, 2
+c = secant_intersection(f, a, b)
+
+p = plot(f, a, b, linewidth=5, legend=false)
+plot!(p, zero, a, b)
+
+plot!(p, [a,b], f.([a,b]));
+scatter!(p, [c], [f(c)])
+
+a, b = b, c
+c = secant_intersection(f, a, b)
+plot!(p, [a,b], f.([a,b]));
+scatter!(p, [c], [f(c)])
+
+
+a, b = b, c
+c = secant_intersection(f, a, b)
+plot!(p, [a,b], f.([a,b]));
+scatter!(p, [c], [f(c)])
+p</code></pre>
+<p>In most cases, this method can fairly quickly find a zero provided two good starting points are used.</p>
+</section>
+</section>
+<section id="parameters-function-context-scope-keyword-arguments" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="parameters-function-context-scope-keyword-arguments"><span class="header-section-number">7.3</span> Parameters, function context (scope), keyword arguments</h2>
+<p>Consider two functions implementing the slope-intercept form and point-slope form of a line:</p>
+<p><span class="math display">\[
+f(x) = m \cdot x + b, \quad g(x) = y_0 + m \cdot (x - x_0).
+\]</span></p>
+<p>Both functions use the variable <span class="math inline">\(x\)</span>, but there is no confusion, as we learn that this is just a dummy variable to be substituted for and so could have any name. Both also share a variable <span class="math inline">\(m\)</span> for a slope. Where does that value come from? In practice, there is a context that gives an answer. Despite the same name, there is no expectation that the slope will be the same for each function if the context is different. So when parameters are involved, a function involves a rule and a context to give specific values to the parameters. Euler had said initially that functions composed of “the variable quantity and numbers or constant quantities.” The term “variable,” we still use, but instead of “constant quantities,” we use the name “parameters.”</p>
+<p>Something similar is also true with <code>Julia</code>. Consider the example of writing a function to model a linear equation with slope <span class="math inline">\(m=2\)</span> and <span class="math inline">\(y\)</span>-intercept <span class="math inline">\(3\)</span>. A typical means to do this would be to define constants, and then use the familiar formula:</p>
+<pre class="{julia}"><code>m, b = 2, 3
+mxb(x) = m*x + b</code></pre>
+<p>This will work as expected. For example, <span class="math inline">\(f(0)\)</span> will be <span class="math inline">\(b\)</span> and <span class="math inline">\(f(2)\)</span> will be <span class="math inline">\(7\)</span>:</p>
+<pre class="{julia}"><code>mxb(0), mxb(2)</code></pre>
+<p>All fine, but what if somewhere later the values for <span class="math inline">\(m\)</span> and <span class="math inline">\(b\)</span> were <em>redefined</em>, say with <span class="math inline">\(m,b = 3,2\)</span>?</p>
+<p>Now what happens with <span class="math inline">\(f(0)\)</span>? When <span class="math inline">\(f\)</span> was defined <code>b</code> was <span class="math inline">\(3\)</span>, but now if we were to call <code>f</code>, <code>b</code> is <span class="math inline">\(2\)</span>. Which value will we get? More generally, when <code>f</code> is being evaluated in what context does <code>Julia</code> look up the bindings for the variables it encounters? It could be that the values are assigned when the function is defined, or it could be that the values for the parameters are resolved when the function is called. If the latter, what context will be used?</p>
+<p>Before discussing this, let’s just see in this case:</p>
+<pre class="{julia}"><code>#| hold: true
+m, b = 3, 2
+mxb(0)</code></pre>
+<p>So the <code>b</code> is found from the currently stored value. This fact can be exploited. we can write template-like functions, such as <code>f(x)=m*x+b</code> and reuse them just by updating the parameters separately.</p>
+<p>How <code>Julia</code> resolves what a variable refers to is described in detail in the manual page <a href="https://docs.julialang.org/en/v1/manual/variables-and-scoping/">Scope of Variables</a>. In this case, the function definition finds variables in the context of where the function was defined, the main workspace, and not where it is called. As seen, this context can be modified after the function definition and prior to the function call. It is only when <code>b</code> is needed, that the context is consulted, so the most recent binding is retrieved. Contexts allow the user to repurpose variable names without there being name collision. For example, we typically use <code>x</code> as a function argument, and different contexts allow this <code>x</code> to refer to different values.</p>
+<p>Mostly this works as expected, but at times it can be complicated to reason about. In our example, definitions of the parameters can be forgotten, or the same variable name may have been used for some other purpose. The potential issue is with the parameters, the value for <code>x</code> is straightforward, as it is passed into the function. However, we can also pass the parameters, such as <span class="math inline">\(m\)</span> and <span class="math inline">\(b\)</span>, as arguments. For parameters, one suggestion is to use <a href="https://docs.julialang.org/en/v1/manual/functions/#Keyword-Arguments">keyword</a> arguments. These allow the specification of parameters, but also give a default value. This can make usage explicit, yet still convenient. For example, here is an alternate way of defining a line with parameters <code>m</code> and <code>b</code>:</p>
+<pre class="{julia}"><code>mxplusb(x; m=1, b=0) = m*x + b</code></pre>
+<p>The right-hand side is identical to before, but the left hand side is different. Arguments defined <em>after</em> a semicolon are keyword arguments. They are specified as <code>var=value</code> (or <code>var::Type=value</code> to restrict the type) where the value is used as the default, should a value not be specified when the function is called.</p>
+<p>Calling a function with keyword arguments can be identical to before:</p>
+<pre class="{julia}"><code>mxplusb(0)</code></pre>
+<p>During this call, values for <code>m</code> and <code>b</code> are found from how the function is called, not the main workspace. In this case, nothing is specified so the defaults of <span class="math inline">\(m=1\)</span> and <span class="math inline">\(b=0\)</span> are used. Whereas, this call will use the user-specified values for <code>m</code> and <code>b</code>:</p>
+<pre class="{julia}"><code>mxplusb(0; m=3, b=2)</code></pre>
+<p>Keywords are used to mark the parameters whose values are to be changed from the default. Though one can use <em>positional arguments</em> for parameters - and there are good reasons to do so - using keyword arguments is a good practice if performance isn’t paramount, as their usage is more explicit yet the defaults mean that a minimum amount of typing needs to be done. Keyword arguments are widely used with plotting commands, as there are numerous options to adjust, but typically only a handful adjusted per call.</p>
+<section id="example-2" class="level5">
+<h5 class="anchored" data-anchor-id="example-2">Example</h5>
+<p>In the example for multi-line functions we hard coded many variables inside the body of the function. In practice it can be better to pass these in as parameters along the lines of:</p>
+<pre class="{julia}"><code>#| hold: true
+function trajectory(x; g = 9.8, v0 = 200, theta = 45*pi/180, k = 1/2)
+  a = v0 * cos(theta)
+  (g/(k*a) + tan(theta))* x + (g/k^2) * log(1 - k/a*x)
+end
+trajectory(100)</code></pre>
+</section>
+<section id="the-fxp-style-for-parameterization" class="level3" data-number="7.3.1">
+<h3 data-number="7.3.1" class="anchored" data-anchor-id="the-fxp-style-for-parameterization"><span class="header-section-number">7.3.1</span> The <code>f(x,p)</code> style for parameterization</h3>
+<p>An alternative to keyword arguments is to bundle the parameters into a container and pass them as a single argument to the function. The idiom in <code>Julia</code> is to use the <em>second</em> argument for parameters, or <code>f(x, p)</code> for the function argument specifications. This style is used in the very popular <code>SciML</code> suite of packages.</p>
+<p>For example, here we use a <em>named tuple</em> to pass parameters to <code>f</code>:</p>
+<pre class="{julia}"><code>#| hold: true
+function trajectory(x ,p)
+    g, v0, theta, k = p.g, p.v0, p.theta, p.k # unpack parameters
+
+    a = v0 * cos(theta)
+    (g/(k*a) + tan(theta))* x + (g/k^2) * log(1 - k/a*x)
+end
+
+p = (g=9.8, v0=200, theta = 45*pi/180, k=1/2)
+trajectory(100, p)</code></pre>
+<p>The style isn’t so different from using keyword arguments, save the extra step of unpacking the parameters. The <em>big</em> advantage is consistency – the function is always called in an identical manner regardless of the number of parameters (or variables).</p>
+</section>
+</section>
+<section id="multiple-dispatch" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="multiple-dispatch"><span class="header-section-number">7.4</span> Multiple dispatch</h2>
+<p>The concept of a function is of much more general use than its restriction to mathematical functions of single real variable. A natural application comes from describing basic properties of geometric objects. The following function definitions likely will cause no great concern when skimmed over:</p>
+<pre class="{julia}"><code>#| hold: true
+Area(w, h) = w * h                                 # of a rectangle
+Volume(r, h) = pi * r^2 * h                        # of a cylinder
+SurfaceArea(r, h) = pi * r * (r + sqrt(h^2 + r^2)) # of a right circular cone, including the base</code></pre>
+<p>The right-hand sides may or may not be familiar, but it should be reasonable to believe that if push came to shove, the formulas could be looked up. However, the left-hand sides are subtly different - they have two arguments, not one. In <code>Julia</code> it is trivial to define functions with multiple arguments - we just did.</p>
+<p>Earlier we saw the <code>log</code> function can use a second argument to express the base. This function is basically defined by <code>log(b,x)=log(x)/log(b)</code>. The <code>log(x)</code> value is the natural log, and this definition just uses the change-of-base formula for logarithms.</p>
+<p>But not so fast, on the left side is a function with two arguments and on the right side the functions have one argument - yet they share the same name. How does <code>Julia</code> know which to use? <code>Julia</code> uses the number, order, and <em>type</em> of the positional arguments passed to a function to determine which function definition to use. This is technically known as <a href="http://en.wikipedia.org/wiki/Multiple_dispatch">multiple dispatch</a> or <strong>polymorphism</strong>. As a feature of the language, it can be used to greatly simplify the number of functions the user must learn. The basic idea is that many functions are “generic” in that they have methods which will work differently in different scenarios.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Multiple dispatch is very common in mathematics. For example, we learn different ways to add: integers (fingers, carrying), real numbers (align the decimal points), rational numbers (common denominators), complex numbers (add components), vectors (add components), polynomials (combine like monomials), … yet we just use the same <code>+</code> notation for each operation. The concepts are related, the details different.</p>
+</div>
+</div>
+<p><code>Julia</code> is similarly structured. <code>Julia</code> terminology would be to call the operation “<code>+</code>” a <em>generic function</em> and the different implementations <em>methods</em> of “<code>+</code>”. This allows the user to just need to know a smaller collection of generic concepts yet still have the power of detail-specific implementations. To see how many different methods are defined in the base <code>Julia</code> language for the <code>+</code> operator, we can use the command <code>methods(+)</code>. As there are so many (<span class="math inline">\(\approx 200\)</span>) and that number is growing, we illustrate how many different logarithm methods are implemented for “numbers:”</p>
+<pre class="{julia}"><code>methods(log, (Number,))</code></pre>
+<p>(The arguments have <em>type annotations</em> such as <code>x::Float64</code> or <code>x::BigFloat</code>. <code>Julia</code> uses these to help resolve which method should be called for a given set of arguments. This allows for different operations depending on the variable type. For example, in this case, the <code>log</code> function for <code>Float64</code> values uses a fast algorithm, whereas for <code>BigFloat</code> values an algorithm that can handle multiple precision is used.)</p>
+<section id="example-3" class="level5">
+<h5 class="anchored" data-anchor-id="example-3">Example</h5>
+<p>A common usage of multiple dispatch is, as is done with <code>log</code> above, to restrict the type of an argument and define a method for just this type. Types in <code>Julia</code> can be abstract or concrete. This distinction is important when construction <em>composite types</em> (which we are not doing here), but otherwise not so important. In the following example, we use the abstract types <code>Integer</code>, <code>Real</code>, and <code>Complex</code> to define methods for a function we call <code>twotox</code>:</p>
+<pre class="{julia}"><code>function twotox(x::Integer)
+    (2//1)^x
+end
+twotox(x::Real) = (2.0)^x
+twotox(x::Complex) = (2.0 + 0.0im)^x</code></pre>
+<p>This is for illustration purposes – the latter two are actually already done through <code>Julia</code>’s <em>promotion</em> mechanism – but we see that <code>twotox</code> will return a rational number when <code>x</code> is an integer unlike <code>Julia</code> which, when <code>x</code> is non-negative will return an integer and will otherwise will error or return a float (when <code>x</code> is a numeric literal, like <code>2^(-3)</code>).</p>
+<p>The key to reading the above is the type annotation acts like a gatekeeper allowing in only variables of that type.</p>
+<p>For example, the number <code>2</code> is parsed as a 64-bit integer (typically) and has concrete type <code>Int64</code> which is a subtype of <code>Integer</code>. So <code>twotox(2)</code> will use the first definition, and return a rational number. Whereas, the number <code>2.0</code> is parsed as a floating point number with concrete type <code>Float64</code> which is a subtype of <code>Real</code>, not <code>Integer</code>, so <code>twotox(2.0)</code> will use the second method defined above.</p>
+</section>
+<section id="example-an-application-of-composition-and-multiple-dispatch" class="level5">
+<h5 class="anchored" data-anchor-id="example-an-application-of-composition-and-multiple-dispatch">Example: An application of composition and multiple dispatch</h5>
+<p>As mentioned <code>Julia</code>’s multiple dispatch allows multiple functions with the same name. The function that gets selected depends not just on the type of the arguments, but also on the number of arguments given to the function. We can exploit this to simplify our tasks. For example, consider this optimization problem:</p>
+<blockquote class="blockquote">
+<p>For all rectangles of perimeter <span class="math inline">\(20\)</span>, what is the one with largest area?</p>
+</blockquote>
+<p>The start of this problem is to represent the area in terms of one variable. We see next that composition can simplify this task, which when done by hand requires a certain amount of algebra.</p>
+<p>Representing the area of a rectangle in terms of two variables is easy, as the familiar formula of width times height applies:</p>
+<pre class="{julia}"><code>Area(w, h) = w * h</code></pre>
+<p>But the other fact about this problem - that the perimeter is <span class="math inline">\(20\)</span> - means that height depends on width. For this question, we can see that <span class="math inline">\(P=2w + 2h\)</span> so that - as a function - <code>height</code> depends on <code>w</code> as follows:</p>
+<pre class="{julia}"><code>height(w) = (20  - 2*w)/2</code></pre>
+<p>By hand we would substitute this last expression into that for the area and simplify (to get <span class="math inline">\(A=w\cdot (20-2 \cdot w)/2 = -w^2 + 10w\)</span>). However, within <code>Julia</code> we can let <em>composition</em> do the substitution and leave the algebraic simplification for <code>Julia</code> to do:</p>
+<pre class="{julia}"><code>Area(w) = Area(w, height(w))</code></pre>
+<p>This might seem odd, just like with <code>log</code>, we now have two <em>different</em> but related functions named <code>Area</code>. Julia will decide which to use based on the number of arguments when the function is called. This setup allows both to be used on the same line, as above. This usage style is not so common with many computer languages, but is a feature of <code>Julia</code> which is built around the concept of <em>generic</em> functions with multiple dispatch rules to decide which rule to call.</p>
+<p>For example, jumping ahead a bit, the <code>plot</code> function of <code>Plots</code> expects functions of a single numeric variable. Behind the scenes, then the function <code>A(w)</code> will be used in this graph:</p>
+<pre class="{julia}"><code>plot(Area, 0, 10)</code></pre>
+<p>From the graph, we can see that that width for maximum area is <span class="math inline">\(w=5\)</span> and so <span class="math inline">\(h=5\)</span> as well.</p>
+</section>
+</section>
+<section id="other-types-of-functions" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="other-types-of-functions"><span class="header-section-number">7.5</span> Other types of functions</h2>
+<p><code>Julia</code> has both <em>generic</em> functions <em>and</em> <em>anonymous</em> functions. Generic functions participate in <em>multiple dispatch</em>, a central feature of <code>Julia</code>. Anonymous functions are very useful with higher-order programming (passing functions as arguments). These notes occasionally take advantage of anonymous functions for convenience.</p>
+<section id="anonymous-functions" class="level3" data-number="7.5.1">
+<h3 data-number="7.5.1" class="anchored" data-anchor-id="anonymous-functions"><span class="header-section-number">7.5.1</span> Anonymous functions</h3>
+<p>Simple mathematical functions have a domain and range which are a subset of the real numbers, and generally have a concrete mathematical rule. However, the definition of a function is much more abstract. We’ve seen that functions for computer languages can be more complicated too, with, for example, the possibility of multiple input values. Things can get more abstract still.</p>
+<p>Take for example, the idea of the shift of a function. The following mathematical definition of a new function <span class="math inline">\(g\)</span> related to a function <span class="math inline">\(f\)</span>:</p>
+<p><span class="math display">\[
+g(x) = f(x-c)
+\]</span></p>
+<p>has an interpretation - the graph of <span class="math inline">\(g\)</span> will be the same as the graph of <span class="math inline">\(f\)</span> shifted to the right by <span class="math inline">\(c\)</span> units. That is <span class="math inline">\(g\)</span> is a transformation of <span class="math inline">\(f\)</span>. From one perspective, the act of replacing <span class="math inline">\(x\)</span> with <span class="math inline">\(x-c\)</span> transforms a function into a new function. Mathematically, when we focus on transforming functions, the word <a href="http://en.wikipedia.org/wiki/Operator_%28mathematics%29">operator</a> is sometimes used. This concept of transforming a function can be viewed as a certain type of function, in an abstract enough way. The relation would be to just pair off the functions <span class="math inline">\((f,g)\)</span> where <span class="math inline">\(g(x) = f(x-c)\)</span>.</p>
+<p>With <code>Julia</code> we can represent such operations. The simplest thing would be to do something like:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = x^2 - 2x
+g(x) = f(x - 3)</code></pre>
+<p>Then <span class="math inline">\(g\)</span> has the graph of <span class="math inline">\(f\)</span> shifted by 3 units to the right. Now <code>f</code> above refers to something in the main workspace, in this example a specific function. Better would be to allow <code>f</code> to be an argument of a function, like this:</p>
+<pre class="{julia}"><code>function shift_right(f; c=0)
+  function(x)
+    f(x - c)
+  end
+end</code></pre>
+<p>That takes some parsing. In the body of the <code>shift_right</code> is the definition of a function. But this function has no name– it is <em>anonymous</em>. But what it does should be clear - it subtracts <span class="math inline">\(c\)</span> from <span class="math inline">\(x\)</span> and evaluates <span class="math inline">\(f\)</span> at this new value. Since the last expression creates a function, this function is returned by <code>shift_right</code>.</p>
+<p>So we could have done something more complicated like:</p>
+<pre class="{julia}"><code>f(x) = x^2 - 2x
+l = shift_right(f, c=3)</code></pre>
+<p>Then <code>l</code> is a function that is derived from <code>f</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The value of <code>c</code> used when <code>l</code> is called is the one passed to <code>shift_right</code>. Functions like <code>l</code> that are returned by other functions also are called <em>closures</em>, as the context they are evaluated within includes the context of the function that constructs them.</p>
+</div>
+</div>
+<p>Anonymous functions can be created with the <code>function</code> keyword, but we will use the “arrow” notation, <code>arg-&gt;body</code> to create them, The above, could have been defined as:</p>
+<pre class="{julia}"><code>shift_right_alt(f; c=0) = x -&gt; f(x-c)</code></pre>
+<p>When the <code>-&gt;</code> is seen a function is being created.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Generic versus anonymous functions. Julia has two types of functions, generic ones, as defined by <code>f(x)=x^2</code> and anonymous ones, as defined by <code>x -&gt; x^2</code>. One gotcha is that <code>Julia</code> does not like to use the same variable name for the two types. In general, Julia is a dynamic language, meaning variable names can be reused with different types of variables. But generic functions take more care, as when a new method is defined it gets added to a method table. So repurposing the name of a generic function for something else is not allowed. Similarly, repurposing an already defined variable name for a generic function is not allowed. This comes up when we use functions that return functions as we have different styles that can be used: When we defined <code>l = shift_right(f, c=3)</code> the value of <code>l</code> is assigned an anonymous function. This binding can be reused to define other variables. However, we could have defined the function <code>l</code> through <code>l(x) = shift_right(f, c=3)(x)</code>, being explicit about what happens to the variable <code>x</code>. This would add a method to the generic function <code>l</code>. Meaning, we get an error if we tried to assign a variable to <code>l</code>, such as an expression like <code>l=3</code>. We generally employ the latter style, even though it involves a bit more typing, as we tend to stick to methods of generic functions for consistency.</p>
+</div>
+</div>
+<section id="example-the-secant-line" class="level5">
+<h5 class="anchored" data-anchor-id="example-the-secant-line">Example: the secant line</h5>
+<p>A secant line is a line through two points on the graph of a function. If we have a function <span class="math inline">\(f(x)\)</span>, and two <span class="math inline">\(x\)</span>-values <span class="math inline">\(x=a\)</span> and <span class="math inline">\(x=b\)</span>, then we can find the slope between the points <span class="math inline">\((a,f(a))\)</span> and <span class="math inline">\((b, f(b))\)</span> with:</p>
+<p><span class="math display">\[
+m = \frac{f(b) - f(a)}{b - a}.
+\]</span></p>
+<p>The point-slope form of a line then gives the equation of the tangent line as <span class="math inline">\(y = f(a) + m \cdot (x - a)\)</span>.</p>
+<p>To model this in <code>Julia</code>, we would want to turn the inputs <code>f</code>,<code>a</code>, <code>b</code> into a function that implements the secant line (functions are much easier to work with than equations). Here is how we can do it:</p>
+<pre class="{julia}"><code>function secant(f, a, b)
+   m = (f(b) - f(a)) / (b - a)
+   x -&gt; f(a) + m * (x - a)
+end</code></pre>
+<p>The body of the function nearly mirrors the mathematical treatment. The main difference is in place of <span class="math inline">\(y = \dots\)</span> we have a <code>x -&gt; ...</code> to create an anonymous function.</p>
+<p>To illustrate the use, suppose <span class="math inline">\(f(x) = x^2 - 2\)</span> and we have the secant line between <span class="math inline">\(a=1\)</span> and <span class="math inline">\(b=2\)</span>. The value at <span class="math inline">\(x=3/2\)</span> is given by:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = x^2 - 2
+a,b = 1, 2
+secant(f,a,b)(3/2)</code></pre>
+<p>The last line employs double parentheses. The first pair, <code>secant(f,a,b)</code>, returns a function and the second pair, <code>(3/2)</code>, are used to call the returned function.</p>
+</section>
+<section id="closures" class="level4">
+<h4 class="anchored" data-anchor-id="closures">Closures</h4>
+<p>One main use of anonymous functions is to make <a href="https://en.wikipedia.org/wiki/Closure_(computer_programming)">closures</a>. We’ve touched on two concepts: functions with parameters <em>and</em> functions as arguments to other functions. The creation of a function for a given set of parameters may be needed. Anonymous functions are used to create <strong>closures</strong> which capture the values of the parameters. For a simple example, <code>mxplusb</code> parameterizes any line, but to use a function to represent a specific line, a new function can be created:</p>
+<pre class="{julia}"><code>#| hold: true
+mxplusb(x; m=0, b=0) = m*x + b
+specific_line(m,b) = x -&gt; mxplusb(x; m=m, b=b)</code></pre>
+<p>The returned object will have its parameters (<code>m</code> and <code>b</code>) fixed when used.</p>
+<p>In <code>Julia</code>, the functions <code>Base.Fix1</code> and <code>Base.Fix2</code> are provided to take functions of two variables and create callable objects of just one variable, with the other argument fixed. This partial function application is provided by a some of the logical comparison operators, which can be useful with filtering, say.</p>
+<p>For example, <code>&lt;(2)</code> is a funny looking way of expressing the function <code>x -&gt; x &lt; 2</code>. (Think of <code>x &lt; y</code> as <code>&lt;(x,y)</code> and then “fix” the value of <code>y</code> to be <code>2</code>.) This is useful with filtering by a predicate function, for example:</p>
+<pre class="{julia}"><code>filter(&lt;(2), 0:4)</code></pre>
+<p>which picks off the values of <code>0</code> and <code>1</code> in a somewhat obscure way but less verbose than <code>filter(x -&gt; x &lt; 2, 0:4)</code>.</p>
+<p>The <code>Fix2</code> function is also helpful when using the <code>f(x, p)</code> form for passing parameters to a function. The result of <code>Base.Fix2(f, p)</code> is a function with its parameters fixed that can be passed along for plotting or other uses.</p>
+</section>
+</section>
+<section id="the-do-notation" class="level3" data-number="7.5.2">
+<h3 data-number="7.5.2" class="anchored" data-anchor-id="the-do-notation"><span class="header-section-number">7.5.2</span> The <code>do</code> notation</h3>
+<p>Many functions in <code>Julia</code> accept a function as the first argument. A common pattern for calling some function is <code>action(f, args...)</code> where <code>action</code> is the function that will act on another function <code>f</code> using the value(s) in <code>args...</code>. There <code>do</code> notation is syntactical sugar for creating an anonymous function which is useful when more complicated function bodies are needed.</p>
+<p>Here is an artificial example to illustrate of a task we won’t have cause to use in these notes, but is an important skill in some contexts. The <code>do</code> notation can be confusing to read, as it moves the function definition to the end and not the beginning, but is convenient to write and is used very often with the task of this example.</p>
+<p>To save some text to a file requires a few steps: opening the file; writing to the file; closing the file. The <code>open</code> function does the first. One method has this signature <code>open(f::Function, args...; kwargs....)</code> and is documented to “Apply the function f to the result of <code>open(args...; kwargs...)</code> and close the resulting file descriptor upon completion.” Which is great, the open and close stages are handled by <code>Julia</code> and only the writing is up to the user.</p>
+<p>The writing is done in the function of a body, so the <code>do</code> notation allows the creation of the function to be handled anonymously. In this context, the argument to this function will be an <code>IO</code> handle, which is typically called <code>io</code>.</p>
+<p>So the pattern would be</p>
+<pre class="{julia}"><code>#| eval: false
+open("somefile.txt", "w") do io
+    write(io, "Four score and seven")
+    write(io, "years ago...")
+end</code></pre>
+<p>The name of the file to open appears, how the file is to be opened (<code>w</code> means write, <code>r</code> would mean read), and then a function with argument <code>io</code> which writes two lines to <code>io</code>.</p>
+</section>
+</section>
+<section id="function-application" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="function-application"><span class="header-section-number">7.6</span> Function application</h2>
+<p>The typical calling pattern for a function simply follows <em>mathematical</em> notation, that is <code>f(x)</code> calls the function <code>f</code> with the argument <code>x</code>. There are times – especially with function composition – that an alternative <em>piping</em> syntax is desirable. <code>Julia</code> provides the <em>infix</em> operation <code>|&gt;</code> for piping, defining it by <code>|&gt;(x, f) = f(x)</code>. This allows composition to work left to right, instead of right to left. For example, these two calls produce the same answer:</p>
+<pre class="{julia}"><code>exp(sin(log(3))), 3 |&gt; log |&gt; sin |&gt; exp</code></pre>
+<p>While convenient, piping works most naturally with functions of a single variable. When more than one variable is needed for a function, say <code>max</code>, then things get a bit cumbersome. Using anonymous functions or “fixing” arguments is then useful. For example, here is one way to implement <code>clamp(x, lo, hi)</code> which returns <code>x</code> when <code>lo &lt; x &lt; hi</code> and otherwise <code>lo</code> or <code>hi</code>, depending:</p>
+<pre class="{julia}"><code>x, lo, hi = -10, -5, 5 # clampl(x, lo, hi) is -5
+x |&gt; x -&gt; max(x, lo) |&gt; x -&gt; min(x, hi)</code></pre>
+<p>Or</p>
+<pre class="{julia}"><code>x |&gt; Base.Fix2(max, lo) |&gt; Base.Fix2(min, hi)</code></pre>
+<p>For heavy use of chaining through function application there are various packages to simplify the notation (e.g.&nbsp;<code>Chain.jl</code>, <code>Pipe.jl</code>, <code>DataPipes.jl</code>, among many others).</p>
+</section>
+<section id="questions" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="questions"><span class="header-section-number">7.7</span> Questions</h2>
+<section id="question" class="level5">
+<h5 class="anchored" data-anchor-id="question">Question</h5>
+<p>State the domain and range of <span class="math inline">\(f(x) = |x + 2|\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"Domain is all real numbers, range is all real numbers",
+"Domain is all real numbers, range is all non-negative numbers",
+"Domain is all non-negative numbers, range is all real numbers",
+"Domain is all non-negative numbers, range is all non-negative numbers"
+]
+answ = 2
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-1" class="level5">
+<h5 class="anchored" data-anchor-id="question-1">Question</h5>
+<p>State the domain and range of <span class="math inline">\(f(x) = 1/(x-2)\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"Domain is all real numbers, range is all real numbers",
+L"Domain is all real numbers except $2$, range is all real numbers except $0$",
+L"Domain is all non-negative numbers except $0$, range is all real numbers except $2$",
+L"Domain is all non-negative numbers except $-2$, range is all non-negative numbers except $0$"
+]
+answ = 2
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-2" class="level5">
+<h5 class="anchored" data-anchor-id="question-2">Question</h5>
+<p>Which of these functions has a domain of all real <span class="math inline">\(x\)</span>, but a range of <span class="math inline">\(x &gt; 0\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw"``f(x) = 2^x``",
+raw"``f(x) = 1/x^2``",
+raw"``f(x) = |x|``",
+raw"``f(x) = \sqrt{x}``"]
+answ = 1
+radioq(choices, answ)</code></pre>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>Which of these commands will make a function for <span class="math inline">\(f(x) = \sin(x + \pi/3)\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [q"f = sin(x + pi/3)",
+q"function f(x) = sin(x + pi/3)",
+q"f(x)  = sin(x + pi/3)",
+q"f: x -&gt; sin(x + pi/3)",
+q"f x = sin(x + pi/3)"]
+answ = 3
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>Which of these commands will create a function for <span class="math inline">\(f(x) = (1 + x^2)^{-1}\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [q"f(x) = (1 + x^2)^(-1)",
+q"function f(x) = (1 + x^2)^(-1)",
+q"f(x) := (1 + x^2)^(-1)",
+q"f[x] =  (1 + x^2)^(-1)",
+q"def f(x): (1 + x^2)^(-1)"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>Will the following <code>Julia</code> commands create a function for</p>
+<p><span class="math display">\[
+f(x) = \begin{cases}
+30 &amp; x &lt; 500\\
+30 + 0.10 \cdot (x-500) &amp; \text{otherwise.}
+\end{cases}
+\]</span></p>
+<pre class="{julia}"><code>phone_plan(x) = x &lt; 500 ? 30.0 : 30 + 0.10 * (x-500);</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+booleanq(true, labels=["Yes", "No"])</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>The expression <code>max(0, x)</code> will be <code>0</code> if <code>x</code> is negative, but otherwise will take the value of <code>x</code>. Is this the same?</p>
+<pre class="{julia}"><code>a_max(x) = x &lt; 0 ? x : 0.0;</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(false)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>In statistics, the normal distribution has two parameters <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span> appearing as:</p>
+<p><span class="math display">\[
+f(x; \mu, \sigma) = \frac{1}{\sqrt{2\pi\sigma}} e^{-\frac{1}{2}\frac{(x-\mu)^2}{\sigma}}.
+\]</span></p>
+<p>Does this function implement this with the default values of <span class="math inline">\(\mu=0\)</span> and <span class="math inline">\(\sigma=1\)</span>?</p>
+<pre class="{julia}"><code>a_normal(x; mu=0, sigma=1) = 1/sqrt(2pi*sigma) * exp(-(1/2)*(x-mu)^2/sigma)</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+booleanq(true, labels=["Yes", "No"])</code></pre>
+<p>What value of <span class="math inline">\(\mu\)</span> is used if the function is called as <code>f(x, sigma=2.7)</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(0)</code></pre>
+<p>What value of <span class="math inline">\(\mu\)</span> is used if the function is called as <code>f(x, mu=70)</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(70)</code></pre>
+<p>What value of <span class="math inline">\(\mu\)</span> is used if the function is called as <code>f(x, mu=70, sigma=2.7)</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(70)</code></pre>
+</section>
+<section id="question-8" class="level6">
+<h6 class="anchored" data-anchor-id="question-8">Question</h6>
+<p><code>Julia</code> has keyword arguments (as just illustrated) but also positional arguments. These are matched by how the function is called. For example,</p>
+<pre class="{julia}"><code>A(w, h) = w * h</code></pre>
+<p>when called as <code>A(10, 5)</code> will use 10 for <code>w</code> and <code>5</code> for <code>h</code>, as the order of <code>w</code> and <code>h</code> matches that of <code>10</code> and <code>5</code> in the call.</p>
+<p>This is clear enough, but in fact positional arguments can have default values (then called <a href="https://docs.julialang.org/en/v1/manual/functions/#Optional-Arguments">optional</a>) arguments). For example,</p>
+<pre class="{julia}"><code>B(w, h=5) = w * h</code></pre>
+<p>Actually creates two functions: <code>B(w,h)</code> for when the call is, say, <code>B(10,5)</code> and <code>B(w)</code> when the call is <code>B(10)</code>.</p>
+<p>Suppose a function <code>C</code> is defined by</p>
+<pre class="{julia}"><code>C(x, mu=0, sigma=1) = 1/sqrt(2pi*sigma) * exp(-(1/2)*(x-mu)^2/sigma)</code></pre>
+<p>This is <em>nearly</em> identical to the last question, save for a comma instead of a semicolon after the <code>x</code>.</p>
+<p>What value of <code>mu</code> is used by the call <code>C(1, 70, 2.7)</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(70)</code></pre>
+<p>What value of <code>mu</code> is used by the call <code>C(1, 70)</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(70)</code></pre>
+<p>What value of <code>mu</code> is used by the call <code>C(1)</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(0)</code></pre>
+<p>Will the call <code>C(1, mu=70)</code> use a value of <code>70</code> for <code>mu</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["Yes, this will work just as it does for keyword arguments",
+"No, there will be an error that the function does not accept keyword arguments"]
+answ = 2
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-9" class="level6">
+<h6 class="anchored" data-anchor-id="question-9">Question</h6>
+<p>This function mirrors that of the built-in <code>clamp</code> function:</p>
+<pre class="{julia}"><code>klamp(x, a, b) = x &lt; a ? a : (x &gt; b ? b : x)</code></pre>
+<p>Can you tell what it does?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"If `x` is in `[a,b]` it returns `x`, otherwise it returns `a` when `x` is less than `a` and `b` when  `x` is greater than `b`.",
+"If `x` is in `[a,b]` it returns `x`, otherwise it returns `NaN`",
+"`x` is the larger of the minimum of `x` and `a` and the value of `b`, aka `max(min(x,a),b)`"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-10" class="level6">
+<h6 class="anchored" data-anchor-id="question-10">Question</h6>
+<p><code>Julia</code> has syntax for the composition of functions <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> using the Unicode operator <code>∘</code> entered as <code>\circ[tab]</code>.</p>
+<p>The notation to call a composition follows the math notation, where parentheses are necessary to separate the act of composition from the act of calling the function:</p>
+<p><span class="math display">\[
+(f \circ g)(x)
+\]</span></p>
+<p>For example</p>
+<pre class="{julia}"><code>(sin ∘ cos)(pi/4)</code></pre>
+<p>What happens if you forget the extra parentheses and were to call <code>sin ∘ cos(pi/4)</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"You still get $0.649...$",
+"You get a `MethodError`, as `cos(pi/4)` is evaluated as a number and `∘` is not defined for functions and numbers",
+"You get a `generic` function, but this won't be callable. If tried, it will give an method error."
+]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The parentheses in <code>(sin ∘ cos)(pi/4)</code> are needed due to the order of operations, with <code>cos(pi/4)</code> being evaluated first in the expression <code>sin ∘ cos(pi/4)</code>. Alternatively, one can define a function <code>sc = sin ∘ cos</code> (without parentheses), then call it through <code>sc(pi/4)</code>.</p>
+</div>
+</div>
+</section>
+<section id="question-11" class="level6">
+<h6 class="anchored" data-anchor-id="question-11">Question</h6>
+<p>The <a href="https://docs.julialang.org/en/v1/manual/functions/#Function-composition-and-piping">pipe</a> notation <code>ex |&gt; f</code> takes the output of <code>ex</code> and uses it as the input to the function <code>f</code>. That is composition. What is the value of this expression <code>1 |&gt; sin |&gt; cos</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"It is `0.6663667453928805`, the same as `cos(sin(1))`",
+"It is `0.5143952585235492`, the same as `sin(cos(1))`",
+"It gives an error"]
+answ = 1
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-12" class="level6">
+<h6 class="anchored" data-anchor-id="question-12">Question</h6>
+<p><code>Julia</code> has implemented this <em>limited</em> set of algebraic operations on functions: <code>∘</code> for <em>composition</em> and <code>!</code> for <em>negation</em>. (Read <code>!</code> as “not.”) The latter is useful for “predicate” functions (ones that return either <code>true</code> or <code>false</code>. What is output by this command?</p>
+<pre class="{julia}"><code>#| eval: false
+fn = !iseven
+fn(3)</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["`true`","`false`"]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-13" class="level6">
+<h6 class="anchored" data-anchor-id="question-13">Question</h6>
+<p>Generic functions in <code>Julia</code> allow many algorithms to work without change for different number types. For example, <a href="https://pdfs.semanticscholar.org/1ef4/ee58a159dc7e437e190ec2839fb9a654596c.pdf">3000</a> years ago, floating point numbers wouldn’t have been used to carry out the secant method computations, rather rational numbers would have been. We can see the results of using rational numbers with no change to our key function, just by starting with rational numbers for <code>a</code> and <code>b</code>:</p>
+<pre class="{julia}"><code>#| hold: true
+secant_intersection(f, a, b) = b - f(b) * (b - a) / (f(b) - f(a))  # rewritten
+f(x) = x^2 - 2
+a, b = 1//1, 2//1
+c = secant_intersection(f, a, b)</code></pre>
+<p>Now <code>c</code> is <code>4//3</code> and not <code>1.333...</code>. This works as the key operations used: division, squaring, subtraction all have different implementations for rational numbers that preserve this type.</p>
+<p>Repeat the secant method two more times to find a better approximation for <span class="math inline">\(\sqrt{2}\)</span>. What is the value of <code>c</code> found?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [q"4//3", q"7//5", q"58//41", q"816//577"]
+answ = 3
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>How small is the value of <span class="math inline">\(f(c)\)</span> for this value?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = f(58/41)
+numericq(val)</code></pre>
+<p>How close is this answer to the true value of <span class="math inline">\(\sqrt{2}\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [L"about $8$ parts in $100$", L"about $1$ parts in $100$", L"about $4$ parts in $10,000$", L"about $2$ parts in $1,000,000$"]
+answ = 3
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>(Finding a good approximation to <span class="math inline">\(\sqrt{2}\)</span> would be helpful to builders, for example, as it could be used to verify the trueness of a square room, say.)</p>
+</section>
+<section id="question-14" class="level6">
+<h6 class="anchored" data-anchor-id="question-14">Question</h6>
+<p><code>Julia</code> does not have surface syntax for the <em>difference</em> of functions. This is a common thing to want when solving equations. The tools available solve <span class="math inline">\(f(x)=0\)</span>, but problems may present as solving for <span class="math inline">\(h(x) = g(x)\)</span> or even <span class="math inline">\(h(x) = c\)</span>, for some constant. Which of these solutions is <strong>not</strong> helpful if <span class="math inline">\(h\)</span> and <span class="math inline">\(g\)</span> are already defined?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["Just use `f = h - g`",
+"Define `f(x) = h(x) - g(x)`",
+"Use `x -&gt; h(x) - g(x)` when the difference is needed"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-15" class="level6">
+<h6 class="anchored" data-anchor-id="question-15">Question</h6>
+<p>Identifying the range of a function can be a difficult task. We see in this question that in some cases, a package can be of assistance.</p>
+<p>A mathematical interval is a set of values of the form</p>
+<ul>
+<li>an open interval: <span class="math inline">\(a &lt; x &lt; b\)</span>, or <span class="math inline">\((a,b)\)</span>;</li>
+<li>a closed interval: <span class="math inline">\(a \leq x \leq b\)</span>, or <span class="math inline">\([a,b]\)</span>;</li>
+<li>or a half-open interval: <span class="math inline">\(a &lt; x \leq b\)</span> or <span class="math inline">\(a \leq x &lt; b\)</span>, respectively <span class="math inline">\((a,b]\)</span> or <span class="math inline">\([a,b)\)</span>.</li>
+</ul>
+<p>They all contain all real numbers between the endpoints, the distinction is whether the endpoints are included or not.</p>
+<p>A domain is some set, but typically that set is an interval such as <em>all real numbers</em> (<span class="math inline">\((-\infty,\infty)\)</span>), <em>all non-negative numbers</em> (<span class="math inline">\([0,\infty)\)</span>), or, say, <em>all positive numbers</em> (<span class="math inline">\((0,\infty)\)</span>).</p>
+<p>The <code>IntervalArithmetic</code> package provides an easy means to define closed intervals using the symbol <code>..</code>, but this is also used by the already loaded <code>CalculusWithJulia</code> package in different manner, so we use the fully qualified named constructor in the following to construct intervals:</p>
+<pre class="{julia}"><code>import IntervalArithmetic</code></pre>
+<pre class="{julia}"><code>I1 = IntervalArithmetic.Interval(-Inf, Inf)</code></pre>
+<pre class="{julia}"><code>I2 = IntervalArithmetic.Interval(0, Inf)</code></pre>
+<p>The main feature of the package is not to construct intervals, but rather to <em>rigorously</em> bound with an interval the output of the image of a closed interval under a function. That is, for a function <span class="math inline">\(f\)</span> and <em>closed</em> interval <span class="math inline">\([a,b]\)</span>, a bound for the set <span class="math inline">\(\{f(x) \text{ for } x \text{ in } [a,b]\}\)</span>. When <code>[a,b]</code> is the domain of <span class="math inline">\(f\)</span>, then this is a bound for the range of <span class="math inline">\(f\)</span>.</p>
+<p>For example the function <span class="math inline">\(f(x) = x^2 + 2\)</span> had a domain of all real <span class="math inline">\(x\)</span>, the range can be found with:</p>
+<pre class="{julia}"><code>ab = IntervalArithmetic.Interval(-Inf, Inf)
+u(x) = x^2 + 2
+u(ab)</code></pre>
+<p>For this problem, the actual range can easily be identified. Does the bound computed match exactly?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq("yes")</code></pre>
+<p>Does <code>sin(0..pi)</code> <strong>exactly</strong> match the interval of <span class="math inline">\([0,1]\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq("no")</code></pre>
+<p>Guess why or why not?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["Well it does, because ``[0,1]`` is the range",
+           """It does not. The bound found is a provably known bound. The small deviation is due to the possible errors in evaluation of the `sin` function near the floating point approximation of `pi`,
+"""]
+radioq(choices, 2)</code></pre>
+<p>Now consider the evaluation</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = x^x
+I = IntervalArithmetic.Interval(0, Inf)
+f(I)</code></pre>
+<p>Make a graph of <code>f</code>. Does the interval found above provide a nearly exact estimate of the true range (as the previous two questions have)?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq("no")</code></pre>
+<p>Any thoughts on why?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["""
+The guarantee of `IntervalArithmetic` is a *bound* on the interval, not the *exact* interval. In the case where the variable `x` appears more than once, it is treated formulaically as an *independent* quantity (meaning it has it full set of values considered in each instance) which is not the actual case mathematically. This is the "dependence problem" in interval arithmetic.""",
+           """
+The interval is a nearly exact estimate, as guaranteed by `IntervalArithmetic`.
+"""]
+radioq(choices, 1)</code></pre>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../precalc/ranges.html" class="pagination-link" aria-label="Ranges and Sets">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../precalc/plotting.html" class="pagination-link" aria-label="The Graph of a Function">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/precalc/functions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

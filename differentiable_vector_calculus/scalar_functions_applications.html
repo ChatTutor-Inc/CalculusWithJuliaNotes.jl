@@ -1,0 +1,2826 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>57&nbsp; Applications with scalar functions – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../differentiable_vector_calculus/vector_fields.html" rel="next">
+<link href="../differentiable_vector_calculus/scalar_functions.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../differentiable_vector_calculus.html">Differential vector calculus</a></li><li class="breadcrumb-item"><a href="../differentiable_vector_calculus/scalar_functions_applications.html"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#tangent-planes-linearization" id="toc-tangent-planes-linearization" class="nav-link active" data-scroll-target="#tangent-planes-linearization"><span class="header-section-number">57.1</span> Tangent planes, linearization</a>
+  <ul class="collapse">
+  <li><a href="#equation-of-the-tangent-plane" id="toc-equation-of-the-tangent-plane" class="nav-link" data-scroll-target="#equation-of-the-tangent-plane"><span class="header-section-number">57.1.1</span> Equation of the tangent plane</a></li>
+  <li><a href="#tangent-plane-for-level-curves" id="toc-tangent-plane-for-level-curves" class="nav-link" data-scroll-target="#tangent-plane-for-level-curves"><span class="header-section-number">57.1.2</span> Tangent plane for level curves</a></li>
+  </ul></li>
+  <li><a href="#linearization" id="toc-linearization" class="nav-link" data-scroll-target="#linearization"><span class="header-section-number">57.2</span> Linearization</a>
+  <ul class="collapse">
+  <li><a href="#newtons-method-to-solve-fxy-0-and-gxy0." id="toc-newtons-method-to-solve-fxy-0-and-gxy0." class="nav-link" data-scroll-target="#newtons-method-to-solve-fxy-0-and-gxy0."><span class="header-section-number">57.2.1</span> Newton’s method to solve <span class="math inline">\(f(x,y) = 0\)</span> and <span class="math inline">\(g(x,y)=0\)</span>.</a></li>
+  </ul></li>
+  <li><a href="#implicit-differentiation" id="toc-implicit-differentiation" class="nav-link" data-scroll-target="#implicit-differentiation"><span class="header-section-number">57.3</span> Implicit differentiation</a></li>
+  <li><a href="#optimization" id="toc-optimization" class="nav-link" data-scroll-target="#optimization"><span class="header-section-number">57.4</span> Optimization</a>
+  <ul class="collapse">
+  <li><a href="#gradient-descent" id="toc-gradient-descent" class="nav-link" data-scroll-target="#gradient-descent"><span class="header-section-number">57.4.1</span> Gradient descent</a></li>
+  <li><a href="#newtons-method-for-minimization" id="toc-newtons-method-for-minimization" class="nav-link" data-scroll-target="#newtons-method-for-minimization"><span class="header-section-number">57.4.2</span> Newton’s method for minimization</a></li>
+  </ul></li>
+  <li><a href="#constrained-optimization-lagrange-multipliers" id="toc-constrained-optimization-lagrange-multipliers" class="nav-link" data-scroll-target="#constrained-optimization-lagrange-multipliers"><span class="header-section-number">57.5</span> Constrained optimization, Lagrange multipliers</a></li>
+  <li><a href="#taylors-theorem" id="toc-taylors-theorem" class="nav-link" data-scroll-target="#taylors-theorem"><span class="header-section-number">57.6</span> Taylor’s theorem</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">57.7</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/differentiable_vector_calculus/scalar_functions_applications.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../differentiable_vector_calculus.html">Differential vector calculus</a></li><li class="breadcrumb-item"><a href="../differentiable_vector_calculus/scalar_functions_applications.html"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses these add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+plotly()
+using SymPy
+using Roots</code></pre>
+<p>And the following from the <code>Contour</code> package:</p>
+<pre class="{julia}"><code>import Contour: contours, levels, level, lines, coordinates</code></pre>
+<p>This section presents different applications of scalar functions.</p>
+<section id="tangent-planes-linearization" class="level2" data-number="57.1">
+<h2 data-number="57.1" class="anchored" data-anchor-id="tangent-planes-linearization"><span class="header-section-number">57.1</span> Tangent planes, linearization</h2>
+<p>Consider the case <span class="math inline">\(f:R^2 \rightarrow R\)</span>. We visualize <span class="math inline">\(z=f(x,y)\)</span> through a surface. At a point <span class="math inline">\((a, b)\)</span>, this surface, if <span class="math inline">\(f\)</span> is sufficiently smooth, can be approximated by a flat area, or a plane. For example, the Northern hemisphere of the earth, might be modeled simplistically by <span class="math inline">\(z = \sqrt{R^2 - (x^2 + y^2)}\)</span> for some <span class="math inline">\(R\)</span> and with the origin at the earth’s core. The ancient view of a “flat earth,” can be more generously seen as identifying this tangent plane with the sphere. More apt for current times, is the use of GPS coordinates to describe location. The difference between any two coordinates is technically a distance on a curved, nearly spherical, surface. But if the two points are reasonably closes (miles, not tens of miles) and accuracy isn’t of utmost importance (i.e., not used for self-driving cars), then the distance can be found from the Euclidean distance formula, <span class="math inline">\(\sqrt{(\Delta\text{latitude})^2 + (\Delta\text{longitude})^2}\)</span>. That is, as if the points were on a plane, not a curved surface.</p>
+<p>For the univariate case, the tangent line has many different uses. Here we see the tangent plane also does.</p>
+<section id="equation-of-the-tangent-plane" class="level3" data-number="57.1.1">
+<h3 data-number="57.1.1" class="anchored" data-anchor-id="equation-of-the-tangent-plane"><span class="header-section-number">57.1.1</span> Equation of the tangent plane</h3>
+<p>The partial derivatives have the geometric view of being the derivative of the univariate functions <span class="math inline">\(f(\vec\gamma_x(t))\)</span> and <span class="math inline">\(f(\vec\gamma_y(t))\)</span>, where <span class="math inline">\(\vec\gamma_x\)</span> moves just parallel to the <span class="math inline">\(x\)</span> axis (e.g.&nbsp;<span class="math inline">\(\langle t + a, b\rangle\)</span>). and <span class="math inline">\(\vec\gamma_y\)</span> moves just parallel to the <span class="math inline">\(y\)</span> axis. The partial derivatives then are slopes of tangent lines to each curve. The tangent plane, should it exist, should match both slopes at a given point. With this observation, we can identify it.</p>
+<p>Consider <span class="math inline">\(f(\vec\gamma_x)\)</span> at a point <span class="math inline">\((a,b)\)</span>. The path has a tangent vector, which has “slope” <span class="math inline">\(\frac{\partial f}{\partial x}\)</span>. and in the direction of the <span class="math inline">\(x\)</span> axis, but not the <span class="math inline">\(y\)</span> axis, as does this vector: <span class="math inline">\(\langle 1, 0, \frac{\partial f}{\partial x} \rangle\)</span>. Similarly, this vector <span class="math inline">\(\langle 0, 1, \frac{\partial f}{\partial y} \rangle\)</span> describes the tangent line to <span class="math inline">\(f(\vec\gamma_y)\)</span> at the point.</p>
+<p>These two vectors will lie in the plane. The normal vector is found by their cross product:</p>
+<pre class="{julia}"><code>@syms f_x f_y
+n = [1, 0, f_x] × [0, 1, f_y]</code></pre>
+<p>Let <span class="math inline">\(\vec{x} = \langle a, b, f(a,b) \rangle\)</span>. The tangent plane at <span class="math inline">\(\vec{x}\)</span> then is described by all vectors <span class="math inline">\(\vec{v}\)</span> with <span class="math inline">\(\vec{n}\cdot(\vec{v} - \vec{x})  = 0\)</span>. Using <span class="math inline">\(\vec{v} = \langle x,y,z\rangle\)</span>, we have:</p>
+<p><span class="math display">\[
+[-\frac{\partial f}{\partial x}, -\frac{\partial f}{\partial y}, 1] \cdot [x-a, y-b, z - f(a,b)] = 0,
+\]</span></p>
+<p>or,</p>
+<p><span class="math display">\[
+z = f(a,b) + \frac{\partial f}{\partial x} (x-a) + \frac{\partial f}{\partial y} (y-b),
+\]</span></p>
+<p>which is more compactly expressed as</p>
+<p><span class="math display">\[
+z = f(a,b) + \nabla(f) \cdot \langle x-a, y-b \rangle.
+\]</span></p>
+<p>This form would then generalize to scalar functions from <span class="math inline">\(R^n \rightarrow R\)</span>. This is consistent with the definition of <span class="math inline">\(f\)</span> being differentiable, where <span class="math inline">\(\nabla{f}\)</span> plays the role of the slope in the formulas.</p>
+<p>The following figure illustrates the above for the function <span class="math inline">\(f(x,y) = 6 - x^2 - y^2\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = 6 - x^2 -y^2
+f(x)= f(x...)
+
+a,b = 1, -1/2
+
+
+# draw surface
+xr = 7/4
+xs = ys = range(-xr, xr, length=100)
+surface(xs, ys, f, legend=false)
+
+# visualize tangent plane as 3d polygon
+pt = [a,b]
+tplane(x) = f(pt) + gradient(f)(pt) ⋅ (x - [a,b])
+
+pts = [[a-1,b-1], [a+1, b-1], [a+1, b+1], [a-1, b+1], [a-1, b-1]]
+plot!(unzip([[pt..., tplane(pt)] for pt in pts])...)
+
+# plot paths in x and y direction through (a,b)
+γ_x(t) = pt + t*[1,0]
+γ_y(t) = pt + t*[0,1]
+
+plot_parametric!((-xr-a)..(xr-a), t -&gt; [γ_x(t)..., (f∘γ_x)(t)],  linewidth=3)
+plot_parametric!((-xr-b)..(xr-b), t -&gt; [γ_y(t)..., (f∘γ_y)(t)],  linewidth=3)
+
+# draw directional derivatives in 3d and normal
+pt = [a, b, f(a,b)]
+fx, fy = gradient(f)(a,b)
+arrow!(pt, [1, 0, fx], linewidth=3)
+arrow!(pt, [0, 1, fy], linewidth=3)
+arrow!(pt, [-fx, -fy, 1], linewidth=3) # normal
+
+# draw point in base, x-y, plane
+pt = [a, b, 0]
+scatter!(unzip([pt])...)
+arrow!(pt, [1,0,0], linestyle=:dash)
+arrow!(pt, [0,1,0], linestyle=:dash)</code></pre>
+<section id="alternate-forms" class="level4">
+<h4 class="anchored" data-anchor-id="alternate-forms">Alternate forms</h4>
+<p>The equation for the tangent plane is often expressed in a more explicit form. For <span class="math inline">\(n=2\)</span>, if we set <span class="math inline">\(dx = x-a\)</span> and <span class="math inline">\(dy=y-b\)</span>, then the equation for the plane becomes:</p>
+<p><span class="math display">\[
+f(a,b) + \frac{\partial f}{\partial x} dx + \frac{\partial f}{\partial y} dy,
+\]</span></p>
+<p>which is a common form for the equation, though possibly confusing, as <span class="math inline">\(\partial x\)</span> and <span class="math inline">\(dx\)</span> need to be distinguished. For <span class="math inline">\(n &gt; 2\)</span>, additional terms follow this pattern. This explicit form is helpful when doing calculations by hand, but much less so when working on the computer, say with <code>Julia</code>, as the representations using vectors (or matrices) can be readily implemented and their representation much closer to the formulas. For example, consider these two possible functions to find the tangent plane (returned as a function) at a point in <span class="math inline">\(2\)</span> dimensions</p>
+<pre class="{julia}"><code>function tangent_plane_1st_crack(f, pt)
+  fx, fy = ForwardDiff.gradient(f, pt)
+  x -&gt; f(x...) + fx * (x[1]-pt[1]) + fy * (x[2]-pt[2])
+end</code></pre>
+<p>It isn’t so bad, but as written, we specialized to the number of dimensions, used indexing, and with additional dimensions, it clearly would get tedious to generalize. Using vectors, we might have:</p>
+<pre class="{julia}"><code>function tangent_plane(f, pt)
+  ∇f = ForwardDiff.gradient(f, pt) # using a variable ∇f
+  x -&gt; f(pt) + ∇f ⋅ (x - pt)
+end</code></pre>
+<p>This is much more like the compact formula and able to handle higher dimensions without rewriting.</p>
+</section>
+</section>
+<section id="tangent-plane-for-level-curves" class="level3" data-number="57.1.2">
+<h3 data-number="57.1.2" class="anchored" data-anchor-id="tangent-plane-for-level-curves"><span class="header-section-number">57.1.2</span> Tangent plane for level curves</h3>
+<p>Consider the surface described by <span class="math inline">\(f(x,y,z) = c\)</span>, a constant. This is more general than surfaces described by <span class="math inline">\(z = f(x,y)\)</span>. The concept of a tangent plane should still be applicable though. Suppose, <span class="math inline">\(\vec{\gamma}(t)\)</span> is a curve in the <span class="math inline">\(x-y-z\)</span> plane, then we have <span class="math inline">\((f\circ\vec\gamma)(t)\)</span> is a curve on the surface and its derivative is given by the chain rule through: <span class="math inline">\(\nabla{f}(\vec\gamma(t))\cdot \vec\gamma'(t)\)</span>. But this composition is constantly the same value, so the derivative is <span class="math inline">\(0\)</span>. This says that <span class="math inline">\(\nabla{f}(\vec\gamma(t))\)</span> is <em>orthogonal</em> to <span class="math inline">\(\vec\gamma'(t)\)</span> for any curve. As these tangential vectors to <span class="math inline">\(\vec\gamma\)</span> lie in the tangent plane, the tangent plane can be characterized by having <span class="math inline">\(\nabla{f}\)</span> as the normal.</p>
+<p>This computation was previously done in two dimensions, and showed the gradient is orthogonal to the contour lines (and points in the direction of greatest ascent). It can be generalized to higher dimensions.</p>
+<p>The surface <span class="math inline">\(F(x,y,z) = z - f(x,y) = 0\)</span> has gradient given by <span class="math inline">\(\langle -\partial{f}/\partial{x}, -\partial{f}/\partial{y}, 1\rangle\)</span>, and as seen above, this vector is normal to the tangent plane, so this generalization agrees on the easier case.</p>
+<p>For clarity:</p>
+<ul>
+<li>The scalar function <span class="math inline">\(z = f(x,y)\)</span> describes a surface, <span class="math inline">\((x,y,f(x,y))\)</span>; the gradient, <span class="math inline">\(\nabla{f}\)</span>, is <span class="math inline">\(2\)</span> dimensional and points in the direction of greatest ascent for the surface.</li>
+<li>The scalar function <span class="math inline">\(f(x,y,z)\)</span> <em>also</em> describes a surface, through level curves <span class="math inline">\(f(x,y,z) = c\)</span>, for some <em>constant</em> <span class="math inline">\(c\)</span>. The gradient <span class="math inline">\(\nabla{f}\)</span> is <span class="math inline">\(3\)</span> dimensional and <em>orthogonal</em> to the surface.</li>
+</ul>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>Let <span class="math inline">\(z = f(x,y) = \sin(x)\cos(x-y)\)</span>. Find an equation for the tangent plane at <span class="math inline">\((\pi/4, \pi/3)\)</span>.</p>
+<p>We have many possible forms to express this in, but we will use the functional description:</p>
+<pre class="{julia}"><code>@syms x, y</code></pre>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = sin(x) * cos(x-y)
+f(x) = f(x...)
+vars = [x, y]
+
+gradf = diff.(f(x,y), vars)  # or use gradient(f, vars) or ∇((f,vars))
+
+pt = [PI/4, PI/3]
+gradfa = subs.(gradf, x=&gt;pt[1], y=&gt;pt[2])
+
+f(pt) + gradfa ⋅ (vars - pt)</code></pre>
+</section>
+<section id="example-1" class="level5">
+<h5 class="anchored" data-anchor-id="example-1">Example</h5>
+<p>A cylinder <span class="math inline">\(f(x,y,z) = (x-a)^2 + y^2 = (2a)^2\)</span> is intersected with a sphere <span class="math inline">\(g(x,y,z) = x^2 + y^2 + z^2 = a^2\)</span>. Let <span class="math inline">\(V\)</span> be the line of intersection. (Viviani’s curve). Let <span class="math inline">\(P\)</span> be a point on the curve. Describe the tangent to the curve.</p>
+<p>We have the line of intersection will have tangent line lying in the tangent plane to both surfaces. These two surfaces have normal vectors given by the gradient, or <span class="math inline">\(\vec{n}_1 = \langle 2(x-a), 2y, 0 \rangle\)</span> and <span class="math inline">\(\vec{n}_2 = \langle 2x, 2y, 2z \rangle\)</span>. The cross product of these two vectors will lie in both tangent planes, so we have:</p>
+<p><span class="math display">\[
+P + t (\vec{n}_1 \times \vec{n}_2),
+\]</span></p>
+<p>will describe the tangent.</p>
+<p>The curve may be described parametrically by <span class="math inline">\(\vec\gamma(t) = a \langle 1 + \cos(t), \sin(t), 2\sin(t/2) \rangle\)</span>. Let’s see that the above is correct by verifying that the cross product of the tangent vector computed two ways is <span class="math inline">\(0\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+a = 1
+gamma(t) = a * [1 + cos(t), sin(t), 2sin(t/2) ]
+P = gamma(1/2)
+n1(x,y,z)= [2*(x-a), 2y, 0]
+n2(x,y,z) = [2x,2y,2z]
+n1(x) = n1(x...)
+n2(x) = n2(x...)
+
+t = 1/2
+(n1(gamma(t)) × n2(gamma(t))) × gamma'(t)</code></pre>
+</section>
+<section id="plotting-level-curves-of-fxyz-c" class="level4">
+<h4 class="anchored" data-anchor-id="plotting-level-curves-of-fxyz-c">Plotting level curves of <span class="math inline">\(F(x,y,z) = c\)</span></h4>
+<p>The <code>wireframe</code> plot can be used to visualize a surface of the type <code>z=f(x,y)</code>, as previously illustrated. However we have no way of plotting <span class="math inline">\(3\)</span>-dimensional implicit surfaces (of the type <span class="math inline">\(F(x,y,z)=c\)</span>) as we do for <span class="math inline">\(2\)</span>-dimensional implicit surfaces with <code>Plots</code>. (The <code>MDBM</code> or <code>IntervalConstraintProgramming</code> packages can be used along with <code>Makie</code> plotting package to produce one.)</p>
+<p>The <code>CalculusWithJulia</code> package provides a stop-gap function, <code>plot_implicit_surface</code> for this task. The basic idea is to slice an axis, by default the <span class="math inline">\(z\)</span> axis up and for each level plot the contours of <span class="math inline">\((x,y) \rightarrow f(x,y,z)-c\)</span>, which becomes a <span class="math inline">\(2\)</span>-dimensional problem. The function allows any of 3 different axes to be chosen to slice over, the default being just the <span class="math inline">\(z\)</span> axis.</p>
+<p>We demonstrate with an example from a February 14, 2019 article in the <a href="https://www.nytimes.com/2019/02/14/science/math-algorithm-valentine.html">New York Times</a>. It shows an equation for a “heart,” as the graphic will illustrate:</p>
+<pre class="{julia}"><code>#| hold: true
+a, b = 1, 3
+f(x,y,z) = (x^2 + ((1+b) * y)^2 + z^2 - 1)^3 - x^2 * z^3 - a * y^2 * z^3
+
+CalculusWithJulia.plot_implicit_surface(f, xlim=-2..2, ylim=-1..1, zlim=-1..2)</code></pre>
+</section>
+</section>
+</section>
+<section id="linearization" class="level2" data-number="57.2">
+<h2 data-number="57.2" class="anchored" data-anchor-id="linearization"><span class="header-section-number">57.2</span> Linearization</h2>
+<p>The tangent plane is the best “linear approximation” to a function at a point. “Linear” refers to mathematical properties of the tangent plane, but at a practical level it means easy to compute, as it will involve only multiplication and addition. “Approximation” is useful in that if a bit of error is an acceptable tradeoff for computational ease, the tangent plane may be used in place of the function. In the univariate case, this is known as linearization, and the tradeoff is widely used in the derivation of theoretical relationships, as well as in practice to get reasonable numeric values.</p>
+<p>Formally, this is saying:</p>
+<p><span class="math display">\[
+f(\vec{x}) \approx f(\vec{a}) + ∇f(\vec{a}) ⋅ (\vec{x} - \vec{a}).
+\]</span></p>
+<p>The explicit meaning of <span class="math inline">\(\approx\)</span> will be made clear when the generalization of Taylor’s theorem is to be stated.</p>
+<section id="example-linear-approximation" class="level5">
+<h5 class="anchored" data-anchor-id="example-linear-approximation">Example: Linear approximation</h5>
+<p>The volume of a cylinder is <span class="math inline">\(V=\pi r^2 h\)</span>. It is thought a cylinder has <span class="math inline">\(r=1\)</span> and <span class="math inline">\(h=2\)</span>. If instead, the amounts are <span class="math inline">\(r=1.01, h=2.01\)</span>, what is the difference in volume?</p>
+<p>That is, if <span class="math inline">\(V(r,h) = \pi r^2 h\)</span>, what is <span class="math inline">\(V(1.01, 2.01) - V(1,2)\)</span>?</p>
+<p>We can use linear approximation to see that this difference is <em>approximately</em> <span class="math inline">\(\nabla{V} \cdot \langle 0.01, 0.01 \rangle\)</span>. This is:</p>
+<pre class="{julia}"><code>V(r, h) = pi * r^2 * h
+V(v) = V(v...)
+a₁ = [1,2]
+dx₁ = [0.01, 0.01]
+ForwardDiff.gradient(V, a₁) ⋅ dx₁   # or use ∇(V)(a)</code></pre>
+<p>The exact difference can be computed:</p>
+<pre class="{julia}"><code>V(a₁ + dx₁) - V(a₁)</code></pre>
+</section>
+<section id="example-2" class="level5">
+<h5 class="anchored" data-anchor-id="example-2">Example</h5>
+<p>Let <span class="math inline">\(f(x,y) = \sin(\pi x y^2)\)</span>. Estimate <span class="math inline">\(f(1.1, 0.9)\)</span>.</p>
+<p>Using linear approximation with <span class="math inline">\(dx=0.1\)</span> and <span class="math inline">\(dy=-0.1\)</span>, this is</p>
+<p><span class="math display">\[
+f(1,1) + \nabla{f}(1,1) \cdot \langle 0.1, -0.1\rangle,
+\]</span></p>
+<p>where <span class="math inline">\(f(1,1) = \sin(\pi) = 0\)</span> and <span class="math inline">\(\nabla{f} = \langle \pi y^2\cos(\pi x y^2), \cos(\pi x y^2) 2\pi x y\rangle = \pi y \cos(\pi x y^2)\langle y,2x\rangle\)</span>. So, the answer is:</p>
+<p><span class="math display">\[
+0 + \pi \cos(\pi) \langle 1,2\rangle\cdot \langle 0.1, -0.1 \rangle =
+(-\pi)(0.1 - 2(0.1)) = 0.1\pi.
+\]</span></p>
+</section>
+<section id="example-3" class="level5">
+<h5 class="anchored" data-anchor-id="example-3">Example</h5>
+<p>A <a href="http://www.math.harvard.edu/~knill/teaching/summer2011/handouts/32-linearization.pdf">piriform</a> is described by the quartic surface <span class="math inline">\(f(x,y,z) = x^4 -x^3 + y^2+z^2 = 0\)</span>. Find the tangent line at the point <span class="math inline">\(\langle 2,2,2 \rangle\)</span>.</p>
+<p>Here, <span class="math inline">\(\nabla{f}\)</span> describes a <em>normal</em> to the tangent plane. The description of a plane may be described by <span class="math inline">\(\hat{N}\cdot(\vec{x} - \vec{x}_0) = 0\)</span>, where <span class="math inline">\(\vec{x}_0\)</span> is identified with a point on the plane (the point <span class="math inline">\((2,2,2)\)</span> here). With this, we have <span class="math inline">\(\hat{N}\cdot\vec{x} = ax + by + cz = \hat{N}\cdot\langle 2,2,2\rangle = 2(a+b+c)\)</span>. For this problem, <span class="math inline">\(\nabla{f}(2,2,2) = \langle a, b, c\rangle\)</span> is given by:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y,z) = x^4 -x^3 + y^2 + z^2
+f(v) = f(v...)
+a, b,c = ∇(f)(2,2,2)
+"$a x + $b y  + $c z = $([a,b,c] ⋅ [2,2,2])"</code></pre>
+</section>
+<section id="newtons-method-to-solve-fxy-0-and-gxy0." class="level3" data-number="57.2.1">
+<h3 data-number="57.2.1" class="anchored" data-anchor-id="newtons-method-to-solve-fxy-0-and-gxy0."><span class="header-section-number">57.2.1</span> Newton’s method to solve <span class="math inline">\(f(x,y) = 0\)</span> and <span class="math inline">\(g(x,y)=0\)</span>.</h3>
+<p>The level curve <span class="math inline">\(f(x,y)=0\)</span> and the level curve <span class="math inline">\(g(x,y)=0\)</span> may intersect. Solving algebraically for the intersection may be difficult in most cases, though the linear case is not. (The linear case being the intersection of two lines).</p>
+<p>To elaborate, consider two linear equations written in a general form:</p>
+<p><span class="math display">\[\begin{align*}
+ax + by &amp;= u\\
+cx + dy &amp;= v
+\end{align*}\]</span></p>
+<p>A method to solve this by hand would be to solve for <span class="math inline">\(y\)</span> from one equation, replace this expression into the second equation and then solve for <span class="math inline">\(x\)</span>. From there, <span class="math inline">\(y\)</span> can be found. A more advanced method expresses the problem in a matrix formulation of the form <span class="math inline">\(Mx=b\)</span> and solves that equation. This form of solving is implemented in <code>Julia</code>, through the “backslash” operator. Here is the general solution:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms a b c d u v
+M = [a b; c d]
+B = [u, v]
+M \ B .|&gt; simplify</code></pre>
+<p>The term <span class="math inline">\(\det(M) = ad-bc\)</span> term is important, as evidenced by its appearance in the denominator of each term. When this is zero there is not a unique solution, as in the typical case.</p>
+<p>Using Newton’s method to solve for intersection points, uses linearization of the surfaces to replace the problem to the intersection of level curves for tangent planes. This is the linear case that can be readily solved. As with Newton’s method for the univariate case, the new answer is generally a better <em>approximation</em> to the answer, and the process is iterated to get a <em>good enough</em> approximation, as defined through some tolerance.</p>
+<p>Consider the functions <span class="math inline">\(f(x,y) =2 - x^2 - y^2\)</span> and <span class="math inline">\(g(x,y) = 3 - 2x^2 - (1/3)y^2\)</span>. These graphs show their surfaces with the level sets for <span class="math inline">\(c=0\)</span> drawn and just the levels sets, showing they intersect in <span class="math inline">\(4\)</span> places.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x,y) = 2 - x^2 - y^2
+g(x,y) = 3 - 2x^2 - (1/3)y^2
+xs = ys = range(-3, stop=3, length=100)
+zfs = [f(x,y) for x in xs, y in ys]
+zgs = [g(x,y) for x in xs, y in ys]
+
+
+ps = Any[]
+pf = surface(xs, ys, f, alpha=0.5, legend=false)
+
+for cl in levels(contours(xs, ys, zfs, [0.0]))
+    for line in lines(cl)
+        _xs, _ys = coordinates(line)
+        plot!(pf, _xs, _ys, 0*_xs, linewidth=3, color=:blue)
+    end
+end
+
+
+pg = surface(xs, ys, g, alpha=0.5, legend=false)
+for cl in levels(contours(xs, ys, zgs, [0.0]))
+    for line in lines(cl)
+        _xs, _ys = coordinates(line)
+        plot!(pg, _xs, _ys, 0*_xs, linewidth=3, color=:red)
+    end
+end
+
+pcnt = plot(legend=false)
+for cl in levels(contours(xs, ys, zfs, [0.0]))
+    for line in lines(cl)
+        _xs, _ys = coordinates(line)
+        plot!(pcnt, _xs, _ys, linewidth=3, color=:blue)
+    end
+end
+
+for cl in levels(contours(xs, ys, zgs, [0.0]))
+    for line in lines(cl)
+        _xs, _ys = coordinates(line)
+        plot!(pcnt, _xs, _ys, linewidth=3, color=:red)
+    end
+end
+
+l = @layout([a b c])
+plot(pf, pg, pcnt, layout=l)</code></pre>
+<p>We look to find the intersection point near <span class="math inline">\((1,1)\)</span> using Newton’s method</p>
+<p>We have by linearization:</p>
+<p><span class="math display">\[\begin{align*}
+f(x,y) &amp;\approx f(x_n, y_n)  + \frac{\partial f}{\partial x}\Delta x + \frac{\partial f}{\partial y}\Delta y \\
+g(x,y) &amp;\approx g(x_n, y_n)  + \frac{\partial g}{\partial x}\Delta x + \frac{\partial g}{\partial y}\Delta y,
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(\Delta x = x- x_n\)</span> and <span class="math inline">\(\Delta y = y-y_n\)</span>. Setting <span class="math inline">\(f(x,y)=0\)</span> and <span class="math inline">\(g(x,y)=0\)</span>, leaves these two linear equations in <span class="math inline">\(\Delta x\)</span> and <span class="math inline">\(\Delta y\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+\frac{\partial f}{\partial x} \Delta x + \frac{\partial f}{\partial y} \Delta y &amp;= -f(x_n, y_n)\\
+\frac{\partial g}{\partial x} \Delta x + \frac{\partial g}{\partial y} \Delta y &amp;= -g(x_n, y_n).
+\end{align*}\]</span></p>
+<p>One step of Newton’s method defines <span class="math inline">\((x_{n+1}, y_{n+1})\)</span> to be the values <span class="math inline">\((x,y)\)</span> that make the linearized functions about <span class="math inline">\((x_n, y_n)\)</span> both equal to <span class="math inline">\(\vec{0}\)</span>.</p>
+<p>As just described, we can use <code>Julia</code>’s <code>\</code> operation to solve the above system of equations, if we express them in matrix form. With this, one step of Newton’s method can be coded as follows:</p>
+<pre class="{julia}"><code>function newton_step(f, g, xn)
+    M = [ForwardDiff.gradient(f, xn)'; ForwardDiff.gradient(g, xn)']
+    b = -[f(xn), g(xn)]
+    Delta = M \ b
+    xn + Delta
+end</code></pre>
+<p>We investigate what happens starting at <span class="math inline">\((1,1)\)</span> after one step:</p>
+<pre class="{julia}"><code>𝒇(x,y) = 2 - x^2 - y^2
+𝒈(x,y) = 3 - 2x^2 - (1/3)y^2
+𝒇(v) = 𝒇(v...); 𝒈(v) = 𝒈(v...)
+𝒙₀ = [1,1]
+𝒙₁ = newton_step(𝒇, 𝒈, 𝒙₀)</code></pre>
+<p>The new function values are</p>
+<pre class="{julia}"><code>𝒇(𝒙₁), 𝒈(𝒙₁)</code></pre>
+<p>We can get better approximations by iterating. Here we hard code <span class="math inline">\(4\)</span> more steps:</p>
+<pre class="{julia}"><code>𝒙₂ = newton_step(𝒇, 𝒈, 𝒙₁)
+𝒙₃ = newton_step(𝒇, 𝒈, 𝒙₂)
+𝒙₄ = newton_step(𝒇, 𝒈, 𝒙₃)
+𝒙₅ = newton_step(𝒇, 𝒈, 𝒙₄)
+𝒙₅, 𝒇(𝒙₅), 𝒈(𝒙₅)</code></pre>
+<p>We see that at the new point, <code>x5</code>, both functions are basically the same value, <span class="math inline">\(0\)</span>, so we have approximated the intersection point.</p>
+<p>For nearby initial guesses and reasonable functions, Newton’s method is <em>quadratic</em>, so should take few steps for convergence, as above.</p>
+<p>Here is a simplistic method to iterate <span class="math inline">\(n\)</span> steps:</p>
+<pre class="{julia}"><code>function nm(f, g, x, n=5)
+    for i in 1:n
+      x = newton_step(f, g, x)
+    end
+    x
+end</code></pre>
+<section id="example-4" class="level5">
+<h5 class="anchored" data-anchor-id="example-4">Example</h5>
+<p>Consider the <a href="https://blogs.scientificamerican.com/roots-of-unity/a-few-of-my-favorite-spaces-the-bicylinder/">bicylinder</a> the intersection of two perpendicular cylinders of the same radius. If the radius is <span class="math inline">\(1\)</span>, we might express these by the functions:</p>
+<p><span class="math display">\[
+f(x,y) = \sqrt{1 - y^2}, \quad g(x,y) = \sqrt{1 - x^2}.
+\]</span></p>
+<p>We see that <span class="math inline">\((1,1)\)</span>, <span class="math inline">\((-1,1)\)</span>, <span class="math inline">\((1,-1)\)</span> and <span class="math inline">\((-1,-1)\)</span> are solutions to <span class="math inline">\(f(x,y)=0\)</span>, <span class="math inline">\(g(x,y)=0\)</span> <em>and</em> <span class="math inline">\((0,0)\)</span> is a solution to <span class="math inline">\(f(x,y)=1\)</span> and <span class="math inline">\(g(x,y)=1\)</span>. What about a level like <span class="math inline">\(1/2\)</span>, say?</p>
+<p>Rather than work with <span class="math inline">\(f(x,y) = c\)</span> we solve <span class="math inline">\(f(x,y)^2 = c^2\)</span>, as that will be avoid issues with the square root not being defined. Here is one way to solve:</p>
+<pre class="{julia}"><code>#| hold: true
+c = 1/2
+f(x,y) = 1 - y^2 - c^2
+g(x,y) = (1 - x^2) - c^2
+f(v) = f(v...); g(v) = g(v...)
+nm(f, g, [1/2, 1/3])</code></pre>
+<p>That <span class="math inline">\(x=y\)</span> is not so surprising, and in fact, this problem can more easily be solved analytically through <span class="math inline">\(x^2 = y^2 = 1 - c^2\)</span>.</p>
+</section>
+</section>
+</section>
+<section id="implicit-differentiation" class="level2" data-number="57.3">
+<h2 data-number="57.3" class="anchored" data-anchor-id="implicit-differentiation"><span class="header-section-number">57.3</span> Implicit differentiation</h2>
+<p>Implicit differentiation of an equation of two variables (say <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>) is performed by <em>assuming</em> <span class="math inline">\(y\)</span> is a function of <span class="math inline">\(x\)</span> and when differentiating an expression with <span class="math inline">\(y\)</span>, use the chain rule. For example, the slope of the tangent line, <span class="math inline">\(dy/dx\)</span>, for the general ellipse <span class="math inline">\(x^2/a + y^2/b = 1\)</span> can be found through this calculation:</p>
+<p><span class="math display">\[
+\frac{d}{dx}(\frac{x^2}{a} + \frac{y^2}{b}) =
+\frac{d}{dx}(1),
+\]</span></p>
+<p>or, using <span class="math inline">\(d/dx(y^2) = 2y dy/dx\)</span>:</p>
+<p><span class="math display">\[
+\frac{2x}{a} + \frac{2y \frac{dy}{dx}}{b} = 0.
+\]</span></p>
+<p>From this, solving for <span class="math inline">\(dy/dx\)</span> is routine, as the equation is linear in that unknown: <span class="math inline">\(dy/dx = -(b/a)(x/y)\)</span></p>
+<p>With more variables, the same technique may be used. Say we have variables <span class="math inline">\(x\)</span>, <span class="math inline">\(y\)</span>, and <span class="math inline">\(z\)</span> in a relation like <span class="math inline">\(F(x,y,z) = 0\)</span>. If we assume <span class="math inline">\(z=z(x,y)\)</span> for some differentiable function (we mention later what conditions will ensure this assumption is valid for some open set), then we can proceed as before, using the chain rule as necessary.</p>
+<p>For example, consider the ellipsoid: <span class="math inline">\(x^2/a + y^2/b + z^2/c = 1\)</span>. What is <span class="math inline">\(\partial z/\partial x\)</span> and <span class="math inline">\(\partial{z}/\partial{y}\)</span>, as needed to describe the tangent plane as above?</p>
+<p>To find <span class="math inline">\(\partial/\partial{x}\)</span> we have:</p>
+<p><span class="math display">\[
+\frac{\partial}{\partial{x}}(x^2/a + y^2/b + z^2/c) =
+\frac{\partial}{\partial{x}}1,
+\]</span></p>
+<p>or</p>
+<p><span class="math display">\[
+\frac{2x}{a} + \frac{0}{b} + \frac{2z\frac{\partial{z}}{\partial{x}}}{c} = 0.
+\]</span></p>
+<p>Again the desired unknown is within a linear equation so can readily be solved:</p>
+<p><span class="math display">\[
+\frac{\partial{z}}{\partial{x}} = -\frac{c}{a} \frac{x}{z}.
+\]</span></p>
+<p>A similar approach can be used for <span class="math inline">\(\partial{z}/\partial{y}\)</span>.</p>
+<section id="example-5" class="level5">
+<h5 class="anchored" data-anchor-id="example-5">Example</h5>
+<p>Let <span class="math inline">\(f(x,y,z) = x^4 -x^3 + y^2 + z^2 = 0\)</span> be a surface with point <span class="math inline">\((2,2,2)\)</span>. Find <span class="math inline">\(\partial{z}/\partial{x}\)</span> and <span class="math inline">\(\partial{z}/\partial{y}\)</span>.</p>
+<p>To find <span class="math inline">\(\partial{z}/\partial{x}\)</span> and <span class="math inline">\(\partial{z}/\partial{y}\)</span> we have:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x, y, Z()
+∂x = solve(diff(x^4 -x^3 + y^2 + Z(x,y)^2, x), diff(Z(x,y),x))
+∂y = solve(diff(x^4 -x^3 + y^2 + Z(x,y)^2, y), diff(Z(x,y),y))
+∂x, ∂y</code></pre>
+</section>
+<section id="example-6" class="level5">
+<h5 class="anchored" data-anchor-id="example-6">Example</h5>
+<p>The <code>find_zero</code> function has been used to solve for <span class="math inline">\(f(x, p) = 0\)</span> where <span class="math inline">\(p\)</span> is a parameter. Mathematically, this equation defines <span class="math inline">\(x^*(p)\)</span> satisfying <span class="math inline">\(f(x^*(p), p)=0,\)</span> that is <span class="math inline">\(x^*\)</span> is implicitly a function of <span class="math inline">\(p\)</span>. What is the derivative (gradient) of <span class="math inline">\(x^*\)</span>?</p>
+<p>Assume for now that <span class="math inline">\(p\)</span> is a scalar quantity, so <span class="math inline">\(f(x,p)\)</span> is a scalar function of two variables. Then we can differentiate in <span class="math inline">\(p\)</span> to see:</p>
+<p><span class="math display">\[
+\frac{d}{dp}f(x^*(p), p) =
+\frac{\partial}{\partial x}f(x^*(p),p) \frac{d}{dp}x^*(p) +
+\frac{\partial}{\partial p}f(x^*(p),p) \frac{d}{dp}p = 0
+\]</span></p>
+<p>As the partial in <span class="math inline">\(x\)</span> of <span class="math inline">\(f\)</span> is a scalar quantity, we can divide to get:</p>
+<p><span class="math display">\[
+\frac{d}{dp}x^*(p) = -\frac{\frac{\partial}{\partial p}f(x^*(p),p)}{\frac{\partial}{\partial x}f(x^*(p),p)}
+\]</span></p>
+<p>For example, consider the equation <span class="math inline">\(f(x, p) = \cos(x) - px\)</span> for <span class="math inline">\(p &gt; 0\)</span>. This will always have a unique solution in <span class="math inline">\((0, \pi/2)\)</span> which can be found, as follows with <span class="math inline">\(p=2\)</span>:</p>
+<pre class="{julia}"><code>f(x, p) = cos(x) - p*x
+p = 2
+xᵅ = find_zero(f, (0, pi/2), p)</code></pre>
+<p>The derivative could be found directly through automatic differentiation by <code>ForwardDiff.derivative</code>, though it takes a bit of an adjustment to our function call to get the types to flow through. Rather than make that adjustment, we use the above to find the derivative for a given <span class="math inline">\(p\)</span>, for example, again with <span class="math inline">\(p=2\)</span>:</p>
+<pre class="{julia}"><code>p = 2
+xᵅ =  find_zero(f, (0, pi/2), p)
+fₓ = ForwardDiff.derivative(x -&gt; f(x,p), xᵅ)
+fₚ = ForwardDiff.derivative(p -&gt; f(xᵅ, p), p)
+- fₚ / fₓ</code></pre>
+<p>The negative sign makes sense: as <span class="math inline">\(p\)</span> gets bigger, the line <span class="math inline">\(y=px\)</span> gets steeper and intersects the cosine graph earlier, hence <span class="math inline">\(x^*\)</span> is decreasing.</p>
+<p>A plot can easily be made by wrapping the above in a function:</p>
+<pre class="{julia}"><code>function find_zero_derivative(f, x₀, p)
+    xᵅ =  find_zero(f, x₀, p)
+    fₓ = ForwardDiff.derivative(x -&gt; f(x,p), xᵅ)
+    fₚ = ForwardDiff.derivative(p -&gt; f(xᵅ, p), p)
+    - fₚ / fₓ
+end
+F(p) = find_zero_derivative(f, (0, pi/2), p)
+plot(F, 0.01, 5)  # p &gt; 0</code></pre>
+<p>This problem does not have a readily expressed value for <span class="math inline">\(x^*\)</span>, but when <span class="math inline">\(p \approx 0\)</span> we should get similar behavior to the intersection of <span class="math inline">\(y=px\)</span> and <span class="math inline">\(y=\pi/2 - x\)</span> for <span class="math inline">\(x^*\)</span>, or <span class="math inline">\(x^* \approx \pi/(2(1+p))\)</span> which has derivative of <span class="math inline">\(-\pi/2\)</span> at <span class="math inline">\(p=0\)</span>, matching the above graph. For <em>large</em> <span class="math inline">\(p\)</span>, the problem looks like the intersection of the line <span class="math inline">\(y=1\)</span> with <span class="math inline">\(y=px\)</span> or <span class="math inline">\(x^* \approx 1/p\)</span> which has derivative that goes to <span class="math inline">\(0\)</span> as <span class="math inline">\(p\)</span> goes to infinity, again matching this graph.</p>
+</section>
+</section>
+<section id="optimization" class="level2" data-number="57.4">
+<h2 data-number="57.4" class="anchored" data-anchor-id="optimization"><span class="header-section-number">57.4</span> Optimization</h2>
+<p>For a continuous univariate function <span class="math inline">\(f:R \rightarrow R\)</span> over an interval <span class="math inline">\(I\)</span> the question of finding a maximum or minimum value is aided by two theorems:</p>
+<ul>
+<li>The Extreme Value Theorem, which states that if <span class="math inline">\(I\)</span> is closed (e.g, <span class="math inline">\(I=[a,b]\)</span>) then <span class="math inline">\(f\)</span> has a maximum (minimum) value <span class="math inline">\(M\)</span> and there is at least one value <span class="math inline">\(c\)</span> with <span class="math inline">\(a \leq c \leq b\)</span> with <span class="math inline">\(M = f(x)\)</span>.</li>
+<li><a href="https://tinyurl.com/nfgz8fz">Fermat</a>’s theorem on critical points, which states that if <span class="math inline">\(f:(a,b) \rightarrow R\)</span> and <span class="math inline">\(x_0\)</span> is such that <span class="math inline">\(a &lt; x_0 &lt; b\)</span> and <span class="math inline">\(f(x_0)\)</span> is a <em>local</em> extremum. If <span class="math inline">\(f\)</span> is differentiable at <span class="math inline">\(x_0\)</span>, then <span class="math inline">\(f'(x_0) = 0\)</span>. That is, local extrema of <span class="math inline">\(f\)</span> happen at points where the derivative does not exist or is <span class="math inline">\(0\)</span> (critical points).</li>
+</ul>
+<p>These two theorems provide an algorithm to find the extreme values of a continuous function over a closed interval: find the critical points, check these and the end points for the maximum and minimum value.</p>
+<p>These checks can be reduced by two theorems that can classify critical points as local extrema, the first and second derivative tests.</p>
+<p>These theorems have generalizations to scalar functions, allowing a similar study of extrema.</p>
+<p>First, we define a <em>local</em> maximum for <span class="math inline">\(f:R^n \rightarrow R\)</span> over a region <span class="math inline">\(U\)</span>: a point <span class="math inline">\(\vec{a}\)</span> in <span class="math inline">\(U\)</span> is a <em>local</em> maximum if <span class="math inline">\(f(\vec{a}) \geq f(\vec{u})\)</span> for all <span class="math inline">\(u\)</span> in some ball about <span class="math inline">\(\vec{a}\)</span>. A <em>local</em> minimum would have <span class="math inline">\(\leq\)</span> instead.</p>
+<p>An <em>absolute</em> maximum over <span class="math inline">\(U\)</span>, should it exist, would be <span class="math inline">\(f(\vec{a})\)</span> if there exists a value <span class="math inline">\(\vec{a}\)</span> in <span class="math inline">\(U\)</span> with the property <span class="math inline">\(f(\vec{a}) \geq f(\vec{u})\)</span> for all <span class="math inline">\(\vec{u}\)</span> in <span class="math inline">\(U\)</span>.</p>
+<p>The difference is the same as the one-dimensional case: local is a statement about nearby points only, absolute a statement about all the points in the specified set.</p>
+<blockquote class="blockquote">
+<p>The <a href="https://tinyurl.com/yyhgxu8y">Extreme Value Theorem</a> Let <span class="math inline">\(f:R^n \rightarrow R\)</span> be continuous and defined on <em>closed</em> set <span class="math inline">\(V\)</span>. Then <span class="math inline">\(f\)</span> has a minimum value <span class="math inline">\(m\)</span> and maximum value <span class="math inline">\(M\)</span> over <span class="math inline">\(V\)</span> and there exists at least two points <span class="math inline">\(\vec{a}\)</span> and <span class="math inline">\(\vec{b}\)</span> with <span class="math inline">\(m = f(\vec{a})\)</span> and <span class="math inline">\(M = f(\vec{b})\)</span>.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><a href="https://tinyurl.com/nfgz8fz">Fermat</a>’s theorem on critical points. Let <span class="math inline">\(f:R^n \rightarrow R\)</span> be a continuous function defined on an <em>open</em> set <span class="math inline">\(U\)</span>. If <span class="math inline">\(x \in U\)</span> is a point where <span class="math inline">\(f\)</span> has a local extrema <em>and</em> <span class="math inline">\(f\)</span> is differentiable, then the gradient of <span class="math inline">\(f\)</span> at <span class="math inline">\(x\)</span> is <span class="math inline">\(\vec{0}\)</span>.</p>
+</blockquote>
+<p>Call a point in the domain of <span class="math inline">\(f\)</span> where the function is differentiable and the gradient is zero a <em>stationary point</em> and a point in the domain where the function is either not differentiable or is a stationary point a <em>critical point</em>. The local extrema can only happen at critical points by Fermat.</p>
+<p>Consider the function <span class="math inline">\(f(x,y) = e^{-(x^2 + y^2)/5} \cos(x^2 + y^2)\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y)= exp(-(x^2 + y^2)/5) * cos(x^2 + y^2)
+xs = ys = range(-4, 4, length=100)
+surface(xs, ys, f, legend=false)</code></pre>
+<p>This function is differentiable and the gradient is given by:</p>
+<p><span class="math display">\[
+\nabla{f} = -2/5e^{-(x^2 + y^2)/5} (5\sin(x^2 + y^2) + \cos(x^2 + y^2)) \langle x, y \rangle.
+\]</span></p>
+<p>This is zero at the origin, or when <span class="math inline">\(5\sin(x^2 + y^2) = -\cos(x^2 + y^2)\)</span>. The latter is <span class="math inline">\(0\)</span> on circles of radius <span class="math inline">\(r\)</span> where <span class="math inline">\(5\sin(r) = -\cos(r)\)</span> or <span class="math inline">\(r = \tan^{-1}(-1/5) + k\pi\)</span> for <span class="math inline">\(k = 1, 2, \dots\)</span>. This matches the graph, where the extrema are on circles by symmetry. Imagine now, picking a value where the function takes a maximum and adding the tangent plane. As the gradient is <span class="math inline">\(\vec{0}\)</span>, this will be flat. The point at the origin will have the surface fall off from the tangent plane in each direction, whereas the other points, will have a circle where the tangent plane rests on the surface, but otherwise will fall off from the tangent plane. Characterizing this “falling off” will help to identify local maxima that are distinct.</p>
+<hr>
+<p>Now consider the differentiable function <span class="math inline">\(f(x,y) = xy\)</span>, graphed below with the projections of the <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> axes:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = x*y
+xs = ys = range(-3, 3, length=100)
+surface(xs, ys, f, legend=false)
+
+plot_parametric!(-4..4, t -&gt; [t, 0, f(t, 0)], linewidth=5)
+plot_parametric!(-4..4, t -&gt; [0, t, f(0, t)], linewidth=5)</code></pre>
+<p>The extrema happen at the edges of the region. The gradient is <span class="math inline">\(\nabla{f} = \langle y, x \rangle\)</span>. This is <span class="math inline">\(\vec{0}\)</span> only at the origin. At the origin, were we to imagine a tangent plane, the surface falls off in one direction but falls <em>above</em> in the other direction. Such a point is referred to as a <em>saddle point</em>. A saddle point for a continuous <span class="math inline">\(f:R^n \rightarrow R\)</span> would be a critical point, <span class="math inline">\(\vec{a}\)</span> where for any ball with non-zero radius about <span class="math inline">\(\vec{a}\)</span>, there are values where the function is greater than <span class="math inline">\(f(\vec{a})\)</span> and values where the function is less.</p>
+<p>To identify these through formulas, and not graphically, we could try and use the first derivative test along all paths through <span class="math inline">\(\vec{a}\)</span>, but this approach is better at showing something isn’t the case, like two paths to show non-continuity.</p>
+<p>The generalization of the <em>second</em> derivative test is more concrete though. Recall, the second derivative test is about the concavity of the function at the critical point. When the concavity can be determined as non-zero, the test is conclusive; when the concavity is zero, the test is not conclusive. Similarly here:</p>
+<blockquote class="blockquote">
+<p>The <a href="https://en.wikipedia.org/wiki/Second_partial_derivative_test">second</a> Partial Derivative Test for <span class="math inline">\(f:R^2 \rightarrow R\)</span>.</p>
+<p>Assume the first and second partial derivatives of <span class="math inline">\(f\)</span> are defined and continuous; <span class="math inline">\(\vec{a}\)</span> be a critical point of <span class="math inline">\(f\)</span>; <span class="math inline">\(H\)</span> is the hessian matrix, <span class="math inline">\([f_{xx}\quad f_{xy};f_{xy}\quad f_{yy}]\)</span>, and <span class="math inline">\(d = \det(H) = f_{xx} f_{yy} - f_{xy}^2\)</span> is the determinant of the Hessian matrix. Then:</p>
+<ul>
+<li>The function <span class="math inline">\(f\)</span> has a local minimum at <span class="math inline">\(\vec{a}\)</span> if <span class="math inline">\(f_{xx} &gt; 0\)</span> <em>and</em> <span class="math inline">\(d&gt;0\)</span>,</li>
+<li>The function <span class="math inline">\(f\)</span> has a local maximum at <span class="math inline">\(\vec{a}\)</span> if <span class="math inline">\(f_{xx} &lt; 0\)</span> <em>and</em> <span class="math inline">\(d&gt;0\)</span>,</li>
+<li>The function <span class="math inline">\(f\)</span> has a saddle point at <span class="math inline">\(\vec{a}\)</span> if <span class="math inline">\(d &lt; 0\)</span>,</li>
+<li>Nothing can be said if <span class="math inline">\(d=0\)</span>.</li>
+</ul>
+</blockquote>
+<hr>
+<p>The intuition behind a proof follows. The case when <span class="math inline">\(f_{xx} &gt; 0\)</span> and <span class="math inline">\(d &gt; 0\)</span> uses a consequence of these assumptions that for any non-zero vector <span class="math inline">\(\vec{x}\)</span> it <em>must</em> be that <span class="math inline">\(x\cdot(Hx) &gt; 0\)</span> (<a href="https://en.wikipedia.org/wiki/Definiteness_of_a_matrix">positive definite</a>) <em>and</em> the quadratic approximation <span class="math inline">\(f(\vec{a}+d\vec{x}) \approx f(\vec{a}) + \nabla{f}(\vec{a}) \cdot d\vec{x} + d\vec{x} \cdot (Hd\vec{x}) = f(\vec{a}) + d\vec{x} \cdot (Hd\vec{x})\)</span>, so for any <span class="math inline">\(d\vec{x}\)</span> small enough, <span class="math inline">\(f(\vec{a}+d\vec{x}) \geq f(\vec{a})\)</span>. That is <span class="math inline">\(f(\vec{a})\)</span> is a local minimum. Similarly, a proof for the local maximum follows by considering <span class="math inline">\(-f\)</span>. Finally, if <span class="math inline">\(d &lt; 0\)</span>, then there are vectors, <span class="math inline">\(d\vec{x}\)</span>, for which <span class="math inline">\(d\vec{x} \cdot (Hd\vec{x})\)</span> will have different signs, and along these vectors the function will be concave up/concave down.</p>
+<p>Apply this to <span class="math inline">\(f(x,y) = xy\)</span> at <span class="math inline">\(\vec{a} = \vec{0}\)</span> we have <span class="math inline">\(f_{xx} = f_{yy} = 0\)</span> and <span class="math inline">\(f_{xy} = 1\)</span>, so the determinant of the Hessian is <span class="math inline">\(-1\)</span>. By the second partial derivative test, this critical point is a saddle point, as seen from a previous graph.</p>
+<p>Applying this to <span class="math inline">\(f(x,y) = e^{-(x^2 + y^2)/5} \cos(x^2 + y^2)\)</span>, we will use <code>SymPy</code> to compute the derivatives, as they get a bit involved:</p>
+<pre class="{julia}"><code>fₖ(x,y) =  exp(-(x^2 + y^2)/5) * cos(x^2 + y^2)
+Hₖ = sympy.hessian(fₖ(x,y), (x,y))</code></pre>
+<p>This is messy, but we only consider it at critical points. The point <span class="math inline">\((0,0)\)</span> is graphically a local maximum. We can see from the Hessian, that the second partial derivative test will give the same characterization:</p>
+<pre class="{julia}"><code>H₀₀ = subs.(Hₖ, x=&gt;0, y=&gt;0)</code></pre>
+<p>Which satisfies:</p>
+<pre class="{julia}"><code>H₀₀[1,1] &lt; 0 &amp;&amp; det(H₀₀) &gt; 0</code></pre>
+<p>Now consider <span class="math inline">\(\vec{a} = \langle \sqrt{2\pi + \tan^{-1}(-1/5)}, 0 \rangle\)</span>, a point on the first visible ring on the graph. The gradient vanishes here:</p>
+<pre class="{julia}"><code>#| hold: true
+gradfₖ = diff.(fₖ(x,y), [x,y])
+a = [sqrt(2PI + atan(-Sym(1)//5)), 0]
+subs.(gradfₖ, x =&gt; a[1], y =&gt; a[2])</code></pre>
+<p>But the test is <em>inconclusive</em>, as the determinant of the Hessian is <span class="math inline">\(0\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+a = [sqrt(PI + atan(-Sym(1)//5)), 0]
+H_a = subs.(Hₖ, x =&gt; a[1], y =&gt; a[2])
+det(H_a)</code></pre>
+<p>(The test is inconclusive, as it needs the function to “fall away” from the tangent plane in all directions, in this case, along a circular curve, the function touches the tangent plane, so it doesn’t fall away.)</p>
+<section id="example-7" class="level5">
+<h5 class="anchored" data-anchor-id="example-7">Example</h5>
+<p>Characterize the critical points of <span class="math inline">\(f(x,y) = 4xy - x^4 - y^4\)</span>.</p>
+<p>The critical points may be found by solving when the gradient is <span class="math inline">\(\vec{0}\)</span>:</p>
+<pre class="{julia}"><code>fⱼ(x,y) = 4x*y - x^4 - y^4
+gradfⱼ = diff.(fⱼ(x,y), [x,y])</code></pre>
+<pre class="{julia}"><code>all_ptsⱼ = solve(gradfⱼ, [x,y])
+ptsⱼ = filter(u -&gt; all(isreal.(u)), all_ptsⱼ)</code></pre>
+<p>There are <span class="math inline">\(3\)</span> real critical points. To classify them we need the sign of <span class="math inline">\(f_{xx}\)</span> and the determinant of the Hessian. We make a simple function to compute these, then apply it to each point using a comprehension:</p>
+<pre class="{julia}"><code>Hⱼ = sympy.hessian(fⱼ(x,y), (x,y))
+function classify(H, pt)
+  Ha = subs.(H, x =&gt; pt[1], y =&gt; pt[2])
+  (det=det(Ha), f_xx=Ha[1,1])
+end
+[classify(Hⱼ, pt) for pt in ptsⱼ]</code></pre>
+<p>We see the first and third points have positive determinant and negative <span class="math inline">\(f_{xx}\)</span>, so are relative maxima, and the second point has negative derivative, so is a saddle point. We graphically confirm this:</p>
+<pre class="{julia}"><code>#| hold: true
+xs = ys = range(-3/2, 3/2, length=100)
+p = surface(xs, ys, fⱼ, legend=false)
+for pt ∈ ptsⱼ
+    scatter!(p, unzip([N.([pt...,fⱼ(pt...)])])...,
+             markercolor=:black, markersize=5)  # add each pt on surface
+end
+p</code></pre>
+</section>
+<section id="example-8" class="level5">
+<h5 class="anchored" data-anchor-id="example-8">Example</h5>
+<p>Consider the function <span class="math inline">\(f(x,y) = x^2 + 3y^2 -x\)</span> over the region <span class="math inline">\(x^2 + y^2 \leq 1\)</span>. This is a continuous function over a closed set, so will have both an absolute maximum and minimum. Find these from an investigation of the critical points and the boundary points.</p>
+<p>The gradient is easily found: <span class="math inline">\(\nabla{f} = \langle 2x - 1, 6y \rangle\)</span>, and is <span class="math inline">\(\vec{0}\)</span> only at <span class="math inline">\(\vec{a} = \langle 1/2, 0 \rangle\)</span>. The Hessian is:</p>
+<p><span class="math display">\[
+H =
+\begin{bmatrix}
+2 &amp; 0\\
+0 &amp; 6
+\end{bmatrix}.
+\]</span></p>
+<p>At <span class="math inline">\(\vec{a}\)</span> this has positive determinant and <span class="math inline">\(f_{xx} &gt; 0\)</span>, so <span class="math inline">\(\vec{a}\)</span> corresponds to a <em>local</em> minimum with values <span class="math inline">\(f(\vec{a}) = (1/2)^2 + 3(0) - 1/2 = -1/4\)</span>. The absolute maximum and minimum may occur here (well, not the maximum) or on the boundary, so that must be considered. In this case we can easily parameterize the boundary and turn this into the univariate case:</p>
+<pre class="{julia}"><code>fₗ(x,y) = x^2 + 2y^2 - x
+fₗ(v) = fₗ(v...)
+gammaₗ(t) = [cos(t), sin(t)]  # traces out x^2 + y^2 = 1 over [0, 2pi]
+gₗ = fₗ ∘ gammaₗ
+
+cpsₗ = find_zeros(gₗ', 0, 2pi) # critical points of g
+append!(cpsₗ, [0, 2pi])
+unique!(cpsₗ)
+gₗ.(cpsₗ)</code></pre>
+<p>We see that maximum value is <code>2.25</code> and that the interior point, <span class="math inline">\(\vec{a}\)</span>, will be where the minimum value occurs. To see exactly where the maximum occurs, we look at the values of gamma:</p>
+<pre class="{julia}"><code>inds = [2,4]
+cpsₗ[inds]</code></pre>
+<p>These are multiples of <span class="math inline">\(\pi\)</span>:</p>
+<pre class="{julia}"><code>cpsₗ[inds]/pi</code></pre>
+<p>So we have the maximum occurs at the angles <span class="math inline">\(2\pi/3\)</span> and <span class="math inline">\(4\pi/3\)</span>. Here we visualize, using a hacky trick of assigning <code>NaN</code> values to the function to avoid plotting outside the circle:</p>
+<pre class="{julia}"><code>hₗ(x,y) = fₗ(x,y) * (x^2 + y^2 &lt;= 1 ? 1 : NaN)</code></pre>
+<pre class="{julia}"><code>#| hold: true
+xs = ys = range(-1,1, length=100)
+surface(xs, ys, hₗ)
+
+ts = cpsₗ  # 2pi/3 and 4pi/3 by above
+xs, ys = cos.(ts), sin.(ts)
+zs = fₗ.(xs, ys)
+scatter3d!(xs, ys, zs)</code></pre>
+<p>A contour plot also shows that some - and only one - extrema happens on the interior:</p>
+<pre class="{julia}"><code>#| hold: true
+xs = ys = range(-1,1, length=100)
+contour(xs, ys, hₗ)</code></pre>
+<p>The extrema are identified by the enclosing regions, in this case the one around the point <span class="math inline">\((1/2, 0)\)</span>.</p>
+</section>
+<section id="example-steiners-problem" class="level5">
+<h5 class="anchored" data-anchor-id="example-steiners-problem">Example: Steiner’s problem</h5>
+<p>This is from <a href="https://ocw.mit.edu/resources/res-18-001-calculus-online-textbook-spring-2005/textbook/MITRES_18_001_strang_13.pdf">Strang</a> p 506.</p>
+<p>We have three points in the plane, <span class="math inline">\((x_1, y_1)\)</span>, <span class="math inline">\((x_2, y_2)\)</span>, and <span class="math inline">\((x_3,y_3)\)</span>. A point <span class="math inline">\(p=(p_x, p_y)\)</span> will have <span class="math inline">\(3\)</span> distances <span class="math inline">\(d_1\)</span>, <span class="math inline">\(d_2\)</span>, and <span class="math inline">\(d_3\)</span>. Broadly speaking we want to minimize to find the point <span class="math inline">\(p\)</span> “nearest” the three fixed points within the triangle. Locating a facility so that it can service <span class="math inline">\(3\)</span> separate cities might be one application. The answer depends on the notion of what measure of distance to use.</p>
+<p>If the measure is the Euclidean distance, then <span class="math inline">\(d_i^2 = (p_x - x_i)^2 + (p_y - y_i)^2\)</span>. If we sought to minimize <span class="math inline">\(d_1^2 + d_2^2 + d_3^2\)</span>, then we would proceed as follows:</p>
+<pre class="{julia}"><code>@syms x1 y1 x2 y2 x3 y3
+d2(p,x) = (p[1] - x[1])^2 + (p[2]-x[2])^2
+d2_1, d2_2, d2_3 = d2((x,y), (x1, y1)), d2((x,y), (x2, y2)), d2((x,y), (x3, y3))
+exₛ = d2_1 + d2_2 + d2_3</code></pre>
+<p>We then find the gradient, and solve for when it is <span class="math inline">\(\vec{0}\)</span>:</p>
+<pre class="{julia}"><code>gradfₛ = diff.(exₛ, [x,y])
+xstarₛ = solve(gradfₛ, [x,y])</code></pre>
+<p>There is only one critical point, so must be a minimum.</p>
+<p>We confirm this by looking at the Hessian and noting <span class="math inline">\(H_{11} &gt; 0\)</span>:</p>
+<pre class="{julia}"><code>Hₛ = subs.(hessian(exₛ, [x,y]), x=&gt;xstarₛ[x], y=&gt;xstarₛ[y])</code></pre>
+<p>As it occurs at <span class="math inline">\((\bar{x}, \bar{y})\)</span> where <span class="math inline">\(\bar{x} = (x_1 + x_2 + x_3)/3\)</span> and <span class="math inline">\(\bar{y} = (y_1+y_2+y_3)/3\)</span> - the averages of the three values - the critical point is an interior point of the triangle.</p>
+<p>As mentioned by Strang, the real problem is to minimize <span class="math inline">\(d_1 + d_2 + d_3\)</span>. A direct approach with <code>SymPy</code> - just replacing <code>d2</code> above with the square root fails. Consider instead the gradient of <span class="math inline">\(d_1\)</span>, say. To avoid square roots, this is taken implicitly from <span class="math inline">\(d_1^2\)</span>:</p>
+<p><span class="math display">\[
+\frac{\partial}{\partial{x}}(d_1^2) = 2 d_1 \frac{\partial{d_1}}{\partial{x}}.
+\]</span></p>
+<p>But computing directly from the expression yields <span class="math inline">\(2(x - x_1)\)</span> Solving, yields:</p>
+<p><span class="math display">\[
+\frac{\partial{d_1}}{\partial{x}} = \frac{(x-x_1)}{d_1}, \quad
+\frac{\partial{d_1}}{\partial{y}} = \frac{(y-y_1)}{d_1}.
+\]</span></p>
+<p>The gradient is then <span class="math inline">\((\vec{p} - \vec{x}_1)/\|\vec{p} - \vec{x}_1\|\)</span>, a <em>unit</em> vector, call it <span class="math inline">\(\hat{u}_1\)</span>. Similarly for <span class="math inline">\(\hat{u}_2\)</span> and <span class="math inline">\(\hat{u}_3\)</span>.</p>
+<p>Let <span class="math inline">\(f = d_1 + d_2 + d_3\)</span>. Then <span class="math inline">\(\nabla{f} = \hat{u}_1 + \hat{u}_2 + \hat{u}_3\)</span>. At the minimum, the gradient is <span class="math inline">\(\vec{0}\)</span>, so the three unit vectors must cancel. This can only happen if the three make a “peace” sign with angles <span class="math inline">\(120^\circ\)</span> between them. To find the minimum then within the triangle, this point and the boundary must be considered, when this point falls outside the triangle.</p>
+<p>Here is a triangle, where the minimum would be within the triangle:</p>
+<pre class="{julia}"><code>usₛ = [[cos(t), sin(t)] for t in (0, 2pi/3, 4pi/3)]
+polygon(ps) = unzip(vcat(ps, ps[1:1])) # easier way to plot a polygon
+
+pₛ = scatter([0],[0], markersize=2, legend=false, aspect_ratio=:equal)
+
+asₛ = (1,2,3)
+plot!(polygon([a*u for (a,u) in zip(asₛ, usₛ)])...)
+[arrow!([0,0], a*u, alpha=0.5) for (a,u) in zip(asₛ, usₛ)]
+pₛ</code></pre>
+<p>For this triangle we find the Steiner point outside of the triangle.</p>
+<pre class="{julia}"><code>asₛ₁ = (1, -1, 3)
+scatter([0],[0], markersize=2, legend=false)
+psₛₗ = [a*u for (a,u) in zip(asₛ₁, usₛ)]
+plot!(polygon(psₛₗ)...)</code></pre>
+<p>Let’s see where the minimum distance point is by constructing a plot. The minimum must be on the boundary, as the only point where the gradient vanishes is the origin, not in the triangle. The plot of the triangle has a contour plot of the distance function, so we see clearly that the minimum happens at the point <code>[0.5, -0.866025]</code>. On this plot, we drew the gradient at some points along the boundary. The gradient points in the direction of greatest increase - away from the minimum. That the gradient vectors have a non-zero projection onto the edges of the triangle in a direction pointing away from the point indicates that the function <code>d</code> would increase if moved along the boundary in that direction, as indeed it does.</p>
+<pre class="{julia}"><code>euclid_dist(x; ps=psₛₗ) = sum(norm(x-p) for p in ps)
+euclid_dist(x,y; ps=psₛₗ) = euclid_dist([x,y]; ps=ps)</code></pre>
+<pre class="{julia}"><code>#| hold: true
+xs = range(-1.5, 1.5, length=100)
+ys = range(-3, 1.0, length=100)
+
+p = plot(polygon(psₛₗ)..., linewidth=3, legend=false)
+scatter!(p, unzip(psₛₗ)..., markersize=3)
+contour!(p, xs, ys, euclid_dist)
+
+# add some gradients along boundary
+li(t, p1, p2) = p1 + t*(p2-p1)  # t in [0,1]
+for t in range(1/100, 1/2, length=3)
+    pt = li(t, psₛₗ[2], psₛₗ[3])
+    arrow!(pt, ForwardDiff.gradient(euclid_dist, pt))
+    pt = li(t, psₛₗ[2], psₛₗ[1])
+    arrow!(pt, ForwardDiff.gradient(euclid_dist, pt))
+end
+
+p</code></pre>
+<p>The following graph, shows distance along each edge:</p>
+<pre class="{julia}"><code>#| hold :  true
+li(t, p1, p2) = p1 + t*(p2-p1)
+p = plot(legend=false)
+for i in 1:2, j in (i+1):3
+  plot!(p, t -&gt; euclid_dist(li(t, psₛₗ[i], psₛₗ[j]); ps=psₛₗ), 0, 1)
+end
+p</code></pre>
+<p>The smallest value is when <span class="math inline">\(t=0\)</span> or <span class="math inline">\(t=1\)</span>, so at one of the points, as <code>li</code> is defined above.</p>
+</section>
+<section id="example-least-squares" class="level5">
+<h5 class="anchored" data-anchor-id="example-least-squares">Example: least squares</h5>
+<p>We know that two points determine a line. What happens when there are more than two points? This is common in statistics where a bivariate data set (pairs of points <span class="math inline">\((x,y)\)</span>) are summarized through a linear model <span class="math inline">\(\mu_{y|x} = \alpha + \beta x\)</span>, That is the average value for <span class="math inline">\(y\)</span> given a particular <span class="math inline">\(x\)</span> value is given through the equation of a line. The data is used to identify what the slope and intercept are for this line. We consider a simple case - <span class="math inline">\(3\)</span> points. The case of <span class="math inline">\(n \geq 3\)</span> being similar.</p>
+<p>We have a line <span class="math inline">\(l(x) = \alpha + \beta(x)\)</span> and three points <span class="math inline">\((x_1, y_1)\)</span>, <span class="math inline">\((x_2, y_2)\)</span>, and <span class="math inline">\((x_3, y_3)\)</span>. Unless these three points <em>happen</em> to be collinear, they can’t possibly all lie on the same line. So to <em>approximate</em> a relationship by a line requires some inexactness. One measure of inexactness is the <em>vertical</em> distance to the line:</p>
+<p><span class="math display">\[
+d1(\alpha, \beta) = |y_1 - l(x_1)| + |y_2 - l(x_2)| + |y_3 - l(x_3)|.
+\]</span></p>
+<p>Another might be the vertical squared distance to the line:</p>
+<p><span class="math display">\[\begin{align*}
+d2(\alpha, \beta) &amp;= (y_1 - l(x_1))^2 + (y_2 - l(x_2))^2 + (y_3 - l(x_3))^2 \\
+&amp;= (y1 - (\alpha + \beta x_1))^2 + (y2 - (\alpha + \beta x_2))^2 + (y3 - (\alpha + \beta x_3))^2
+\end{align*}\]</span></p>
+<p>Another might be the <em>shortest</em> distance to the line:</p>
+<p><span class="math display">\[
+d3(\alpha, \beta) = \frac{\beta x_1 - y_1 + \alpha}{\sqrt{1 + \beta^2}} + \frac{\beta x_2 - y_2 + \alpha}{\sqrt{1 + \beta^2}} + \frac{\beta x_3 - y_3 + \alpha}{\sqrt{1 + \beta^2}}.
+\]</span></p>
+<p>The method of least squares minimizes the second one of these. That is, it chooses <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> that make the expression a minimum.</p>
+<pre class="{julia}"><code>@syms xₗₛ[1:3] yₗₛ[1:3] α β
+li(x, alpha, beta) =  alpha + beta * x
+d₂(alpha, beta) = sum((y - li(x, alpha, beta))^2 for (y,x) in zip(yₗₛ, xₗₛ))
+d₂(α, β)</code></pre>
+<p>To identify <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> we find the gradient:</p>
+<pre class="{julia}"><code>grad_d₂ = diff.(d₂(α, β), [α, β])</code></pre>
+<pre class="{julia}"><code>outₗₛ = solve(grad_d₂, [α, β])</code></pre>
+<p>As found, the formulas aren’t pretty. If <span class="math inline">\(x_1 + x_2 + x_3 = 0\)</span> they simplify. For example:</p>
+<pre class="{julia}"><code>subs(outₗₛ[β], sum(xₗₛ) =&gt; 0)</code></pre>
+<p>Let <span class="math inline">\(\vec{x} = \langle x_1, x_2, x_3 \rangle\)</span> and <span class="math inline">\(\vec{y} = \langle y_1, y_2, y_3 \rangle\)</span> this is simply <span class="math inline">\((\vec{x} \cdot \vec{y})/(\vec{x}\cdot \vec{x})\)</span>, a formula that will generalize to <span class="math inline">\(n &gt; 3\)</span>. The assumption is not a restriction - it comes about by subtracting the mean, <span class="math inline">\(\bar{x} = (x_1 + x_2 + x_3)/3\)</span>, from each <span class="math inline">\(x\)</span> term (and similarly subtract <span class="math inline">\(\bar{y}\)</span> from each <span class="math inline">\(y\)</span> term). A process called “centering.”</p>
+<p>With this observation, the formulas can be re-expressed through:</p>
+<p><span class="math display">\[
+\beta = \frac{\sum{(x_i - \bar{x})(y_i - \bar{y})}}{\sum(x_i-\bar{x})^2},
+\quad
+\alpha = \bar{y} - \beta \bar{x}.
+\]</span></p>
+<p>Relative to the centered values, this may be viewed as a line through <span class="math inline">\((\bar{x}, \bar{y})\)</span> with slope given by <span class="math inline">\((\vec{x}-\bar{x})\cdot(\vec{y}-\bar{y}) / \|\vec{x}-\bar{x}\|^2\)</span>.</p>
+<p>As an example, if the point are <span class="math inline">\((1,1), (2,3), (5,8)\)</span> we get:</p>
+<pre class="{julia}"><code>[k =&gt; subs(v, xₗₛ[1]=&gt;1, yₗₛ[1]=&gt;1, xₗₛ[2]=&gt;2, yₗₛ[2]=&gt;3,
+           xₗₛ[3]=&gt;5, yₗₛ[3]=&gt;8) for (k,v) in outₗₛ]</code></pre>
+</section>
+<section id="gradient-descent" class="level3" data-number="57.4.1">
+<h3 data-number="57.4.1" class="anchored" data-anchor-id="gradient-descent"><span class="header-section-number">57.4.1</span> Gradient descent</h3>
+<p>As seen in the examples above, extrema may be identified analytically by solving for when the gradient is <span class="math inline">\(0\)</span>. Here we discuss some numeric algorithms for finding extrema.</p>
+<p>An algorithm to identify where a surface is at its minimum is <a href="https://en.wikipedia.org/wiki/Gradient_descent">gradient descent</a>. The gradient points in the direction of the steepest ascent of the surface and the negative gradient the direction of the steepest descent. To move to a minimum then, it make intuitive sense to move in the direction of the negative gradient. How far? That is a different question and one with different answers. Let’s formulate the movement first, then discuss how far.</p>
+<p>Let <span class="math inline">\(\vec{x}_0\)</span>, <span class="math inline">\(\vec{x}_1\)</span>, <span class="math inline">\(\dots\)</span>, <span class="math inline">\(\vec{x}_n\)</span> be the position of the algorithm for <span class="math inline">\(n\)</span> steps starting from an initial point <span class="math inline">\(\vec{x}_0\)</span>. The difference between these points is given by:</p>
+<p><span class="math display">\[
+\vec{x}_{n+1} = \vec{x}_n - \gamma \nabla{f}(\vec{x}_n),
+\]</span></p>
+<p>where <span class="math inline">\(\gamma\)</span> is some scaling factor for the gradient. The above quantifies the idea: to go from <span class="math inline">\(\vec{x}_n\)</span> to <span class="math inline">\(\vec{x}_{n+1}\)</span>, move along <span class="math inline">\(-\nabla{f}\)</span> by a certain amount.</p>
+<p>Let <span class="math inline">\(\Delta_x =\vec{x}_{n}- \vec{x}_{n-1}\)</span> and <span class="math inline">\(\Delta_y =  \nabla{f}(\vec{x}_{n}) -  \nabla{f}(\vec{x}_{n-1})\)</span> A variant of the Barzilai-Borwein method is to take <span class="math inline">\(\gamma_n = | \Delta_x \cdot \Delta_y / \Delta_y \cdot \Delta_y |\)</span>.</p>
+<p>To illustrate, take <span class="math inline">\(f(x,y) = - e^{-((x-1)^2 + 2(y-1/2)^2)}\)</span> and a starting point <span class="math inline">\(\langle 0, 0 \rangle\)</span>. We have, starting with <span class="math inline">\(\gamma_0 = 1\)</span> there are <span class="math inline">\(5\)</span> steps taken:</p>
+<pre class="{julia}"><code>f₂(x,y) = -exp(-((x-1)^2 + 2(y-1/2)^2))
+f₂(x) = f₂(x...)
+
+xs₂ = [[0.0, 0.0]] # we store a vector
+gammas₂ = [1.0]
+
+for n in 1:5
+    xn = xs₂[end]
+    gamma₀ = gammas₂[end]
+    xn1 = xn - gamma₀ * gradient(f₂)(xn)
+    dx, dy = xn1 - xn, gradient(f₂)(xn1) - gradient(f₂)(xn)
+    gamman1 = abs( (dx ⋅ dy) / (dy ⋅ dy) )
+
+    push!(xs₂, xn1)
+    push!(gammas₂, gamman1)
+end
+
+[(x, f₂(x)) for x in xs₂]</code></pre>
+<p>We now visualize, using the <code>Contour</code> package to draw the contour lines in the <span class="math inline">\(x-y\)</span> plane:</p>
+<pre class="{julia}"><code>#| hold: true
+function surface_contour(xs, ys, f; offset=0)
+  p = surface(xs, ys, f, legend=false, fillalpha=0.5)
+
+  ## we add to the graphic p, then plot
+  zs = [f(x,y) for x in xs, y in ys]  # reverse order for use with Contour package
+  for cl in levels(contours(xs, ys, zs))
+    lvl = level(cl) # the z-value of this contour level
+    for line in lines(cl)
+        _xs, _ys = coordinates(line) # coordinates of this line segment
+        _zs = offset * _xs
+        plot!(p, _xs, _ys, _zs, alpha=0.5)        # add curve on x-y plane
+    end
+  end
+  p
+end
+
+
+offset = 0
+us = vs = range(-1, 2, length=100)
+surface_contour(us, vs, f₂, offset=offset)
+pts = [[pt..., offset] for pt in xs₂]
+scatter3d!(unzip(pts)...)
+plot!(unzip(pts)..., linewidth=3)</code></pre>
+</section>
+<section id="newtons-method-for-minimization" class="level3" data-number="57.4.2">
+<h3 data-number="57.4.2" class="anchored" data-anchor-id="newtons-method-for-minimization"><span class="header-section-number">57.4.2</span> Newton’s method for minimization</h3>
+<p>A variant of Newton’s method can be used to minimize a function <span class="math inline">\(f:R^2 \rightarrow R\)</span>. We look for points where both partial derivatives of <span class="math inline">\(f\)</span> vanish. Let <span class="math inline">\(g(x,y) = \partial f/\partial x(x,y)\)</span> and <span class="math inline">\(h(x,y) = \partial f/\partial y(x,y)\)</span>. Then applying Newton’s method, as above to solve simultaneously for when <span class="math inline">\(g=0\)</span> and <span class="math inline">\(h=0\)</span>, we considered this matrix:</p>
+<p><span class="math display">\[
+M = [\nabla{g}'; \nabla{h}'],
+\]</span></p>
+<p>and had a step expressible in terms of the inverse of <span class="math inline">\(M\)</span> as <span class="math inline">\(M^{-1} [g; h]\)</span>. In terms of the function <span class="math inline">\(f\)</span>, this step is <span class="math inline">\(H^{-1}\nabla{f}\)</span>, where <span class="math inline">\(H\)</span> is the Hessian matrix. <a href="https://en.wikipedia.org/wiki/Newton%27s_method_in_optimization#Higher_dimensions">Newton</a>’s method then becomes:</p>
+<p><span class="math display">\[
+\vec{x}_{n+1} = \vec{x}_n - [H_f(\vec{x}_n)]^{-1} \nabla(f)(\vec{x}_n).
+\]</span></p>
+<p>The Wikipedia page states where applicable, Newton’s method converges much faster towards a local maximum or minimum than gradient descent.</p>
+<p>We apply it to the task of characterizing the following function, which has a few different peaks over the region <span class="math inline">\([-3,3] \times [-2,2]\)</span>:</p>
+<pre class="{julia}"><code>function peaks(x, y)
+    z = 3 * (1 - x)^2 * exp(-x^2 - (y + 1)^2)
+    z += -10 * (x / 5 - x^3 - y^5) * exp(-x^2 - y^2)
+    z += -1/3 * exp(-(x+1)^2 - y^2)
+    return z
+end
+peaks(v) = peaks(v...)</code></pre>
+<pre class="{julia}"><code>#| hold: true
+xs = range(-3, stop=3, length=100)
+ys = range(-2, stop=2, length=100)
+Ps = surface(xs, ys, peaks, legend=false)
+Pc = contour(xs, ys, peaks, legend=false)
+plot(Ps, Pc, layout=2) # combine plots</code></pre>
+<p>As we will solve for the critical points numerically, we consider the contour plot as well, as it shows better where the critical points are.</p>
+<p>Over this region we see clearly 5 peaks or valleys: near <span class="math inline">\((0, 1.5)\)</span>, near <span class="math inline">\((1.2, 0)\)</span>, near <span class="math inline">\((0.2, -1.8)\)</span>, near <span class="math inline">\((-0.5, -0.8)\)</span>, and near <span class="math inline">\((-1.2, 0.2)\)</span>. To classify the <span class="math inline">\(5\)</span> critical points we need to first identify them, then compute the Hessian, and then, possibly compute <span class="math inline">\(f_{xx}\)</span> at the point. Here we do so for one of them using a numeric approach.</p>
+<p>For concreteness, consider the peak or valley near <span class="math inline">\((0,1.5)\)</span>. We use Newton’s method to numerically compute the critical point. The Newton step, specialized here is:</p>
+<pre class="{julia}"><code>function newton_stepₚ(f, x)
+  M = ForwardDiff.hessian(f, x)
+  b = ForwardDiff.gradient(f, x)
+  x - M \ b
+end</code></pre>
+<p>We perform <span class="math inline">\(3\)</span> steps of Newton’s method, and see that it has found a critical point.</p>
+<pre class="{julia}"><code>xₚ = [0, 1.5]
+xₚ = newton_stepₚ(peaks, xₚ)
+xₚ = newton_stepₚ(peaks, xₚ)
+xₚ = newton_stepₚ(peaks, xₚ)
+xₚ, ForwardDiff.gradient(peaks, xₚ)</code></pre>
+<p>The Hessian at this point is given by:</p>
+<pre class="{julia}"><code>Hₚ = ForwardDiff.hessian(peaks, xₚ)</code></pre>
+<p>From which we see:</p>
+<pre class="{julia}"><code>#| hold: true
+fxx = Hₚ[1,1]
+d = det(Hₚ)
+fxx, d</code></pre>
+<p>Consequently we have a local maximum at this critical point.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+<p>The <code>Optim.jl</code> package provides efficient implementations of these two numeric methods, and others.</p>
+</section>
+</section>
+<section id="constrained-optimization-lagrange-multipliers" class="level2" data-number="57.5">
+<h2 data-number="57.5" class="anchored" data-anchor-id="constrained-optimization-lagrange-multipliers"><span class="header-section-number">57.5</span> Constrained optimization, Lagrange multipliers</h2>
+<p>We considered the problem of maximizing a function over a closed region. This maximum is achieved at a critical point <em>or</em> a boundary point. Investigating the critical points isn’t so difficult and the second partial derivative test can help characterize the points along the way, but characterizing the boundary points usually involves parameterizing the boundary, which is not always so easy. However, if we put this problem into a more general setting a different technique becomes available.</p>
+<p>The different setting is: maximize <span class="math inline">\(f(x,y)\)</span> subject to the constraint <span class="math inline">\(g(x,y) = k\)</span>. The constraint can be used to describe the boundary used previously.</p>
+<p>Why does this help? The key is something we have seen prior: If <span class="math inline">\(g\)</span> is differentiable, and we take <span class="math inline">\(\nabla{g}\)</span>, then it will point at directions <em>orthogonal</em> to the level curve <span class="math inline">\(g(x,y) = 0\)</span>. (Parameterize the curve, then <span class="math inline">\((g\circ\vec{r})(t) = 0\)</span> and so the chain rule has <span class="math inline">\(\nabla{g}(\vec{r}(t)) \cdot \vec{r}'(t) = 0\)</span>.) For example, consider the function <span class="math inline">\(g(x,y) = x^2 +2y^2 - 1\)</span>. The level curve <span class="math inline">\(g(x,y) = 0\)</span> is an ellipse. Here we plot the level curve, along with a few gradient vectors at points satisfying <span class="math inline">\(g(x,y) = 0\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+g(x,y) = x^2 + 2y^2 -1
+g(v) = g(v...)
+
+xs = range(-3, 3, length=100)
+ys = range(-1, 4, length=100)
+
+p = plot(aspect_ratio=:equal, legend=false)
+contour!(xs, ys, g, levels=[0])
+
+gi(x) = sqrt(1/2*(1-x^2)) # solve for y in terms of x
+pts = [[x, gi(x)] for x in (-3/4, -1/4, 1/4, 3/4)]
+
+for pt in pts
+  arrow!(pt, ForwardDiff.gradient(g, pt) )
+end
+
+p</code></pre>
+<p>From the plot we see the key property that <span class="math inline">\(\nabla g\)</span> is orthogonal to the level curve.</p>
+<p>Now consider <span class="math inline">\(f(x,y)\)</span>, a function we wish to maximize. The gradient points in the direction of <em>greatest</em> increase, provided <span class="math inline">\(f\)</span> is smooth. We are interested in the value of this gradient along the level curve of <span class="math inline">\(g\)</span>. Consider this figure representing a portion of the level curve, it’s tangent, normal, the gradient of <span class="math inline">\(f\)</span>, and the contours of <span class="math inline">\(f\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+r(t) = [cos(t), sin(t)/2]
+plot_parametric(pi/12..pi/3, r, legend=false, aspect_ratio=true, linewidth=3)
+T(t) = -r'(t) / norm(r'(t))
+No(t) = T'(t) / norm(T'(t))
+t = pi/4
+lambda=1/10
+scatter!(unzip([r(t)])...)
+arrow!(r(t), T(t)*lambda)
+arrow!(r(t), No(t)* lambda)
+
+f(x,y)= x^2 + y^2
+f(v) = f(v...)
+arrow!(r(t), lambda*ForwardDiff.gradient(f, r(t)))
+
+xs = range(0.5,1, length=100)
+ys = range(0.1, 0.5, length=100)
+contour!(xs, ys, f)</code></pre>
+<p>We can identify the tangent, the normal, and subsequently the gradient of <span class="math inline">\(f\)</span>. Is the point drawn a maximum of <span class="math inline">\(f\)</span> subject to the constraint <span class="math inline">\(g\)</span>?</p>
+<p>The answer is no, but why? By adding the contours of <span class="math inline">\(f\)</span>, we see that moving along the curve from this point will increase or decrease <span class="math inline">\(f\)</span>, depending on which direction we move in. As the <em>gradient</em> is the direction of greatest increase, we can see that the <em>projection</em> of the gradient on the tangent will point in a direction of <em>increase</em>.</p>
+<p>It isn’t just because the point picked was chosen to make a pretty picture, and not be a maximum. Rather, the fact that <span class="math inline">\(\nabla{f}\)</span> has a non-trivial projection onto the tangent vector. What does it say if we move the point in the direction of this projection?</p>
+<p>The gradient points in the direction of greatest increase. If we first move in one component of the gradient we will increase, just not as fast. This is because the directional derivative in the direction of the tangent will be non-zero. In the picture, if we were to move the point to the right along the curve <span class="math inline">\(f(x,y)\)</span> will increase.</p>
+<p>Now consider this figure at a different point of the figure:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+r(t) = [cos(t), sin(t)/2]
+plot_parametric(-pi/6..pi/6,r, legend=false, aspect_ratio=true, linewidth=3)
+T(t) = -r'(t) / norm(r'(t))
+No(t) = T'(t) / norm(T'(t))
+t = 0
+lambda=1/10
+scatter!(unzip([r(t)])...)
+arrow!(r(t), T(t)*lambda)
+arrow!(r(t), No(t)* lambda)
+
+f(x,y)= x^2 + y^2
+f(v) = f(v...)
+arrow!(r(t), lambda*ForwardDiff.gradient(f, r(t)))
+
+xs = range(0.5,1.5, length=100)
+ys = range(-0.5, 0.5, length=100)
+contour!(xs, ys, f,  levels = [.7, .85, 1, 1.15, 1.3])</code></pre>
+<p>We can still identify the tangent and normal directions. What is different about this point is that local movement on the constraint curve is also local movement on the contour line of <span class="math inline">\(f\)</span>, so <span class="math inline">\(f\)</span> doesn’t increase or decrease here, as it would if this point were an extrema along the constraint. The key to seeing this is the contour lines of <span class="math inline">\(f\)</span> are <em>tangent</em> to the constraint. The respective gradients are <em>orthogonal</em> to their tangent lines, and in dimension <span class="math inline">\(2\)</span>, this implies they are parallel to each other.</p>
+<blockquote class="blockquote">
+<p><em>The method of Lagrange multipliers</em>: To optimize <span class="math inline">\(f(x,y)\)</span> subject to a constraint <span class="math inline">\(g(x,y) = k\)</span> we solve for all <em>simultaneous</em> solutions to</p>
+<p><span class="math display">\[\begin{align*}
+\nabla{f}(x,y) &amp;= \lambda \nabla{g}(x,y), \text{and}\\
+g(x,y) &amp;= k.
+\end{align*}\]</span></p>
+<p>These <em>possible</em> points are evaluated to see if they are maxima or minima.</p>
+</blockquote>
+<p>The method will not work if <span class="math inline">\(\nabla{g} = \vec{0}\)</span> or if <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> are not differentiable.</p>
+<hr>
+<section id="example-9" class="level5">
+<h5 class="anchored" data-anchor-id="example-9">Example</h5>
+<p>We consider <a href="&quot;../derivatives/optimization.html&quot;">again</a> the problem of maximizing all rectangles subject to the perimeter being <span class="math inline">\(20\)</span>. We have seen this results in a square. This time we use the Lagrange multiplier technique. We have two equations:</p>
+<p><span class="math display">\[
+A(x,y) = xy, \quad P(x,y) = 2x + 2y = 20.
+\]</span></p>
+<p>We see <span class="math inline">\(\nabla{A} = \lambda \nabla{P}\)</span>, or <span class="math inline">\(\langle y, x \rangle = \lambda \langle 2, 2\rangle\)</span>. We see the solution has <span class="math inline">\(x = y\)</span> and from the constraint <span class="math inline">\(x=y = 5\)</span>.</p>
+<p>This is clearly the maximum for this problem, though the Lagrange technique does not imply that, it only identifies possible extrema.</p>
+</section>
+<section id="example-10" class="level5">
+<h5 class="anchored" data-anchor-id="example-10">Example</h5>
+<p>We can reverse the question: what are the ranges for the perimeter when the area is a fixed value of <span class="math inline">\(25\)</span>? We have:</p>
+<p><span class="math display">\[
+P(x,y) = 2x + 2y, \quad A(x,y) = xy = 25.
+\]</span></p>
+<p>Now we look for <span class="math inline">\(\nabla{P} = \lambda \nabla{A}\)</span> and will get, as the last example, that <span class="math inline">\(\langle 2, 2 \rangle = \lambda \langle y, x\rangle\)</span>. So <span class="math inline">\(x=y\)</span> and from the constraint <span class="math inline">\(x=y=5\)</span>.</p>
+<p>However this is <em>not</em> the maximum perimeter, but rather the minimal perimeter. The maximum is <span class="math inline">\(\infty\)</span>, which comes about in the limit by considering long skinny rectangles.</p>
+</section>
+<section id="example-a-rephrasing" class="level5">
+<h5 class="anchored" data-anchor-id="example-a-rephrasing">Example: A rephrasing</h5>
+<p>An slightly different formulation of the Lagrange method is to combine the equation and the constraint into one equation:</p>
+<p><span class="math display">\[
+L(x,y,\lambda) = f(x,y) - \lambda (g(x,y)  -  k).
+\]</span></p>
+<p>The we have</p>
+<p><span class="math display">\[\begin{align*}
+\frac{\partial L}{\partial{x}} &amp;= \frac{\partial{f}}{\partial{x}} - \lambda \frac{\partial{g}}{\partial{x}}\\
+\frac{\partial L}{\partial{y}} &amp;= \frac{\partial{f}}{\partial{y}} - \lambda \frac{\partial{g}}{\partial{y}}\\
+\frac{\partial L}{\partial{\lambda}} &amp;= 0 + (g(x,y)  -  k).
+\end{align*}\]</span></p>
+<p>But if the Lagrange condition holds, each term is <span class="math inline">\(0\)</span>, so Lagrange’s method can be seen as solving for point <span class="math inline">\(\nabla{L} = \vec{0}\)</span>. The optimization problem in two variables with a constraint becomes a problem of finding and classifying zeros of a function with <em>three</em> variables.</p>
+<p>Apply this to the optimization problem:</p>
+<p>Find the extrema of <span class="math inline">\(f(x,y) = x^2 - y^2\)</span> subject to the constraint <span class="math inline">\(g(x,y) = x^2 + y^2 = 1\)</span>.</p>
+<p>We have:</p>
+<p><span class="math display">\[
+L(x, y, \lambda) = f(x,y) - \lambda(g(x,y) - 1)
+\]</span></p>
+<p>We can solve for <span class="math inline">\(\nabla{L} = \vec{0}\)</span> by hand, but we do so symbolically:</p>
+<pre class="{julia}"><code>@syms lambda
+fₗₐ(x, y) = x^2 - y^2
+gₗₐ(x, y) = x^2 + y^2
+Lₗₐ(x, y, lambda) = fₗₐ(x,y) - lambda * (gₗₐ(x,y) - 1)
+dsₗₐ = solve(diff.(Lₗₐ(x, y, lambda), [x, y, lambda]))</code></pre>
+<p>This has <span class="math inline">\(4\)</span> easy solutions, here are the values at each point:</p>
+<pre class="{julia}"><code>[fₗₐ(d[x], d[y]) for d in dsₗₐ]</code></pre>
+<p>So <span class="math inline">\(1\)</span> is a maximum value and <span class="math inline">\(-1\)</span> a minimum value.</p>
+</section>
+<section id="example-didos-problem" class="level5">
+<h5 class="anchored" data-anchor-id="example-didos-problem">Example: Dido’s problem</h5>
+<p>Consider a slightly different problem: What shape should a rope (curve) of fixed length make to <em>maximize</em> the area between the rope and <span class="math inline">\(x\)</span> axis?</p>
+<p>Let <span class="math inline">\(L\)</span> be the length of the rope and suppose <span class="math inline">\(y(x)\)</span> describes the curve. Then we wish to</p>
+<p><span class="math display">\[
+\text{Maximize } \int y(x) dx, \quad\text{subject to }
+\int \sqrt{1 + y'(x)^2} dx = L.
+\]</span></p>
+<p>The latter being the formula for arc length. This is very much like a optimization problem that Lagrange’s method could help solve, but with one big difference: the answer is <em>not</em> a point but a <em>function</em>.</p>
+<p>This is a variant of <a href="http://www.ams.org/publications/journals/notices/201709/rnoti-p980.pdf">Dido</a>’s problem, described by Bandle as</p>
+<blockquote class="blockquote">
+<p><em>Dido’s problem</em>: The Roman poet Publius Vergilius Maro (70–19 B.C.) tells in his epic Aeneid the story of queen Dido, the daughter of the Phoenician king of the 9th century B.C. After the assassination of her husband by her brother she fled to a haven near Tunis. There she asked the local leader, Yarb, for as much land as could be enclosed by the hide of a bull. Since the deal seemed very modest, he agreed. Dido cut the hide into narrow strips, tied them together and encircled a large tract of land which became the city of Carthage. Dido faced the following mathematical problem, which is also known as the isoperimetric problem: Find among all curves of given length the one which encloses maximal area. Dido found intuitively the right answer.</p>
+</blockquote>
+<p>The problem as stated above and method of solution follows notes by <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.368.1522&amp;rep=rep1&amp;type=pdf">Wang</a> though Bandle attributes the ideas back to a 19-year old Lagrange in a letter to Euler.</p>
+<p>The method of solution will be to <em>assume</em> we have the function and then characterize this function in such a way that it can be identified.</p>
+<p>Following Lagrange, we generalize the problem to the following: maximize <span class="math inline">\(\int_{x_0}^{x_1} f(x, y(x), y'(x)) dx\)</span> subject to a constraint <span class="math inline">\(\int_{x_0}^{x_1} g(x,y(x), y'(x)) dx = K\)</span>. Suppose <span class="math inline">\(y(x)\)</span> is a solution.</p>
+<p>The starting point is a <em>perturbation</em>: <span class="math inline">\(\hat{y}(x) = y(x) + \epsilon_1 \eta_1(x) + \epsilon_2 \eta_2(x)\)</span>. There are two perturbation terms, were only one term added, then the perturbation may make <span class="math inline">\(\hat{y}\)</span> not satisfy the constraint, the second term is used to ensure the constraint is not violated. If <span class="math inline">\(\hat{y}\)</span> is to be a possible solution to our problem, we would want <span class="math inline">\(\hat{y}(x_0) = \hat{y}(x_1) = 0\)</span>, as it does for <span class="math inline">\(y(x)\)</span>, so we <em>assume</em> <span class="math inline">\(\eta_1\)</span> and <span class="math inline">\(\eta_2\)</span> satisfy this boundary condition.</p>
+<p>With this notation, and fixing <span class="math inline">\(y\)</span> we can re-express the equations in terms of <span class="math inline">\(\epsilon_1\)</span> and <span class="math inline">\(\epsilon_2\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+F(\epsilon_1, \epsilon_2) &amp;= \int f(x, \hat{y}, \hat{y}') dx =
+\int f(x, y + \epsilon_1 \eta_1 + \epsilon_2 \eta_2, y' + \epsilon_1 \eta_1' + \epsilon_2 \eta_2') dx,\\
+G(\epsilon_1, \epsilon_2) &amp;= \int g(x, \hat{y}, \hat{y}') dx =
+\int g(x, y + \epsilon_1 \eta_1 + \epsilon_2 \eta_2, y' + \epsilon_1 \eta_1' + \epsilon_2 \eta_2') dx.
+\end{align*}\]</span></p>
+<p>Then our problem is restated as:</p>
+<p><span class="math display">\[
+\text{Maximize } F(\epsilon_1, \epsilon_2) \text{ subject to }
+G(\epsilon_1, \epsilon_2) = L.
+\]</span></p>
+<p>Now, Lagrange’s method can be employed. This will be fruitful - even though we know the answer - it being <span class="math inline">\(\epsilon_1 = \epsilon_2 = 0\)</span>!</p>
+<p>Forging ahead, we compute <span class="math inline">\(\nabla{F}\)</span> and <span class="math inline">\(\lambda \nabla{G}\)</span> and set <span class="math inline">\(\epsilon_1 = \epsilon_2 = 0\)</span> where the two are equal. This will lead to a description of <span class="math inline">\(y\)</span> in terms of <span class="math inline">\(y'\)</span>.</p>
+<p>Lagrange’s method has:</p>
+<p><span class="math display">\[
+\frac{\partial{F}}{\partial{\epsilon_1}}(0,0) - \lambda \frac{\partial{G}}{\partial{\epsilon_1}}(0,0) = 0, \text{ and }
+\frac{\partial{F}}{\partial{\epsilon_2}}(0,0) - \lambda \frac{\partial{G}}{\partial{\epsilon_2}}(0,0) = 0.
+\]</span></p>
+<p>Computing just the first one, we have using the chain rule and assuming interchanging the derivative and integral is possible:</p>
+<p><span class="math display">\[\begin{align*}
+\frac{\partial{F}}{\partial{\epsilon_1}}
+&amp;= \int \frac{\partial}{\partial{\epsilon_1}}(
+f(x, y + \epsilon_1 \eta_1 + \epsilon_2 \eta_2, y' + \epsilon_1 \eta_1' + \epsilon_2 \eta_2')) dx\\
+&amp;= \int \left(\frac{\partial{f}}{\partial{y}} \eta_1 + \frac{\partial{f}}{\partial{y'}} \eta_1'\right) dx\quad\quad(\text{from }\nabla{f} \cdot \langle 0, \eta_1, \eta_1'\rangle)\\
+&amp;=\int \eta_1 \left(\frac{\partial{f}}{\partial{y}} - \frac{d}{dx}\frac{\partial{f}}{\partial{y'}}\right) dx.
+\end{align*}\]</span></p>
+<p>The last line by integration by parts: <span class="math inline">\(\int u'(x) v(x) dx = (u \cdot v)(x)\mid_{x_0}^{x_1} - \int u(x) \frac{d}{dx} v(x) dx = - \int u(x) \frac{d}{dx} v(x) dx\)</span>. The last lines, as <span class="math inline">\(\eta_1 = 0\)</span> at <span class="math inline">\(x_0\)</span> and <span class="math inline">\(x_1\)</span> by assumption. We get:</p>
+<p><span class="math display">\[
+0 = \int \eta_1\left(\frac{\partial{f}}{\partial{y}} - \frac{d}{dx}\frac{\partial{f}}{\partial{y'}}\right).
+\]</span></p>
+<p>Similarly were <span class="math inline">\(G\)</span> considered, we would find a similar statement. Setting <span class="math inline">\(L(x, y, y') = f(x, y, y') - \lambda g(x, y, y')\)</span>, the combination of terms gives:</p>
+<p><span class="math display">\[
+0 = \int \eta_1\left(\frac{\partial{L}}{\partial{y}} - \frac{d}{dx}\frac{\partial{L}}{\partial{y'}}\right) dx.
+\]</span></p>
+<p>Since <span class="math inline">\(\eta_1\)</span> is arbitrary save for its boundary conditions, under smoothness conditions on <span class="math inline">\(L\)</span> this will imply the rest of the integrand <em>must</em> be <span class="math inline">\(0\)</span>.</p>
+<p>That is, If <span class="math inline">\(y(x)\)</span> is a maximizer of <span class="math inline">\(\int_{x_0}^{x_1} f(x, y, y')dx\)</span> and sufficiently smooth over <span class="math inline">\([x_0, x_1]\)</span> and <span class="math inline">\(y(x)\)</span> satisfies the constraint <span class="math inline">\(\int_{x_0}^{x_1} g(x, y, y')dx = K\)</span> then there exists a constant <span class="math inline">\(\lambda\)</span> such that <span class="math inline">\(L = f -\lambda g\)</span> will satisfy:</p>
+<p><span class="math display">\[
+\frac{d}{dx}\frac{\partial{L}}{\partial{y'}} - \frac{\partial{L}}{\partial{y}}  = 0.
+\]</span></p>
+<p>If <span class="math inline">\(\partial{L}/\partial{x} = 0\)</span>, this simplifies to the <a href="https://en.wikipedia.org/wiki/Beltrami_identity">Beltrami</a> identity:</p>
+<p><span class="math display">\[
+L - y' \frac{\partial{L}}{\partial{y'}} = C.\quad(\text{Beltrami identity})
+\]</span></p>
+<hr>
+<p>For Dido’s problem, <span class="math inline">\(f(x,y,y') = y\)</span> and <span class="math inline">\(g(x, y, y') = \sqrt{1 + y'^2}\)</span>, so <span class="math inline">\(L = y - \lambda\sqrt{1 + y'^2}\)</span> will have <span class="math inline">\(0\)</span> partial derivative with respect to <span class="math inline">\(x\)</span>. Using the Beltrami identify we have:</p>
+<p><span class="math display">\[
+(y - \lambda\sqrt{1 + y'^2}) + \lambda y' \frac{2y'}{2\sqrt{1 + y'^2}} = C.
+\]</span></p>
+<p>by multiplying through by the denominator and squaring to remove the square root, a quadratic equation in <span class="math inline">\(y'^2\)</span> can be found. This can be solved to give:</p>
+<p><span class="math display">\[
+y' = \frac{dy}{dx} = \sqrt{\frac{\lambda^2 -(y - C)^2}{(y-C)^2}}.
+\]</span></p>
+<p>Here is a snippet of <code>SymPy</code> code to verify the above:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms y y′ λ C
+ex = Eq(-λ*y′^2/sqrt(1 + y′^2) + λ*sqrt(1 + y′^2), y - C)
+Δ = sqrt(1 + y′^2) / (y - C)
+ex1 = Eq(simplify(ex.lhs()*Δ), simplify(ex.rhs() * Δ))
+ex2 = Eq(ex1.lhs()^2 - 1, simplify(ex1.rhs()^2) - 1)</code></pre>
+<p>Now <span class="math inline">\(y'\)</span> can be integrated using the substitution <span class="math inline">\(y - C = \lambda \cos\theta\)</span> to give: <span class="math inline">\(-\lambda\int\cos\theta d\theta = x + D\)</span>, <span class="math inline">\(D\)</span> some constant. That is:</p>
+<p><span class="math display">\[\begin{align*}
+x + D &amp;=  - \lambda \sin\theta\\
+y - C &amp;= \lambda\cos\theta.
+\end{align*}\]</span></p>
+<p>Squaring gives the equation of a circle: <span class="math inline">\((x +D)^2 + (y-C)^2 = \lambda^2\)</span>.</p>
+<p>We center and <em>rescale</em> the problem so that <span class="math inline">\(x_0 = -1, x_1 = 1\)</span>. Then <span class="math inline">\(L &gt; 2\)</span> as otherwise the rope is too short. From here, we describe the radius and center of the circle.</p>
+<p>We have <span class="math inline">\(y=0\)</span> at <span class="math inline">\(x=1\)</span> and <span class="math inline">\(-1\)</span> giving:</p>
+<p><span class="math display">\[\begin{align*}
+(-1 + D)^2 + (0 - C)^2 &amp;= \lambda^2\\
+(+1 + D)^2 + (0 - C)^2 &amp;= \lambda^2.
+\end{align*}\]</span></p>
+<p>Squaring out and solving gives <span class="math inline">\(D=0\)</span>, <span class="math inline">\(1 + C^2 = \lambda^2\)</span>. That is, an arc of circle with radius <span class="math inline">\(\sqrt{1+C^2}\)</span> and centered at <span class="math inline">\((0, C)\)</span>.</p>
+<p><span class="math display">\[
+x^2 + (y - C)^2 = 1 + C^2.
+\]</span></p>
+<p>Now to identify <span class="math inline">\(C\)</span> in terms of <span class="math inline">\(L\)</span>. <span class="math inline">\(L\)</span> is the length of arc of circle of radius <span class="math inline">\(r =\sqrt{1 + C^2}\)</span> and angle <span class="math inline">\(2\theta\)</span>, so <span class="math inline">\(L = 2r\theta\)</span> But using the boundary conditions in the equations for <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> gives <span class="math inline">\(\tan\theta = 1/C\)</span>, so <span class="math inline">\(L = 2\sqrt{1 + C^2}\tan^{-1}(1/C)\)</span> which can be solved for <span class="math inline">\(C\)</span> provided <span class="math inline">\(L \geq 2\)</span>.</p>
+</section>
+<section id="example-more-constraints" class="level5">
+<h5 class="anchored" data-anchor-id="example-more-constraints">Example: more constraints</h5>
+<p>Consider now the case of maximizing <span class="math inline">\(f(x,y,z)\)</span> subject to <span class="math inline">\(g(x,y,z)=c\)</span> and <span class="math inline">\(h(x,y,z) = d\)</span>. Can something similar be said to characterize potential values for this to occur? Trying to describe where <span class="math inline">\(g(x,y,z) = c\)</span> and <span class="math inline">\(h(x,y,z)=d\)</span> in general will prove difficult. The easy case would be it the two equations were linear, in which case they would describe planes. Two non-parallel planes would intersect in a line. If the general case, imagine the surfaces locally replaced by their tangent planes, then their intersection would be a line, and this line would point in along the curve given by the intersection of the surfaces formed by the constraints. This line is similar to the tangent line in the <span class="math inline">\(2\)</span>-variable case. Now if <span class="math inline">\(\nabla{f}\)</span>, which points in the direction of greatest increase of <span class="math inline">\(f\)</span>, had a non-zero projection onto this line, then moving the point in that direction along the line would increase <span class="math inline">\(f\)</span> and still leave the point following the constraints. That is, if there is a non-zero directional derivative the point is not a maximum.</p>
+<p>The tangent planes are <em>orthogonal</em> to the vectors <span class="math inline">\(\nabla{g}\)</span> and <span class="math inline">\(\nabla{h}\)</span>, so in this case parallel to <span class="math inline">\(\nabla{g} \times \nabla{h}\)</span>. The condition that <span class="math inline">\(\nabla{f}\)</span> be <em>orthogonal</em> to this vector, means that <span class="math inline">\(\nabla{f}\)</span> <em>must</em> sit in the plane described by <span class="math inline">\(\nabla{g}\)</span> and <span class="math inline">\(\nabla{h}\)</span> - the plane of orthogonal vectors to <span class="math inline">\(\nabla{g} \times \nabla{h}\)</span>. That is, this condition is needed:</p>
+<p><span class="math display">\[
+\nabla{f}(x,y,z) = \lambda_1 \nabla{g}(x,y,z) + \lambda_2 \nabla{h}(x,y,z).
+\]</span></p>
+<p>At a point satisfying the above, we would have the tangent “plane” of <span class="math inline">\(f\)</span> is contained in the intersection of the tangent “plane”s to <span class="math inline">\(g\)</span> and <span class="math inline">\(h\)</span>.</p>
+<hr>
+<p>Consider a curve given through the intersection of two expressions: <span class="math inline">\(g_1(x,y,z) = x^2 + y^2 - z^2 = 0\)</span> and <span class="math inline">\(g_2(x,y,z) = x - 2z = 3\)</span>. What is the minimum distance to the origin along this curve?</p>
+<p>We have <span class="math inline">\(f(x,y,z) = \text{distance}(\vec{x},\vec{0}) = \sqrt{x^2 + y^2 + z^2}\)</span>, subject to the two constraints. As the square root is increasing, we can actually just consider <span class="math inline">\(f(x,y,z) = x^2 + y^2 + z^2\)</span>, ignoring the square root. The Lagrange multiplier technique instructs us to look for solutions to:</p>
+<p><span class="math display">\[
+\langle 2x, 2y ,2z \rangle = \lambda_1\langle 2x, 2y, -2z\rangle + \lambda_2 \langle 1, 0, -2 \rangle.
+\]</span></p>
+<p>Here we use <code>SymPy</code>:</p>
+<pre class="{julia}"><code>@syms z lambda1 lambda2
+g1(x, y, z) = x^2 + y^2 - z^2
+g2(x, y, z) = x - 2z - 3
+fₘ(x,y,z)= x^2 + y^2 + z^2
+Lₘ(x,y,z,lambda1, lambda2) = fₘ(x,y,z) - lambda1*(g1(x,y,z) - 0) - lambda2*(g2(x,y,z) - 0)
+
+∇Lₘ = diff.(Lₘ(x,y,z,lambda1, lambda2), [x, y, z,lambda1, lambda2])</code></pre>
+<p>Before trying to solve for <span class="math inline">\(\nabla{L} = \vec{0}\)</span> we see from the second equation that <em>either</em> <span class="math inline">\(\lambda_1 = 1\)</span> or <span class="math inline">\(y = 0\)</span>. First we solve with <span class="math inline">\(\lambda_1 = 1\)</span>:</p>
+<pre class="{julia}"><code>solve(subs.(∇Lₘ, lambda1 .=&gt; 1))</code></pre>
+<p>There are no real solutions. Next when <span class="math inline">\(y = 0\)</span> we get:</p>
+<pre class="{julia}"><code>outₘ = solve(subs.(∇Lₘ, y .=&gt; 0))</code></pre>
+<p>The two solutions have values yielding the extrema:</p>
+<pre class="{julia}"><code>[fₘ(d[x], 0, d[z]) for d in outₘ]</code></pre>
+</section>
+</section>
+<section id="taylors-theorem" class="level2" data-number="57.6">
+<h2 data-number="57.6" class="anchored" data-anchor-id="taylors-theorem"><span class="header-section-number">57.6</span> Taylor’s theorem</h2>
+<p>Taylor’s theorem for a univariate function states that if <span class="math inline">\(f\)</span> has <span class="math inline">\(k+1\)</span> derivatives in an open interval around <span class="math inline">\(a\)</span>, <span class="math inline">\(f^{(k)}\)</span> is continuous between the closed interval from <span class="math inline">\(a\)</span> to <span class="math inline">\(x\)</span> then:</p>
+<p><span class="math display">\[
+f(x) = \sum_{j=0}^k \frac{f^{j}(a)}{j!} (x-a)^j + R_k(x),
+\]</span></p>
+<p>where <span class="math inline">\(R_k(x) = f^{k+1}(\xi)/(k+1)!(x-a)^{k+1}\)</span> for some <span class="math inline">\(\xi\)</span> between <span class="math inline">\(a\)</span> and <span class="math inline">\(x\)</span>.</p>
+<p>This theorem can be generalized to scalar functions, but the notation can be cumbersome. Following <a href="https://sites.math.washington.edu/~folland/Math425/taylor2.pdf">Folland</a> we use <em>multi-index</em> notation. Suppose <span class="math inline">\(f:R^n \rightarrow R\)</span>, and let <span class="math inline">\(\alpha=(\alpha_1, \alpha_2, \dots, \alpha_n)\)</span>. Then define the following notation:</p>
+<p><span class="math display">\[\begin{align*}
+|\alpha| &amp;= \alpha_1 + \cdots + \alpha_n, \\
+\alpha! &amp;= \alpha_1!\alpha_2!\cdot\cdots\cdot\alpha_n!, \\
+\vec{x}^\alpha &amp;= x_1^{\alpha_1}x_2^{\alpha_2}\cdots x_n^{\alpha^n}, \\
+\partial^\alpha f &amp;= \partial_1^{\alpha_1}\partial_2^{\alpha_2}\cdots \partial_n^{\alpha_n} f \\
+&amp; = \frac{\partial^{|\alpha|}f}{\partial x_1^{\alpha_1} \partial x_2^{\alpha_2} \cdots \partial x_n^{\alpha_n}}.
+\end{align*}\]</span></p>
+<p>This notation makes many formulas from one dimension carry over to higher dimensions. For example, the binomial theorem says:</p>
+<p><span class="math display">\[
+(a+b)^n = \sum_{k=0}^n \frac{n!}{k!(n-k)!}a^kb^{n-k},
+\]</span></p>
+<p>and this becomes:</p>
+<p><span class="math display">\[
+(x_1 + x_2 + \cdots + x_n)^n = \sum_{|\alpha|=k} \frac{k!}{\alpha!} \vec{x}^\alpha.
+\]</span></p>
+<p>Taylor’s theorem then becomes:</p>
+<p>If <span class="math inline">\(f: R^n \rightarrow R\)</span> is sufficiently smooth (<span class="math inline">\(C^{k+1}\)</span>) on an open convex set <span class="math inline">\(S\)</span> about <span class="math inline">\(\vec{a}\)</span> then if <span class="math inline">\(\vec{a}\)</span> and <span class="math inline">\(\vec{a}+\vec{h}\)</span> are in <span class="math inline">\(S\)</span>,</p>
+<p><span class="math display">\[
+f(\vec{a} + \vec{h}) = \sum_{|\alpha| \leq k}\frac{\partial^\alpha f(\vec{a})}{\alpha!}\vec{h}^\alpha + R_{\vec{a},k}(\vec{h}),
+\]</span></p>
+<p>where <span class="math inline">\(R_{\vec{a},k} = \sum_{|\alpha|=k+1}\partial^\alpha \frac{f(\vec{a} + c\vec{h})}{\alpha!} \vec{h}^\alpha\)</span> for some <span class="math inline">\(c\)</span> in <span class="math inline">\((0,1)\)</span>.</p>
+<section id="example-11" class="level5">
+<h5 class="anchored" data-anchor-id="example-11">Example</h5>
+<p>The elegant notation masks what can be complicated expressions. Consider the simple case <span class="math inline">\(f:R^2 \rightarrow R\)</span> and <span class="math inline">\(k=2\)</span>. Then this says:</p>
+<p><span class="math display">\[\begin{align*}
+f(x + dx, y+dy) &amp;= f(x, y) + \frac{\partial f}{\partial x} dx + \frac{\partial f}{\partial y} dy \\
+&amp;+ \frac{\partial^2 f}{\partial x^2} \frac{dx^2}{2} +  2\frac{\partial^2 f}{\partial x\partial y} \frac{dx dy}{2}\\
+&amp;+ \frac{\partial^2 f}{\partial y^2} \frac{dy^2}{2} + R_{\langle x, y \rangle, k}(\langle dx, dy \rangle).
+\end{align*}\]</span></p>
+<p>Using <span class="math inline">\(\nabla\)</span> and <span class="math inline">\(H\)</span> for the Hessian and <span class="math inline">\(\vec{x} = \langle x, y \rangle\)</span> and <span class="math inline">\(d\vec{x} = \langle dx, dy \rangle\)</span>, this can be expressed as:</p>
+<p><span class="math display">\[
+f(\vec{x} + d\vec{x}) = f(\vec{x}) + \nabla{f} \cdot d\vec{x} +  d\vec{x} \cdot (H d\vec{x}) +R_{\vec{x}, k}d\vec{x}.
+\]</span></p>
+<p>As for <span class="math inline">\(R\)</span>, the full term involves terms for <span class="math inline">\(\alpha = (3,0), (2,1), (1,2)\)</span>, and <span class="math inline">\((0,3)\)</span>. Using <span class="math inline">\(\vec{a} = \langle x, y\rangle\)</span> and <span class="math inline">\(\vec{h}=\langle dx, dy\rangle\)</span>:</p>
+<p><span class="math display">\[
+\frac{\partial^3 f(\vec{a}+c\vec{h})}{\partial x^3} \frac{dx^3}{3!}+
+\frac{\partial^3 f(\vec{a}+c\vec{h})}{\partial x^2\partial y} \frac{dx^2 dy}{2!1!} +
+\frac{\partial^3 f(\vec{a}+c\vec{h})}{\partial x\partial y^2} \frac{dxdy^2}{1!2!} +
+\frac{\partial^3 f(\vec{a}+c\vec{h})}{\partial y^3} \frac{dy^3}{3!}.
+\]</span></p>
+<p>The exact answer is usually not as useful as the bound: <span class="math inline">\(|R| \leq M/(k+1)! \|\vec{h}\|^{k+1}\)</span>, for some finite constant <span class="math inline">\(M\)</span>.</p>
+</section>
+<section id="example-12" class="level5">
+<h5 class="anchored" data-anchor-id="example-12">Example</h5>
+<p>We can encode multiindices using <code>SymPy</code>. The basic definitions are fairly straightforward using <code>zip</code> to pair variables with components of <span class="math inline">\(\alpha\)</span>. We define a new type so that we can overload the familiar notation:</p>
+<pre class="{julia}"><code>struct MultiIndex
+  alpha::Vector{Int}
+  end
+Base.show(io::IO, α::MultiIndex) = println(io, "α = ($(join(α.alpha, ", ")))")
+
+## |α| = α_1 + ... + α_m
+Base.length(α::MultiIndex) = sum(α.alpha)
+
+## factorial(α) computes α!
+Base.factorial(α::MultiIndex) = prod(factorial(Sym(a)) for a in α.alpha)
+
+## x^α = x_1^α_1 * x_2^α^2 * ... * x_n^α_n
+import Base: ^
+^(x, α::MultiIndex) = prod(u^a for (u,a) in zip(x, α.alpha))
+
+## ∂^α(ex) = ∂_1^α_1 ∘ ∂_2^α_2 ∘ ... ∘ ∂_n^α_n (ex)
+partial(ex::SymPy.SymbolicObject, α::MultiIndex, vars=free_symbols(ex)) = diff(ex, zip(vars, α.alpha)...)</code></pre>
+<pre class="{julia}"><code>@syms w
+alpha = MultiIndex([1,2,1,3])
+length(alpha)  # 1 + 2 + 1 + 3=7
+[1,2,3,4]^alpha
+exₜ = x^3 * cos(w*y*z)
+partial(exₜ, alpha, [w,x,y,z])</code></pre>
+<p>The remainder term needs to know information about sets like <span class="math inline">\(|\alpha| =k\)</span>. This is a combinatoric problem, even to identify the length. Here we define an iterator to iterate over all possible MultiIndexes. This is low level, and likely could be done in a much better style, so shouldn’t be parsed unless there is curiosity. It manually chains together iterators.</p>
+<pre class="{julia}"><code>struct MultiIndices
+    n::Int
+    k::Int
+end
+
+function Base.length(as::MultiIndices)
+  n,k = as.n, as.k
+  n == 1 &amp;&amp; return 1
+  sum(length(MultiIndices(n-1, j)) for j in 0:k)  # recursively identify length
+end
+
+function Base.iterate(alphas::MultiIndices)
+    k, n = alphas.k, alphas.n
+    n == 1 &amp;&amp; return ([k],(0, MultiIndices(0,0), nothing))
+
+    m = zeros(Int, n)
+    m[1] = k
+    betas = MultiIndices(n-1, 0)
+    stb = iterate(betas)
+    st = (k, MultiIndices(n-1, 0), stb)
+    return (m, st)
+end
+
+function Base.iterate(alphas::MultiIndices, st)
+
+    st == nothing &amp;&amp; return nothing
+    k,n = alphas.k, alphas.n
+    k == 0 &amp;&amp; return nothing
+    n == 1 &amp;&amp; return nothing
+
+    # can we iterate the next on
+    bk, bs, stb = st
+
+    if stb==nothing
+        bk = bk-1
+        bk &lt; 0 &amp;&amp; return nothing
+        bs = MultiIndices(bs.n, bs.k+1)
+        val, stb = iterate(bs)
+        return (vcat(bk,val), (bk, bs, stb))
+    end
+
+    resp = iterate(bs, stb)
+    if resp == nothing
+        bk = bk-1
+        bk &lt; 0 &amp;&amp; return nothing
+        bs = MultiIndices(bs.n, bs.k+1)
+        val, stb = iterate(bs)
+        return (vcat(bk, val), (bk, bs, stb))
+    end
+
+    val, stb = resp
+    return (vcat(bk, val), (bk, bs, stb))
+
+end</code></pre>
+<p>This returns a vector, not a <code>MultiIndex</code>. Here we get all multiindices in two variables of size <span class="math inline">\(3\)</span></p>
+<pre class="{julia}"><code>collect(MultiIndices(2, 3))</code></pre>
+<p>To get all of size <span class="math inline">\(3\)</span> or less, we could do something like this:</p>
+<pre class="{julia}"><code>union((collect(MultiIndices(2, i)) for i in 0:3)...)</code></pre>
+<p>To see the computational complexity. Suppose we had <span class="math inline">\(3\)</span> variables and were interested in the error for order <span class="math inline">\(4\)</span>:</p>
+<pre class="{julia}"><code>k = 4
+length(MultiIndices(3, k+1))</code></pre>
+<p>Finally, to see how compact the notation issue, suppose <span class="math inline">\(f:R^3 \rightarrow R\)</span>, we have the third-order Taylor series expands to <span class="math inline">\(20\)</span> terms as follows:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms 𝐅() a[1:3] dx[1:3]
+
+sum(partial(𝐅(a...), α, a) / factorial(α) * dx^α for k in 0:3 for α in MultiIndex.(MultiIndices(3, k)))  # 3rd order</code></pre>
+</section>
+</section>
+<section id="questions" class="level2" data-number="57.7">
+<h2 data-number="57.7" class="anchored" data-anchor-id="questions"><span class="header-section-number">57.7</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>Let <span class="math inline">\(f(x,y) = \sqrt{x + y}\)</span>. Find the tangent plane approximation for <span class="math inline">\(f(2.1, 2.2)\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x,y) = sqrt(x + y)
+f(v) = f(v...)
+pt = [2,2]
+dxdy = [.1, .2]
+val = f(pt) + dot(ForwardDiff.gradient(f, pt), dxdy)
+numericq(val)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>Let <span class="math inline">\(f(x,y,z) = xy + yz + zx\)</span>. Using a <em>linear approximation</em> estimate <span class="math inline">\(f(1.1, 1.0, 0.9)\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x,y,z) = x*y + y*z + z*x
+f(v) = f(v...)
+pt = [1,1,1]
+dx = [0.1, 0.0, -0.1]
+val = f(pt) + ∇(f)(pt) ⋅ dx
+numericq(val)</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>Let <span class="math inline">\(f(x,y,z) = xy + yz + zx - 3\)</span>. What equation describes the tangent approximation at <span class="math inline">\((1,1,1)\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x,y,z) = x*y + y*z + z*x - 8
+f(v) = f(v...)
+pt = [1,1,1]
+n = ∇(f)(pt)
+d = dot(n, pt)
+choices = [
+    raw"`` x + y + z = 3``",
+    raw"`` 2x + y - 2z = 1``",
+    raw"`` x + 2y + 3z = 6``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>(<a href="http://www.math.harvard.edu/~knill/teaching/summer2018/handouts/week4.pdf">Knill</a>) Let <span class="math inline">\(f(x,y) = xy + x^2y + xy^2\)</span>.</p>
+<p>Find the gradient of <span class="math inline">\(f\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    raw"`` \langle 2xy + y^2 + y, 2xy + x^2 + x\rangle``",
+    raw"`` y^2 + y, x^2 + x``",
+    raw"`` \langle 2y + y^2, 2x + x^2``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>Is this the Hessian of <span class="math inline">\(f\)</span>?</p>
+<p><span class="math display">\[
+\left[\begin{matrix}2 y &amp; 2 x + 2 y + 1\\2 x + 2 y + 1 &amp; 2 x\end{matrix}\right]
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(true)</code></pre>
+<p>The point <span class="math inline">\((-1/3, -1/3)\)</span> is a solution to the <span class="math inline">\(\nabla{f} = 0\)</span>. What is the <em>determinant</em>, <span class="math inline">\(d\)</span>, of the Hessian at this point?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x,y) = x*y + x*y^2 + x^2 * y
+f(v) = f(v...)
+val = det(ForwardDiff.hessian(f, [-1/3, -1/3]))
+numericq(val)</code></pre>
+<p>Which is true of <span class="math inline">\(f\)</span> at <span class="math inline">\((-1/3, -1/3)\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    L"The function $f$ has a local minimum, as $f_{xx} &gt; 0$ and $d &gt;0$",
+    L"The function $f$ has a local maximum, as $f_{xx} &lt; 0$ and $d &gt;0$",
+    L"The function $f$ has a saddle point, as $d  &lt; 0$",
+    L"Nothing can be said, as $d=0$"
+]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>(<a href="http://www.math.harvard.edu/~knill/teaching/summer2018/handouts/week4.pdf">Knill</a>) Let the Tutte polynomial be <span class="math inline">\(f(x,y) = x + 2x^2 + x^3 + y + 2xy + y^2\)</span>.</p>
+<p>Does this accurately find the gradient of <span class="math inline">\(f\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| results: "hidden"
+f(x,y) = x + 2x^2 + x^3 + y + 2x*y + y^2
+@syms x::real y::real
+gradf = gradient(f(x,y), [x,y])</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(true)</code></pre>
+<p>How many answers does this find to <span class="math inline">\(\nabla{f} = \vec{0}\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| results: "hidden"
+f(x,y) = x + 2x^2 + x^3 + y + 2x*y + y^2
+@syms x::real y::real
+gradf = gradient(f(x,y), [x,y])
+
+solve(gradf, [x,y])</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(2)</code></pre>
+<p>The Hessian is found by</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = x + 2x^2 + x^3 + y + 2x*y + y^2
+@syms x::real y::real
+gradf = gradient(f(x,y), [x,y])
+
+sympy.hessian(f(x,y), [x,y])</code></pre>
+<p>Which is true of <span class="math inline">\(f\)</span> at <span class="math inline">\((-2/3, 1/6)\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    L"The function $f$ has a local minimum, as $f_{xx} &gt; 0$ and $d &gt;0$",
+    L"The function $f$ has a local maximum, as $f_{xx} &lt; 0$ and $d &gt;0$",
+    L"The function $f$ has a saddle point, as $d  &lt; 0$",
+    L"Nothing can be said, as $d=0$",
+    L"The test does not apply, as $\nabla{f}$ is not $0$ at this point."
+]
+answ = 3
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>Which is true of <span class="math inline">\(f\)</span> at <span class="math inline">\((0, -1/2)\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    L"The function $f$ has a local minimum, as $f_{xx} &gt; 0$ and $d &gt;0$",
+    L"The function $f$ has a local maximum, as $f_{xx} &lt; 0$ and $d &gt;0$",
+    L"The function $f$ has a saddle point, as $d  &lt; 0$",
+    L"Nothing can be said, as $d=0$",
+    L"The test does not apply, as $\nabla{f}$ is not $0$ at this point."
+]
+answ = 1
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>Which is true of <span class="math inline">\(f\)</span> at <span class="math inline">\((1/2, 0)\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    L"The function $f$ has a local minimum, as $f_{xx} &gt; 0$ and $d &gt;0$",
+    L"The function $f$ has a local maximum, as $f_{xx} &lt; 0$ and $d &gt;0$",
+    L"The function $f$ has a saddle point, as $d  &lt; 0$",
+    L"Nothing can be said, as $d=0$",
+    L"The test does not apply, as $\nabla{f}$ is not $0$ at this point."
+]
+answ = 5
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>(Strang p509) Consider the quadratic function <span class="math inline">\(f(x,y) = ax^2 + bxy +cy^2\)</span>. Since the second partial derivative test is essentially done by replacing the function at a critical point by a quadratic function, understanding this <span class="math inline">\(f\)</span> is of some interest.</p>
+<p>Is this the Hessian of <span class="math inline">\(f\)</span>?</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+2a &amp; b\\
+b  &amp; 2c
+\end{bmatrix}
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(true)</code></pre>
+<p>Or is this the Hessian of <span class="math inline">\(f\)</span>?</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+2ax &amp; by\\
+bx  &amp; 2cy
+\end{bmatrix}
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(false)</code></pre>
+<p>Explain why <span class="math inline">\(4ac - b^2\)</span> is of any interest here:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices =[
+    "It is the determinant of the Hessian",
+    L"It isn't, $b^2-4ac$ is from the quadratic formula"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>Which condition on <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>, and <span class="math inline">\(c\)</span> will ensure a <em>local maximum</em>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    L"That $a&gt;0$ and $4ac-b^2 &gt; 0$",
+    L"That $a&lt;0$ and $4ac-b^2 &gt; 0$",
+    L"That $4ac-b^2 &lt; 0$"
+]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>Which condition on <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>, and <span class="math inline">\(c\)</span> will ensure a saddle point?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    L"That $a&gt;0$ and $4ac-b^2 &gt; 0$",
+    L"That $a&lt;0$ and $4ac-b^2 &gt; 0$",
+    L"That $4ac-b^2 &lt; 0$"
+]
+answ = 3
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>Let <span class="math inline">\(f(x,y) = e^{-x^2 - y^2} (2x^2 + y^2)\)</span>. Use Lagrange’s method to find the absolute maximum and absolute minimum over <span class="math inline">\(x^2 + y^2 = 3\)</span>.</p>
+<p>Is <span class="math inline">\(\nabla{f}\)</span> given by the following?</p>
+<p><span class="math display">\[
+\nabla{f} =2 e^{-x^2 - y^2} \langle x(2 - 2x^2 - y^2), y(1 - 2x^2 - y^2)\rangle.
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(true)</code></pre>
+<p>Which vector is orthogonal to the contour line <span class="math inline">\(x^2 + y^2 = 3\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+    raw"`` \langle 2x, 2y\rangle``",
+    raw"`` \langle 2x, y^2\rangle``",
+    raw"`` \langle x^2, 2y \rangle``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>Due to the form of the gradient of the constraint, finding when <span class="math inline">\(\nabla{f} = \lambda \nabla{g}\)</span> is the same as identifying when this ratio <span class="math inline">\(|f_x/f_y|\)</span> is <span class="math inline">\(1\)</span>. The following solves for this by checking each point on the constraint:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,y) = exp(-x^2-y^2) * (2x^2 + y^2)
+f(v) = f(v...)
+r(t) = sqrt(3)*[cos(t), sin(t)]
+rat(x) = abs(x[1]/x[2]) - 1
+fn = rat ∘ ∇(f) ∘ r
+ts = fzeros(fn, 0, 2pi)</code></pre>
+<p>Using these points, what is the largest value on the boundary?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x,y) = exp(-x^2-y^2) * (2x^2 + y^2)
+f(v) = f(v...)
+r(t) = sqrt(3)*[cos(t), sin(t)]
+rat(x) = abs(x[1]/x[2]) - 1
+fn = rat ∘ ∇(f) ∘ r
+ts = fzeros(fn, 0, 2pi)
+
+val = maximum((f∘r).(ts))
+numericq(val)</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../differentiable_vector_calculus/scalar_functions.html" class="pagination-link" aria-label="Scalar functions">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../differentiable_vector_calculus/vector_fields.html" class="pagination-link" aria-label="Functions $R^n \rightarrow R^m$">
+        <span class="nav-page-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/differentiable_vector_calculus/scalar_functions_applications.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

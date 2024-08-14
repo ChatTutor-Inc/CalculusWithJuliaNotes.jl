@@ -1,0 +1,1998 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>25&nbsp; The mean value theorem for differentiable functions. – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../derivatives/optimization.html" rel="next">
+<link href="../derivatives/symbolic_derivatives.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+<script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../derivatives.html">Derivatives</a></li><li class="breadcrumb-item"><a href="../derivatives/mean_value_theorem.html"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#differentiable-is-more-restrictive-than-continuous." id="toc-differentiable-is-more-restrictive-than-continuous." class="nav-link active" data-scroll-target="#differentiable-is-more-restrictive-than-continuous."><span class="header-section-number">25.1</span> Differentiable is more restrictive than continuous.</a></li>
+  <li><a href="#derivatives-and-maxima." id="toc-derivatives-and-maxima." class="nav-link" data-scroll-target="#derivatives-and-maxima."><span class="header-section-number">25.2</span> Derivatives and maxima.</a>
+  <ul class="collapse">
+  <li><a href="#numeric-derivatives" id="toc-numeric-derivatives" class="nav-link" data-scroll-target="#numeric-derivatives"><span class="header-section-number">25.2.1</span> Numeric derivatives</a></li>
+  </ul></li>
+  <li><a href="#rolles-theorem" id="toc-rolles-theorem" class="nav-link" data-scroll-target="#rolles-theorem"><span class="header-section-number">25.3</span> Rolle’s theorem</a></li>
+  <li><a href="#the-mean-value-theorem" id="toc-the-mean-value-theorem" class="nav-link" data-scroll-target="#the-mean-value-theorem"><span class="header-section-number">25.4</span> The mean value theorem</a>
+  <ul class="collapse">
+  <li><a href="#the-cauchy-mean-value-theorem" id="toc-the-cauchy-mean-value-theorem" class="nav-link" data-scroll-target="#the-cauchy-mean-value-theorem"><span class="header-section-number">25.4.1</span> The Cauchy mean value theorem</a></li>
+  <li><a href="#visualizing-the-cauchy-mean-value-theorem" id="toc-visualizing-the-cauchy-mean-value-theorem" class="nav-link" data-scroll-target="#visualizing-the-cauchy-mean-value-theorem"><span class="header-section-number">25.4.2</span> Visualizing the Cauchy mean value theorem</a></li>
+  </ul></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">25.5</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/derivatives/mean_value_theorem.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../derivatives.html">Derivatives</a></li><li class="breadcrumb-item"><a href="../derivatives/mean_value_theorem.html"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses these add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+plotly()
+using Roots</code></pre>
+<pre class="{julia}"><code>#| echo: false
+#| results: "hidden"
+using Printf
+using SymPy
+nothing</code></pre>
+<hr>
+<p>A function is <em>continuous</em> at <span class="math inline">\(c\)</span> if <span class="math inline">\(f(c+h) - f(c) \rightarrow 0\)</span> as <span class="math inline">\(h\)</span> goes to <span class="math inline">\(0\)</span>. We can write that as <span class="math inline">\(f(c+h) - f(c) = \epsilon_h\)</span>, with <span class="math inline">\(\epsilon_h\)</span> denoting a function going to <span class="math inline">\(0\)</span> as <span class="math inline">\(h \rightarrow 0\)</span>. With this notion, differentiability could be written as <span class="math inline">\(f(c+h) - f(c) - f'(c)h = \epsilon_h \cdot h\)</span>. This is clearly a more demanding requirement than mere continuity at <span class="math inline">\(c\)</span>.</p>
+<p>We defined a function to be <em>continuous</em> on an interval <span class="math inline">\(I=(a,b)\)</span> if it was continuous at each point <span class="math inline">\(c\)</span> in <span class="math inline">\(I\)</span>. Similarly, we define a function to be <em>differentiable</em> on the interval <span class="math inline">\(I\)</span> if it is differentiable at each point <span class="math inline">\(c\)</span> in <span class="math inline">\(I\)</span>.</p>
+<p>This section looks at properties of differentiable functions. As there is a more stringent definition, perhaps more properties are a consequence of the definition.</p>
+<section id="differentiable-is-more-restrictive-than-continuous." class="level2" data-number="25.1">
+<h2 data-number="25.1" class="anchored" data-anchor-id="differentiable-is-more-restrictive-than-continuous."><span class="header-section-number">25.1</span> Differentiable is more restrictive than continuous.</h2>
+<p>Let <span class="math inline">\(f\)</span> be a differentiable function on <span class="math inline">\(I=(a,b)\)</span>. We see that <span class="math inline">\(f(c+h) - f(c) = f'(c)h + \epsilon_h\cdot h = h(f'(c) + \epsilon_h)\)</span>. The right hand side will clearly go to <span class="math inline">\(0\)</span> as <span class="math inline">\(h\rightarrow 0\)</span>, so <span class="math inline">\(f\)</span> will be continuous. In short:</p>
+<blockquote class="blockquote">
+<p>A differentiable function on <span class="math inline">\(I=(a,b)\)</span> is continuous on <span class="math inline">\(I\)</span>.</p>
+</blockquote>
+<p>Is it possible that all continuous functions are differentiable?</p>
+<p>The fact that the derivative is related to the tangent line’s slope might give an indication that this won’t be the case - we just need a function which is continuous but has a point with no tangent line. The usual suspect is <span class="math inline">\(f(x) = \lvert x\rvert\)</span> at <span class="math inline">\(0\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = abs(x)
+plot(f, -1,1)</code></pre>
+<p>We can see formally that the secant line expression will not have a limit when <span class="math inline">\(c=0\)</span> (the left limit is <span class="math inline">\(-1\)</span>, the right limit <span class="math inline">\(1\)</span>). But more insight is gained by looking at the shape of the graph. At the origin, the graph always is vee-shaped. There is no linear function that approximates this function well. The function is just not smooth enough, as it has a kink.</p>
+<p>There are other functions that have kinks. These are often associated with powers. For example, at <span class="math inline">\(x=0\)</span> this function will not have a derivative:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = (x^2)^(1/3)
+plot(f, -1, 1)</code></pre>
+<p>Other functions have tangent lines that become vertical. The natural slope would be <span class="math inline">\(\infty\)</span>, but this isn’t a limiting answer (except in the extended sense we don’t apply to the definition of derivatives). A candidate for this case is the cube root function:</p>
+<pre class="{julia}"><code>plot(cbrt, -1, 1)</code></pre>
+<p>The derivative at <span class="math inline">\(0\)</span> would need to be <span class="math inline">\(+\infty\)</span> to match the graph. This is implied by the formula for the derivative from the power rule: <span class="math inline">\(f'(x) = 1/3 \cdot x^{-2/3}\)</span>, which has a vertical asymptote at <span class="math inline">\(x=0\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <code>cbrt</code> function is used above, instead of <code>f(x) = x^(1/3)</code>, as the latter is not defined for negative <code>x</code>. Though it can be for the exact power <code>1/3</code>, it can’t be for an exact power like <code>1/2</code>. This means the value of the argument is important in determining the type of the output - and not just the type of the argument. Having type-stable functions is part of the magic to making <code>Julia</code> run fast, so <code>x^c</code> is not defined for negative <code>x</code> and most floating point exponents.</p>
+</div>
+</div>
+<p>Lest you think that continuous functions always have derivatives except perhaps at exceptional points, this isn’t the case. The functions used to <a href="http://tinyurl.com/cpdpheb">model</a> the stock market are continuous but have no points where they are differentiable.</p>
+</section>
+<section id="derivatives-and-maxima." class="level2" data-number="25.2">
+<h2 data-number="25.2" class="anchored" data-anchor-id="derivatives-and-maxima."><span class="header-section-number">25.2</span> Derivatives and maxima.</h2>
+<p>We have defined an <em>absolute maximum</em> of <span class="math inline">\(f(x)\)</span> over an interval to be a value <span class="math inline">\(f(c)\)</span> for a point <span class="math inline">\(c\)</span> in the interval that is as large as any other value in the interval. Just specifying a function and an interval does not guarantee an absolute maximum, but specifying a <em>continuous</em> function and a <em>closed</em> interval does, by the extreme value theorem.</p>
+<blockquote class="blockquote">
+<p><em>A relative maximum</em>: We say <span class="math inline">\(f(x)\)</span> has a <em>relative maximum</em> at <span class="math inline">\(c\)</span> if there exists <em>some</em> interval <span class="math inline">\(I=(a,b)\)</span> with <span class="math inline">\(a &lt; c &lt; b\)</span> for which <span class="math inline">\(f(c)\)</span> is an absolute maximum for <span class="math inline">\(f\)</span> and <span class="math inline">\(I\)</span>.</p>
+</blockquote>
+<p>The difference is a bit subtle, for an absolute maximum the interval must also be specified, for a relative maximum there just needs to exist some interval, possibly really small, though it must be bigger than a point.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A hiker can appreciate the difference. A relative maximum would be the crest of any hill, but an absolute maximum would be the summit.</p>
+</div>
+</div>
+<p>What does this have to do with derivatives?</p>
+<p><a href="http://science.larouchepac.com/fermat/fermat-maxmin.pdf">Fermat</a>, perhaps with insight from Kepler, was interested in maxima of polynomial functions. As a warm up, he considered a line segment <span class="math inline">\(AC\)</span> and a point <span class="math inline">\(E\)</span> with the task of choosing <span class="math inline">\(E\)</span> so that <span class="math inline">\((E-A) \times (C-E)\)</span> being a maximum. We might recognize this as finding the maximum of <span class="math inline">\(f(x) = (x-A)\cdot(C-x)\)</span> for some <span class="math inline">\(A &lt; C\)</span>. Geometrically, we know this to be at the midpoint, as the equation is a parabola, but Fermat was interested in an algebraic solution that led to more generality.</p>
+<p>He takes <span class="math inline">\(b=AC\)</span> and <span class="math inline">\(a=AE\)</span>. Then the product is <span class="math inline">\(a \cdot (b-a) = ab - a^2\)</span>. He then perturbs this writing <span class="math inline">\(AE=a+e\)</span>, then this new product is <span class="math inline">\((a+e) \cdot (b - a - e)\)</span>. Equating the two, and canceling like terms gives <span class="math inline">\(be = 2ae + e^2\)</span>. He cancels the <span class="math inline">\(e\)</span> and basically comments that this must be true for all <span class="math inline">\(e\)</span> even as <span class="math inline">\(e\)</span> goes to <span class="math inline">\(0\)</span>, so <span class="math inline">\(b = 2a\)</span> and the value is at the midpoint.</p>
+<p>In a more modern approach, this would be the same as looking at this expression:</p>
+<p><span class="math display">\[
+\frac{f(x+e) - f(x)}{e} = 0.
+\]</span></p>
+<p>Working on the left hand side, for non-zero <span class="math inline">\(e\)</span> we can cancel the common <span class="math inline">\(e\)</span> terms, and then let <span class="math inline">\(e\)</span> become <span class="math inline">\(0\)</span>. This becomes a problem in solving <span class="math inline">\(f'(x)=0\)</span>. Fermat could compute the derivative for any polynomial by taking a limit, a task we would do now by the power rule and the sum and difference of function rules.</p>
+<p>This insight holds for other types of functions:</p>
+<blockquote class="blockquote">
+<p>If <span class="math inline">\(f(c)\)</span> is a relative maximum then either <span class="math inline">\(f'(c) = 0\)</span> or the derivative at <span class="math inline">\(c\)</span> does not exist.</p>
+</blockquote>
+<p>When the derivative exists, this says the tangent line is flat. (If it had a slope, then the the function would increase by moving left or right, as appropriate, a point we pursue later.)</p>
+<p>For a continuous function <span class="math inline">\(f(x)\)</span>, call a point <span class="math inline">\(c\)</span> in the domain of <span class="math inline">\(f\)</span> where either <span class="math inline">\(f'(c)=0\)</span> or the derivative does not exist a <strong>critical</strong> <strong>point</strong>.</p>
+<p>We can combine Bolzano’s extreme value theorem with Fermat’s insight to get the following:</p>
+<blockquote class="blockquote">
+<p>A continuous function on <span class="math inline">\([a,b]\)</span> has an absolute maximum that occurs at a critical point <span class="math inline">\(c\)</span>, <span class="math inline">\(a &lt; c &lt; b\)</span>, or an endpoint, <span class="math inline">\(a\)</span> or <span class="math inline">\(b\)</span>.</p>
+</blockquote>
+<p>A similar statement holds for an absolute minimum. This gives a restricted set of places to look for absolute maximum and minimum values - all the critical points and the endpoints.</p>
+<p>It is also the case that all relative extrema occur at a critical point, <em>however</em> not all critical points correspond to relative extrema. We will see <em>derivative tests</em> that help characterize when that occurs.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+### {{{lhopital_32}}}
+imgfile = "figures/lhopital-32.png"
+caption =  L"""
+Image number ``32`` from L'Hopitals calculus book (the first) showing that
+at a relative minimum, the tangent line is parallel to the
+$x$-axis. This of course is true when the tangent line is well defined
+by Fermat's observation.
+"""
+# ImageFile(:derivatives, imgfile, caption)
+nothing</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./figures/lhopital-32.png" class="img-fluid figure-img"></p>
+<figcaption>Image number <span class="math inline">\(32\)</span> from L’Hopitals calculus book (the first) showing that at a relative minimum, the tangent line is parallel to the <span class="math inline">\(x\)</span>-axis. This of course is true when the tangent line is well defined by Fermat’s observation.</figcaption>
+</figure>
+</div>
+<section id="numeric-derivatives" class="level3" data-number="25.2.1">
+<h3 data-number="25.2.1" class="anchored" data-anchor-id="numeric-derivatives"><span class="header-section-number">25.2.1</span> Numeric derivatives</h3>
+<p>The <code>ForwardDiff</code> package provides a means to numerically compute derivatives without approximations at a point. In <code>CalculusWithJulia</code> this is extended to find derivatives of functions and the <code>'</code> notation is overloaded for function objects. Hence these two give nearly identical answers, the difference being only the type of number used:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = 3x^3 - 2x
+fp(x) = 9x^2 - 2
+f'(3), fp(3)</code></pre>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>For the function <span class="math inline">\(f(x) = x^2 \cdot e^{-x}\)</span> find the absolute maximum over the interval <span class="math inline">\([0, 5]\)</span>.</p>
+<p>We have that <span class="math inline">\(f(x)\)</span> is continuous on the closed interval of the question, and in fact differentiable on <span class="math inline">\((0,5)\)</span>, so any critical point will be a zero of the derivative. We can check for these with:</p>
+<pre class="{julia}"><code>f(x) = x^2 * exp(-x)
+cps = find_zeros(f', -1, 6)     # find_zeros in `Roots`</code></pre>
+<p>We get <span class="math inline">\(0\)</span> and <span class="math inline">\(2\)</span> are critical points. The endpoints are <span class="math inline">\(0\)</span> and <span class="math inline">\(5\)</span>. So the absolute maximum over this interval is either at <span class="math inline">\(0\)</span>, <span class="math inline">\(2\)</span>, or <span class="math inline">\(5\)</span>:</p>
+<pre class="{julia}"><code>f(0), f(2), f(5)</code></pre>
+<p>We see that <span class="math inline">\(f(2)\)</span> is then the maximum.</p>
+<p>A few things. First, <code>find_zeros</code> can miss some roots, in particular endpoints and roots that just touch <span class="math inline">\(0\)</span>. We should graph to verify it didn’t. Second, it can be easier sometimes to check the values using the “dot” notation. If <code>f</code>, <code>a</code>,<code>b</code> are the function and the interval, then this would typically follow this pattern:</p>
+<pre class="{julia}"><code>a, b = 0, 5
+critical_pts = find_zeros(f', a, b)
+f.(critical_pts), f(a), f(b)</code></pre>
+<p>For this problem, we have the left endpoint repeated, but in general this won’t be a point where the derivative is zero.</p>
+<p>As an aside, the output above is not a single container. To achieve that, the values can be combined before the broadcasting:</p>
+<pre class="{julia}"><code>f.(vcat(a, critical_pts, b))</code></pre>
+</section>
+<section id="example-1" class="level5">
+<h5 class="anchored" data-anchor-id="example-1">Example</h5>
+<p>For the function <span class="math inline">\(g(x) = e^x\cdot(x^3 - x)\)</span> find the absolute maximum over the interval <span class="math inline">\([0, 2]\)</span>.</p>
+<p>We follow the same pattern. Since <span class="math inline">\(f(x)\)</span> is continuous on the closed interval and differentiable on the open interval we know that the absolute maximum must occur at an endpoint (<span class="math inline">\(0\)</span> or <span class="math inline">\(2\)</span>) or a critical point where <span class="math inline">\(f'(c)=0\)</span>. To solve for these, we have again:</p>
+<pre class="{julia}"><code>g(x) = exp(x) * (x^3 - x)
+gcps = find_zeros(g', 0, 2)</code></pre>
+<p>And checking values gives:</p>
+<pre class="{julia}"><code>g.(vcat(0, gcps, 2))</code></pre>
+<p>Here the maximum occurs at an endpoint. The critical point <span class="math inline">\(c=0.67\dots\)</span> does not produce a maximum value. Rather <span class="math inline">\(f(0.67\dots)\)</span> is an absolute minimum.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Absolute minimum</strong> We haven’t discussed the parallel problem of absolute minima over a closed interval. By considering the function <span class="math inline">\(h(x) = - f(x)\)</span>, we see that the any thing true for an absolute maximum should hold in a related manner for an absolute minimum, in particular an absolute minimum on a closed interval will only occur at a critical point or an end point.</p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="rolles-theorem" class="level2" data-number="25.3">
+<h2 data-number="25.3" class="anchored" data-anchor-id="rolles-theorem"><span class="header-section-number">25.3</span> Rolle’s theorem</h2>
+<p>Let <span class="math inline">\(f(x)\)</span> be differentiable on <span class="math inline">\((a,b)\)</span> and continuous on <span class="math inline">\([a,b]\)</span>. Then the absolute maximum occurs at an endpoint or where the derivative is <span class="math inline">\(0\)</span> (as the derivative is always defined). This gives rise to:</p>
+<blockquote class="blockquote">
+<p><em><a href="http://en.wikipedia.org/wiki/Rolle%27s_theorem">Rolle’s</a> theorem</em>: For <span class="math inline">\(f\)</span> differentiable on <span class="math inline">\((a,b)\)</span> and continuous on <span class="math inline">\([a,b]\)</span>, if <span class="math inline">\(f(a)=f(b)\)</span>, then there exists some <span class="math inline">\(c\)</span> in <span class="math inline">\((a,b)\)</span> with <span class="math inline">\(f'(c) = 0\)</span>.</p>
+</blockquote>
+<p>This modest observation opens the door to many relationships between a function and its derivative, as it ties the two together in one statement.</p>
+<p>To see why Rolle’s theorem is true, we assume that <span class="math inline">\(f(a)=0\)</span>, otherwise consider <span class="math inline">\(g(x)=f(x)-f(a)\)</span>. By the extreme value theorem, there must be an absolute maximum and minimum. If <span class="math inline">\(f(x)\)</span> is ever positive, then the absolute maximum occurs in <span class="math inline">\((a,b)\)</span> - not at an endpoint - so at a critical point where the derivative is <span class="math inline">\(0\)</span>. Similarly if <span class="math inline">\(f(x)\)</span> is ever negative. Finally, if <span class="math inline">\(f(x)\)</span> is just <span class="math inline">\(0\)</span>, then take any <span class="math inline">\(c\)</span> in <span class="math inline">\((a,b)\)</span>.</p>
+<p>The statement in Rolle’s theorem speaks to existence. It doesn’t give a recipe to find <span class="math inline">\(c\)</span>. It just guarantees that there is <em>one</em> or <em>more</em> values in the interval <span class="math inline">\((a,b)\)</span> where the derivative is <span class="math inline">\(0\)</span> if we assume differentiability on <span class="math inline">\((a,b)\)</span> and continuity on <span class="math inline">\([a,b]\)</span>.</p>
+<section id="example-2" class="level5">
+<h5 class="anchored" data-anchor-id="example-2">Example</h5>
+<p>Let <span class="math inline">\(j(x) = e^x \cdot x \cdot (x-1)\)</span>. We know <span class="math inline">\(j(0)=0\)</span> and <span class="math inline">\(j(1)=0\)</span>, so on <span class="math inline">\([0,1]\)</span>. Rolle’s theorem guarantees that we can find <em>at</em> <em>least</em> one answer (unless numeric issues arise):</p>
+<pre class="{julia}"><code>j(x) = exp(x) * x * (x-1)
+find_zeros(j', 0, 1)</code></pre>
+<p>The following graph illustrates the lone value for <span class="math inline">\(c\)</span> in <span class="math inline">\([a,b]\)</span> for this problem:</p>
+<pre class="{julia}"><code>#| echo: false
+x0 = find_zero(j', (0, 1))
+j₀ = j(x0)
+plot([j, x-&gt;j₀ + 0*(x-x0)], 0, 1; legend=false)
+scatter!([0,x0,1], [j₀, j₀, j₀])
+annotate!([(0,j₀,text("a", :bottom)),
+          (x0, j₀, text("c", :bottom)),
+          (1, j₀, text("b", :bottom))])</code></pre>
+</section>
+</section>
+<section id="the-mean-value-theorem" class="level2" data-number="25.4">
+<h2 data-number="25.4" class="anchored" data-anchor-id="the-mean-value-theorem"><span class="header-section-number">25.4</span> The mean value theorem</h2>
+<p>We are driving south and in one hour cover 70 miles. If the speed limit is 65 miles per hour, were we ever speeding? We’ll we averaged more than the speed limit so we know the answer is yes, but why? Speeding would mean our instantaneous speed was more than the speed limit, yet we only know for sure our <em>average</em> speed was more than the speed limit. The mean value tells us that if some conditions are met, then at some point (possibly more than one) we must have that our instantaneous speed is equal to our average speed.</p>
+<p>The mean value theorem is a direct generalization of Rolle’s theorem.</p>
+<blockquote class="blockquote">
+<p><em>Mean value theorem</em>: Let <span class="math inline">\(f(x)\)</span> be differentiable on <span class="math inline">\((a,b)\)</span> and continuous on <span class="math inline">\([a,b]\)</span>. Then there exists a value <span class="math inline">\(c\)</span> in <span class="math inline">\((a,b)\)</span> where <span class="math inline">\(f'(c) = (f(b) - f(a)) / (b - a)\)</span>.</p>
+</blockquote>
+<p>This says for any secant line between <span class="math inline">\(a &lt; b\)</span> there will be a parallel tangent line at some <span class="math inline">\(c\)</span> with <span class="math inline">\(a &lt; c &lt; b\)</span> (all provided <span class="math inline">\(f\)</span> is differentiable on <span class="math inline">\((a,b)\)</span> and continuous on <span class="math inline">\([a,b]\)</span>).</p>
+<p>This graph illustrates the theorem. The orange line is the secant line. A parallel line tangent to the graph is guaranteed by the mean value theorem. In this figure, there are two such lines, rendered using red.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = x^3 - x
+a, b = -2, 1.75
+m = (f(b) - f(a)) / (b-a)
+cps = find_zeros(x -&gt; f'(x) - m, a, b)
+
+p = plot(f, a-1, b+1,         linewidth=3, legend=false)
+plot!(x -&gt; f(a) + m*(x-a),  a-1, b+1,   linewidth=3, color=:orange)
+scatter!([a,b], [f(a), f(b)])
+annotate!([(a, f(a), text("a", :bottom)),
+           (b, f(b), text("b", :bottom))])
+
+for cp in cps
+    plot!(x -&gt; f(cp) + f'(cp)*(x-cp), a-1, b+1, color=:red)
+end
+scatter!(cps, f.(cps))
+subsscripts = collect("₀₁₂₃₄₅₆₇₈₉")
+annotate!([(cp, f(cp), text("c"*subsscripts[i], :bottom)) for (i,cp) ∈ enumerate(cps)])
+p</code></pre>
+<p>Like Rolle’s theorem this is a guarantee that something exists, not a recipe to find it. In fact, the mean value theorem is just Rolle’s theorem applied to:</p>
+<p><span class="math display">\[
+g(x) = f(x) - (f(a) + (f(b) - f(a)) / (b-a) \cdot (x-a))
+\]</span></p>
+<p>That is the function <span class="math inline">\(f(x)\)</span>, minus the secant line between <span class="math inline">\((a,f(a))\)</span> and <span class="math inline">\((b, f(b))\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+# Need to bring jsxgraph into PLUTO
+#caption = """
+#Illustration of the mean value theorem from
+#[jsxgraph](https://jsxgraph.uni-bayreuth.de/).
+#The polynomial function interpolates  the points ``A``,``B``,``C``, and ``D``.
+#Adjusting these creates different functions. Regardless of the
+#function -- which as a polynomial will always be continuous and
+#differentiable -- the slope of the secant line between ``A`` and ``B`` is
+#always matched by **some** tangent line between the points ``A`` and ``B``.
+#"""
+#JSXGraph(:derivatives, "mean-value.js", caption)
+nothing</code></pre>
+<div id="jsxgraph" style="width: 500px; height: 500px;"></div>
+<div class="cell hidden">
+<div class="sourceCode cell-code hidden" id="cb23" data-startfrom="383" data-source-offset="-1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 382;"><span id="cb23-383"><a href="#cb23-383" aria-hidden="true" tabindex="-1"></a>JXG <span class="op">=</span> <span class="pp">require</span>(<span class="st">"jsxgraph"</span>)<span class="op">;</span></span>
+<span id="cb23-384"><a href="#cb23-384" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-385"><a href="#cb23-385" aria-hidden="true" tabindex="-1"></a>board <span class="op">=</span> JXG<span class="op">.</span><span class="at">JSXGraph</span><span class="op">.</span><span class="fu">initBoard</span>(<span class="st">'jsxgraph'</span><span class="op">,</span> {<span class="dt">boundingbox</span><span class="op">:</span> [<span class="op">-</span><span class="dv">5</span><span class="op">,</span> <span class="dv">10</span><span class="op">,</span> <span class="dv">7</span><span class="op">,</span> <span class="op">-</span><span class="dv">6</span>]<span class="op">,</span> <span class="dt">axis</span><span class="op">:</span><span class="kw">true</span>})<span class="op">;</span></span>
+<span id="cb23-386"><a href="#cb23-386" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> [</span>
+<span id="cb23-387"><a href="#cb23-387" aria-hidden="true" tabindex="-1"></a>  board<span class="op">.</span><span class="fu">create</span>(<span class="st">'point'</span><span class="op">,</span> [<span class="op">-</span><span class="dv">1</span><span class="op">,-</span><span class="dv">2</span>]<span class="op">,</span> {<span class="dt">size</span><span class="op">:</span><span class="dv">2</span>})<span class="op">,</span></span>
+<span id="cb23-388"><a href="#cb23-388" aria-hidden="true" tabindex="-1"></a>  board<span class="op">.</span><span class="fu">create</span>(<span class="st">'point'</span><span class="op">,</span> [<span class="dv">6</span><span class="op">,</span><span class="dv">5</span>]<span class="op">,</span> {<span class="dt">size</span><span class="op">:</span><span class="dv">2</span>})<span class="op">,</span></span>
+<span id="cb23-389"><a href="#cb23-389" aria-hidden="true" tabindex="-1"></a>  board<span class="op">.</span><span class="fu">create</span>(<span class="st">'point'</span><span class="op">,</span> [<span class="op">-</span><span class="fl">0.5</span><span class="op">,</span><span class="dv">1</span>]<span class="op">,</span> {<span class="dt">size</span><span class="op">:</span><span class="dv">2</span>})<span class="op">,</span></span>
+<span id="cb23-390"><a href="#cb23-390" aria-hidden="true" tabindex="-1"></a>  board<span class="op">.</span><span class="fu">create</span>(<span class="st">'point'</span><span class="op">,</span> [<span class="dv">3</span><span class="op">,</span><span class="dv">3</span>]<span class="op">,</span> {<span class="dt">size</span><span class="op">:</span><span class="dv">2</span>})</span>
+<span id="cb23-391"><a href="#cb23-391" aria-hidden="true" tabindex="-1"></a>]<span class="op">;</span></span>
+<span id="cb23-392"><a href="#cb23-392" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> JXG<span class="op">.</span><span class="at">Math</span><span class="op">.</span><span class="at">Numerics</span><span class="op">.</span><span class="fu">lagrangePolynomial</span>(p)<span class="op">;</span></span>
+<span id="cb23-393"><a href="#cb23-393" aria-hidden="true" tabindex="-1"></a>graph <span class="op">=</span> board<span class="op">.</span><span class="fu">create</span>(<span class="st">'functiongraph'</span><span class="op">,</span> [f<span class="op">,-</span><span class="dv">10</span><span class="op">,</span> <span class="dv">10</span>])<span class="op">;</span></span>
+<span id="cb23-394"><a href="#cb23-394" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-395"><a href="#cb23-395" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> <span class="kw">function</span>(x) {</span>
+<span id="cb23-396"><a href="#cb23-396" aria-hidden="true" tabindex="-1"></a>     <span class="cf">return</span> JXG<span class="op">.</span><span class="at">Math</span><span class="op">.</span><span class="at">Numerics</span><span class="op">.</span><span class="fu">D</span>(f)(x)<span class="op">-</span>(p[<span class="dv">1</span>]<span class="op">.</span><span class="fu">Y</span>()<span class="op">-</span>p[<span class="dv">0</span>]<span class="op">.</span><span class="fu">Y</span>())<span class="op">/</span>(p[<span class="dv">1</span>]<span class="op">.</span><span class="fu">X</span>()<span class="op">-</span>p[<span class="dv">0</span>]<span class="op">.</span><span class="fu">X</span>())<span class="op">;</span></span>
+<span id="cb23-397"><a href="#cb23-397" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
+<span id="cb23-398"><a href="#cb23-398" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-399"><a href="#cb23-399" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> board<span class="op">.</span><span class="fu">create</span>(<span class="st">'glider'</span><span class="op">,</span> [</span>
+<span id="cb23-400"><a href="#cb23-400" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">function</span>() { <span class="cf">return</span> JXG<span class="op">.</span><span class="at">Math</span><span class="op">.</span><span class="at">Numerics</span><span class="op">.</span><span class="fu">root</span>(g<span class="op">,</span>(p[<span class="dv">0</span>]<span class="op">.</span><span class="fu">X</span>()<span class="op">+</span>p[<span class="dv">1</span>]<span class="op">.</span><span class="fu">X</span>())<span class="op">*</span><span class="fl">0.5</span>)<span class="op">;</span> }<span class="op">,</span></span>
+<span id="cb23-401"><a href="#cb23-401" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">function</span>() { <span class="cf">return</span> <span class="fu">f</span>(JXG<span class="op">.</span><span class="at">Math</span><span class="op">.</span><span class="at">Numerics</span><span class="op">.</span><span class="fu">root</span>(g<span class="op">,</span>(p[<span class="dv">0</span>]<span class="op">.</span><span class="fu">X</span>()<span class="op">+</span>p[<span class="dv">1</span>]<span class="op">.</span><span class="fu">X</span>())<span class="op">*</span><span class="fl">0.5</span>))<span class="op">;</span> }<span class="op">,</span></span>
+<span id="cb23-402"><a href="#cb23-402" aria-hidden="true" tabindex="-1"></a>                    graph]<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span><span class="st">' '</span><span class="op">,</span><span class="dt">size</span><span class="op">:</span><span class="dv">4</span><span class="op">,</span><span class="dt">fixed</span><span class="op">:</span><span class="kw">true</span>})<span class="op">;</span></span>
+<span id="cb23-403"><a href="#cb23-403" aria-hidden="true" tabindex="-1"></a>board<span class="op">.</span><span class="fu">create</span>(<span class="st">'tangent'</span><span class="op">,</span> [r]<span class="op">,</span> {<span class="dt">strokeColor</span><span class="op">:</span><span class="st">'#ff0000'</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-7" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-8" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb24" data-startfrom="404" data-source-offset="-830"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 403;"><span id="cb24-404"><a href="#cb24-404" aria-hidden="true" tabindex="-1"></a>line <span class="op">=</span> board<span class="op">.</span><span class="fu">create</span>(<span class="st">'line'</span><span class="op">,</span>[p[<span class="dv">0</span>]<span class="op">,</span>p[<span class="dv">1</span>]]<span class="op">,</span>{<span class="dt">strokeColor</span><span class="op">:</span><span class="st">'#ff0000'</span><span class="op">,</span><span class="dt">dash</span><span class="op">:</span><span class="dv">1</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-9" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<p>This interactive example can also be found at <a href="http://jsxgraph.uni-bayreuth.de/wiki/index.php?title=Mean_Value_Theorem">jsxgraph</a>. It shows a cubic polynomial fit to the <span class="math inline">\(4\)</span> adjustable points labeled A through D. The secant line is drawn between points A and B with a dashed line. A tangent line – with the same slope as the secant line – is identified at a point <span class="math inline">\((\alpha, f(\alpha))\)</span> where <span class="math inline">\(\alpha\)</span> is between the points A and B. That this can always be done is a conseuqence of the mean value theorem.</p>
+<section id="example-3" class="level5">
+<h5 class="anchored" data-anchor-id="example-3">Example</h5>
+<p>The mean value theorem is an extremely useful tool to relate properties of a function with properties of its derivative, as, like Rolle’s theorem, it includes both <span class="math inline">\(f\)</span> and <span class="math inline">\(f'\)</span> in its statement.</p>
+<p>For example, suppose we have a function <span class="math inline">\(f(x)\)</span> and we know that the derivative is <strong>always</strong> <span class="math inline">\(0\)</span>. What can we say about the function?</p>
+<p>Well, constant functions have derivatives that are constantly <span class="math inline">\(0\)</span>. But do others? We will see the answer is no: If a function has a zero derivative in <span class="math inline">\((a,b)\)</span> it must be a constant. We can readily see that if <span class="math inline">\(f\)</span> is a polynomial function this is the case, as we can differentiate a polynomial function and this will be zero only if <strong>all</strong> its coefficients are <span class="math inline">\(0\)</span>, which would mean there is no non-constant leading term in the polynomial. But polynomials are not representative of all functions, and so a proof requires a bit more effort.</p>
+<p>Suppose it is known that <span class="math inline">\(f'(x)=0\)</span> on some interval <span class="math inline">\(I\)</span> and we take any <span class="math inline">\(a &lt; b\)</span> in <span class="math inline">\(I\)</span>. Since <span class="math inline">\(f'(x)\)</span> always exists, <span class="math inline">\(f(x)\)</span> is always differentiable, and hence always continuous. So on <span class="math inline">\([a,b]\)</span> the conditions of the mean value theorem apply. That is, there is a <span class="math inline">\(c\)</span> in <span class="math inline">\((a,b)\)</span> with <span class="math inline">\((f(b) - f(a)) / (b-a) = f'(c) = 0\)</span>. But this would imply <span class="math inline">\(f(b) - f(a)=0\)</span>. That is <span class="math inline">\(f(x)\)</span> is a constant, as for any <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>, we see <span class="math inline">\(f(a)=f(b)\)</span>.</p>
+</section>
+<section id="the-cauchy-mean-value-theorem" class="level3" data-number="25.4.1">
+<h3 data-number="25.4.1" class="anchored" data-anchor-id="the-cauchy-mean-value-theorem"><span class="header-section-number">25.4.1</span> The Cauchy mean value theorem</h3>
+<p><a href="http://en.wikipedia.org/wiki/Mean_value_theorem#Cauchy.27s_mean_value_theorem">Cauchy</a> offered an extension to the mean value theorem above. Suppose both <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> satisfy the conditions of the mean value theorem on <span class="math inline">\([a,b]\)</span> with <span class="math inline">\(g(b)-g(a) \neq 0\)</span>, then there exists at least one <span class="math inline">\(c\)</span> with <span class="math inline">\(a &lt; c &lt; b\)</span> such that</p>
+<p><span class="math display">\[
+f'(c)  = g'(c) \cdot \frac{f(b) - f(a)}{g(b) - g(a)}.
+\]</span></p>
+<p>The proof follows by considering <span class="math inline">\(h(x) = f(x) - r\cdot g(x)\)</span>, with <span class="math inline">\(r\)</span> chosen so that <span class="math inline">\(h(a)=h(b)\)</span>. Then Rolle’s theorem applies so that there is a <span class="math inline">\(c\)</span> with <span class="math inline">\(h'(c)=0\)</span>, so <span class="math inline">\(f'(c) = r g'(c)\)</span>, but <span class="math inline">\(r\)</span> can be seen to be <span class="math inline">\((f(b)-f(a))/(g(b)-g(a))\)</span>, which proves the theorem.</p>
+<p>Letting <span class="math inline">\(g(x) = x\)</span> demonstrates that the mean value theorem is a special case.</p>
+<section id="example-4" class="level5">
+<h5 class="anchored" data-anchor-id="example-4">Example</h5>
+<p>Suppose <span class="math inline">\(f(x)\)</span> and <span class="math inline">\(g(x)\)</span> satisfy the Cauchy mean value theorem on <span class="math inline">\([0,x]\)</span>, <span class="math inline">\(g'(x)\)</span> is non-zero on <span class="math inline">\((0,x)\)</span>, and <span class="math inline">\(f(0)=g(0)=0\)</span>. Then we have:</p>
+<p><span class="math display">\[
+\frac{f(x) - f(0)}{g(x) - g(0)} = \frac{f(x)}{g(x)} = \frac{f'(c)}{g'(c)},
+\]</span></p>
+<p>For some <span class="math inline">\(c\)</span> in <span class="math inline">\([0,x]\)</span>. If <span class="math inline">\(\lim_{x \rightarrow 0} f'(x)/g'(x) = L\)</span>, then the right hand side will have a limit of <span class="math inline">\(L\)</span>, and hence the left hand side will too. That is, when the limit exists, we have under these conditions that <span class="math inline">\(\lim_{x\rightarrow 0}f(x)/g(x) = \lim_{x\rightarrow 0}f'(x)/g'(x)\)</span>.</p>
+<p>This could be used to prove the limit of <span class="math inline">\(\sin(x)/x\)</span> as <span class="math inline">\(x\)</span> goes to <span class="math inline">\(0\)</span> just by showing the limit of <span class="math inline">\(\cos(x)/1\)</span> is <span class="math inline">\(1\)</span>, as is known by continuity.</p>
+</section>
+</section>
+<section id="visualizing-the-cauchy-mean-value-theorem" class="level3" data-number="25.4.2">
+<h3 data-number="25.4.2" class="anchored" data-anchor-id="visualizing-the-cauchy-mean-value-theorem"><span class="header-section-number">25.4.2</span> Visualizing the Cauchy mean value theorem</h3>
+<p>The Cauchy mean value theorem can be visualized in terms of a tangent line and a <em>parallel</em> secant line in a similar manner as the mean value theorem as long as a <em>parametric</em> graph is used. A parametric graph plots the points <span class="math inline">\((g(t), f(t))\)</span> for some range of <span class="math inline">\(t\)</span>. That is, it graphs <em>both</em> functions at the same time. The following illustrates the construction of such a graph:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+### {{{parametric_fns}}}
+gr()
+
+
+function parametric_fns_graph(n)
+    f = (x) -&gt; sin(x)
+    g = (x) -&gt; x
+
+    ns = (1:10)/10
+    ts = range(-pi/2, stop=-pi/2 + ns[n] * pi, length=100)
+
+    plt = plot(f, g, -pi/2, -pi/2 + ns[n] * pi, legend=false, size=fig_size,
+               xlim=(-1.1,1.1), ylim=(-pi/2-.1, pi/2+.1))
+    scatter!(plt, [f(ts[end])], [g(ts[end])], color=:orange, markersize=5)
+    val = @sprintf("% 0.2f", ts[end])
+    annotate!(plt, [(0, 1, "t = $val")])
+end
+caption = L"""
+
+Illustration of parametric graph of $(g(t), f(t))$ for $-\pi/2 \leq t
+\leq \pi/2$ with $g(x) = \sin(x)$ and  $f(x) = x$. Each point on the
+graph is from some value $t$ in the interval. We can see that the
+graph goes through $(0,0)$ as that is when $t=0$. As well, it must go
+through $(1, \pi/2)$ as that is when $t=\pi/2$
+
+"""
+
+
+n = 10
+anim = @animate for i=1:n
+    parametric_fns_graph(i)
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<p>With <span class="math inline">\(g(x) = \sin(x)\)</span> and <span class="math inline">\(f(x) = x\)</span>, we can take <span class="math inline">\(I=[a,b] = [0, \pi/2]\)</span>. In the figure below, the <em>secant line</em> is drawn in red which connects <span class="math inline">\((g(a), f(a))\)</span> with the point <span class="math inline">\((g(b), f(b))\)</span>, and hence has slope <span class="math inline">\(\Delta f/\Delta g\)</span>. The parallel lines drawn show the <em>tangent</em> lines with slope <span class="math inline">\(f'(c)/g'(c)\)</span>. Two exist for this problem, the mean value theorem guarantees at least one will.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+g(x) = sin(x)
+f(x) = x
+ts = range(-pi/2, stop=pi/2, length=50)
+a,b = 0, pi/2
+m = (f(b) - f(a))/(g(b) - g(a))
+cps = find_zeros(x -&gt; f'(x)/g'(x) - m, -pi/2, pi/2)
+c = cps[1]
+Delta = (0 + m * (c - 0)) - (g(c))
+
+p = plot(g, f, -pi/2, pi/2, linewidth=3, legend=false)
+plot!(x -&gt; f(a) + m * (x - g(a)), -1, 1, linewidth=3, color=:red)
+scatter!([g(a),g(b)], [f(a), f(b)])
+for c in cps
+  plot!(x -&gt; f(c) + m * (x - g(c)), -1, 1, color=:orange)
+end
+
+p</code></pre>
+</section>
+</section>
+<section id="questions" class="level2" data-number="25.5">
+<h2 data-number="25.5" class="anchored" data-anchor-id="questions"><span class="header-section-number">25.5</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>Rolle’s theorem is a guarantee of a value, but does not provide a recipe to find it. For the function <span class="math inline">\(1 - x^2\)</span> over the interval <span class="math inline">\([-5,5]\)</span>, find a value <span class="math inline">\(c\)</span> that satisfies the result.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+c = 0
+numericq(c)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>The extreme value theorem is a guarantee of a value, but does not provide a recipe to find it. For the function <span class="math inline">\(f(x) = \sin(x)\)</span> on <span class="math inline">\(I=[0, \pi]\)</span> find a value <span class="math inline">\(c\)</span> satisfying the theorem for an absolute maximum.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+c = pi/2
+numericq(c)</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>The extreme value theorem is a guarantee of a value, but does not provide a recipe to find it. For the function <span class="math inline">\(f(x) = \cos(x)\)</span> on <span class="math inline">\(I=[\pi, 3\pi/2]\)</span> find a value <span class="math inline">\(c\)</span> in <span class="math inline">\(I\)</span> for which <span class="math inline">\(f(x)\)</span> has its maximum value.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+c = 3pi/2
+numericq(c)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>The mean value theorem is a guarantee of a value, but does not provide a recipe to find it. For <span class="math inline">\(f(x) = x^2\)</span> on <span class="math inline">\([0,2]\)</span> find a value of <span class="math inline">\(c\)</span> satisfying the theorem.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+c = 1
+numericq(c)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>The Cauchy mean value theorem is a guarantee of a value, but does not provide a recipe to find it. For <span class="math inline">\(f(x) = x^3\)</span> and <span class="math inline">\(g(x) = x^2\)</span> find a value <span class="math inline">\(c\)</span> in the interval <span class="math inline">\([1, 2]\)</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+c,x = symbols("c, x", real=true)
+val = solve(3c^2 / (2c) - (2^3 - 1^3) / (2^2 - 1^2), c)[1]
+numericq(float(val))</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>Will the function <span class="math inline">\(f(x) = x + 1/x\)</span> satisfy the conditions of the mean value theorem over <span class="math inline">\([-1/2, 1/2]\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+radioq(["Yes", "No"], 2)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>Just as it is a fact that <span class="math inline">\(f'(x) = 0\)</span> (for all <span class="math inline">\(x\)</span> in <span class="math inline">\(I\)</span>) implies <span class="math inline">\(f(x)\)</span> is a constant, so too is it a fact that if <span class="math inline">\(f'(x) = g'(x)\)</span> that <span class="math inline">\(f(x) - g(x)\)</span> is a constant. What function would you consider, if you wanted to prove this with the mean value theorem?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``h(x) = f(x) - (f(b) - f(a)) / (b - a)``",
+"``h(x) = f(x) - (f(b) - f(a)) / (b - a) \\cdot g(x)``",
+"``h(x) = f(x) - g(x)``",
+"``h(x) = f'(x) - g'(x)``"
+]
+answ = 3
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>Suppose <span class="math inline">\(f''(x) &gt; 0\)</span> on <span class="math inline">\(I\)</span>. Why is it impossible that <span class="math inline">\(f'(x) = 0\)</span> at more than one value in <span class="math inline">\(I\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"It isn't. The function $f(x) = x^2$ has two zeros and $f''(x) = 2 &gt; 0$",
+"By the Rolle's theorem, there is at least one, and perhaps more",
+L"By the mean value theorem, we must have $f'(b) - f'(a) &gt; 0$ whenever $b &gt; a$. This means $f'(x)$ is increasing and can't double back to have more than one zero."
+]
+answ = 3
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-8" class="level6">
+<h6 class="anchored" data-anchor-id="question-8">Question</h6>
+<p>Let <span class="math inline">\(f(x) = 1/x\)</span>. For <span class="math inline">\(0 &lt; a &lt; b\)</span>, find <span class="math inline">\(c\)</span> so that <span class="math inline">\(f'(c) = (f(b) - f(a)) / (b-a)\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``c = (a+b)/2``",
+"``c = \\sqrt{ab}``",
+"``c = 1 / (1/a + 1/b)``",
+"``c = a + (\\sqrt{5} - 1)/2 \\cdot (b-a)``"
+]
+answ = 2
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-9" class="level6">
+<h6 class="anchored" data-anchor-id="question-9">Question</h6>
+<p>Let <span class="math inline">\(f(x) = x^2\)</span>. For <span class="math inline">\(0 &lt; a &lt; b\)</span>, find <span class="math inline">\(c\)</span> so that <span class="math inline">\(f'(c) = (f(b) - f(a)) / (b-a)\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``c = (a+b)/2``",
+"``c = \\sqrt{ab}``",
+"``c = 1 / (1/a + 1/b)``",
+"``c = a + (\\sqrt{5} - 1)/2 \\cdot (b-a)``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-10" class="level6">
+<h6 class="anchored" data-anchor-id="question-10">Question</h6>
+<p>In an example, we used the fact that if <span class="math inline">\(0 &lt; c &lt; x\)</span>, for some <span class="math inline">\(c\)</span> given by the mean value theorem and <span class="math inline">\(f(x)\)</span> goes to <span class="math inline">\(0\)</span> as <span class="math inline">\(x\)</span> goes to zero then <span class="math inline">\(f(c)\)</span> will also go to zero. As <span class="math inline">\(c\)</span> depends on <span class="math inline">\(x\)</span>, suppose we write <span class="math inline">\(c=g(x)\)</span> for some function <span class="math inline">\(g\)</span>.</p>
+<p>Why is it known that <span class="math inline">\(g(x)\)</span> goes to <span class="math inline">\(0\)</span> as <span class="math inline">\(x\)</span> goes to zero (from the right)?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [L"The squeeze theorem applies, as $0 &lt; g(x) &lt; x$.",
+L"As $f(x)$ goes to zero by Rolle's theorem it must be that $g(x)$ goes to $0$.",
+L"This follows by the extreme value theorem, as there must be some $c$ in $[0,x]$."]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>Since <span class="math inline">\(g(x)\)</span> goes to zero, why is it true that if <span class="math inline">\(f(x)\)</span> goes to <span class="math inline">\(L\)</span> as <span class="math inline">\(x\)</span> goes to zero that <span class="math inline">\(f(g(x))\)</span> must also have a limit <span class="math inline">\(L\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["It isn't true. The limit must be 0",
+L"The squeeze theorem applies, as $0 &lt; g(x) &lt; x$",
+"This follows from the limit rules for composition of functions"]
+answ = 3
+radioq(choices, answ)</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlxuSlhHID0gcmVxdWlyZShcImpzeGdyYXBoXCIpO1xuXG5ib2FyZCA9IEpYRy5KU1hHcmFwaC5pbml0Qm9hcmQoJ2pzeGdyYXBoJywge2JvdW5kaW5nYm94OiBbLTUsIDEwLCA3LCAtNl0sIGF4aXM6dHJ1ZX0pO1xucCA9IFtcbiAgYm9hcmQuY3JlYXRlKCdwb2ludCcsIFstMSwtMl0sIHtzaXplOjJ9KSxcbiAgYm9hcmQuY3JlYXRlKCdwb2ludCcsIFs2LDVdLCB7c2l6ZToyfSksXG4gIGJvYXJkLmNyZWF0ZSgncG9pbnQnLCBbLTAuNSwxXSwge3NpemU6Mn0pLFxuICBib2FyZC5jcmVhdGUoJ3BvaW50JywgWzMsM10sIHtzaXplOjJ9KVxuXTtcbmYgPSBKWEcuTWF0aC5OdW1lcmljcy5sYWdyYW5nZVBvbHlub21pYWwocCk7XG5ncmFwaCA9IGJvYXJkLmNyZWF0ZSgnZnVuY3Rpb25ncmFwaCcsIFtmLC0xMCwgMTBdKTtcblxuZyA9IGZ1bmN0aW9uKHgpIHtcbiAgICAgcmV0dXJuIEpYRy5NYXRoLk51bWVyaWNzLkQoZikoeCktKHBbMV0uWSgpLXBbMF0uWSgpKS8ocFsxXS5YKCktcFswXS5YKCkpO1xufTtcblxuciA9IGJvYXJkLmNyZWF0ZSgnZ2xpZGVyJywgW1xuICAgICAgICAgICAgICAgICAgICBmdW5jdGlvbigpIHsgcmV0dXJuIEpYRy5NYXRoLk51bWVyaWNzLnJvb3QoZywocFswXS5YKCkrcFsxXS5YKCkpKjAuNSk7IH0sXG4gICAgICAgICAgICAgICAgICAgIGZ1bmN0aW9uKCkgeyByZXR1cm4gZihKWEcuTWF0aC5OdW1lcmljcy5yb290KGcsKHBbMF0uWCgpK3BbMV0uWCgpKSowLjUpKTsgfSxcbiAgICAgICAgICAgICAgICAgICAgZ3JhcGhdLCB7bmFtZTonICcsc2l6ZTo0LGZpeGVkOnRydWV9KTtcbmJvYXJkLmNyZWF0ZSgndGFuZ2VudCcsIFtyXSwge3N0cm9rZUNvbG9yOicjZmYwMDAwJ30pO1xubGluZSA9IGJvYXJkLmNyZWF0ZSgnbGluZScsW3BbMF0scFsxXV0se3N0cm9rZUNvbG9yOicjZmYwMDAwJyxkYXNoOjF9KTtcbiJ9XX0=
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../derivatives";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../derivatives/symbolic_derivatives.html" class="pagination-link" aria-label="Symbolic derivatives">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../derivatives/optimization.html" class="pagination-link" aria-label="Optimization">
+        <span class="nav-page-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/derivatives/mean_value_theorem.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

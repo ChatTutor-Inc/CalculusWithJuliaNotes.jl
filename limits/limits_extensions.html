@@ -1,0 +1,2023 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>19&nbsp; Limits, issues, extensions of the concept – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../limits/continuity.html" rel="next">
+<link href="../limits/limits.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../limits.html">Limits</a></li><li class="breadcrumb-item"><a href="../limits/limits_extensions.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#right-and-left-limits" id="toc-right-and-left-limits" class="nav-link active" data-scroll-target="#right-and-left-limits"><span class="header-section-number">19.1</span> Right and left limits</a></li>
+  <li><a href="#limits-at-infinity" id="toc-limits-at-infinity" class="nav-link" data-scroll-target="#limits-at-infinity"><span class="header-section-number">19.2</span> Limits at infinity</a></li>
+  <li><a href="#limits-of-infinity" id="toc-limits-of-infinity" class="nav-link" data-scroll-target="#limits-of-infinity"><span class="header-section-number">19.3</span> Limits of infinity</a></li>
+  <li><a href="#limits-of-sequences" id="toc-limits-of-sequences" class="nav-link" data-scroll-target="#limits-of-sequences"><span class="header-section-number">19.4</span> Limits of sequences</a>
+  <ul class="collapse">
+  <li><a href="#some-limit-theorems-for-sequences" id="toc-some-limit-theorems-for-sequences" class="nav-link" data-scroll-target="#some-limit-theorems-for-sequences"><span class="header-section-number">19.4.1</span> Some limit theorems for sequences</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">19.5</span> Summary</a></li>
+  <li><a href="#rates-of-growth" id="toc-rates-of-growth" class="nav-link" data-scroll-target="#rates-of-growth"><span class="header-section-number">19.6</span> Rates of growth</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">19.7</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/limits/limits_extensions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../limits.html">Limits</a></li><li class="breadcrumb-item"><a href="../limits/limits_extensions.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses the following add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+plotly()
+using SymPy</code></pre>
+<pre class="{julia}"><code>#| echo: false
+#| results: "hidden"
+using DataFrames
+nothing</code></pre>
+<hr>
+<p>The limit of a function at <span class="math inline">\(c\)</span> need not exist for one of many different reasons. Some of these reasons can be handled with extensions to the concept of the limit, others are just problematic in terms of limits. This section covers examples of each.</p>
+<p>Let’s begin with a function that is just problematic. Consider</p>
+<p><span class="math display">\[
+f(x) = \sin(1/x)
+\]</span></p>
+<p>As this is a composition of nice functions it will have a limit everywhere except possibly when <span class="math inline">\(x=0\)</span>, as then <span class="math inline">\(1/x\)</span> may not have a limit. So rather than talk about where it is nice, let’s consider the question of whether a limit exists at <span class="math inline">\(c=0\)</span>.</p>
+<p>A graph shows the issue:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = sin(1/x)
+plot(f, range(-1, stop=1, length=1000))</code></pre>
+<p>The graph oscillates between <span class="math inline">\(-1\)</span> and <span class="math inline">\(1\)</span> infinitely many times on this interval - so many times, that no matter how close one zooms in, the graph on the screen will fail to capture them all. Graphically, there is no single value of <span class="math inline">\(L\)</span> that the function gets close to, as it varies between all the values in <span class="math inline">\([-1,1]\)</span> as <span class="math inline">\(x\)</span> gets close to <span class="math inline">\(0\)</span>. A simple proof that there is no limit, is to take any <span class="math inline">\(\epsilon\)</span> less than <span class="math inline">\(1\)</span>, then with any <span class="math inline">\(\delta &gt; 0\)</span>, there are infinitely many <span class="math inline">\(x\)</span> values where <span class="math inline">\(f(x)=1\)</span> and infinitely many where <span class="math inline">\(f(x) = -1\)</span>. That is, there is no <span class="math inline">\(L\)</span> with <span class="math inline">\(|f(x) - L| &lt; \epsilon\)</span> when <span class="math inline">\(\epsilon\)</span> is less than <span class="math inline">\(1\)</span> for all <span class="math inline">\(x\)</span> near <span class="math inline">\(0\)</span>.</p>
+<p>This function basically has too many values it gets close to. Another favorite example of such a function is the function that is <span class="math inline">\(0\)</span> if <span class="math inline">\(x\)</span> is rational and <span class="math inline">\(1\)</span> if not. This function will have no limit anywhere, not just at <span class="math inline">\(0\)</span>, and for basically the same reason as above.</p>
+<p>The issue isn’t oscillation though. Take, for example, the function <span class="math inline">\(f(x) = x \cdot \sin(1/x)\)</span>. This function again has a limit everywhere save possibly <span class="math inline">\(0\)</span>. But in this case, there is a limit at <span class="math inline">\(0\)</span> of <span class="math inline">\(0\)</span>. This is because, the following is true:</p>
+<p><span class="math display">\[
+-|x| \leq x \sin(1/x) \leq |x|.
+\]</span></p>
+<p>The following figure illustrates:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = x * sin(1/x)
+plot(f, -1, 1)
+plot!(abs)
+plot!(x -&gt; -abs(x))</code></pre>
+<p>The <a href="http://en.wikipedia.org/wiki/Squeeze_theorem">squeeze</a> theorem of calculus is the formal reason <span class="math inline">\(f\)</span> has a limit at <span class="math inline">\(0\)</span>, as both the upper function, <span class="math inline">\(|x|\)</span>, and the lower function, <span class="math inline">\(-|x|\)</span>, have a limit of <span class="math inline">\(0\)</span> at <span class="math inline">\(0\)</span>.</p>
+<section id="right-and-left-limits" class="level2" data-number="19.1">
+<h2 data-number="19.1" class="anchored" data-anchor-id="right-and-left-limits"><span class="header-section-number">19.1</span> Right and left limits</h2>
+<p>Another example where <span class="math inline">\(f(x)\)</span> has no limit is the function <span class="math inline">\(f(x) = x /|x|, x \neq 0\)</span>. This function is <span class="math inline">\(-1\)</span> for negative <span class="math inline">\(x\)</span> and <span class="math inline">\(1\)</span> for positive <span class="math inline">\(x\)</span>. Again, this function will have a limit everywhere except possibly at <span class="math inline">\(x=0\)</span>, where division by <span class="math inline">\(0\)</span> is possible.</p>
+<p>It’s graph is</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = abs(x)/x
+plot(f, -2, 2)</code></pre>
+<p>The sharp jump at <span class="math inline">\(0\)</span> is misleading - again, the plotting algorithm just connects the points, it doesn’t handle what is a fundamental discontinuity well - the function is not defined at <span class="math inline">\(0\)</span> and jumps from <span class="math inline">\(-1\)</span> to <span class="math inline">\(1\)</span> there. Similarly to our example of <span class="math inline">\(\sin(1/x)\)</span>, near <span class="math inline">\(0\)</span> the function get’s close to both <span class="math inline">\(1\)</span> and <span class="math inline">\(-1\)</span>, so will have no limit. (Again, just take <span class="math inline">\(\epsilon\)</span> smaller than <span class="math inline">\(1\)</span>.)</p>
+<p>But unlike the previous example, this function <em>would</em> have a limit if the definition didn’t consider values of <span class="math inline">\(x\)</span> on both sides of <span class="math inline">\(c\)</span>. The limit on the right side would be <span class="math inline">\(1\)</span>, the limit on the left side would be <span class="math inline">\(-1\)</span>. This distinction is useful, so there is an extension of the idea of a limit to <em>one-sided limits</em>.</p>
+<p>Let’s loosen up the language in the definition of a limit to read:</p>
+<blockquote class="blockquote">
+<p>The limit of <span class="math inline">\(f(x)\)</span> as <span class="math inline">\(x\)</span> approaches <span class="math inline">\(c\)</span> is <span class="math inline">\(L\)</span> if for every neighborhood, <span class="math inline">\(V\)</span>, of <span class="math inline">\(L\)</span> there is a neighborhood, <span class="math inline">\(U\)</span>, of <span class="math inline">\(c\)</span> for which <span class="math inline">\(f(x)\)</span> is in <span class="math inline">\(V\)</span> for every <span class="math inline">\(x\)</span> in <span class="math inline">\(U\)</span>, except possibly <span class="math inline">\(x=c\)</span>.</p>
+</blockquote>
+<p>The <span class="math inline">\(\epsilon-\delta\)</span> definition has <span class="math inline">\(V = (L-\epsilon, L + \epsilon)\)</span> and <span class="math inline">\(U=(c-\delta, c+\delta)\)</span>. This is a rewriting of <span class="math inline">\(L-\epsilon &lt; f(x) &lt; L + \epsilon\)</span> as <span class="math inline">\(|f(x) - L| &lt; \epsilon\)</span>.</p>
+<p>Now for the definition:</p>
+<blockquote class="blockquote">
+<p>A function <span class="math inline">\(f(x)\)</span> has a limit on the right of <span class="math inline">\(c\)</span>, written <span class="math inline">\(\lim_{x  \rightarrow c+}f(x) = L\)</span> if for every <span class="math inline">\(\epsilon &gt; 0\)</span>, there exists a <span class="math inline">\(\delta &gt; 0\)</span> such that whenever <span class="math inline">\(0 &lt; x - c &lt; \delta\)</span> it holds that <span class="math inline">\(|f(x) - L| &lt; \epsilon\)</span>. That is, <span class="math inline">\(U\)</span> is <span class="math inline">\((c, c+\delta)\)</span></p>
+</blockquote>
+<p>Similarly, a limit on the left is defined where <span class="math inline">\(U=(c-\delta, c)\)</span>.</p>
+<p>The <code>SymPy</code> function <code>limit</code> has a keyword argument <code>dir="+"</code> or <code>dir="-"</code> to request that a one-sided limit be formed. The default is <code>dir="+"</code>. Passing <code>dir="+-"</code> will compute both one side limits, and throw an error if the two are not equal, in agreement with no limit existing.</p>
+<pre class="{julia}"><code>@syms x</code></pre>
+<pre class="{julia}"><code>#| hold: true
+f(x) = abs(x)/x
+limit(f(x), x=&gt;0, dir="+"), limit(f(x), x=&gt;0, dir="-")</code></pre>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>That means the mathematical limit need not exist when <code>SymPy</code>’s <code>limit</code> returns an answer, as <code>SymPy</code> is only carrying out a one sided limit. Explicitly passing <code>dir="+-"</code> or checking that both <code>limit(ex, x=&gt;c)</code> and <code>limit(ex, x=&gt;c, dir="-")</code> are equal would be needed to confirm a limit exists mathematically.</p>
+</div>
+</div>
+<p>The relation between the two concepts is that a function has a limit at <span class="math inline">\(c\)</span> if and only if the left and right limits exist and are equal. This function <span class="math inline">\(f\)</span> has both existing, but the two limits are not equal.</p>
+<p>There are other such functions that jump. Another useful one is the floor function, which just rounds down to the nearest integer. A graph shows the basic shape:</p>
+<pre class="{julia}"><code>plot(floor, -5,5)</code></pre>
+<p>Again, the (nearly) vertical lines are an artifact of the graphing algorithm and not actual points that solve <span class="math inline">\(y=f(x)\)</span>. The floor function has limits except at the integers. There the left and right limits differ.</p>
+<p>Consider the limit at <span class="math inline">\(c=0\)</span>. If <span class="math inline">\(0 &lt; x &lt; 1/2\)</span>, say, then <span class="math inline">\(f(x) = 0\)</span> as we round down, so the right limit will be <span class="math inline">\(0\)</span>. However, if <span class="math inline">\(-1/2 &lt; x &lt; 0\)</span>, then the <span class="math inline">\(f(x) = -1\)</span>, again as we round down, so the left limit will be <span class="math inline">\(-1\)</span>. Again, with this example both the left and right limits exists, but at the integer values they are not equal, as they differ by 1.</p>
+<p>Some functions only have one-sided limits as they are not defined in an interval around <span class="math inline">\(c\)</span>. There are many examples, but we will take <span class="math inline">\(f(x) = x^x\)</span> and consider <span class="math inline">\(c=0\)</span>. This function is not well defined for all <span class="math inline">\(x &lt; 0\)</span>, so it is typical to just take the domain to be <span class="math inline">\(x &gt; 0\)</span>. Still it has a right limit <span class="math inline">\(\lim_{x \rightarrow 0+} x^x = 1\)</span>. <code>SymPy</code> can verify:</p>
+<pre class="{julia}"><code>limit(x^x, x=&gt;0, dir="+")</code></pre>
+<p>This agrees with the IEEE convention of assigning <code>0^0</code> to be <code>1</code>.</p>
+<p>However, not all such functions with indeterminate forms of <span class="math inline">\(0^0\)</span> will have a limit of <span class="math inline">\(1\)</span>.</p>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>Consider this funny graph:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+xs = range(0,stop=1, length=50)
+
+plot(x-&gt;x^2, -2, -1, legend=false)
+plot!(exp, -1,0)
+plot!(x -&gt; 1-2x, 0, 1)
+plot!(sqrt, 1, 2)
+plot!(x -&gt; 1-x, 2,3)</code></pre>
+<p>Describe the limits at <span class="math inline">\(-1\)</span>, <span class="math inline">\(0\)</span>, and <span class="math inline">\(1\)</span>.</p>
+<ul>
+<li>At <span class="math inline">\(-1\)</span> we see a jump, there is no limit but instead a left limit of 1 and a right limit appearing to be <span class="math inline">\(1/2\)</span>.</li>
+<li>At <span class="math inline">\(0\)</span> we see a limit of <span class="math inline">\(1\)</span>.</li>
+<li>Finally, at <span class="math inline">\(1\)</span> again there is a jump, so no limit. Instead the left limit is about <span class="math inline">\(-1\)</span> and the right limit <span class="math inline">\(1\)</span>.</li>
+</ul>
+</section>
+</section>
+<section id="limits-at-infinity" class="level2" data-number="19.2">
+<h2 data-number="19.2" class="anchored" data-anchor-id="limits-at-infinity"><span class="header-section-number">19.2</span> Limits at infinity</h2>
+<p>The loose definition of a horizontal asymptote is “a line such that the distance between the curve and the line approaches <span class="math inline">\(0\)</span> as they tend to infinity.” This sounds like it should be defined by a limit. The issue is, that the limit would be at <span class="math inline">\(\pm\infty\)</span> and not some finite <span class="math inline">\(c\)</span>. This requires the idea of a neighborhood of <span class="math inline">\(c\)</span>, <span class="math inline">\(0 &lt; |x-c| &lt; \delta\)</span>, to be reworked.</p>
+<p>The basic idea for a limit at <span class="math inline">\(+\infty\)</span> is that for any <span class="math inline">\(\epsilon\)</span>, there exists an <span class="math inline">\(M\)</span> such that when <span class="math inline">\(x &gt; M\)</span> it must be that <span class="math inline">\(|f(x) - L| &lt; \epsilon\)</span>. For a horizontal asymptote, the line would be <span class="math inline">\(y=L\)</span>. Similarly a limit at <span class="math inline">\(-\infty\)</span> can be defined with <span class="math inline">\(x &lt; M\)</span> being the condition.</p>
+<p>Let’s consider some cases.</p>
+<p>The function <span class="math inline">\(f(x) = \sin(x)\)</span> will not have a limit at <span class="math inline">\(+\infty\)</span> for exactly the same reason that <span class="math inline">\(f(x) = \sin(1/x)\)</span> does not have a limit at <span class="math inline">\(c=0\)</span> - it just oscillates between <span class="math inline">\(-1\)</span> and <span class="math inline">\(1\)</span> so never eventually gets close to a single value.</p>
+<p><code>SymPy</code> gives an odd answer here indicating the range of values:</p>
+<pre class="{julia}"><code>limit(sin(x), x =&gt; oo)</code></pre>
+<p>(We used <code>SymPy</code>’s <code>oo</code> for <span class="math inline">\(\infty\)</span> and not <code>Inf</code>.)</p>
+<hr>
+<p>However, a damped oscillation, such as <span class="math inline">\(f(x) = e^{-x} \sin(x)\)</span> will have a limit:</p>
+<pre class="{julia}"><code>limit(exp(-x)*sin(x), x =&gt; oo)</code></pre>
+<hr>
+<p>We have rational functions will have the expected limit. In this example <span class="math inline">\(m = n\)</span>, so we get a horizontal asymptote that is not <span class="math inline">\(y=0\)</span>:</p>
+<pre class="{julia}"><code>limit((x^2 - 2x +2)/(4x^2 + 3x - 2), x=&gt;oo)</code></pre>
+<hr>
+<p>Though rational functions can have only one (at most) horizontal asymptote, this isn’t true for all functions. Consider the following <span class="math inline">\(f(x) = x / \sqrt{x^2 + 4}\)</span>. It has different limits depending if <span class="math inline">\(x\)</span> goes to <span class="math inline">\(\infty\)</span> or negative <span class="math inline">\(\infty\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = x / sqrt(x^2 + 4)
+limit(f(x), x=&gt;oo), limit(f(x), x=&gt;-oo)</code></pre>
+<p>(A simpler example showing this behavior is just the function <span class="math inline">\(x/|x|\)</span> considered earlier.)</p>
+<section id="example-limits-at-infinity-and-right-limits-at-0" class="level5">
+<h5 class="anchored" data-anchor-id="example-limits-at-infinity-and-right-limits-at-0">Example: Limits at infinity and right limits at <span class="math inline">\(0\)</span></h5>
+<p>Given a function <span class="math inline">\(f\)</span> the question of whether this exists:</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow \infty} f(x)
+\]</span></p>
+<p>can be reduced to the question of whether this limit exists:</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 0+} f(1/x)
+\]</span></p>
+<p>So whether <span class="math inline">\(\lim_{x \rightarrow 0+} \sin(1/x)\)</span> exists is equivalent to whether <span class="math inline">\(\lim_{x\rightarrow \infty} \sin(x)\)</span> exists, which clearly does not due to the oscillatory nature of <span class="math inline">\(\sin(x)\)</span>.</p>
+<p>Similarly, one can make this reduction</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow c+} f(x) =
+\lim_{x \rightarrow 0+} f(c + x) =
+\lim_{x \rightarrow \infty} f(c + \frac{1}{x}).
+\]</span></p>
+<p>That is, right limits can be analyzed as limits at <span class="math inline">\(\infty\)</span> or right limits at <span class="math inline">\(0\)</span>, should that prove more convenient.</p>
+</section>
+</section>
+<section id="limits-of-infinity" class="level2" data-number="19.3">
+<h2 data-number="19.3" class="anchored" data-anchor-id="limits-of-infinity"><span class="header-section-number">19.3</span> Limits of infinity</h2>
+<p>Vertical asymptotes are nicely defined with, as with horizontal asymptotes, by the graph getting close to some line. However, the formal definition of a limit won’t be the same. For a vertical asymptote, the value of <span class="math inline">\(f(x)\)</span> heads towards positive or negative infinity, not some finite <span class="math inline">\(L\)</span>. As such, a neighborhood like <span class="math inline">\((L-\epsilon, L+\epsilon)\)</span> will no longer make sense, rather we replace it with an expression like <span class="math inline">\((M, \infty)\)</span> or <span class="math inline">\((-\infty, M)\)</span>. As in: the limit of <span class="math inline">\(f(x)\)</span> as <span class="math inline">\(x\)</span> approaches <span class="math inline">\(c\)</span> is <em>infinity</em> if for every <span class="math inline">\(M &gt; 0\)</span> there exists a <span class="math inline">\(\delta&gt;0\)</span> such that if <span class="math inline">\(0 &lt; |x-c| &lt; \delta\)</span> then <span class="math inline">\(f(x) &gt; M\)</span>. Approaching <span class="math inline">\(-\infty\)</span> would conclude with <span class="math inline">\(f(x) &lt; -M\)</span> for <span class="math inline">\(M&gt;0\)</span>.</p>
+<section id="examples" class="level5">
+<h5 class="anchored" data-anchor-id="examples">Examples</h5>
+<p>Consider the function <span class="math inline">\(f(x) = 1/x^2\)</span>. This will have a limit at every point except possibly <span class="math inline">\(0\)</span>, where division by <span class="math inline">\(0\)</span> is possible. In this case, there is a vertical asymptote, as seen in the following graph. The limit at <span class="math inline">\(0\)</span> is <span class="math inline">\(\infty\)</span>, in the extended sense above. For <span class="math inline">\(M&gt;0\)</span>, we can take any <span class="math inline">\(0 &lt; \delta &lt; 1/\sqrt{M}\)</span>. The following graph shows <span class="math inline">\(M=25\)</span> where the function values are outside of the box, as <span class="math inline">\(f(x) &gt; M\)</span> for those <span class="math inline">\(x\)</span> values with <span class="math inline">\(0 &lt; |x-0| &lt; 1/\sqrt{M}\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = 1/x^2
+M = 25
+delta = 1/sqrt(M)
+
+f(x) = 1/x^2 &gt; 50 ? NaN : 1/x^2
+plot(f, -1, 1, legend=false)
+plot!([-delta, delta],  [M,M], color=colorant"orange")
+plot!([-delta, -delta], [0,M], color=colorant"red")
+plot!([delta, delta], [0,M], color=colorant"red")</code></pre>
+<hr>
+<p>The function <span class="math inline">\(f(x)=1/x\)</span> requires us to talk about left and right limits of infinity, with the natural generalization. We can see that the left limit at <span class="math inline">\(0\)</span> is <span class="math inline">\(-\infty\)</span> and the right limit <span class="math inline">\(\infty\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = 1/x
+plot(f, 1/50, 1,    color=:blue, legend=false)
+plot!(f, -1, -1/50, color=:blue)</code></pre>
+<p><code>SymPy</code> agrees:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = 1/x
+limit(f(x), x=&gt;0, dir="-"), limit(f(x), x=&gt;0, dir="+")</code></pre>
+<hr>
+<p>Consider the function <span class="math inline">\(g(x) = x^x(1 + \log(x)), x &gt; 0\)</span>. Does this have a <em>right</em> limit at <span class="math inline">\(0\)</span>?</p>
+<p>A quick graph shows that a limit may be <span class="math inline">\(-\infty\)</span>:</p>
+<pre class="{julia}"><code>g(x) = x^x * (1 + log(x))
+plot(g, 1/100, 1)</code></pre>
+<p>We can check with <code>SymPy</code>:</p>
+<pre class="{julia}"><code>limit(g(x), x=&gt;0, dir="+")</code></pre>
+</section>
+</section>
+<section id="limits-of-sequences" class="level2" data-number="19.4">
+<h2 data-number="19.4" class="anchored" data-anchor-id="limits-of-sequences"><span class="header-section-number">19.4</span> Limits of sequences</h2>
+<p>After all this, we still can’t formalize the basic question asked in the introduction to limits: what is the area contained in a parabola. For that we developed a sequence of sums: <span class="math inline">\(s_n = 1/2 \cdot((1/4)^0 + (1/4)^1 + (1/4)^2 + \cdots + (1/4)^n)\)</span>. This isn’t a function of <span class="math inline">\(x\)</span>, but rather depends only on non-negative integer values of <span class="math inline">\(n\)</span>. However, the same idea as a limit at infinity can be used to define a limit.</p>
+<blockquote class="blockquote">
+<p>Let <span class="math inline">\(a_0,a_1, a_2, \dots, a_n, \dots\)</span> be a sequence of values indexed by <span class="math inline">\(n\)</span>. We have <span class="math inline">\(\lim_{n \rightarrow \infty} a_n = L\)</span> if for every <span class="math inline">\(\epsilon &gt; 0\)</span> there exists an <span class="math inline">\(M&gt;0\)</span> where if <span class="math inline">\(n &gt; M\)</span> then <span class="math inline">\(|a_n - L| &lt; \epsilon\)</span>.</p>
+</blockquote>
+<p>Common language is the sequence <em>converges</em> when the limit exists and otherwise <em>diverges</em>.</p>
+<p>The above is essentially the same as a limit <em>at</em> infinity for a function, but in this case the function’s domain is only the non-negative integers.</p>
+<p><code>SymPy</code> is happy to compute limits of sequences. Defining this one involving a sum is best done with the <code>summation</code> function:</p>
+<pre class="{julia}"><code>@syms i::integer n::(integer, positive)
+s(n) = 1//2 * summation((1//4)^i, (i, 0, n))    # rationals make for an exact answer
+limit(s(n), n=&gt;oo)</code></pre>
+<section id="example-1" class="level5">
+<h5 class="anchored" data-anchor-id="example-1">Example</h5>
+<p>The limit</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 0} \frac{e^x - 1}{x} = 1,
+\]</span></p>
+<p>is an important limit. Using the definition of <span class="math inline">\(e^x\)</span> by an infinite sequence:</p>
+<p><span class="math display">\[
+e^x = \lim_{n \rightarrow \infty} (1 + \frac{x}{n})^n,
+\]</span></p>
+<p>we can establish the limit using the squeeze theorem. First,</p>
+<p><span class="math display">\[
+A = |(1 + \frac{x}{n})^n - 1 - x| = |\Sigma_{k=0}^n {n \choose k}(\frac{x}{n})^k - 1 - x| = |\Sigma_{k=2}^n {n \choose k}(\frac{x}{n})^k|,
+\]</span></p>
+<p>the first two sums cancelling off. The above comes from the binomial expansion theorem for a polynomial. Now <span class="math inline">\({n \choose k} \leq n^k\)</span>so we have</p>
+<p><span class="math display">\[
+A \leq \Sigma_{k=2}^n |x|^k = |x|^2 \frac{1 - |x|^{n+1}}{1 - |x|} \leq
+\frac{|x|^2}{1 - |x|}.
+\]</span></p>
+<p>using the <em>geometric</em> sum formula with <span class="math inline">\(x \approx 0\)</span> (and not <span class="math inline">\(1\)</span>):</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x n i
+summation(x^i, (i,0,n))</code></pre>
+<p>As this holds for all <span class="math inline">\(n\)</span>, as <span class="math inline">\(n\)</span> goes to <span class="math inline">\(\infty\)</span> we have:</p>
+<p><span class="math display">\[
+|e^x - 1 - x| \leq \frac{|x|^2}{1 - |x|}
+\]</span></p>
+<p>Dividing both sides by <span class="math inline">\(x\)</span> and noting that as <span class="math inline">\(x \rightarrow 0\)</span>, <span class="math inline">\(|x|/(1-|x|)\)</span> goes to <span class="math inline">\(0\)</span> by continuity, the squeeze theorem gives the limit:</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 0} \frac{e^x -1}{x} - 1 = 0.
+\]</span></p>
+<p>That <span class="math inline">\({n \choose k} \leq n^k\)</span> can be viewed as the left side counts the number of combinations of <span class="math inline">\(k\)</span> choices from <span class="math inline">\(n\)</span> distinct items, which is less than the number of permutations of <span class="math inline">\(k\)</span> choices, which is less than the number of choices of <span class="math inline">\(k\)</span> items from <span class="math inline">\(n\)</span> distinct ones without replacement – what <span class="math inline">\(n^k\)</span> counts.</p>
+</section>
+<section id="some-limit-theorems-for-sequences" class="level3" data-number="19.4.1">
+<h3 data-number="19.4.1" class="anchored" data-anchor-id="some-limit-theorems-for-sequences"><span class="header-section-number">19.4.1</span> Some limit theorems for sequences</h3>
+<p>The limit discussion first defined limits of scalar univariate functions at a point <span class="math inline">\(c\)</span> and then added generalizations. The pedagogical approach can be reversed by starting the discussion with limits of sequences and then generalizing from there. This approach relies on a few theorems to be gathered along the way that are mentioned here for the curious reader:</p>
+<ul>
+<li>Convergent sequences are bounded.</li>
+<li>All <em>bounded</em> monotone sequences converge.</li>
+<li>Every bounded sequence has a convergent subsequence. (Bolzano-Weierstrass)</li>
+<li>The limit of <span class="math inline">\(f\)</span> at <span class="math inline">\(c\)</span> exists and equals <span class="math inline">\(L\)</span> if and only if for <em>every</em> sequence <span class="math inline">\(x_n\)</span> in the domain of <span class="math inline">\(f\)</span> converging to <span class="math inline">\(c\)</span> the sequence <span class="math inline">\(s_n = f(x_n)\)</span> converges to <span class="math inline">\(L\)</span>.</li>
+</ul>
+</section>
+</section>
+<section id="summary" class="level2" data-number="19.5">
+<h2 data-number="19.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">19.5</span> Summary</h2>
+<p>The following table captures the various changes to the definition of the limit to accommodate some of the possible behaviors.</p>
+<pre class="{julia}"><code>#| echo: false
+limit_type=[
+"limit",
+"right limit",
+"left limit",
+L"limit at $\infty$",
+L"limit at $-\infty$",
+L"limit of $\infty$",
+L"limit of $-\infty$",
+"limit of a sequence"
+]
+
+Notation=[
+L"\lim_{x\rightarrow c}f(x) = L",
+L"\lim_{x\rightarrow c+}f(x) = L",
+L"\lim_{x\rightarrow c-}f(x) = L",
+L"\lim_{x\rightarrow \infty}f(x) = L",
+L"\lim_{x\rightarrow -\infty}f(x) = L",
+L"\lim_{x\rightarrow c}f(x) = \infty",
+L"\lim_{x\rightarrow c}f(x) = -\infty",
+L"\lim_{n \rightarrow \infty} a_n = L"
+]
+
+Vs = [
+L"(L-\epsilon, L+\epsilon)",
+L"(L-\epsilon, L+\epsilon)",
+L"(L-\epsilon, L+\epsilon)",
+L"(L-\epsilon, L+\epsilon)",
+L"(L-\epsilon, L+\epsilon)",
+L"(M, \infty)",
+L"(-\infty, M)",
+L"(L-\epsilon, L+\epsilon)"
+]
+
+Us = [
+L"(c - \delta, c+\delta)",
+L"(c, c+\delta)",
+L"(c - \delta, c)",
+L"(M, \infty)",
+L"(-\infty, M)",
+L"(c - \delta, c+\delta)",
+L"(c - \delta, c+\delta)",
+L"(M, \infty)"
+]
+
+d = DataFrame(Type=limit_type, Notation=Notation, V=Vs, U=Us)
+table(d)</code></pre>
+<p><a href="https://doi.org/10.1007/978-1-4614-6271-2">Ross</a> summarizes this by enumerating the 15 different <em>related</em> definitions for <span class="math inline">\(\lim_{x \rightarrow a} f(x) = L\)</span> that arise from <span class="math inline">\(L\)</span> being either finite, <span class="math inline">\(-\infty\)</span>, or <span class="math inline">\(+\infty\)</span> and <span class="math inline">\(a\)</span> being any of <span class="math inline">\(c\)</span>, <span class="math inline">\(c-\)</span>, <span class="math inline">\(c+\)</span>, <span class="math inline">\(-\infty\)</span>, or <span class="math inline">\(+\infty\)</span>.</p>
+</section>
+<section id="rates-of-growth" class="level2" data-number="19.6">
+<h2 data-number="19.6" class="anchored" data-anchor-id="rates-of-growth"><span class="header-section-number">19.6</span> Rates of growth</h2>
+<p>Consider two functions <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> to be <em>comparable</em> if there are positive integers <span class="math inline">\(m\)</span> and <span class="math inline">\(n\)</span> with <em>both</em></p>
+<p><span class="math display">\[
+\lim_{x \rightarrow \infty} \frac{f(x)^m}{g(x)} = \infty \quad\text{and }
+\lim_{x \rightarrow \infty} \frac{g(x)^n}{f(x)} = \infty.
+\]</span></p>
+<p>The first says <span class="math inline">\(g\)</span> is eventually bounded by a power of <span class="math inline">\(f\)</span>, the second that <span class="math inline">\(f\)</span> is eventually bounded by a power of <span class="math inline">\(g\)</span>.</p>
+<p>Here we consider which families of functions are <em>comparable</em>.</p>
+<p>First consider <span class="math inline">\(f(x) = x^3\)</span> and <span class="math inline">\(g(x) = x^4\)</span>. We can take <span class="math inline">\(m=2\)</span> and <span class="math inline">\(n=1\)</span> to verify <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> are comparable:</p>
+<pre class="{julia}"><code>fx, gx = x^3, x^4
+limit(fx^2/gx, x=&gt;oo), limit(gx^1 / fx, x=&gt;oo)</code></pre>
+<p>Similarly for any pairs of powers, so we could conclude <span class="math inline">\(f(x) = x^n\)</span> and <span class="math inline">\(g(x) =x^m\)</span> are comparable. (However, as is easily observed, for <span class="math inline">\(m\)</span> and <span class="math inline">\(n\)</span> both positive integers <span class="math inline">\(\lim_{x \rightarrow \infty} x^{m+n}/x^m = \infty\)</span> and <span class="math inline">\(\lim_{x \rightarrow \infty} x^{m}/x^{m+n} = 0\)</span>, consistent with our discussion on rational functions that higher-order polynomials dominate lower-order polynomials.)</p>
+<p>Now consider <span class="math inline">\(f(x) = x\)</span> and <span class="math inline">\(g(x) = \log(x)\)</span>. These are not compatible as there will be no <span class="math inline">\(n\)</span> large enough. We might say <span class="math inline">\(x\)</span> dominates <span class="math inline">\(\log(x)\)</span>.</p>
+<pre class="{julia}"><code>limit(log(x)^n / x, x =&gt; oo)</code></pre>
+<p>As <span class="math inline">\(x\)</span> could be replaced by any monomial <span class="math inline">\(x^k\)</span>, we can say “powers” grow faster than “logarithms”.</p>
+<p>Now consider <span class="math inline">\(f(x)=x\)</span> and <span class="math inline">\(g(x) = e^x\)</span>. These are not compatible as there will be no <span class="math inline">\(m\)</span> large enough:</p>
+<pre class="{julia}"><code>@syms m::(positive, integer)
+limit(x^m / exp(x), x =&gt; oo)</code></pre>
+<p>That is <span class="math inline">\(e^x\)</span> grows faster than any power of <span class="math inline">\(x\)</span>.</p>
+<p>Now, if <span class="math inline">\(a, b &gt; 1\)</span> then <span class="math inline">\(f(x) = a^x\)</span> and <span class="math inline">\(g(x) = b^x\)</span> will be comparable. Take <span class="math inline">\(m\)</span> so that <span class="math inline">\(a^m &gt; b\)</span> and <span class="math inline">\(n\)</span> so that <span class="math inline">\(b^n &gt; a\)</span> as then, say,</p>
+<p><span class="math display">\[
+\frac{(a^x)^m}{b^x} = \frac{a^{xm}}{b^x} = \frac{(a^m)^x}{b^x} = (\frac{a^m}{b})^x,
+\]</span></p>
+<p>which will go to <span class="math inline">\(\infty\)</span> as <span class="math inline">\(x \rightarrow \infty\)</span> as <span class="math inline">\(a^m/b &gt; 1\)</span>.</p>
+<p>Finally, consider <span class="math inline">\(f(x) = \exp(x^2)\)</span> and <span class="math inline">\(g(x) = \exp(x)^2\)</span>. Are these comparable? No, as no <span class="math inline">\(n\)</span> is large enough:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x n::(positive, integer)
+fx, gx = exp(x^2), exp(x)^2
+limit(gx^n / fx, x =&gt; oo)</code></pre>
+<p>A negative test for compatibility is the following: if</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow \infty} \frac{\log(|f(x)|)}{\log(|g(x)|)} = 0,
+\]</span></p>
+<p>Then <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> are not compatible (and <span class="math inline">\(g\)</span> grows faster than <span class="math inline">\(f\)</span>). Applying this to the last two values of <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span>, we have</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow \infty}\frac{\log(\exp(x)^2)}{\log(\exp(x^2))} =
+\lim_{x \rightarrow \infty}\frac{2\log(\exp(x))}{x^2} =
+\lim_{x \rightarrow \infty}\frac{2x}{x^2} = 0,
+\]</span></p>
+<p>so <span class="math inline">\(f(x) = \exp(x^2)\)</span> grows faster than <span class="math inline">\(g(x) = \exp(x)^2\)</span>.</p>
+<hr>
+<p>Keeping in mind that logarithms grow slower than powers which grow slower than exponentials (<span class="math inline">\(a &gt; 1\)</span>) can help understand growth at <span class="math inline">\(\infty\)</span> as a comparison of leading terms does for rational functions.</p>
+<p>We can immediately put this to use to compute <span class="math inline">\(\lim_{x\rightarrow 0+} x^x\)</span>. We first express this problem using <span class="math inline">\(x^x = (\exp(\ln(x)))^x = e^{x\ln(x)}\)</span>. Rewriting <span class="math inline">\(u(x) = \exp(\ln(u(x)))\)</span>, which only uses the basic inverse relation between the two functions, can often be a useful step.</p>
+<p>As <span class="math inline">\(f(x) = e^x\)</span> is a suitably nice function (continuous) so that the limit of a composition can be computed through the limit of the inside function, <span class="math inline">\(x\ln(x)\)</span>, it is enough to see what <span class="math inline">\(\lim_{x\rightarrow 0+} x\ln(x)\)</span> is. We <em>re-express</em> this as a limit at <span class="math inline">\(\infty\)</span></p>
+<p><span class="math display">\[
+\lim_{x\rightarrow 0+} x\ln(x) = \lim_{x \rightarrow \infty} (1/x)\ln(1/x) =
+\lim_{x \rightarrow \infty} \frac{-\ln(x)}{x} = 0
+\]</span></p>
+<p>The last equality follows, as the function <span class="math inline">\(x\)</span> dominates the function <span class="math inline">\(\ln(x)\)</span>. So by the limit rule involving compositions we have: <span class="math inline">\(\lim_{x\rightarrow 0+} x^x = e^0 = 1\)</span>.</p>
+</section>
+<section id="questions" class="level2" data-number="19.7">
+<h2 data-number="19.7" class="anchored" data-anchor-id="questions"><span class="header-section-number">19.7</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>Select the graph for which the limit at <span class="math inline">\(a\)</span> is infinite.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+gr()
+
+p1 = plot(;axis=nothing, legend=false)
+title!(p1, "(a)")
+plot!(p1, x -&gt; x^2, 0, 2, color=:black)
+plot!(p1, zero, linestyle=:dash)
+annotate!(p1,[(1,0,"a")])
+
+p2 = plot(;axis=nothing, legend=false)
+title!(p2, "(b)")
+plot!(p2, x -&gt; 1/(1-x), 0, .95, color=:black)
+plot!(p2, x-&gt; -1/(1-x), 1.05, 2, color=:black)
+plot!(p2, zero, linestyle=:dash)
+annotate!(p2,[(1,0,"a")])
+
+p3 = plot(;axis=nothing, legend=false)
+title!(p3, "(c)")
+plot!(p3, sinpi, 0, 2, color=:black)
+plot!(p3, zero, linestyle=:dash)
+annotate!(p3,[(1,0,"a")])
+
+p4 = plot(;axis=nothing, legend=false)
+title!(p4, "(d)")
+plot!(p4, x -&gt; x^x, 0, 2, color=:black)
+plot!(p4, zero, linestyle=:dash)
+annotate!(p4,[(1,0,"a")])
+
+l = @layout[a b; c d]
+p = plot(p1, p2, p3, p4, layout=l)
+imgfile = tempname() * ".png"
+savefig(p, imgfile)
+plotly()
+hotspotq(imgfile, (1/2,1), (1/2,1))</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>Select the graph for which the limit at <span class="math inline">\(\infty\)</span> appears to be defined.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+gr()
+p1 = plot(;axis=nothing, legend=false)
+title!(p1, "(a)")
+plot!(p1, x -&gt; x^2, 0, 2, color=:black)
+plot!(p1, zero, linestyle=:dash)
+
+p2 = plot(;axis=nothing, legend=false)
+title!(p2, "(b)")
+plot!(p2, x -&gt; 1/(1-x), 0, .95, color=:black)
+plot!(p2, x-&gt; -1/(1-x), 1.05, 2, color=:black)
+plot!(p2, zero, linestyle=:dash)
+
+p3 = plot(;axis=nothing, legend=false)
+title!(p3, "(c)")
+plot!(p3, sinpi, 0, 2, color=:black)
+plot!(p3, zero, linestyle=:dash)
+
+p4 = plot(;axis=nothing, legend=false)
+title!(p4, "(d)")
+plot!(p4, x -&gt; x^x, 0, 2, color=:black)
+plot!(p4, zero, linestyle=:dash)
+
+l = @layout[a b; c d]
+p = plot(p1, p2, p3, p4, layout=l)
+imgfile = tempname() * ".png"
+savefig(p, imgfile)
+plotly()
+hotspotq(imgfile, (1/2,1), (1/2,1))</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>Consider the function <span class="math inline">\(f(x) = \sqrt{x}\)</span>.</p>
+<p>Does this function have a limit at every <span class="math inline">\(c &gt; 0\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+booleanq(true, labels=["Yes", "No"])</code></pre>
+<p>Does this function have a limit at <span class="math inline">\(c=0\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+booleanq(false, labels=["Yes", "No"])</code></pre>
+<p>Does this function have a right limit at <span class="math inline">\(c=0\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+booleanq(true, labels=["Yes", "No"])</code></pre>
+<p>Does this function have a left limit at <span class="math inline">\(c=0\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+booleanq(false, labels=["Yes", "No"])</code></pre>
+</section>
+<section id="question-3" class="level5">
+<h5 class="anchored" data-anchor-id="question-3">Question</h5>
+<p>Find <span class="math inline">\(\lim_{x \rightarrow \infty} \sin(x)/x\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(0)</code></pre>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>Find <span class="math inline">\(\lim_{x \rightarrow \infty} (1-\cos(x))/x^2\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(0)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>Find <span class="math inline">\(\lim_{x \rightarrow \infty} \log(x)/x\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(0)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>Find <span class="math inline">\(\lim_{x \rightarrow 2+} (x-3)/(x-2)\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices=["``L=-\\infty``", "``L=-1``", "``L=0``", "``L=\\infty``"]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>Find <span class="math inline">\(\lim_{x \rightarrow -3-} (x-3)/(x+3)\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices=["``L=-\\infty``", "``L=-1``", "``L=0``", "``L=\\infty``"]
+answ = 4
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>Let <span class="math inline">\(f(x) = \exp(x + \exp(-x^2))\)</span> and <span class="math inline">\(g(x) = \exp(-x^2)\)</span>. Compute:</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow \infty} \frac{\ln(f(x))}{\ln(g(x))}.
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+@syms x
+ex = log(exp(x + exp(-x^2))) / log(exp(-x^2))
+val = N(limit(ex, x =&gt; oo))
+numericq(val)</code></pre>
+</section>
+<section id="question-8" class="level6">
+<h6 class="anchored" data-anchor-id="question-8">Question</h6>
+<p>Consider the following expression:</p>
+<pre class="{julia}"><code>ex = 1/(exp(-x + exp(-x))) - exp(x)</code></pre>
+<p>We want to find the limit, <span class="math inline">\(L\)</span>, as <span class="math inline">\(x \rightarrow \infty\)</span>, which we assume exists below.</p>
+<p>We first rewrite <code>ex</code> using <code>w</code> as <code>exp(-x)</code>:</p>
+<pre class="{julia}"><code>@syms w
+ex1 = ex(exp(-x) =&gt; w)</code></pre>
+<p>As <span class="math inline">\(x \rightarrow \infty\)</span>, <span class="math inline">\(w \rightarrow 0+\)</span>, so the limit at <span class="math inline">\(0+\)</span> of <code>ex1</code> is of interest.</p>
+<p>Use this fact, to find <span class="math inline">\(L\)</span></p>
+<pre class="{julia}"><code>limit(ex1 - (w/2 - 1), w=&gt;0)</code></pre>
+<p><span class="math inline">\(L\)</span> is:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(-1)</code></pre>
+<p>(This awkward approach is generalizable: replacing the limit as <span class="math inline">\(w \rightarrow 0\)</span> of an expression with the limit of a polynomial in <code>w</code> that is easy to identify.)</p>
+</section>
+<section id="question-9" class="level6">
+<h6 class="anchored" data-anchor-id="question-9">Question</h6>
+<p>As mentioned, for limits that depend on specific values of parameters <code>SymPy</code> may have issues. As an example, <code>SymPy</code> has an issue with the following limit, whose answer depends on the value of <span class="math inline">\(k\)</span>”</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 0+} \frac{\sin(\sin(x^2))}{x^k}.
+\]</span></p>
+<p>In particular, the following with a symbolic <code>k</code> will fail:</p>
+<pre class="{julia}"><code>#| eval: false
+@syms x::real k::integer
+limit(sin(sin(x^2))/x^k, x=&gt;0)</code></pre>
+<p>For which value(s) of <span class="math inline">\(k\)</span> in <span class="math inline">\(1,2,3\)</span> is the limit <span class="math inline">\(0\)</span>? (Do the above <span class="math inline">\(3\)</span> times using a specific value of <code>k</code>, not a numeric one.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``1``", "``2``", "``3``", "``1,2``", "``1,3``", "``2,3``", "``1,2,3``"]
+radioq(choices, 1, keep_order=true)</code></pre>
+</section>
+<section id="question-no-limit" class="level6">
+<h6 class="anchored" data-anchor-id="question-no-limit">Question: No limit</h6>
+<p>Some functions do not have a limit. Make a graph of <span class="math inline">\(\sin(1/x)\)</span> from <span class="math inline">\(0.0001\)</span> to <span class="math inline">\(1\)</span> and look at the output. Why does a limit not exist?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices=["The limit does exist - it is any number from -1 to 1",
+  "Err, the limit does exists and is 1",
+  "The function oscillates too much and its y values do not get close to any one value",
+  "Any function that oscillates does not have a limit."]
+answ = 3
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-00-is-not-always-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-00-is-not-always-1">Question <span class="math inline">\(0^0\)</span> is not <em>always</em> <span class="math inline">\(1\)</span></h6>
+<p>Is the form <span class="math inline">\(0^0\)</span> really indeterminate? As mentioned <code>0^0</code> evaluates to <code>1</code>.</p>
+<p>Consider this limit:</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 0+} x^{k\cdot x} = L.
+\]</span></p>
+<p>Consider different values of <span class="math inline">\(k\)</span> to see if this limit depends on <span class="math inline">\(k\)</span> or not. What is <span class="math inline">\(L\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``1``", "``k``", "``\\log(k)``", "The limit does not exist"]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>Now, consider this limit:</p>
+<p><span class="math display">\[
+\lim_{x \rightarrow 0+} x^{1/\log_k(x)} = L.
+\]</span></p>
+<p>In <code>julia</code>, <span class="math inline">\(\log_k(x)\)</span> is found with <code>log(k,x)</code>. The default, <code>log(x)</code> takes <span class="math inline">\(k=e\)</span> so gives the natural log. So, we would define <code>h</code>, for a given <code>k</code>, with</p>
+<pre class="{julia}"><code>k = 10              # say. Replace with actual value
+h(x) = x^(1/log(k, x))</code></pre>
+<p>Consider different values of <span class="math inline">\(k\)</span> to see if the limit depends on <span class="math inline">\(k\)</span> or not. What is <span class="math inline">\(L\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``1``", "``k``", "``\\log(k)``", "The limit does not exist"]
+answ = 2
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-10" class="level6">
+<h6 class="anchored" data-anchor-id="question-10">Question</h6>
+<p>Limits <em>of</em> infinity <em>at</em> infinity. We could define this concept quite easily mashing together the two definitions. Suppose we did. Which of these ratios would have a limit of infinity at infinity:</p>
+<p><span class="math display">\[
+x^4/x^3,\quad x^{100+1}/x^{100}, \quad x/\log(x), \quad 3^x / 2^x, \quad e^x/x^{100}
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices=[
+"the first one",
+"the first and second ones",
+"the first, second and third ones",
+"the first, second, third, and fourth ones",
+"all of them"]
+answ = 5
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-11" class="level6">
+<h6 class="anchored" data-anchor-id="question-11">Question</h6>
+<p>A slant asymptote is a line <span class="math inline">\(mx + b\)</span> for which the graph of <span class="math inline">\(f(x)\)</span> gets close to as <span class="math inline">\(x\)</span> gets large. We can’t express this directly as a limit, as “<span class="math inline">\(L\)</span>” is not a number. How might we?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"We can talk about the limit at $\infty$ of $f(x) - (mx + b)$ being $0$",
+L"We can talk about the limit at $\infty$ of $f(x) - mx$ being $b$",
+L"We can say $f(x) - (mx+b)$ has a horizontal asymptote $y=0$",
+L"We can say $f(x) - mx$ has a horizontal asymptote $y=b$",
+"Any of the above"]
+answ = 5
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-12" class="level6">
+<h6 class="anchored" data-anchor-id="question-12">Question</h6>
+<p>Suppose a sequence of points <span class="math inline">\(x_n\)</span> converges to <span class="math inline">\(a\)</span> in the limiting sense. For a function <span class="math inline">\(f(x)\)</span>, the sequence of points <span class="math inline">\(f(x_n)\)</span> may or may not converge. One alternative definition of a <a href="https://en.wikipedia.org/wiki/Limit_of_a_function#In_terms_of_sequences">limit</a> due to Heine is that <span class="math inline">\(\lim_{x \rightarrow a}f(x) = L\)</span> if <em>and</em> only if <strong>all</strong> sequences <span class="math inline">\(x_n \rightarrow a\)</span> have <span class="math inline">\(f(x_n) \rightarrow L\)</span>.</p>
+<p>Consider the function <span class="math inline">\(f(x) = \sin(1/x)\)</span>, <span class="math inline">\(a=0\)</span>, and the two sequences implicitly defined by <span class="math inline">\(1/x_n = \pi/2 + n \cdot (2\pi)\)</span> and <span class="math inline">\(y_n = 3\pi/2 + n \cdot(2\pi)\)</span>, <span class="math inline">\(n = 0, 1, 2, \dots\)</span>.</p>
+<p>What is <span class="math inline">\(\lim_{x_n \rightarrow 0} f(x_n)\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(1)</code></pre>
+<p>What is <span class="math inline">\(\lim_{y_n \rightarrow 0} f(y_n)\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(-1)</code></pre>
+<p>This shows that</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [L" $f(x)$ has a limit of $1$ as $x \rightarrow 0$",
+L" $f(x)$ has a limit of $-1$ as $x \rightarrow 0$",
+L" $f(x)$ does not have a limit as $x \rightarrow 0$"
+]
+answ = 3
+radioq(choices, answ)</code></pre>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../limits/limits.html" class="pagination-link" aria-label="Limits">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../limits/continuity.html" class="pagination-link" aria-label="Continuity">
+        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/limits/limits_extensions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

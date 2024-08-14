@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>49&nbsp; ODEs – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../ODEs/euler.html" rel="next">
+<link href="../ODEs.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ODEs.html">ODEs</a></li><li class="breadcrumb-item"><a href="../ODEs/odes.html"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#motion-with-constant-acceleration" id="toc-motion-with-constant-acceleration" class="nav-link active" data-scroll-target="#motion-with-constant-acceleration"><span class="header-section-number">49.1</span> Motion with constant acceleration</a></li>
+  <li><a href="#first-order-initial-value-problems" id="toc-first-order-initial-value-problems" class="nav-link" data-scroll-target="#first-order-initial-value-problems"><span class="header-section-number">49.2</span> First-order initial-value problems</a></li>
+  <li><a href="#separable-equations" id="toc-separable-equations" class="nav-link" data-scroll-target="#separable-equations"><span class="header-section-number">49.3</span> Separable equations</a></li>
+  <li><a href="#symbolic-solutions" id="toc-symbolic-solutions" class="nav-link" data-scroll-target="#symbolic-solutions"><span class="header-section-number">49.4</span> Symbolic solutions</a></li>
+  <li><a href="#visualizing-a-first-order-initial-value-problem" id="toc-visualizing-a-first-order-initial-value-problem" class="nav-link" data-scroll-target="#visualizing-a-first-order-initial-value-problem"><span class="header-section-number">49.5</span> Visualizing a first-order initial value problem</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">49.6</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/ODEs/odes.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ODEs.html">ODEs</a></li><li class="breadcrumb-item"><a href="../ODEs/odes.html"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses these add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+using SymPy</code></pre>
+<hr>
+<p>Some relationships are easiest to describe in terms of rates or derivatives. For example:</p>
+<ul>
+<li>Knowing the speed of a car and how long it has been driving can summarize the car’s location.</li>
+<li>One of Newton’s famous laws, <span class="math inline">\(F=ma\)</span>, describes the force on an object of mass <span class="math inline">\(m\)</span> in terms of the acceleration. The acceleration is the derivative of velocity, which in turn is the derivative of position. So if we know the rates of change of <span class="math inline">\(v(t)\)</span> or <span class="math inline">\(x(t)\)</span>, we can differentiate to find <span class="math inline">\(F\)</span>.</li>
+<li>Newton’s law of <a href="http://tinyurl.com/z4lmetp">cooling</a>. This describes the temperature change in an object due to a difference in temperature with the object’s surroundings. The formula being, <span class="math inline">\(T'(t) = -r \left(T(t) - T_a \right)\)</span>, where <span class="math inline">\(T(t)\)</span> is temperature at time <span class="math inline">\(t\)</span> and <span class="math inline">\(T_a\)</span> the ambient temperature.</li>
+<li><a href="http://tinyurl.com/kbz7r8l">Hooke’s law</a> relates force on an object to the position on the object, through <span class="math inline">\(F = k x\)</span>. This is appropriate for many systems involving springs. Combined with Newton’s law <span class="math inline">\(F=ma\)</span>, this leads to an equation that <span class="math inline">\(x\)</span> must satisfy: <span class="math inline">\(m x''(t) = k x(t)\)</span>.</li>
+</ul>
+<section id="motion-with-constant-acceleration" class="level2" data-number="49.1">
+<h2 data-number="49.1" class="anchored" data-anchor-id="motion-with-constant-acceleration"><span class="header-section-number">49.1</span> Motion with constant acceleration</h2>
+<p>Let’s consider the case of constant acceleration. This describes how nearby objects fall to earth, as the force due to gravity is assumed to be a constant, so the acceleration is the constant force divided by the constant mass.</p>
+<p>With constant acceleration, what is the velocity?</p>
+<p>As mentioned, we have <span class="math inline">\(dv/dt = a\)</span> for any velocity function <span class="math inline">\(v(t)\)</span>, but in this case, the right hand side is assumed to be constant. How does this restrict the possible functions, <span class="math inline">\(v(t)\)</span>, that the velocity can be?</p>
+<p>Here we can integrate to find that any answer must look like the following for some constant of integration:</p>
+<p><span class="math display">\[
+v(t) = \int \frac{dv}{dt} dt = \int a dt = at + C.
+\]</span></p>
+<p>If we are given the velocity at a fixed time, say <span class="math inline">\(v(t_0) = v_0\)</span>, then we can use the definite integral to get:</p>
+<p><span class="math display">\[
+v(t) - v(t_0) = \int_{t_0}^t a dt = at - a t_0.
+\]</span></p>
+<p>Solving, gives:</p>
+<p><span class="math display">\[
+v(t) = v_0 + a (t - t_0).
+\]</span></p>
+<p>This expresses the velocity at time <span class="math inline">\(t\)</span> in terms of the initial velocity, the constant acceleration and the time duration.</p>
+<p>A natural question might be, is this the <em>only</em> possible answer? There are a few useful ways to think about this.</p>
+<p>First, suppose there were another, say <span class="math inline">\(u(t)\)</span>. Then define <span class="math inline">\(w(t)\)</span> to be the difference: <span class="math inline">\(w(t) = v(t) - u(t)\)</span>. We would have that <span class="math inline">\(w'(t) = v'(t) - u'(t) = a - a = 0\)</span>. But from the mean value theorem, a function whose derivative is <em>continuously</em> <span class="math inline">\(0\)</span>, will necessarily be a constant. So at most, <span class="math inline">\(v\)</span> and <span class="math inline">\(u\)</span> will differ by a constant, but if both are equal at <span class="math inline">\(t_0\)</span>, they will be equal for all <span class="math inline">\(t\)</span>.</p>
+<p>Second, since the derivative of any solution is a continuous function, it is true by the fundamental theorem of calculus that it <em>must</em> satisfy the form for the antiderivative. The initial condition makes the answer unique, as the indeterminate <span class="math inline">\(C\)</span> can take only one value.</p>
+<p>Summarizing, we have</p>
+<blockquote class="blockquote">
+<p>If <span class="math inline">\(v(t)\)</span> satisfies the equation: <span class="math inline">\(v'(t) = a\)</span>, <span class="math inline">\(v(t_0) = v_0,\)</span> then the unique solution will be <span class="math inline">\(v(t) = v_0 + a (t - t_0)\)</span>.</p>
+</blockquote>
+<p>Next, what about position? Here we know that the time derivative of position yields the velocity, so we should have that the unknown position function satisfies this equation and initial condition:</p>
+<p><span class="math display">\[
+x'(t) = v(t) = v_0 + a (t - t_0), \quad x(t_0) = x_0.
+\]</span></p>
+<p>Again, we can integrate to get an answer for any value <span class="math inline">\(t\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+x(t) - x(t_0) &amp;= \int_{t_0}^t \frac{dx}{dt} dt     \\
+&amp;= (v_0t + \frac{1}{2}a t^2 - at_0 t) |_{t_0}^t    \\
+&amp;= (v_0 - at_0)(t - t_0) + \frac{1}{2} a (t^2 - t_0^2).
+\end{align*}\]</span></p>
+<p>There are three constants: the initial value for the independent variable, <span class="math inline">\(t_0\)</span>, and the two initial values for the velocity and position, <span class="math inline">\(v_0, x_0\)</span>. Assuming <span class="math inline">\(t_0 = 0\)</span>, we can simplify the above to get a formula familiar from introductory physics:</p>
+<p><span class="math display">\[
+x(t) = x_0 + v_0 t + \frac{1}{2} at^2.
+\]</span></p>
+<p>Again, the mean value theorem can show that with the initial value specified this is the only possible solution.</p>
+</section>
+<section id="first-order-initial-value-problems" class="level2" data-number="49.2">
+<h2 data-number="49.2" class="anchored" data-anchor-id="first-order-initial-value-problems"><span class="header-section-number">49.2</span> First-order initial-value problems</h2>
+<p>The two problems just looked at can be summarized by the following. We are looking for solutions to an equation of the form (taking <span class="math inline">\(y\)</span> and <span class="math inline">\(x\)</span> as the variables, in place of <span class="math inline">\(x\)</span> and <span class="math inline">\(t\)</span>):</p>
+<p><span class="math display">\[
+y'(x) = f(x), \quad y(x_0) = y_0.
+\]</span></p>
+<p>This is called an <em>ordinary differential equation</em> (ODE), as it is an equation involving the ordinary derivative of an unknown function, <span class="math inline">\(y\)</span>.</p>
+<p>This is called a first-order, ordinary differential equation, as there is only the first derivative involved.</p>
+<p>This is called an initial-value problem, as the value at the initial point <span class="math inline">\(x_0\)</span> is specified as part of the problem.</p>
+<section id="examples" class="level4">
+<h4 class="anchored" data-anchor-id="examples">Examples</h4>
+<p>Let’s look at a few more examples, and then generalize.</p>
+<section id="example-newtons-law-of-cooling" class="level5">
+<h5 class="anchored" data-anchor-id="example-newtons-law-of-cooling">Example: Newton’s law of cooling</h5>
+<p>Consider the ordinary differential equation given by Newton’s law of cooling:</p>
+<p><span class="math display">\[
+T'(t) = -r (T(t) - T_a), \quad T(0) = T_0
+\]</span></p>
+<p>This equation is also first order, as it involves just the first derivative, but notice that on the right hand side is the function <span class="math inline">\(T\)</span>, not the variable being differentiated against, <span class="math inline">\(t\)</span>.</p>
+<p>As we have a difference on the right hand side, we rename the variable through <span class="math inline">\(U(t) = T(t) - T_a\)</span>. Then, as <span class="math inline">\(U'(t) = T'(t)\)</span>, we have the equation:</p>
+<p><span class="math display">\[
+U'(t) = -r U(t), \quad U(0) = U_0.
+\]</span></p>
+<p>This shows that the rate of change of <span class="math inline">\(U\)</span> depends on <span class="math inline">\(U\)</span>. Large positive values indicate a negative rate of change - a push back towards the origin, and large negative values of <span class="math inline">\(U\)</span> indicate a positive rate of change - again, a push back towards the origin. We shouldn’t be surprised to either see a steady decay towards the origin, or oscillations about the origin.</p>
+<p>What will we find? This equation is different from the previous two equations, as the function <span class="math inline">\(U\)</span> appears on both sides. However, we can rearrange to get:</p>
+<p><span class="math display">\[
+\frac{dU}{dt}\frac{1}{U(t)} = -r.
+\]</span></p>
+<p>This suggests integrating both sides, as before. Here we do the “<span class="math inline">\(u\)</span>”-substitution <span class="math inline">\(u = U(t)\)</span>, so <span class="math inline">\(du = U'(t) dt\)</span>:</p>
+<p><span class="math display">\[
+-rt + C = \int \frac{dU}{dt}\frac{1}{U(t)} dt =
+\int \frac{1}{u}du = \log(u).
+\]</span></p>
+<p>Solving gives: <span class="math inline">\(u = U(t) = e^C e^{-rt}\)</span>. Using the initial condition forces <span class="math inline">\(e^C = U(t_0) = T(0) - T_a\)</span> and so our solution in terms of <span class="math inline">\(T(t)\)</span> is:</p>
+<p><span class="math display">\[
+T(t) - T_a = (T_0 - T_a) e^{-rt}.
+\]</span></p>
+<p>In words, the initial difference in temperature of the object and the environment exponentially decays to <span class="math inline">\(0\)</span>.</p>
+<p>That is, as <span class="math inline">\(t &gt; 0\)</span> goes to <span class="math inline">\(\infty\)</span>, the right hand will go to <span class="math inline">\(0\)</span> for <span class="math inline">\(r &gt; 0\)</span>, so <span class="math inline">\(T(t) \rightarrow T_a\)</span> - the temperature of the object will reach the ambient temperature. The rate of this is largest when the difference between <span class="math inline">\(T(t)\)</span> and <span class="math inline">\(T_a\)</span> is largest, so when objects are cooling the statement “hotter things cool faster” is appropriate.</p>
+<p>A graph of the solution for <span class="math inline">\(T_0=200\)</span> and <span class="math inline">\(T_a=72\)</span> and <span class="math inline">\(r=1/2\)</span> is made as follows. We’ve added a few line segments from the defining formula, and see that they are indeed tangent to the solution found for the differential equation.</p>
+<pre class="{julia}"><code>#| echo: false
+let
+    T0, Ta, r = 200, 72, 1/2
+    f(u, t) = -r*(u - Ta)
+    v(t) = Ta + (T0 - Ta) * exp(-r*t)
+    p = plot(v, 0, 6, linewidth=4, legend=false)
+    [plot!(p, x -&gt; v(a) + f(v(a), a) * (x-a), 0, 6) for a in 1:2:5]
+    p
+end</code></pre>
+<p>The above is implicitly assuming that there could be no other solution, than the one we found. Is that really the case? We will see that there is a theorem that can answer this, but in this case, the trick of taking the difference of two equations satisfying the equation leads to the equation <span class="math inline">\(W'(t) = r W(t), \text{ and } W(0) = 0\)</span>. This equation has a general solution of <span class="math inline">\(W(t) = Ce^{rt}\)</span> and the initial condition forces <span class="math inline">\(C=0\)</span>, so <span class="math inline">\(W(t) = 0\)</span>, as before. Hence, the initial-value problem for Newton’s law of cooling has a unique solution.</p>
+<p>In general, the equation could be written as (again using <span class="math inline">\(y\)</span> and <span class="math inline">\(x\)</span> as the variables):</p>
+<p><span class="math display">\[
+y'(x) = g(y), \quad y(x_0) = y_0
+\]</span></p>
+<p>This is called an <em>autonomous</em>, first-order ODE, as the right-hand side does not depend on <span class="math inline">\(x\)</span> (except through <span class="math inline">\(y(x)\)</span>).</p>
+<p>Let <span class="math inline">\(F(y) = \int_{y_0}^y du/g(u)\)</span>, then a solution to the above is <span class="math inline">\(F(y) = x - x_0\)</span>, assuming <span class="math inline">\(1/g(u)\)</span> is integrable.</p>
+</section>
+<section id="example-toricellis-law" class="level5">
+<h5 class="anchored" data-anchor-id="example-toricellis-law">Example: Toricelli’s law</h5>
+<p><a href="http://tinyurl.com/hxvf3qp">Toricelli’s Law</a> describes the speed a jet of water will leave a vessel through an opening below the surface of the water. The formula is <span class="math inline">\(v=\sqrt{2gh}\)</span>, where <span class="math inline">\(h\)</span> is the height of the water above the hole and <span class="math inline">\(g\)</span> the gravitational constant. This arises from equating the kinetic energy gained, <span class="math inline">\(1/2 mv^2\)</span> and potential energy lost, <span class="math inline">\(mgh\)</span>, for the exiting water.</p>
+<p>An application of Torricelli’s law is to describe the volume of water in a tank over time, <span class="math inline">\(V(t)\)</span>. Imagine a cylinder of cross sectional area <span class="math inline">\(A\)</span> with a hole of cross sectional area <span class="math inline">\(a\)</span> at the bottom, Then <span class="math inline">\(V(t) = A h(t)\)</span>, with <span class="math inline">\(h\)</span> giving the height. The change in volume over <span class="math inline">\(\Delta t\)</span> units of time must be given by the value <span class="math inline">\(a v(t) \Delta t\)</span>, or</p>
+<p><span class="math display">\[
+V(t+\Delta t) - V(t) = -a v(t) \Delta t = -a\sqrt{2gh(t)}\Delta t
+\]</span></p>
+<p>This suggests the following formula, written in terms of <span class="math inline">\(h(t)\)</span> should apply:</p>
+<p><span class="math display">\[
+A\frac{dh}{dt} = -a \sqrt{2gh(t)}.
+\]</span></p>
+<p>Rearranging, this gives an equation</p>
+<p><span class="math display">\[
+\frac{dh}{dt} \frac{1}{\sqrt{h(t)}} = -\frac{a}{A}\sqrt{2g}.
+\]</span></p>
+<p>Integrating both sides yields:</p>
+<p><span class="math display">\[
+2\sqrt{h(t)} = -\frac{a}{A}\sqrt{2g} t + C.
+\]</span></p>
+<p>If <span class="math inline">\(h(0) = h_0 = V(0)/A\)</span>, we can solve for <span class="math inline">\(C = 2\sqrt{h_0}\)</span>, or</p>
+<p><span class="math display">\[
+\sqrt{h(t)} = \sqrt{h_0} -\frac{1}{2}\frac{a}{A}\sqrt{2g} t.
+\]</span></p>
+<p>Setting <span class="math inline">\(h(t)=0\)</span> and solving for <span class="math inline">\(t\)</span> shows that the time to drain the tank would be <span class="math inline">\((2A)/(a\sqrt{2g})\sqrt{h_0}\)</span>.</p>
+</section>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>Consider now the equation</p>
+<p><span class="math display">\[
+y'(x) = y(x)^2, \quad y(x_0) = y_0.
+\]</span></p>
+<p>This is called a <em>non-linear</em> ordinary differential equation, as the <span class="math inline">\(y\)</span> variable on the right hand side presents itself in a non-linear form (it is squared). These equations may have solutions that are not defined for all times.</p>
+<p>This particular problem can be solved as before by moving the <span class="math inline">\(y^2\)</span> to the left hand side and integrating to yield:</p>
+<p><span class="math display">\[
+y(x) = - \frac{1}{C + x},
+\]</span></p>
+<p>and with the initial condition:</p>
+<p><span class="math display">\[
+y(x) = \frac{y_0}{1 - y_0(x - x_0)}.
+\]</span></p>
+<p>This answer can demonstrate <em>blow-up</em>. That is, in a finite range for <span class="math inline">\(x\)</span> values, the <span class="math inline">\(y\)</span> value can go to infinity. For example, if the initial conditions are <span class="math inline">\(x_0=0\)</span> and <span class="math inline">\(y_0 = 1\)</span>, then <span class="math inline">\(y(x) = 1/(1-x)\)</span> is only defined for <span class="math inline">\(x \geq x_0\)</span> on <span class="math inline">\([0,1)\)</span>, as at <span class="math inline">\(x=1\)</span> there is a vertical asymptote.</p>
+</section>
+</section>
+</section>
+<section id="separable-equations" class="level2" data-number="49.3">
+<h2 data-number="49.3" class="anchored" data-anchor-id="separable-equations"><span class="header-section-number">49.3</span> Separable equations</h2>
+<p>We’ve seen equations of the form <span class="math inline">\(y'(x) = f(x)\)</span> and <span class="math inline">\(y'(x) = g(y)\)</span> both solved by integrating. The same tricks will work for equations of the form <span class="math inline">\(y'(x) = f(x) \cdot g(y)\)</span>. Such equations are called <em>separable</em>.</p>
+<p>Basically, we equate up to constants</p>
+<p><span class="math display">\[
+\int \frac{dy}{g(y)} = \int f(x) dx.
+\]</span></p>
+<p>For example, suppose we have the equation</p>
+<p><span class="math display">\[
+\frac{dy}{dx} = x \cdot y(x), \quad y(x_0) = y_0.
+\]</span></p>
+<p>Then we can find a solution, <span class="math inline">\(y(x)\)</span> through:</p>
+<p><span class="math display">\[
+\int \frac{dy}{y} = \int x dx,
+\]</span></p>
+<p>or</p>
+<p><span class="math display">\[
+\log(y) = \frac{x^2}{2} + C
+\]</span></p>
+<p>Which yields:</p>
+<p><span class="math display">\[
+y(x) = e^C e^{\frac{1}{2}x^2}.
+\]</span></p>
+<p>Substituting in <span class="math inline">\(x_0\)</span> yields a value for <span class="math inline">\(C\)</span> in terms of the initial information <span class="math inline">\(y_0\)</span> and <span class="math inline">\(x_0\)</span>.</p>
+</section>
+<section id="symbolic-solutions" class="level2" data-number="49.4">
+<h2 data-number="49.4" class="anchored" data-anchor-id="symbolic-solutions"><span class="header-section-number">49.4</span> Symbolic solutions</h2>
+<p>Differential equations are classified according to their type. Different types have different methods for solution, when a solution exists.</p>
+<p>The first-order initial value equations we have seen can be described generally by</p>
+<p><span class="math display">\[\begin{align*}
+y'(x) &amp;= F(y,x),\\
+y(x_0) &amp;= x_0.
+\end{align*}\]</span></p>
+<p>Special cases include:</p>
+<ul>
+<li><em>linear</em> if the function <span class="math inline">\(F\)</span> is linear in <span class="math inline">\(y\)</span>;</li>
+<li><em>autonomous</em> if <span class="math inline">\(F(y,x) = G(y)\)</span> (a function of <span class="math inline">\(y\)</span> alone);</li>
+<li><em>separable</em> if <span class="math inline">\(F(y,x) = G(y)H(x)\)</span>.</li>
+</ul>
+<p>As seen, separable equations are approached by moving the “<span class="math inline">\(y\)</span>” terms to one side, the “<span class="math inline">\(x\)</span>” terms to the other and integrating. This also applies to autonomous equations then. There are other families of equation types that have exact solutions, and techniques for solution, summarized at this <a href="http://tinyurl.com/zywzz4q">Wikipedia page</a>.</p>
+<p>Rather than go over these various families, we demonstrate that <code>SymPy</code> can solve many of these equations symbolically.</p>
+<p>The <code>solve</code> function in <code>SymPy</code> solves equations for unknown <em>variables</em>. As a differential equation involves an unknown <em>function</em> there is a different function, <code>dsolve</code>. The basic idea is to describe the differential equation using a symbolic function and then call <code>dsolve</code> to solve the expression.</p>
+<p>Symbolic functions are defined by the <code>@syms</code> macro (also see <code>?symbols</code>) using parentheses to distinguish a function from a variable:</p>
+<pre class="{julia}"><code>@syms x u() # a symbolic variable and a symbolic function</code></pre>
+<p>We will solve the following, known as the <em>logistic equation</em>:</p>
+<p><span class="math display">\[
+u'(x) = a u(1-u), \quad a &gt; 0
+\]</span></p>
+<p>Before beginning, we look at the form of the equation. When <span class="math inline">\(u=0\)</span> or <span class="math inline">\(u=1\)</span> the rate of change is <span class="math inline">\(0\)</span>, so we expect the function might be bounded within that range. If not, when <span class="math inline">\(u\)</span> gets bigger than <span class="math inline">\(1\)</span>, then the slope is negative and when <span class="math inline">\(u\)</span> gets less than <span class="math inline">\(0\)</span>, the slope is positive, so there will at least be a drift back to the range <span class="math inline">\([0,1]\)</span>. Let’s see exactly what happens. We define a parameter, restricting <code>a</code> to be positive:</p>
+<pre class="{julia}"><code>@syms a::positive</code></pre>
+<p>To specify a derivative of <code>u</code> in our equation we can use <code>diff(u(x),x)</code> but here, for visual simplicity, use the <code>Differential</code> operator, as follows:</p>
+<pre class="{julia}"><code>D = Differential(x)
+eqn = D(u)(x) ~ a * u(x) * (1 - u(x)) # use l \Equal[tab] r, Eq(l,r), or just l - r</code></pre>
+<p>In the above, we evaluate the symbolic function at the variable <code>x</code> through the use of <code>u(x)</code> in the expression. The equation above uses <code>~</code> to combine the left- and right-hand sides as an equation in <code>SymPy</code>. (A unicode equals is also available for this task). This is a shortcut for <code>Eq(l,r)</code>, but even just using <code>l - r</code> would suffice, as the default assumption for an equation is that it is set to <code>0</code>.</p>
+<p>The <code>Differential</code> operation is borrowed from the <code>ModelingToolkit</code> package, which will be introduced later.</p>
+<p>To finish, we call <code>dsolve</code> to find a solution (if possible):</p>
+<pre class="{julia}"><code>out = dsolve(eqn)</code></pre>
+<p>This answer - to a first-order equation - has one free constant, <code>C_1</code>, which can be solved for from an initial condition. We can see that when <span class="math inline">\(a &gt; 0\)</span>, as <span class="math inline">\(x\)</span> goes to positive infinity the solution goes to <span class="math inline">\(1\)</span>, and when <span class="math inline">\(x\)</span> goes to negative infinity, the solution goes to <span class="math inline">\(0\)</span> and otherwise is trapped in between, as expected.</p>
+<p>The limits are confirmed by investigating the limits of the right-hand:</p>
+<pre class="{julia}"><code>limit(rhs(out), x =&gt; oo), limit(rhs(out), x =&gt; -oo)</code></pre>
+<p>We can confirm that the solution is always increasing, hence trapped within <span class="math inline">\([0,1]\)</span> by observing that the derivative is positive when <code>C₁</code> is positive:</p>
+<pre class="{juila}"><code>diff(rhs(out),x)</code></pre>
+<p>Suppose that <span class="math inline">\(u(0) = 1/2\)</span>. Can we solve for <span class="math inline">\(C_1\)</span> symbolically? We can use <code>solve</code>, but first we will need to get the symbol for <code>C_1</code>:</p>
+<pre class="{julia}"><code>eq = rhs(out)    # just the right hand side
+C1 = first(setdiff(free_symbols(eq), (x,a))) # fish out constant, it is not x or a
+c1 = solve(eq(x=&gt;0) - 1//2, C1)</code></pre>
+<p>And we plug in with:</p>
+<pre class="{julia}"><code>eq(C1 =&gt; c1[1])</code></pre>
+<p>That’s a lot of work. The <code>dsolve</code> function in <code>SymPy</code> allows initial conditions to be specified for some equations. In this case, ours is <span class="math inline">\(x_0=0\)</span> and <span class="math inline">\(y_0=1/2\)</span>. The extra arguments passed in through a dictionary to the <code>ics</code> argument:</p>
+<pre class="{julia}"><code>x0, y0 = 0, Sym(1//2)
+dsolve(eqn, u(x), ics=Dict(u(x0) =&gt; y0))</code></pre>
+<p>(The one subtlety is the need to write the rational value as a symbolic expression, as otherwise it will get converted to a floating point value prior to being passed along.)</p>
+<section id="example-hookes-law" class="level5">
+<h5 class="anchored" data-anchor-id="example-hookes-law">Example: Hooke’s law</h5>
+<p>In the first example, we solved for position, <span class="math inline">\(x(t)\)</span>, from an assumption of constant acceleration in two steps. The equation relating the two is a second-order equation: <span class="math inline">\(x''(t) = a\)</span>, so two constants are generated. That a second-order equation could be reduced to two first-order equations is not happy circumstance, as it can always be done. Rather than show the technique though, we demonstrate that <code>SymPy</code> can also handle some second-order ODEs.</p>
+<p>Hooke’s law relates the force on an object to its position via <span class="math inline">\(F=ma = -kx\)</span>, or <span class="math inline">\(x''(t) = -(k/m)x(t)\)</span>.</p>
+<p>Suppose <span class="math inline">\(k &gt; 0\)</span>. Then we can solve, similar to the above, with:</p>
+<pre class="{julia}"><code>@syms k::positive m::positive
+D2 = D ∘ D  # takes second derivative through composition
+eqnh = D2(u)(x) ~ -(k/m)*u(x)
+dsolve(eqnh)</code></pre>
+<p>Here we find two constants, as anticipated, for we would guess that two integrations are needed in the solution.</p>
+<p>Suppose the spring were started by pulling it down to a bottom and releasing. The initial position at time <span class="math inline">\(0\)</span> would be <span class="math inline">\(a\)</span>, say, and initial velocity <span class="math inline">\(0\)</span>. Here we get the solution specifying initial conditions on the function and its derivative (expressed through <code>u'</code>):</p>
+<pre class="{julia}"><code>dsolve(eqnh, u(x), ics = Dict(u(0) =&gt; -a, D(u)(0) =&gt;  0))</code></pre>
+<p>We get that the motion will follow <span class="math inline">\(u(x) = -a \cos(\sqrt{k/m}x)\)</span>. This is simple oscillatory behavior. As the spring stretches, the force gets large enough to pull it back, and as it compresses the force gets large enough to push it back. The amplitude of this oscillation is <span class="math inline">\(a\)</span> and the period <span class="math inline">\(2\pi/\sqrt{k/m}\)</span>. Larger <span class="math inline">\(k\)</span> values mean shorter periods; larger <span class="math inline">\(m\)</span> values mean longer periods.</p>
+</section>
+<section id="example-the-pendulum" class="level5">
+<h5 class="anchored" data-anchor-id="example-the-pendulum">Example: the pendulum</h5>
+<p>The simple gravity <a href="http://tinyurl.com/h8ys6ts">pendulum</a> is an idealization of a physical pendulum that models a “bob” with mass <span class="math inline">\(m\)</span> swinging on a massless rod of length <span class="math inline">\(l\)</span> in a frictionless world governed only by the gravitational constant <span class="math inline">\(g\)</span>. The motion can be described by this differential equation for the angle, <span class="math inline">\(\theta\)</span>, made from the vertical:</p>
+<p><span class="math display">\[
+\theta''(t) + \frac{g}{l}\sin(\theta(t)) = 0
+\]</span></p>
+<p>Can this second-order equation be solved by <code>SymPy</code>?</p>
+<pre class="{julia}"><code>@syms g::positive l::positive theta()=&gt;"θ"
+eqnp = D2(theta)(x) + g/l*sin(theta(x))</code></pre>
+<p>Trying to do so, can cause <code>SymPy</code> to hang or simply give up and repeat its input; no easy answer is forthcoming for this equation.</p>
+<p>In general, for the first-order initial value problem characterized by <span class="math inline">\(y'(x) = F(y,x)\)</span>, there are conditions (<a href="http://tinyurl.com/h663wba">Peano</a> and <a href="http://tinyurl.com/3rbde5e">Picard-Lindelof</a>) that can guarantee the existence (and uniqueness) of equation locally, but there may not be an accompanying method to actually find it. This particular problem has a solution, but it can not be written in terms of elementary functions.</p>
+<p>However, as <a href="https://en.wikipedia.org/wiki/Christiaan_Huygens">Huygens</a> first noted, if the angles involved are small, then we approximate the solution through the linearization <span class="math inline">\(\sin(\theta(t)) \approx \theta(t)\)</span>. The resulting equation for an approximate answer is just that of Hooke:</p>
+<p><span class="math display">\[
+\theta''(t) + \frac{g}{l}\theta(t) = 0
+\]</span></p>
+<p>Here, the solution is in terms of sines and cosines, with period given by <span class="math inline">\(T = 2\pi/\sqrt{k} =  2\pi\cdot\sqrt{l/g}\)</span>. The answer does not depend on the mass, <span class="math inline">\(m\)</span>, of the bob nor the amplitude of the motion, provided the small-angle approximation is valid.</p>
+<p>If we pull the bob back an angle <span class="math inline">\(a\)</span> and release it then the initial conditions are <span class="math inline">\(\theta(0) = a\)</span> and <span class="math inline">\(\theta'(0) = 0\)</span>. This gives the solution:</p>
+<pre class="{julia}"><code>eqnp₁ = D2(u)(x) + g/l * u(x)
+dsolve(eqnp₁, u(x), ics=Dict(u(0) =&gt; a, D(u)(0) =&gt; 0))</code></pre>
+</section>
+<section id="example-hanging-cables" class="level5">
+<h5 class="anchored" data-anchor-id="example-hanging-cables">Example: hanging cables</h5>
+<p>A chain hangs between two supports a distance <span class="math inline">\(L\)</span> apart. What shape will it take if there are no forces outside of gravity acting on it? What about if the force is uniform along length of the chain, like a suspension bridge? How will the shape differ then?</p>
+<p>Let <span class="math inline">\(y(x)\)</span> describe the chain at position <span class="math inline">\(x\)</span>, with <span class="math inline">\(0 \leq x \leq L\)</span>, say. We consider first the case of the chain with no force save gravity. Let <span class="math inline">\(w(x)\)</span> be the density of the chain at <span class="math inline">\(x\)</span>, taken below to be a constant.</p>
+<p>The chain is in equilibrium, so tension, <span class="math inline">\(T(x)\)</span>, in the chain will be in the direction of the derivative. Let <span class="math inline">\(V\)</span> be the vertical component and <span class="math inline">\(H\)</span> the horizontal component. With only gravity acting on the chain, the value of <span class="math inline">\(H\)</span> will be a constant. The value of <span class="math inline">\(V\)</span> will vary with position.</p>
+<p>At a point <span class="math inline">\(x\)</span>, there is <span class="math inline">\(s(x)\)</span> amount of chain with weight <span class="math inline">\(w \cdot s(x)\)</span>. The tension is in the direction of the tangent line, so:</p>
+<p><span class="math display">\[
+\tan(\theta) = y'(x) = \frac{w s(x)}{H}.
+\]</span></p>
+<p>In terms of an increment of chain, we have:</p>
+<p><span class="math display">\[
+\frac{w ds}{H} = d(y'(x)).
+\]</span></p>
+<p>That is, the ratio of the vertical and horizontal tensions in the increment are in balance with the differential of the derivative.</p>
+<p>But <span class="math inline">\(ds = \sqrt{dx^2 + dy^2} = \sqrt{dx^2 + y'(x)^2 dx^2} = \sqrt{1 + y'(x)^2}dx\)</span>, so we can simplify to:</p>
+<p><span class="math display">\[
+\frac{w}{H}\sqrt{1 + y'(x)^2}dx =y''(x)dx.
+\]</span></p>
+<p>This yields the second-order equation:</p>
+<p><span class="math display">\[
+y''(x) = \frac{w}{H} \sqrt{1 + y'(x)^2}.
+\]</span></p>
+<p>We enter this into <code>Julia</code>:</p>
+<pre class="{julia}"><code>@syms w::positive H::positive y()
+eqnc = D2(y)(x) ~ (w/H) * sqrt(1 + D(y(x))^2)</code></pre>
+<p>Unfortunately, <code>SymPy</code> needs a bit of help with this problem, by breaking the problem into steps.</p>
+<p>For the first step we solve for the derivative. Let <span class="math inline">\(u = y'\)</span>, then we have <span class="math inline">\(u'(x) = (w/H)\sqrt{1 + u(x)^2}\)</span>:</p>
+<pre class="{julia}"><code>eqnc₁ = subs(eqnc, D(y)(x) =&gt; u(x))</code></pre>
+<p>and can solve via:</p>
+<pre class="{julia}"><code>outc = dsolve(eqnc₁)</code></pre>
+<p>So <span class="math inline">\(y'(x) = u(x) = \sinh(C_1 + w \cdot x/H)\)</span>. This can be solved by direct integration as there is no <span class="math inline">\(y(x)\)</span> term on the right hand side.</p>
+<pre class="{julia}"><code>D(y)(x) ~ rhs(outc)</code></pre>
+<p>We see a simple linear transformation involving the hyperbolic sine. To avoid, <code>SymPy</code> struggling with the above equation, and knowing the hyperbolic sine is the derivative of the hyperbolic cosine, we anticipate an answer and verify it:</p>
+<pre class="{julia}"><code>yc = (H/w)*cosh(C1 + w*x/H)
+diff(yc, x) == rhs(outc) # == not \Equal[tab]</code></pre>
+<p>The shape is a hyperbolic cosine, known as the catenary.</p>
+<pre class="{julia}"><code>#| echo: false
+imgfile = "figures/verrazano-narrows-bridge-anniversary-historic-photos-2.jpeg"
+caption = """
+The cables of an unloaded suspension bridge have a different shape than a loaded suspension bridge. As seen, the cables in this [figure](https://www.brownstoner.com/brooklyn-life/verrazano-narrows-bridge-anniversary-historic-photos/) would be modeled by a catenary.
+"""
+# ImageFile(:ODEs, imgfile, caption)
+nothing</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./figures/verrazano-narrows-bridge-anniversary-historic-photos-2.jpeg" class="img-fluid figure-img"></p>
+<figcaption>The cables of an unloaded suspension bridge have a different shape than a loaded suspension bridge. As seen, the cables in this <a href="https://www.brownstoner.com/brooklyn-life/verrazano-narrows-bridge-anniversary-historic-photos/">figure</a> would be modeled by a catenary.</figcaption>
+</figure>
+</div>
+<hr>
+<p>If the chain has a uniform load – like a suspension bridge with a deck – sufficient to make the weight of the chain negligible, then how does the above change? Then the vertical tension comes from <span class="math inline">\(Udx\)</span> and not <span class="math inline">\(w ds\)</span>, so the equation becomes instead:</p>
+<p><span class="math display">\[
+\frac{Udx}{H} = d(y'(x)).
+\]</span></p>
+<p>This <span class="math inline">\(y''(x) = U/H\)</span>, a constant. So it’s answer will be a parabola.</p>
+</section>
+<section id="example-projectile-motion-in-a-medium" class="level5">
+<h5 class="anchored" data-anchor-id="example-projectile-motion-in-a-medium">Example: projectile motion in a medium</h5>
+<p>The first example describes projectile motion without air resistance. If we use <span class="math inline">\((x(t), y(t))\)</span> to describe position at time <span class="math inline">\(t\)</span>, the functions satisfy:</p>
+<p><span class="math display">\[
+x''(t) = 0, \quad y''(t) = -g.
+\]</span></p>
+<p>That is, the <span class="math inline">\(x\)</span> position - where no forces act - has <span class="math inline">\(0\)</span> acceleration, and the <span class="math inline">\(y\)</span> position - where the force of gravity acts - has constant acceleration, <span class="math inline">\(-g\)</span>, where <span class="math inline">\(g=9.8m/s^2\)</span> is the gravitational constant. These equations can be solved to give:</p>
+<p><span class="math display">\[
+x(t) = x_0 + v_0 \cos(\alpha) t, \quad y(t) = y_0 + v_0\sin(\alpha)t - \frac{1}{2}g \cdot t^2.
+\]</span></p>
+<p>Furthermore, we can solve for <span class="math inline">\(t\)</span> from <span class="math inline">\(x(t)\)</span>, to get an equation describing <span class="math inline">\(y(x)\)</span>. Here are all the steps:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x0::real y0::real v0::real alpha::real g::real
+@syms t::positive x u()
+Dₜ = Differential(t)
+D2ₜ = Dₜ ∘ Dₜ
+a1 = dsolve(D2ₜ(u)(t) ~ 0, u(t), ics=Dict(u(0) =&gt; x0, Dₜ(u)(0) =&gt; v0 * cos(alpha)))
+a2 = dsolve(D2ₜ(u)(t) ~ -g, u(t), ics=Dict(u(0) =&gt; y0, Dₜ(u)(0) =&gt; v0 * sin(alpha)))
+ts = solve(x - rhs(a1), t)[1]
+y = simplify(rhs(a2)(t =&gt; ts))
+sympy.Poly(y, x).coeffs()</code></pre>
+<p>Though <code>y</code> is messy, it can be seen that the answer is a quadratic polynomial in <span class="math inline">\(x\)</span> yielding the familiar parabolic motion for a trajectory. The output shows the coefficients.</p>
+<p>In a resistive medium, there are drag forces at play. If this force is proportional to the velocity, say, with proportion <span class="math inline">\(\gamma\)</span>, then the equations become:</p>
+<p><span class="math display">\[\begin{align*}
+x''(t) &amp;= -\gamma x'(t), &amp; \quad y''(t) &amp;= -\gamma y'(t) -g, \\
+x(0) &amp;= x_0, &amp;\quad y(0) &amp;= y_0,\\
+x'(0) &amp;= v_0\cos(\alpha),&amp;\quad y'(0) &amp;= v_0 \sin(\alpha).
+\end{align*}\]</span></p>
+<p>We now attempt to solve these.</p>
+<pre class="{julia}"><code>@syms alpha::real, γ::positive, v()
+@syms x_0::real y_0::real v_0::real
+
+eq₁ = Dₜ(Dₜ(u))(t) ~    - γ * Dₜ(u)(t)
+eq₂ = Dₜ(Dₜ(v))(t) ~ -g - γ * Dₜ(v)(t)
+
+a₁ = dsolve(eq₁, ics=Dict(u(0) =&gt; x_0, Dₜ(u)(0) =&gt; v_0 * cos(alpha)))
+a₂ = dsolve(eq₂, ics=Dict(v(0) =&gt; y_0, Dₜ(v)(0) =&gt; v_0 * sin(alpha)))
+
+ts = solve(x - rhs(a₁), t)[1]
+yᵣ = rhs(a₂)(t =&gt; ts)</code></pre>
+<p>This gives <span class="math inline">\(y\)</span> as a function of <span class="math inline">\(x\)</span>.</p>
+<p>There are a lot of symbols. Lets simplify by using constants <span class="math inline">\(x_0=y_0=0\)</span>:</p>
+<pre class="{julia}"><code>yᵣ₁ = yᵣ(x_0 =&gt; 0, y_0 =&gt; 0)</code></pre>
+<p>What is the trajectory? We see that the <code>log</code> function part will have issues when <span class="math inline">\(-\gamma x + v_0 \cos(\alpha) = 0\)</span>.</p>
+<p>If we fix some parameters, we can plot.</p>
+<pre class="{julia}"><code>v₀, γ₀, α = 200, 1/2, pi/4
+soln = yᵣ₁(v_0=&gt;v₀, γ=&gt;γ₀, alpha=&gt;α, g=&gt;9.8)
+plot(soln, 0, v₀ * cos(α) / γ₀ - 1/10, legend=false)</code></pre>
+<p>We can see that the resistance makes the path quite non-symmetric.</p>
+</section>
+</section>
+<section id="visualizing-a-first-order-initial-value-problem" class="level2" data-number="49.5">
+<h2 data-number="49.5" class="anchored" data-anchor-id="visualizing-a-first-order-initial-value-problem"><span class="header-section-number">49.5</span> Visualizing a first-order initial value problem</h2>
+<p>The solution, <span class="math inline">\(y(x)\)</span>, is known through its derivative. A useful tool to visualize the solution to a first-order differential equation is the <a href="http://tinyurl.com/jspzfok">slope field</a> (or direction field) plot, which at different values of <span class="math inline">\((x,y)\)</span>, plots a vector with slope given through <span class="math inline">\(y'(x)\)</span>.The <code>vectorfieldplot</code> of the <code>CalculusWithJulia</code> package can be used to produce these.</p>
+<p>For example, in a previous example we found a solution to <span class="math inline">\(y'(x) = x\cdot y(x)\)</span>, coded as</p>
+<pre class="{julia}"><code>F(y, x) = y*x</code></pre>
+<p>Suppose <span class="math inline">\(x_0=1\)</span> and <span class="math inline">\(y_0=1\)</span>. Then a direction field plot is drawn through:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x y
+x0, y0 = 1, 1
+
+plot(legend=false)
+vectorfieldplot!((x,y) -&gt; [1, F(y,x)], xlims=(x0, 2), ylims=(y0-5, y0+5))
+
+f(x) =  y0*exp(-x0^2/2) * exp(x^2/2)
+plot!(f,  linewidth=5)</code></pre>
+<p>In general, if the first-order equation is written as <span class="math inline">\(y'(x) = F(y,x)\)</span>, then we plot a “function” that takes <span class="math inline">\((x,y)\)</span> and returns an <span class="math inline">\(x\)</span> value of <span class="math inline">\(1\)</span> and a <span class="math inline">\(y\)</span> value of <span class="math inline">\(F(y,x)\)</span>, so the slope is <span class="math inline">\(F(y,x)\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The order of variables in <span class="math inline">\(F(y,x)\)</span> is conventional with the equation <span class="math inline">\(y'(x) = F(y(x),x)\)</span>.</p>
+</div>
+</div>
+<p>The plots are also useful for illustrating solutions for different initial conditions:</p>
+<pre class="{julia}"><code>#| hold: true
+p = plot(legend=false)
+x0, y0 = 1, 1
+
+vectorfieldplot!((x,y) -&gt; [1,F(y,x)], xlims=(x0, 2), ylims=(y0-5, y0+5))
+for y0 in -4:4
+  f(x) =  y0*exp(-x0^2/2) * exp(x^2/2)
+  plot!(f, x0, 2, linewidth=5)
+end
+p</code></pre>
+<p>Such solutions are called <a href="https://en.wikipedia.org/wiki/Integral_curve">integral curves</a>. These graphs illustrate the fact that the slope field is tangent to the graph of any integral curve.</p>
+</section>
+<section id="questions" class="level2" data-number="49.6">
+<h2 data-number="49.6" class="anchored" data-anchor-id="questions"><span class="header-section-number">49.6</span> Questions</h2>
+<section id="question" class="level5">
+<h5 class="anchored" data-anchor-id="question">Question</h5>
+<p>Using <code>SymPy</code> to solve the differential equation</p>
+<p><span class="math display">\[
+u' = \frac{1-x}{u}
+\]</span></p>
+<p>gives</p>
+<pre class="{julia}"><code>#| hold: true
+@syms x u()
+dsolve(D(u)(x) - (1-x)/u(x))</code></pre>
+<p>The two answers track positive and negative solutions. For the initial condition, <span class="math inline">\(u(-1)=1\)</span>, we have the second one is appropriate: <span class="math inline">\(u(x) = \sqrt{C_1 - x^2 + 2x}\)</span>. At <span class="math inline">\(-1\)</span> this gives: <span class="math inline">\(1 = \sqrt{C_1-3}\)</span>, so <span class="math inline">\(C_1 = 4\)</span>.</p>
+<p>This value is good for what values of <span class="math inline">\(x\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"``[-1, \\infty)``",
+"``[-1, 4]``",
+"``[-1, 0]``",
+"``[1-\\sqrt{5}, 1 + \\sqrt{5}]``"]
+answ = 4
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-1" class="level5">
+<h5 class="anchored" data-anchor-id="question-1">Question</h5>
+<p>Suppose <span class="math inline">\(y(x)\)</span> satisfies</p>
+<p><span class="math display">\[
+y'(x) = y(x)^2, \quad y(1) = 1.
+\]</span></p>
+<p>What is <span class="math inline">\(y(3/2)\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+@syms x u()
+out = dsolve(D(u)(x) - u(x)^2, u(x), ics=Dict(u(1) =&gt; 1))
+val = N(rhs(out(3/2)))
+numericq(val)</code></pre>
+</section>
+<section id="question-2" class="level5">
+<h5 class="anchored" data-anchor-id="question-2">Question</h5>
+<p>Solve the initial value problem</p>
+<p><span class="math display">\[
+y' = 1 + x^2 + y(x)^2 + x^2 y(x)^2, \quad y(0) = 1.
+\]</span></p>
+<p>Use your answer to find <span class="math inline">\(y(1)\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+eqn = D(u)(x) - (1 + x^2 + u(x)^2 + x^2 * u(x)^2)
+out = dsolve(eqn, u(x), ics=Dict(u(0) =&gt; 1))
+val = N(rhs(out)(1).evalf())
+numericq(val)</code></pre>
+</section>
+<section id="question-3" class="level5">
+<h5 class="anchored" data-anchor-id="question-3">Question</h5>
+<p>A population is modeled by <span class="math inline">\(y(x)\)</span>. The rate of population growth is generally proportional to the population (<span class="math inline">\(k y(x)\)</span>), but as the population gets large, the rate is curtailed <span class="math inline">\((1 - y(x)/M)\)</span>.</p>
+<p>Solve the initial value problem</p>
+<p><span class="math display">\[
+y'(x) = k\cdot y(x) \cdot (1 - \frac{y(x)}{M}),
+\]</span></p>
+<p>when <span class="math inline">\(k=1\)</span>, <span class="math inline">\(M=100\)</span>, and <span class="math inline">\(y(0) = 20\)</span>. Find the value of <span class="math inline">\(y(5)\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+k, M = 1, 100
+eqn = D(u)(x) - k * u(x) * (1 - u(x)/M)
+out = dsolve(eqn, u(x), ics=Dict(u(0) =&gt; 20))
+val = N(rhs(out)(5))
+numericq(val)</code></pre>
+</section>
+<section id="question-4" class="level5">
+<h5 class="anchored" data-anchor-id="question-4">Question</h5>
+<p>Solve the initial value problem</p>
+<p><span class="math display">\[
+y'(t) = \sin(t) - \frac{y(t)}{t}, \quad y(\pi) = 1
+\]</span></p>
+<p>Find the value of the solution at <span class="math inline">\(t=2\pi\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+eqn = D(u)(x) - (sin(x) - u(x)/x)
+out = dsolve(eqn, u(x), ics=Dict(u(PI) =&gt; 1))
+val = N(rhs(out(2PI)))
+numericq(val)</code></pre>
+</section>
+<section id="question-5" class="level5">
+<h5 class="anchored" data-anchor-id="question-5">Question</h5>
+<p>Suppose <span class="math inline">\(u(x)\)</span> satisfies:</p>
+<p><span class="math display">\[
+\frac{du}{dx} = e^{-x} \cdot u(x), \quad u(0) = 1.
+\]</span></p>
+<p>Find <span class="math inline">\(u(5)\)</span> using <code>SymPy</code>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+eqn = D(u)(x) - exp(-x)*u(x)
+out = dsolve(eqn, u(x), ics=Dict(u(0) =&gt; 1))
+val = N(rhs(out)(5))
+numericq(val)</code></pre>
+</section>
+<section id="question-6" class="level5">
+<h5 class="anchored" data-anchor-id="question-6">Question</h5>
+<p>The differential equation with boundary values</p>
+<p><span class="math display">\[
+\frac{d(r^2 \frac{dc}{dr})}{dr} = 0, \quad c(1)=2, c(10)=1,
+\]</span></p>
+<p>can be solved with <code>SymPy</code>. What is the value of <span class="math inline">\(c(5)\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+@syms x u()
+eqn = diff(x^2*D(u)(x), x)
+out = dsolve(eqn, u(x), ics=Dict(u(1)=&gt;2, u(10) =&gt; 1)) |&gt; rhs
+out(5)  # 10/9
+choices = ["``10/9``", "``3/2``", "``9/10``", "``8/9``"]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-7" class="level5">
+<h5 class="anchored" data-anchor-id="question-7">Question</h5>
+<p>The example with projectile motion in a medium has a parameter <span class="math inline">\(\gamma\)</span> modeling the effect of air resistance. If <code>y</code> is the answer - as would be the case if the example were copy-and-pasted in - what can be said about <code>limit(y, gamma=&gt;0)</code>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"The limit is a quadratic polynomial in `x`, mirroring the first part of that example.",
+"The limit does not exist, but the limit to `oo` gives a quadratic polynomial in `x`, mirroring the first part of that example.",
+"The limit does not exist -- there is a singularity -- as seen by setting `gamma=0`."
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../ODEs.html" class="pagination-link" aria-label="ODEs">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">ODEs</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../ODEs/euler.html" class="pagination-link" aria-label="Euler's method">
+        <span class="nav-page-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/ODEs/odes.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

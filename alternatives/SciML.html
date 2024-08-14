@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>66&nbsp; The SciML suite of packages – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../alternatives/plotly_plotting.html" rel="next">
+<link href="../alternatives/symbolics.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../alternatives.html">Alternative packages</a></li><li class="breadcrumb-item"><a href="../alternatives/SciML.html"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#symbolic-math-symbolics" id="toc-symbolic-math-symbolics" class="nav-link active" data-scroll-target="#symbolic-math-symbolics"><span class="header-section-number">66.1</span> Symbolic math (<code>Symbolics</code>)</a></li>
+  <li><a href="#solving-equations" id="toc-solving-equations" class="nav-link" data-scroll-target="#solving-equations"><span class="header-section-number">66.2</span> Solving equations</a>
+  <ul class="collapse">
+  <li><a href="#linearsolve" id="toc-linearsolve" class="nav-link" data-scroll-target="#linearsolve"><span class="header-section-number">66.2.1</span> <code>LinearSolve</code></a></li>
+  <li><a href="#nonlinearsolve" id="toc-nonlinearsolve" class="nav-link" data-scroll-target="#nonlinearsolve"><span class="header-section-number">66.2.2</span> <code>NonlinearSolve</code></a></li>
+  <li><a href="#higher-dimensions" id="toc-higher-dimensions" class="nav-link" data-scroll-target="#higher-dimensions"><span class="header-section-number">66.2.3</span> Higher dimensions</a></li>
+  <li><a href="#using-modelingtoolkit-to-model-a-non-linear-problem" id="toc-using-modelingtoolkit-to-model-a-non-linear-problem" class="nav-link" data-scroll-target="#using-modelingtoolkit-to-model-a-non-linear-problem"><span class="header-section-number">66.2.4</span> Using <code>ModelingToolkit</code> to model a non-linear problem</a></li>
+  </ul></li>
+  <li><a href="#optimization-optimization.jl" id="toc-optimization-optimization.jl" class="nav-link" data-scroll-target="#optimization-optimization.jl"><span class="header-section-number">66.3</span> Optimization (<code>Optimization.jl</code>)</a>
+  <ul class="collapse">
+  <li><a href="#two-dimensional" id="toc-two-dimensional" class="nav-link" data-scroll-target="#two-dimensional"><span class="header-section-number">66.3.1</span> Two dimensional</a></li>
+  </ul></li>
+  <li><a href="#integration-integrals.jl" id="toc-integration-integrals.jl" class="nav-link" data-scroll-target="#integration-integrals.jl"><span class="header-section-number">66.4</span> Integration (<code>Integrals.jl</code>)</a>
+  <ul class="collapse">
+  <li><a href="#higher-dimension-integrals" id="toc-higher-dimension-integrals" class="nav-link" data-scroll-target="#higher-dimension-integrals"><span class="header-section-number">66.4.1</span> Higher dimension integrals</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/alternatives/SciML.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../alternatives.html">Alternative packages</a></li><li class="breadcrumb-item"><a href="../alternatives/SciML.html"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>The <code>Julia</code> ecosystem advances rapidly. For much of it, the driving force is the <a href="https://github.com/SciML">SciML</a> organization (Scientific Machine Learning).</p>
+<p>In this section we describe some packages provided by this organization that could be used as alternatives to the ones utilized in these notes. Members of this organization created many packages for solving different types of differential equations, and have branched out from there. Many newer efforts of this organization have been to write uniform interfaces to other packages in the ecosystem, some of which are discussed below. We don’t discuss this key promise of SciML: “Performance is considered a priority, and performance issues are considered bugs,” as we don’t pursue features like in-place modification, sparsity, etc. Interested readers should consult the relevant packages documentation.</p>
+<p>The basic structure to use these packages is the “problem-algorithm-solve” interface described in <a href="../ODEs/solve.html">The problem-algorithm-solve interface</a> sectino. We also discussed this interface a bit in <a href="../ODEs/differential_equations.html">ODEs</a>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>These packages are in a process of rapid development and change to them is expected.</p>
+</div>
+</div>
+<section id="symbolic-math-symbolics" class="level2" data-number="66.1">
+<h2 data-number="66.1" class="anchored" data-anchor-id="symbolic-math-symbolics"><span class="header-section-number">66.1</span> Symbolic math (<code>Symbolics</code>)</h2>
+<p>The <code>Symbolics</code>, <code>SymbolicUtils</code>, and <code>ModelingToolkit</code> packages are provided by this organization. These can be viewed as an alternative to <code>SymPy</code>, which is used throughout this set of notes. See the section on <a href="./symbolics.html">Symbolics</a> for some additional details, the package <a href="https://symbolics.juliasymbolics.org/stable/">documentation</a>, or the documentation for <a href="https://github.com/JuliaSymbolics/SymbolicUtils.jl">SymbolicsUtils</a>.</p>
+</section>
+<section id="solving-equations" class="level2" data-number="66.2">
+<h2 data-number="66.2" class="anchored" data-anchor-id="solving-equations"><span class="header-section-number">66.2</span> Solving equations</h2>
+<p>Solving one or more equations (simultaneously) is different in the linear case (where solutions are readily found – though performance can distinguish approaches) and the nonlinear case – where for most situations, numeric approaches are required.</p>
+<section id="linearsolve" class="level3" data-number="66.2.1">
+<h3 data-number="66.2.1" class="anchored" data-anchor-id="linearsolve"><span class="header-section-number">66.2.1</span> <code>LinearSolve</code></h3>
+<p>The <code>LinearSolve</code> package aims to generalize the solving of linear equations. For many cases these are simply represented as matrix equations of the form <code>Ax=b</code>, from which <code>Julia</code> (borrowing from MATLAB) offers the interface <code>A \ b</code> to yield <code>x</code>. There are scenarios that don’t naturally fit this structure and perhaps problems where different tolerances need to be specified, and the <code>LinearSolve</code> package aims to provide a common interface to handle these scenarios. As this set of notes doesn’t bump into such, this package is not described here. In the symbolic case, the <code>Symbolics.solve_for</code> function was described in <a href="./symbolics.html">Symbolics</a>.</p>
+</section>
+<section id="nonlinearsolve" class="level3" data-number="66.2.2">
+<h3 data-number="66.2.2" class="anchored" data-anchor-id="nonlinearsolve"><span class="header-section-number">66.2.2</span> <code>NonlinearSolve</code></h3>
+<p>The <code>NonlinearSolve</code> package can be seen as an alternative to the use of the <code>Roots</code> package in this set of notes. The package presents itself as “Fast implementations of root finding algorithms in Julia that satisfy the SciML common interface.”</p>
+<p>The package is loaded through the following command:</p>
+<pre class="{julia}"><code>using NonlinearSolve</code></pre>
+<p>Unlike <code>Roots</code>, the package handles problems beyond the univariate case, as such, the simplest problems have a little extra setup required.</p>
+<p>For example, suppose we want to use this package to solve for zeros of <span class="math inline">\(f(x) = x^5 - x - 1\)</span>. We could do so a few different ways.</p>
+<p>An approach that most closely mirrors that of <code>Roots</code> would be:</p>
+<pre class="{julia}"><code>f(x, p) = x^5 - x - 1
+prob = NonlinearProblem(f, 1.0)
+solve(prob, NewtonRaphson())</code></pre>
+<p>The <code>NewtonRaphson</code> method uses a derivative of <code>f</code>, which <code>NonlinearSolve</code> computes using automatic differentiation.</p>
+<p>However, it is more performant and not much more work to allow for a vector of starting values. For this, <code>f</code> can be defined as:</p>
+<pre class="{julia}"><code>f(u, p) = @. (u^5 - u - 1)</code></pre>
+<p>The function definition expects a container for the “<code>x</code>” variables and allows the passing of a container to hold parameters. We could have used the dotted operations for the power and each subtraction to allow vectorization of these basic math operations, as <code>u</code> is a container of values. The <code>@.</code> macro makes adding the “dots” quite easy, as illustrated above. It converts “every function call or operator in expr into a <code>dot call</code>.”</p>
+<p>A problem is set up with this function and an initial guess. The <code>@SVector</code> specification for the guess is for performance purposes and is provided by the <code>StaticArrays</code> package.</p>
+<pre class="{julia}"><code>using StaticArrays
+u0 = @SVector[1.0]
+prob = NonlinearProblem(f, u0)</code></pre>
+<p>The problem is solved by calling <code>solve</code> with an appropriate method specified. Here we use Newton’s method.</p>
+<pre class="{julia}"><code>soln = solve(prob, NewtonRaphson())</code></pre>
+<p>Again, the derivative of <code>f</code> is computed automatically.</p>
+<p>The basic interface for retrieving the numeric solution from the solution object is to use indexing:</p>
+<pre class="{julia}"><code>soln[]</code></pre>
+<hr>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This interface is more performant than <code>Roots</code>, though it isn’t an apples to oranges comparison, as different stopping criteria are used by the two. In order to compare, we help out the call to <code>NonlinearProblem</code> to indicate the problem is non-mutating by adding a “<code>false</code>”, as follows:</p>
+<pre class="{julia}"><code>using BenchmarkTools
+@btime solve(NonlinearProblem{false}(f, @SVector[1.0]), NewtonRaphson())</code></pre>
+<p>As compared to:</p>
+<pre class="{julia}"><code>import Roots
+import ForwardDiff
+g(x) = x^5 - x - 1
+gp(x) = ForwardDiff.derivative(g, x)
+@btime solve(Roots.ZeroProblem((g, gp), 1.0), Roots.Newton())</code></pre>
+</div>
+</div>
+<p>This problem can also be solved using a bracketing method. The package has both <code>Bisection</code> and <code>Falsi</code> as possible methods. To use a bracketing method, the initial bracket must be specified.</p>
+<pre class="{julia}"><code>u0 = (1.0, 2.0)
+prob = IntervalNonlinearProblem(f, u0)</code></pre>
+<p>And</p>
+<pre class="{julia}"><code>solve(prob, Bisection())</code></pre>
+<hr>
+<p>Incorporating parameters is readily done. For example to solve <span class="math inline">\(f(x) = \cos(x) - x/p\)</span> for different values of <span class="math inline">\(p\)</span> we might have:</p>
+<pre class="{julia}"><code>f(x, p) = @. cos(x) - x/p
+u0 = (0.0, pi/2)
+p = 2.0
+prob = IntervalNonlinearProblem(f, u0, p)
+solve(prob, Bisection())</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <em>insignificant</em> difference in stopping criteria used by <code>NonlinearSolve</code> and <code>Roots</code> is illustrated in this example, where the value returned by <code>NonlinearSolve</code> differs by one floating point value:</p>
+<pre class="{julia}"><code>an = solve(IntervalNonlinearProblem{false}(f, u0, p), Bisection())
+ar = solve(Roots.ZeroProblem(f, u0), Roots.Bisection(); p=p)
+nextfloat(an[]) == ar, f(an[], p), f(ar, p)</code></pre>
+</div>
+</div>
+<p>We can solve for several parameters at once, by using a matching number of initial positions as follows:</p>
+<pre class="{julia}"><code>ps = [1, 2, 3, 4]
+u0 = [1, 1, 1, 1]
+prob = NonlinearProblem(f, u0, ps)
+solve(prob, NewtonRaphson())</code></pre>
+</section>
+<section id="higher-dimensions" class="level3" data-number="66.2.3">
+<h3 data-number="66.2.3" class="anchored" data-anchor-id="higher-dimensions"><span class="header-section-number">66.2.3</span> Higher dimensions</h3>
+<p>We solve now for a point on the surface of the following <code>peaks</code> function where the gradient is <span class="math inline">\(0\)</span>. (The gradient here will be a vector-valued function from <span class="math inline">\(R^2\)</span> to <span class="math inline">\(R^2.\)</span>) First we define the function:</p>
+<pre class="{julia}"><code>function _peaks(x, y)
+    p = 3 * (1 - x)^2 * exp(-x^2 - (y + 1)^2)
+    p -= 10 * (x / 5 - x^3 - y^5) * exp(-x^2 - y^2)
+    p -= 1/3 * exp(-(x + 1)^2 - y^2)
+    p
+end
+peaks(u) = _peaks(u[1], u[2])  # pass container, take first two components</code></pre>
+<p>The gradient can be computed different ways within <code>Julia</code>, but here we use the fact that the <code>ForwardDiff</code> package is loaded by <code>NonlinearSolve</code>. Once the function is defined, the pattern is similar to above. We provide a starting point, create a problem, then solve:</p>
+<pre class="{julia}"><code>∇peaks(x, p=nothing) = NonlinearSolve.ForwardDiff.gradient(peaks, x)
+u0 = @SVector[1.0, 1.0]
+prob = NonlinearProblem(∇peaks, u0)
+u = solve(prob, NewtonRaphson())</code></pre>
+<p>We can see that this identified value is a “zero” through:</p>
+<pre class="{julia}"><code>#| error: true
+∇peaks(u.u)</code></pre>
+</section>
+<section id="using-modelingtoolkit-to-model-a-non-linear-problem" class="level3" data-number="66.2.4">
+<h3 data-number="66.2.4" class="anchored" data-anchor-id="using-modelingtoolkit-to-model-a-non-linear-problem"><span class="header-section-number">66.2.4</span> Using <code>ModelingToolkit</code> to model a non-linear problem</h3>
+<p>Nonlinear problems can also be approached symbolically using the <code>ModelingToolkit</code> package. There is one additional step necessary.</p>
+<p>As an example, we look to solve numerically for the zeros of <span class="math inline">\(x^5-x-\alpha\)</span> for a parameter <span class="math inline">\(\alpha\)</span>. We can describe this equation as follows:</p>
+<pre class="{julia}"><code>using ModelingToolkit
+
+@variables x
+@parameters α
+
+eq = x^5 - x - α ~ 0</code></pre>
+<p>The extra step is to specify a “<code>NonlinearSystem</code>.” It is a system, as in practice one or more equations can be considered. The <code>NonlinearSystem</code>constructor handles the details where the equation, the variable, and the parameter are specified. Below this is done using vectors with just one element:</p>
+<pre class="{julia}"><code>ns = NonlinearSystem([eq], [x], [α], name=:ns);
+ns = complete(ns)</code></pre>
+<p>The <code>name</code> argument is special. The name of the object (<code>ns</code>) is assigned through <code>=</code>, but the system must also know this same name. However, the name on the left is not known when the name on the right is needed, so it is up to the user to keep them synchronized. The <code>@named</code> macro handles this behind the scenes by simply rewriting the syntax of the assignment:</p>
+<pre class="{julia}"><code>@named ns = NonlinearSystem([eq], [x], [α]);
+ns = complete(ns)</code></pre>
+<p>With the system defined, we can pass this to <code>NonlinearProblem</code>, as was done with a function. The parameter is specified here, and in this case is <code>α =&gt; 1.0</code>. The initial guess is <code>[1.0]</code>:</p>
+<pre class="{julia}"><code>prob = NonlinearProblem(ns, [1.0], [α =&gt; 1.0])</code></pre>
+<p>The problem is solved as before:</p>
+<pre class="{julia}"><code>solve(prob, NewtonRaphson())</code></pre>
+</section>
+</section>
+<section id="optimization-optimization.jl" class="level2" data-number="66.3">
+<h2 data-number="66.3" class="anchored" data-anchor-id="optimization-optimization.jl"><span class="header-section-number">66.3</span> Optimization (<code>Optimization.jl</code>)</h2>
+<p>We describe briefly the <code>Optimization</code> package which provides a common interface to <em>numerous</em> optimization packages in the <code>Julia</code> ecosystem. We discuss only the interface for <code>Optim.jl</code> defined in <code>OptimizationOptimJL</code>.</p>
+<p>We begin with a standard example from first semester calculus:</p>
+<blockquote class="blockquote">
+<p>Among all rectangles of fixed perimeter, find the one with the <em>maximum</em> area.</p>
+</blockquote>
+<p>If the perimeter is taken to be <span class="math inline">\(25\)</span>, the mathematical setup has a constraint (<span class="math inline">\(P=25=2x+2y\)</span>) and an objective (<span class="math inline">\(A=xy\)</span>) to maximize. In this case, the function to <em>maximize</em> is <span class="math inline">\(A(x) = x \cdot (25-2x)/2\)</span>. This is easily done different ways, such as finding the one critical point and identifying this as the point of maximum.</p>
+<p>To do this last step using the <code>Optimization</code> package, we must first load the package <strong>and</strong> the underlying backend glue code we intend to use:</p>
+<pre class="{julia}"><code>using Optimization
+using OptimizationOptimJL</code></pre>
+<p>Our objective function is defined using an intermediate function derived from the constraint:</p>
+<pre class="{julia}"><code>height(x) = @. (25 - 2x)/2
+A(x, p=nothing) = @.(- x * height(x))</code></pre>
+<p>The minus sign is needed here as optimization routines find <em>minimums</em>, not maximums.</p>
+<p>Next, we define an optimization function with information on how its derivatives will be taken. The following uses <code>ForwardDiff</code>, which is a good choice in the typical calculus setting, where there are a small number of inputs (just <span class="math inline">\(1\)</span> here.)</p>
+<pre class="{julia}"><code>F = OptimizationFunction(A, Optimization.AutoForwardDiff())
+x0 = [4.0]
+prob = OptimizationProblem(F, x0)</code></pre>
+<p>The problem is solved through the common interface with a specified method, in this case <code>Newton</code>:</p>
+<pre class="{julia}"><code>soln = solve(prob, Newton())</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We use the method <code>Newton</code> and not <code>NewtonRaphson</code>, as above. Both methods are similar, but they come from different packages – the latter for solving non-linear equation(s), the former for solving optimization problems.</p>
+</div>
+</div>
+<p>The solution is an object containing the identified answer and more. To get the value, use index notation:</p>
+<pre class="{julia}"><code>soln[]</code></pre>
+<p>The corresponding <span class="math inline">\(y\)</span> value and area are found by:</p>
+<pre class="{julia}"><code>xstar = soln[]
+height(xstar), A(xstar)</code></pre>
+<p>The <code>minimum</code> property also holds the identified minimum:</p>
+<pre class="{julia}"><code>soln.minimum  # compare with A(soln[], nothing)</code></pre>
+<p>The package is a wrapper around other packages. The output of the underlying package is presented in the <code>original</code> property:</p>
+<pre class="{julia}"><code>soln.original</code></pre>
+<hr>
+<p>This problem can also be approached symbolically, using <code>ModelingToolkit</code>.</p>
+<p>For example, we set up the problem with:</p>
+<pre class="{julia}"><code>using ModelingToolkit
+@parameters P
+@variables x
+y = (P - 2x)/2
+Area = - x*y</code></pre>
+<p>The above should be self explanatory. To put into a form to pass to <code>solve</code> we define a “system” by specifying our objective function, the variables, and the parameters.</p>
+<pre class="{julia}"><code>@named sys = OptimizationSystem(Area, [x], [P]);
+sys = complete(sys)</code></pre>
+<p>(This step is different, as before an <code>OptimizationFunction</code> was defined; we use <code>@named</code>, as above, to ensure the system has the same name as the identifier, <code>sys</code>.)</p>
+<p>This system is passed to <code>OptimizationProblem</code> along with a specification of the initial condition (<span class="math inline">\(x=4\)</span>) and the perimeter (<span class="math inline">\(P=25\)</span>). A vector of pairs is used below:</p>
+<pre class="{julia}"><code>prob = OptimizationProblem(sys, [x =&gt; 4.0], [P =&gt; 25.0]; grad=true, hess=true)</code></pre>
+<p>The keywords <code>grad=true</code> and <code>hess=true</code> instruct for automatic derivatives to be taken as needed. These are needed in the choice of method, <code>Newton</code>, below.</p>
+<p>Solving this problem then follows the same pattern as before, again with <code>Newton</code> we have:</p>
+<pre class="{julia}"><code>solve(prob, Newton())</code></pre>
+<p>(A derivative-free method like <code>NelderMead()</code> could be used and then the <code>grad</code> and <code>hess</code> keywords above would be unnecessary, though not harmful.)</p>
+<hr>
+<p>The related calculus problem:</p>
+<blockquote class="blockquote">
+<p>Among all rectangles with a fixed area, find the one with <em>minimum</em> perimeter</p>
+</blockquote>
+<p>could be similarly approached:</p>
+<pre class="{julia}"><code>@parameters Area
+@variables x
+y = Area/x  # from A = xy
+P = 2x + 2y
+@named sys = OptimizationSystem(P, [x], [Area]);
+sys = structural_simplify(sys)
+
+u0 = [x =&gt; 4.0]
+p = [Area =&gt; 25.0]
+
+prob = OptimizationProblem(sys, u0, p; grad=true, hess=true)
+soln = solve(prob, LBFGS())</code></pre>
+<p>We used an initial guess of <span class="math inline">\(x=4\)</span> above. The <code>LBFGS</code> method is a computationally efficient modification of the Broyden-Fletcher-Goldfarb-Shanno algorithm. It is a quasi-Newton method that updates an approximation to the Hessian using past approximations as well as the gradient. On this problem it performs similarly to <code>Newton</code>, though in general may be preferable for higher-dimensional problems.</p>
+<section id="two-dimensional" class="level3" data-number="66.3.1">
+<h3 data-number="66.3.1" class="anchored" data-anchor-id="two-dimensional"><span class="header-section-number">66.3.1</span> Two dimensional</h3>
+<p>Scalar functions of two input variables can have their minimum value identified in the same manner using <code>Optimization.jl</code>.</p>
+<p>For example, consider the function</p>
+<p><span class="math display">\[
+f(x,y) = (x + 2y - 7)^2 + (2x + y - 5)^2
+\]</span></p>
+<p>We wish to minimize this function.</p>
+<p>We begin by defining a function in <code>Julia</code>:</p>
+<pre class="{julia}"><code>function f(u, p)
+    x, y = u
+    (x + 2y - 7)^2 + (2x + y - 5)^2
+end</code></pre>
+<p>We turn this into an optimization function by specifying how derivatives will be taken, as we will the <code>LBFGS</code> algorithm below:</p>
+<pre class="{julia}"><code>ff = OptimizationFunction(f, Optimization.AutoForwardDiff())</code></pre>
+<p>We will begin our search at the origin. We have to be mindful to use floating point numbers here:</p>
+<pre class="{julia}"><code>u0 = [0.0, 0.0] # or zeros(2)</code></pre>
+<pre class="{julia}"><code>prob = OptimizationProblem(ff, u0)</code></pre>
+<p>Finally, we solve the values:</p>
+<pre class="{julia}"><code>solve(prob, LBFGS())</code></pre>
+<p>The value of <span class="math inline">\((1, 3)\)</span> agrees with the contour graph, as it is a point in the interior of the contour for the smallest values displayed.</p>
+<pre class="{julia}"><code>using Plots
+
+xs = range(0, 2, length=100)
+ys = range(2, 4, length=100)
+contour(xs, ys,  (x,y) -&gt; f((x,y), nothing))</code></pre>
+<p>We could also use a <em>derivative-free</em> method, and skip a step:</p>
+<pre class="{julia}"><code>prob = OptimizationProblem(f, u0) # skip making an OptimizationFunction
+solve(prob, NelderMead())</code></pre>
+</section>
+</section>
+<section id="integration-integrals.jl" class="level2" data-number="66.4">
+<h2 data-number="66.4" class="anchored" data-anchor-id="integration-integrals.jl"><span class="header-section-number">66.4</span> Integration (<code>Integrals.jl</code>)</h2>
+<p>The <code>Integrals</code> package provides a common interface to different numeric integration packages in the <code>Julia</code> ecosystem. For example, <code>QuadGK</code> and <code>HCubature</code>. The value of this interface, over those two packages, is its non-differentiated access to other packages, which for some uses may be more performant.</p>
+<p>The package follows the same <code>problem-algorithm-solve</code> interface, as already seen.</p>
+<p>The interface is designed for <span class="math inline">\(1\)</span>-and-higher dimensional integrals.</p>
+<p>The package is loaded with</p>
+<pre class="{julia}"><code>using Integrals</code></pre>
+<p>For a simple definite integral, such as <span class="math inline">\(\int_0^\pi \sin(x)dx\)</span>, we have:</p>
+<pre class="{julia}"><code>f(x, p) = sin(x)
+prob = IntegralProblem(f, 0.0, 1pi)
+soln = solve(prob, QuadGKJL())</code></pre>
+<p>To get access to the answer, we can use indexing notation:</p>
+<pre class="{julia}"><code>soln[]</code></pre>
+<p>Comparing to just using <code>QuadGK</code>, the same definite integral would be estimated with:</p>
+<pre class="{julia}"><code>using QuadGK
+quadgk(sin, 0, pi)</code></pre>
+<p>The estimated upper bound on the error from <code>QuadGK</code>, is available through the <code>resid</code> property on the <code>Integrals</code> output:</p>
+<pre class="{julia}"><code>soln.resid</code></pre>
+<p>The <code>Integrals</code> solution is a bit more verbose, but it is more flexible. For example, the <code>HCubature</code> package provides a similar means to compute <span class="math inline">\(n\)</span>- dimensional integrals. For this problem, the modifications would be:</p>
+<pre class="{julia}"><code>f(x, p) = sin.(x)
+prob = IntegralProblem(f, [0.0], [1pi])
+soln = solve(prob, HCubatureJL())</code></pre>
+<pre class="{julia}"><code>soln[]</code></pre>
+<p>The estimated maximum error is also given by <code>resid</code>:</p>
+<pre class="{julia}"><code>soln.resid</code></pre>
+<hr>
+<p>As well, suppose we wanted to parameterize our function and then differentiate.</p>
+<p>Consider <span class="math inline">\(d/dp \int_0^\pi \sin(px) dx\)</span>. We can do this integral directly to get</p>
+<p><span class="math display">\[\begin{align*}
+\frac{d}{dp} \int_0^\pi \sin(px)dx
+&amp;= \frac{d}{dp}\left( \frac{-1}{p} \cos(px)\Big\rvert_0^\pi\right)\\
+&amp;= \frac{d}{dp}\left( -\frac{\cos(p\cdot\pi)-1}{p}\right)\\
+&amp;= \frac{\cos(p\cdot \pi) - 1}{p^2} + \frac{\pi\cdot\sin(p\cdot\pi)}{p}
+\end{align*}\]</span></p>
+<p>Using <code>Integrals</code> with <code>QuadGK</code> we have:</p>
+<pre class="{julia}"><code>f(x, p) = sin(p*x)
+function ∫sinpx(p)
+    prob = IntegralProblem(f, 0.0, 1pi, p)
+    solve(prob, QuadGKJL())
+end</code></pre>
+<p>We can compute values at both <span class="math inline">\(p=1\)</span> and <span class="math inline">\(p=2\)</span>:</p>
+<pre class="{julia}"><code>∫sinpx(1), ∫sinpx(2)</code></pre>
+<p>To find the derivative in <span class="math inline">\(p\)</span> , we have:</p>
+<pre class="{julia}"><code>ForwardDiff.derivative(∫sinpx, 1), ForwardDiff.derivative(∫sinpx, 2)</code></pre>
+<p>(In <code>QuadGK</code>, the following can be differentiated <code>∫sinpx(p) = quadgk(x -&gt; sin(p*x), 0, pi)[1]</code> as well. <code>Integrals</code> gives a consistent interface.</p>
+<section id="higher-dimension-integrals" class="level3" data-number="66.4.1">
+<h3 data-number="66.4.1" class="anchored" data-anchor-id="higher-dimension-integrals"><span class="header-section-number">66.4.1</span> Higher dimension integrals</h3>
+<p>The power of a common interface is the ability to swap backends and the uniformity for different dimensions. Here we discuss integrals of scalar-valued and vector-valued functions.</p>
+<section id="f-rn-rightarrow-r" class="level4">
+<h4 class="anchored" data-anchor-id="f-rn-rightarrow-r"><span class="math inline">\(f: R^n \rightarrow R\)</span></h4>
+<p>The area under a surface generated by <span class="math inline">\(z=f(x,y)\)</span> over a rectangular region <span class="math inline">\([a,b]\times[c,d]\)</span> can be readily computed. The two coding implementations require <span class="math inline">\(f\)</span> to be expressed as a function of a vector–<em>and</em> a parameter–and the interval to be expressed using two vectors, one for the left endpoints (<code>[a,c]</code>) and one for the right endpoints (<code>[b,d]</code>).</p>
+<p>For example, the area under the function <span class="math inline">\(f(x,y) = 1 + x^2 + 2y^2\)</span> over <span class="math inline">\([-1/2, 1/2] \times [-1,1]\)</span> is computed by:</p>
+<pre class="{julia}"><code>f(x, y) = 1 + x^2 + 2y^2  # match math
+fxp(x, p) = f(x[1], x[2]) # prepare for IntegralProblem
+ls = [-1/2, -1]           # left endpoints
+rs = [1/2, 1]             # right endpoints
+prob = IntegralProblem(fxp, ls, rs)
+soln = solve(prob, HCubatureJL())</code></pre>
+<p>Of course, we could have directly defined the function (<code>fxp</code>) using indexing of the <code>x</code> variable.</p>
+<hr>
+<p>For non-rectangular domains a change of variable is required.</p>
+<p>For example, an integral to assist in finding the volume of a sphere might be</p>
+<p><span class="math display">\[
+V = 2 \iint_R \sqrt{\rho^2 - x^2 - y^2} dx dy
+\]</span></p>
+<p>where <span class="math inline">\(R\)</span> is the disc of radius <span class="math inline">\(\rho\)</span> in the <span class="math inline">\(x-y\)</span> plane.</p>
+<p>The usual approach is to change to polar-coordinates and write this integral as</p>
+<p><span class="math display">\[
+V = \int_0^{2\pi}\int_0^\rho \sqrt{\rho^2 - r^2} r dr d\theta
+\]</span></p>
+<p>the latter being an integral over a rectangular domain.</p>
+<p>To compute this transformed integral, we might have:</p>
+<pre class="{julia}"><code>function vol_sphere(ρ)
+    f(rθ, p) = sqrt(ρ^2 - rθ[1]^2) * rθ[1]
+    ls = [0.0,0.0]
+    rs = [ρ, 2pi]
+    prob = IntegralProblem(f, ls, rs)
+    solve(prob, HCubatureJL())
+end
+
+vol_sphere(2)</code></pre>
+<p>If it is possible to express the region to integrate as <span class="math inline">\(G(R)\)</span> where <span class="math inline">\(R\)</span> is a rectangular region, then the change of variables formula,</p>
+<p><span class="math display">\[
+\iint_{G(R)} f(x) dA = \iint_R (f\circ G)(u) |det(J_G(u))| dU
+\]</span></p>
+<p>turns the integral into the non-rectangular domain <span class="math inline">\(G(R)\)</span> into one over the rectangular domain <span class="math inline">\(R\)</span>. The key is to <em>identify</em> <span class="math inline">\(G\)</span> and to compute the Jacobian. The latter is simply accomplished with <code>ForwardDiff.jacobian</code>.</p>
+<p>For an example, we find the moment of inertia about the axis of the unit square tilted counter-clockwise an angle <span class="math inline">\(0 \leq \alpha \leq \pi/2\)</span>.</p>
+<p>The counter clockwise rotation of a unit square by angle <span class="math inline">\(\alpha\)</span> is described by</p>
+<p><span class="math display">\[
+G(u, v) = \langle \cos(\alpha)\cdot u - \sin(\alpha)\cdot v, \sin(\alpha)\cdot u, +\cos(\alpha)\cdot v \rangle
+\]</span></p>
+<p>So we have <span class="math inline">\(\iint_{G(R)} x^2 dA\)</span> is computed by the following with <span class="math inline">\(\alpha=\pi/4\)</span>:</p>
+<pre class="{julia}"><code>import LinearAlgebra: det
+
+𝑓(uv) = uv[1]^2
+
+function G(uv)
+
+    α = pi/4 # could be made a parameter
+
+    u,v = uv
+    [cos(α)*u - sin(α)*v, sin(α)*u + cos(α)*v]
+
+end
+
+f(u, p) = (𝑓∘G)(u) * det(ForwardDiff.jacobian(G, u))
+
+prob = IntegralProblem(f, [0,0], [1,1])
+solve(prob, HCubatureJL())</code></pre>
+</section>
+<section id="f-rn-rightarrow-rm" class="level4">
+<h4 class="anchored" data-anchor-id="f-rn-rightarrow-rm"><span class="math inline">\(f: R^n \rightarrow R^m\)</span></h4>
+<p>The <code>Integrals</code> package provides an interface for vector-valued functions. By default, the number of dimensions in the output is assumed to be <span class="math inline">\(1\)</span>, but the <code>nout</code> argument can adjust that.</p>
+<p>Let <span class="math inline">\(f\)</span> be vector valued with components <span class="math inline">\(f_1, f_2, \dots, f_m\)</span>, then the output below is the vector with components <span class="math inline">\(\iint_R f_1 dV, \iint_R f_2 dV, \dots, \iint_R f_m dV\)</span>.</p>
+<p>For a trivial example, we have:</p>
+<pre class="{julia}"><code>f(x, p) = [x[1], x[2]^2]
+prob = IntegralProblem(f, [0,0],[3,4])
+solve(prob, HCubatureJL())</code></pre>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../alternatives/symbolics.html" class="pagination-link" aria-label="Symbolics.jl">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../alternatives/plotly_plotting.html" class="pagination-link" aria-label="JavaScript based plotting libraries">
+        <span class="nav-page-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/alternatives/SciML.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

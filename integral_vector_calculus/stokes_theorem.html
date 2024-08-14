@@ -1,0 +1,2418 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>63&nbsp; Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../integral_vector_calculus/review.html" rel="next">
+<link href="../integral_vector_calculus/div_grad_curl.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../integral_vector_calculus.html">Integral vector calculus</a></li><li class="breadcrumb-item"><a href="../integral_vector_calculus/stokes_theorem.html"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#greens-theorem" id="toc-greens-theorem" class="nav-link active" data-scroll-target="#greens-theorem"><span class="header-section-number">63.1</span> Green’s theorem</a>
+  <ul class="collapse">
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples"><span class="header-section-number">63.1.1</span> Examples</a></li>
+  </ul></li>
+  <li><a href="#stokes-theorem" id="toc-stokes-theorem" class="nav-link" data-scroll-target="#stokes-theorem"><span class="header-section-number">63.2</span> Stokes’ theorem</a>
+  <ul class="collapse">
+  <li><a href="#examples-1" id="toc-examples-1" class="nav-link" data-scroll-target="#examples-1"><span class="header-section-number">63.2.1</span> Examples</a></li>
+  </ul></li>
+  <li><a href="#divergence-theorem" id="toc-divergence-theorem" class="nav-link" data-scroll-target="#divergence-theorem"><span class="header-section-number">63.3</span> Divergence theorem</a>
+  <ul class="collapse">
+  <li><a href="#examples-of-the-divergence-theorem" id="toc-examples-of-the-divergence-theorem" class="nav-link" data-scroll-target="#examples-of-the-divergence-theorem"><span class="header-section-number">63.3.1</span> Examples of the divergence theorem</a></li>
+  </ul></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">63.4</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/integral_vector_calculus/stokes_theorem.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../integral_vector_calculus.html">Integral vector calculus</a></li><li class="breadcrumb-item"><a href="../integral_vector_calculus/stokes_theorem.html"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses these add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+plotly()
+using QuadGK
+using SymPy</code></pre>
+<pre class="{julia}"><code>#| echo: false
+#| results: "hidden"
+
+# some useful helpers for drawing
+_bar(x) = sum(x)/length(x)
+_shrink(x, xbar, offset) = xbar + (1-offset/100)*(x-xbar)
+
+function drawf!(p,f, m, dx)
+    a,b = m-dx, m+dx
+    xs = range(a,b,length=100)
+    plot!(p, [a,a,b,b],[f(a),0,0,f(b)], color=:black, linewidth=2)
+    plot!(p, xs, f.(xs), color=:blue, linewidth=3)
+    p
+end
+
+function apoly!(plt::Plots.Plot, ps; offset=5, kwargs...)
+    xs, ys = unzip(ps)
+    xbar, ybar = _bar.((xs, ys))
+    xs, ys = _shrink.(xs, xbar, offset), _shrink.(ys, ybar, offset)
+
+    plot!(plt, xs, ys; kwargs...)
+    xn = [xs[end],ys[end]]
+    x0 = [xs[1], ys[1]]
+    dxn = 0.95*(x0 - xn)
+
+    arrow!(plt, xn, dxn; kwargs...)
+
+    plt
+end
+apoly!(ps;offset=5,kwargs...) = apoly!(Plots.current(), ps; offset=offset, kwargs...)
+
+# arrow square
+# start 1,2,3,4: 1 upper left, 2 lower left
+function cpoly!(p, c, r, st=1, orient=:ccw; linewidth=1,linealpha=1.0, color=[:red,:red,:red,:black])
+
+    ps = [[-1,1], [1,1],[1,-1],[-1,-1]]
+    if orient == :ccw
+        ps = [[-1,1],[-1,-1],[1,-1],[1,1]]
+    end
+    k = 1
+    for i in st:(st+2)
+        plot!(p, unzip([c+r*ps[mod1(i,4)], c+r*ps[mod1(i+1,4)]])..., linewidth=linewidth, linealpha=linealpha, color=color[mod1(k,length(color))])
+        k = k+1
+    end
+        i = mod1(st+3,4)
+        j = mod1(i+1, 4)
+        arrow!(p, c+r*ps[i], 0.95*r*(ps[j]-ps[i]), linewidth=linewidth, linealpha= linealpha, color=color[mod1(k,length(color))])
+    p
+end
+
+
+nothing</code></pre>
+<hr>
+<p>The fundamental theorem of calculus is a fan favorite, as it reduces a definite integral, <span class="math inline">\(\int_a^b f(x) dx\)</span>, into the evaluation of a <em>related</em> function at two points: <span class="math inline">\(F(b)-F(a)\)</span>, where the relation is <span class="math inline">\(F\)</span> is an <em>antiderivative</em> of <span class="math inline">\(f\)</span>. It is a favorite, as it makes life much easier than the alternative of computing a limit of a Riemann sum.</p>
+<p>This relationship can be generalized. The key is to realize that the interval <span class="math inline">\([a,b]\)</span> has boundary <span class="math inline">\(\{a, b\}\)</span> (a set) and then expressing the theorem as: the integral around some region of <span class="math inline">\(f\)</span> is the integral, suitably defined, around the <em>boundary</em> of the region for a function <em>related</em> to <span class="math inline">\(f\)</span>.</p>
+<p>In an abstract setting, Stokes’ theorem says exactly this with the relationship being the <em>exterior</em> derivative. Here we are not as abstract, we discuss below:</p>
+<ul>
+<li>Green’s theorem, a <span class="math inline">\(2\)</span>-dimensional theorem, where the region is a planar region, <span class="math inline">\(D\)</span>, and the boundary a simple curve <span class="math inline">\(C\)</span>;</li>
+<li>Stokes’ theorem in <span class="math inline">\(3\)</span> dimensions, where the region is an open surface, <span class="math inline">\(S\)</span>, in <span class="math inline">\(R^3\)</span> with boundary, <span class="math inline">\(C\)</span>;</li>
+<li>The Divergence theorem in <span class="math inline">\(3\)</span> dimensions, where the region is a volume in three dimensions and the boundary its <span class="math inline">\(2\)</span>-dimensional closed surface.</li>
+</ul>
+<p>The related functions will involve the divergence and the curl, previously discussed.</p>
+<p>Many of the the examples in this section come from either <a href="https://ocw.mit.edu/resources/res-18-001-calculus-online-textbook-spring-2005/">Strang</a> or <a href="https://www.amazon.com/Div-Grad-Curl-All-That/dp/0393925161/">Schey</a>.</p>
+<p>To make the abstract concrete, consider the one dimensional case of finding the definite integral <span class="math inline">\(\int_a^b F'(x) dx\)</span>. The Riemann sum picture at the <em>microscopic</em> level considers a figure like:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+a, b,n = 1/10,2, 10
+dx = (b-a)/n
+f(x) = x^x
+xs = range(a-dx/2, b+dx/2, length=251)
+ms = a:dx:b
+
+p = plot(legend=false, xticks=nothing, yticks=nothing, border=:none, ylim=(-1/2, f(b)+1/2))
+#plot!(p, xs, f.(xs), color=:blue, linewidth=3)
+for m in ms
+    drawf!(p, f, m, 0.9*dx/2)
+end
+annotate!([(ms[6]-dx/2,-0.3, L"x_{i-1}"), (ms[6]+dx/2,-0.3, L"x_{i}")])
+p</code></pre>
+<p>The total area under the blue curve from <span class="math inline">\(a\)</span> to <span class="math inline">\(b\)</span>, is found by adding the area of each segment of the figure.</p>
+<p>Let’s consider now what an integral over the boundary would mean. The region, or interval, <span class="math inline">\([x_{i-1}, x_i]\)</span> has a boundary that clearly consists of the two points <span class="math inline">\(x_{i-1}\)</span> and <span class="math inline">\(x_i\)</span>. If we <em>orient</em> the boundary, as we need to for higher dimensional boundaries, using the outward facing direction, then the oriented boundary at the right-hand end point, <span class="math inline">\(x_i\)</span>, would point towards <span class="math inline">\(+\infty\)</span> and the left-hand end point, <span class="math inline">\(x_{i-1}\)</span>, would be oriented to point to <span class="math inline">\(-\infty\)</span>. An “integral” on the boundary of <span class="math inline">\(F\)</span> would naturally be <span class="math inline">\(F(b) \times 1\)</span> plus <span class="math inline">\(F(a) \times -1\)</span>, or <span class="math inline">\(F(b)-F(a)\)</span>.</p>
+<p>With this choice of integral over the boundary, we can see much cancellation arises were we to compute this integral for each piece, as we would have with <span class="math inline">\(a=x_0 &lt; x_1 &lt; \cdots &lt; x_{n-1} &lt; x_n=b\)</span>:</p>
+<p><span class="math display">\[
+(F(x_1) - F(x_0)) + (F(x_2)-F(x_1)) + \cdots + (F(x_n) - F(x_{n-1})) = F(x_n) - F(x_0) = F(b) - F(a).
+\]</span></p>
+<p>That is, with this definition for a boundary integral, the interior pieces of the microscopic approximation cancel and the total is just the integral over the oriented macroscopic boundary <span class="math inline">\(\{a, b\}\)</span>.</p>
+<p>But each microscopic piece can be reimagined, as</p>
+<p><span class="math display">\[
+F(x_{i}) - F(x_{i-1}) = \left(\frac{F(x_{i}) - F(x_{i-1})}{\Delta{x}}\right)\Delta{x}
+\approx F'(x_i)\Delta{x}.
+\]</span></p>
+<p>The approximation could be exact were the mean value theorem used to identify a point in the interval, but we don’t pursue that, as the key point is the right hand side is a Riemann sum approximation for a <em>different</em> integral, in this case the integral <span class="math inline">\(\int_a^b F'(x) dx\)</span>. Passing from the microscopic view to an infinitesimal view, the picture gives two interpretations, leading to the Fundamental Theorem of Calculus:</p>
+<p><span class="math display">\[
+\int_a^b F'(x) dx = F(b) - F(a).
+\]</span></p>
+<p>The three theorems of this section, Green’s theorem, Stokes’ theorem, and the divergence theorem, can all be seen in this manner: the sum of microscopic boundary integrals leads to a macroscopic boundary integral of the entire region; whereas, by reinterpretation, the microscopic boundary integrals are viewed as Riemann sums, which in the limit become integrals of a <em>related</em> function over the region.</p>
+<section id="greens-theorem" class="level2" data-number="63.1">
+<h2 data-number="63.1" class="anchored" data-anchor-id="greens-theorem"><span class="header-section-number">63.1</span> Green’s theorem</h2>
+<p>To continue the above analysis for a higher dimension, we consider the following figure hinting at a decomposition of a macroscopic square into subsequent microscopic sub-squares. The boundary of each square is oriented so that the right hand rule comes out of the picture.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+a = 1
+ps = [[0,a],[0,0],[a,0],[a,a]]
+p = plot(; legend=false, aspect_ratio=:equal, xticks=nothing, yticks=nothing,  border=:none)
+apoly!(p, ps, linewidth=3, color=:blue)
+a = 1/2
+ps = [[0,a],[0,0],[a,0],[a,a]]
+del = 2/100
+apoly!(p, ([del,del],) .+ ps, linewidth=3, color=:red, offset=20)
+apoly!(p, ([0+del,a-del],) .+ ps, linewidth=3, color=:red, offset=20)
+apoly!(p, ([a-del,0+del],) .+ ps, linewidth=3, color=:red, offset=20)
+apoly!(p, ([a-del,a-del],) .+ ps, linewidth=3, color=:red, offset=20)
+
+a = 1/4
+ps = [[del,del]] .+ [[0,a],[0,0],[a,0],[a,a]]
+del = 4/100
+apoly!(p, ([del,del],) .+ ps, linewidth=3, color=:green, offset=40)
+apoly!(p, ([0+del,a-del],) .+ ps, linewidth=3, color=:green, offset=40)
+apoly!(p, ([a-del,0+del],) .+ ps, linewidth=3, color=:green, offset=40)
+apoly!(p, ([a-del,a-del],) .+ ps, linewidth=3, color=:green, offset=40)
+
+p</code></pre>
+<p>Consider the boundary integral <span class="math inline">\(\oint_c F\cdot\vec{T} ds\)</span> around the smallest (green) squares. We have seen that the <em>curl</em> at a point in a direction is given in terms of the limit. Let the plane be the <span class="math inline">\(x-y\)</span> plane, and the <span class="math inline">\(\hat{k}\)</span> direction be the one coming out of the figure. In the derivation of the curl, we saw that the line integral for circulation around the square satisfies:</p>
+<p><span class="math display">\[
+\lim \frac{1}{\Delta{x}\Delta{y}} \oint_C F \cdot\hat{T}ds =
+\frac{\partial{F_y}}{\partial{x}} - \frac{\partial{F_x}}{\partial{y}}.
+\]</span></p>
+<p>If the green squares are small enough, then the line integrals satisfy:</p>
+<p><span class="math display">\[
+\oint_C F \cdot\hat{T}ds
+\approx
+\left(
+\frac{\partial{F_y}}{\partial{x}}
+-
+\frac{\partial{F_x}}{\partial{y}}
+\right) \Delta{x}\Delta{y} .
+\]</span></p>
+<p>We interpret the right hand side as a Riemann sum approximation for the <span class="math inline">\(2\)</span> dimensional integral of the function <span class="math inline">\(f(x,y) = \frac{\partial{F_y}}{\partial{x}} - \frac{\partial{F_x}}{\partial{y}}=\text{curl}(F)\)</span>, the two-dimensional curl. Were the green squares continued to fill out the large blue square, then the sum of these terms would approximate the integral</p>
+<p><span class="math display">\[
+\iint_S f(x,y) dA = \iint_S
+\left(\frac{\partial{F_y}}{\partial{x}} - \frac{\partial{F_x}}{\partial{y}}\right) dA
+= \iint_S \text{curl}(F) dA.
+\]</span></p>
+<p>However, the microscopic boundary integrals have cancellations that lead to a macroscopic boundary integral. The sum of <span class="math inline">\(\oint_C F \cdot\hat{T}ds\)</span> over the <span class="math inline">\(4\)</span> green squares will be equal to <span class="math inline">\(\oint_{C_r} F\cdot\hat{T}ds\)</span>, where <span class="math inline">\(C_r\)</span> is the red square, as the interior line integral pieces will all cancel off. The sum of <span class="math inline">\(\oint_{C_r} F \cdot\hat{T}ds\)</span> over the <span class="math inline">\(4\)</span> red squares will equal <span class="math inline">\(\oint_{C_b} F \cdot\hat{T}ds\)</span>, where <span class="math inline">\(C_b\)</span> is the oriented path around the blue square, as again the interior line pieces will cancel off. Etc.</p>
+<p>This all suggests that the flow integral around the surface of the larger region (the blue square) is equivalent to the integral of the curl component over the region. This is <a href="https://en.wikipedia.org/wiki/Green%27s_theorem">Green</a>’s theorem, as stated by Wikipedia:</p>
+<blockquote class="blockquote">
+<p><strong>Green’s theorem</strong>: Let <span class="math inline">\(C\)</span> be a positively oriented, piecewise smooth, simple closed curve in the plane, and let <span class="math inline">\(D\)</span> be the region bounded by <span class="math inline">\(C\)</span>. If <span class="math inline">\(F=\langle F_x, F_y\rangle\)</span>, is a vector field on an open region containing <span class="math inline">\(D\)</span> having continuous partial derivatives then:</p>
+<p><span class="math display">\[
+\oint_C F\cdot\hat{T}ds =
+\iint_D \left(
+\frac{\partial{F_y}}{\partial{x}} - \frac{\partial{F_x}}{\partial{y}}
+\right) dA=
+\iint_D \text{curl}(F)dA.
+\]</span></p>
+</blockquote>
+<p>The statement of the theorem applies only to regions whose boundaries are simple closed curves. Not all simple regions have such boundaries. An annulus for example. This is a restriction that will be generalized.</p>
+<section id="examples" class="level3" data-number="63.1.1">
+<h3 data-number="63.1.1" class="anchored" data-anchor-id="examples"><span class="header-section-number">63.1.1</span> Examples</h3>
+<p>Some examples, following Strang, are:</p>
+<section id="computing-area" class="level4">
+<h4 class="anchored" data-anchor-id="computing-area">Computing area</h4>
+<p>Let <span class="math inline">\(F(x,y) = \langle -y, x\rangle\)</span>. Then <span class="math inline">\(\frac{\partial{F_y}}{\partial{x}} - \frac{\partial{F_x}}{\partial{y}}=2\)</span>, so</p>
+<p><span class="math display">\[
+\frac{1}{2}\oint_C F\cdot\hat{T}ds = \frac{1}{2}\oint_C (xdy - ydx) =
+\iint_D dA = A(D).
+\]</span></p>
+<p>This gives a means to compute the area of a region by integrating around its boundary.</p>
+<hr>
+<p>To compute the area of an ellipse, we have:</p>
+<pre class="{julia}"><code>#| hold: true
+
+F(x,y) = [-y,x]
+F(v) = F(v...)
+
+r(t) = [a*cos(t),b*sin(t)]
+
+@syms a::positive b::positive t
+(1//2) * integrate( F(r(t)) ⋅ diff.(r(t),t), (t, 0, 2PI))</code></pre>
+<p>To compute the area of the triangle with vertices <span class="math inline">\((0,0)\)</span>, <span class="math inline">\((a,0)\)</span> and <span class="math inline">\((0,b)\)</span> we can orient the boundary counter clockwise. Let <span class="math inline">\(A\)</span> be the line segment from <span class="math inline">\((0,b)\)</span> to <span class="math inline">\((0,0)\)</span>, <span class="math inline">\(B\)</span> be the line segment from <span class="math inline">\((0,0)\)</span> to <span class="math inline">\((a,0)\)</span>, and <span class="math inline">\(C\)</span> be the other. Then</p>
+<p><span class="math display">\[\begin{align*}
+\frac{1}{2} \int_A F\cdot\hat{T} ds &amp;=\frac{1}{2} \int_A -ydx = 0\\
+\frac{1}{2} \int_B F\cdot\hat{T} ds &amp;=\frac{1}{2} \int_B xdy = 0,
+\end{align*}\]</span></p>
+<p>as on <span class="math inline">\(A\)</span>, <span class="math inline">\(y=0\)</span> and <span class="math inline">\(dy=0\)</span> and on <span class="math inline">\(B\)</span>, <span class="math inline">\(x=0\)</span> and <span class="math inline">\(dx=0\)</span>.</p>
+<p>On <span class="math inline">\(C\)</span> we have <span class="math inline">\(\vec{r}(t) = (0, b) + t\cdot(1,-b/a) =\langle t, b-(bt)/a\rangle\)</span> from <span class="math inline">\(t=a\)</span> to <span class="math inline">\(0\)</span></p>
+<p><span class="math display">\[
+\int_C F\cdot \frac{d\vec{r}}{dt} dt =
+\int_a^0 \langle -b + (bt)/a), t\rangle\cdot\langle 1, -b/a\rangle dt
+= \int_a^0 -b dt = -bt\mid_{a}^0 = ba.
+\]</span></p>
+<p>Dividing by <span class="math inline">\(1/2\)</span> give the familiar answer <span class="math inline">\(A=(1/2) a b\)</span>.</p>
+</section>
+<section id="conservative-fields" class="level4">
+<h4 class="anchored" data-anchor-id="conservative-fields">Conservative fields</h4>
+<p>A vector field is conservative if path integrals for work are independent of the path. We have seen that a vector field that is the gradient of a scalar field will be conservative and vice versa. This led to the vanishing identify <span class="math inline">\(\nabla\times\nabla(f) = 0\)</span> for a scalar field <span class="math inline">\(f\)</span>.</p>
+<p>Is the converse true? Namely, <em>if</em> for some vector field <span class="math inline">\(F\)</span>, <span class="math inline">\(\nabla\times{F}\)</span> is identically <span class="math inline">\(0\)</span> is the field conservative?</p>
+<p>The answer is yes – if the vector field has continuous partial derivatives and the curl is <span class="math inline">\(0\)</span> in a simply connected domain.</p>
+<p>For the two dimensional case the curl is a scalar. <em>If</em> <span class="math inline">\(F = \langle F_x, F_y\rangle = \nabla{f}\)</span> is conservative, then <span class="math inline">\(\partial{F_y}/\partial{x} - \partial{F_x}/\partial{y} = 0\)</span>.</p>
+<p>Now assume <span class="math inline">\(\partial{F_y}/\partial{x} - \partial{F_x}/\partial{y} = 0\)</span>. Let <span class="math inline">\(P\)</span> and <span class="math inline">\(Q\)</span> be two points in the plane. Take any path, <span class="math inline">\(C_1\)</span> from <span class="math inline">\(P\)</span> to <span class="math inline">\(Q\)</span> and any return path, <span class="math inline">\(C_2\)</span>, from <span class="math inline">\(Q\)</span> to <span class="math inline">\(P\)</span> that do not cross and such that <span class="math inline">\(C\)</span>, the concatenation of the two paths, satisfies Green’s theorem. Then, as <span class="math inline">\(F\)</span> is continuous on an open interval containing <span class="math inline">\(D\)</span>, we have:</p>
+<p><span class="math display">\[\begin{align*}
+0 &amp;= \iint_D 0 dA \\
+&amp;=
+\iint_D \left(\partial{F_y}/\partial{x} - \partial{F_x}/\partial{y}\right)dA \\
+&amp;=
+\oint_C F \cdot \hat{T} ds \\
+&amp;=
+\int_{C_1} F \cdot \hat{T} ds + \int_{C_2}F \cdot \hat{T} ds.
+\end{align*}\]</span></p>
+<p>Reversing <span class="math inline">\(C_2\)</span> to go from <span class="math inline">\(P\)</span> to <span class="math inline">\(Q\)</span>, we see the two work integrals are identical, that is the field is conservative.</p>
+<p>Summarizing:</p>
+<ul>
+<li>If <span class="math inline">\(F=\nabla{f}\)</span> then <span class="math inline">\(F\)</span> is conservative.</li>
+<li>If <span class="math inline">\(F=\langle F_x, F_y\rangle\)</span> has <em>continuous</em> partial derivatives in a simply connected open region with <span class="math inline">\(\partial{F_y}/\partial{x} - \partial{F_x}/\partial{y}=0\)</span>, then in that region <span class="math inline">\(F\)</span> is conservative and can be represented as the gradient of a scalar function.</li>
+</ul>
+<p>For example, let <span class="math inline">\(F(x,y) = \langle \sin(xy), \cos(xy) \rangle\)</span>. Is this a conservative vector field?</p>
+<p>We can check by taking partial derivatives. Those of interest are:</p>
+<p><span class="math display">\[\begin{align*}
+\frac{\partial{F_y}}{\partial{x}} &amp;= \frac{\partial{(\cos(xy))}}{\partial{x}} =
+-\sin(xy) y,\\
+\frac{\partial{F_x}}{\partial{y}} &amp;= \frac{\partial{(\sin(xy))}}{\partial{y}} =
+\cos(xy)x.
+\end{align*}\]</span></p>
+<p>It is not the case that <span class="math inline">\(\partial{F_y}/\partial{x} - \partial{F_x}/\partial{y}=0\)</span>, so this vector field is <em>not</em> conservative.</p>
+<hr>
+<p>The conditions of Green’s theorem are important, as this next example shows.</p>
+<p>Let <span class="math inline">\(D\)</span> be the unit disc, <span class="math inline">\(C\)</span> the unit circle parameterized counter clockwise.</p>
+<p>Let <span class="math inline">\(R(x,y) = \langle -y, x\rangle\)</span> be a rotation field and <span class="math inline">\(F(x,y) = R(x,y)/(R(x,y)\cdot R(x,y))\)</span>. Then:</p>
+<pre class="{julia}"><code>@syms x::real y::real z::real t::real</code></pre>
+<pre class="{julia}"><code>#| hold: true
+R(x,y) = [-y,x]
+F(x,y) = R(x,y)/(R(x,y)⋅R(x,y))
+
+Fx, Fy = F(x,y)
+diff(Fy, x) - diff(Fx, y) |&gt; simplify</code></pre>
+<p>As the integrand is <span class="math inline">\(0\)</span>, <span class="math inline">\(\iint_D \left( \partial{F_y}/{\partial{x}}-\partial{F_xy}/{\partial{y}}\right)dA = 0\)</span>, as well. But,</p>
+<p><span class="math display">\[
+F\cdot\hat{T} = \frac{R}{R\cdot{R}} \cdot \frac{R}{R\cdot{R}} = \frac{R\cdot{R}}{(R\cdot{R})^2} = \frac{1}{R\cdot{R}},
+\]</span></p>
+<p>so <span class="math inline">\(\oint_C F\cdot\hat{T}ds = 2\pi\)</span>, <span class="math inline">\(C\)</span> being the unit circle so <span class="math inline">\(R\cdot{R}=1\)</span>.</p>
+<p>That is, for this example, Green’s theorem does <strong>not</strong> apply, as the two integrals are not the same. What isn’t satisfied in the theorem? <span class="math inline">\(F\)</span> is not continuous at the origin and our curve <span class="math inline">\(C\)</span> defining <span class="math inline">\(D\)</span> encircles the origin. So, <span class="math inline">\(F\)</span> does not have continuous partial derivatives, as is required for the theorem.</p>
+</section>
+<section id="more-complicated-boundary-curves" class="level4">
+<h4 class="anchored" data-anchor-id="more-complicated-boundary-curves">More complicated boundary curves</h4>
+<p>A simple closed curve is one that does not cross itself. Green’s theorem applies to regions bounded by curves which have finitely many crosses provided the orientation used is consistent throughout.</p>
+<p>Consider the curve <span class="math inline">\(y = f(x)\)</span>, <span class="math inline">\(a \leq x \leq b\)</span>, assuming <span class="math inline">\(f\)</span> is continuous, <span class="math inline">\(f(a) &gt; 0\)</span>, and <span class="math inline">\(f(b) &lt; 0\)</span>. We can use Green’s theorem to compute the signed “area” under <span class="math inline">\(f\)</span> if we consider the curve in <span class="math inline">\(R^2\)</span> from <span class="math inline">\((a,0)\)</span> to <span class="math inline">\((b,0)\)</span> to <span class="math inline">\((b, f(b))\)</span>, to <span class="math inline">\((a, f(a))\)</span> and back to <span class="math inline">\((a,0)\)</span> in that orientation. This will cross at each zero of <span class="math inline">\(f\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+a, b = pi/2, 3pi/2
+f(x) = sin(x)
+p = plot(f, a, b, legend=false,  xticks=nothing,  border=:none, color=:green)
+arrow!(p, [3pi/4, f(3pi/4)], -0.01*[1,cos(3pi/4)], color = :green)
+arrow!(p, [5pi/4, f(5pi/4)], -0.01*[1,cos(5pi/4)], color = :green)
+arrow!(p, [a,f(a)], [0, -f(a)], color=:red)
+arrow!(p, [b, 0], [0, f(b)], color=:blue)
+arrow!(p, [a, 0], [b-a, 0], color=:black)
+del = -0.1
+annotate!(p, [(a,del, "a"), (b,-del,"b")])
+p</code></pre>
+<p>Let <span class="math inline">\(A\)</span> label the red line, <span class="math inline">\(B\)</span> the green curve, <span class="math inline">\(C\)</span> the blue line, and <span class="math inline">\(D\)</span> the black line. Then the area is given from Green’s theorem by considering half of the the line integral of <span class="math inline">\(F(x,y) = \langle -y, x\rangle\)</span> or <span class="math inline">\(\oint_C (xdy - ydx)\)</span>. To that matter we have:</p>
+<p><span class="math display">\[\begin{align*}
+\int_A (xdy - ydx) &amp;= a(-f(a))\\
+\int_C (xdy - ydx) &amp;= b f(b)\\
+\int_D (xdy - ydx) &amp;= 0\\
+\end{align*}\]</span></p>
+<p>Finally the integral over <span class="math inline">\(B\)</span>, using integration by parts:</p>
+<p><span class="math display">\[\begin{align*}
+\int_B F(\vec{r}(t))\cdot \frac{d\vec{r}(t)}{dt} dt &amp;=
+\int_b^a \langle -f(t),t \rangle\cdot\langle 1, f'(t)\rangle dt\\
+&amp;= \int_a^b f(t)dt - \int_a^b tf'(t)dt\\
+&amp;= \int_a^b f(t)dt - \left(tf(t)\mid_a^b - \int_a^b f(t) dt\right).
+\end{align*}\]</span></p>
+<p>Combining, we have after cancellation <span class="math inline">\(\oint (xdy - ydx) = 2\int_a^b f(t) dt\)</span>, or after dividing by <span class="math inline">\(2\)</span> the signed area under the curve.</p>
+<hr>
+<p>The region may not be simply connected. A simple case might be the disc: <span class="math inline">\(1 \leq x^2 + y^2 \leq 4\)</span>. In this figure we introduce a cut to make a simply connected region.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+a, b = 1, 2
+theta = pi/48
+alpha = asin(b/a*sin(theta))
+f1(t) = b*[cos(t), sin(t)]
+f2(t) = a*[cos(t), sin(t)]
+yflip(x) = [x[1],-x[2]]
+p = plot(unzip(f1, theta, 2pi-theta)..., legend=false, aspect_ratio=:equal, color=:blue)
+plot!(p, unzip(f2, alpha, 2pi-alpha)..., color=:red)
+arrow!(p, [0,2], [-.1,0], color=:blue)
+arrow!(p, [0,1], [.1,0], color=:red)
+arrow!(p, yflip(f1(theta)), yflip(f2(alpha)) - yflip(f1(theta)), color=:green)
+arrow!(p, f2(alpha), f1(theta) - f2(alpha), color=:black)
+p</code></pre>
+<p>The cut leads to a counter-clockwise orientation on the outer ring and a clockwise orientation on the inner ring. If this cut becomes so thin as to vanish, then the line integrals along the lines introducing the cut will cancel off and we have a boundary consisting of two curves with opposite orientations. (If we follow either orientation the closed figure is on the left.)</p>
+<p>To see that the area integral of <span class="math inline">\(F(x,y) = (1/2)\langle -y, x\rangle\)</span> produces the area for this orientation we have, using <span class="math inline">\(C_1\)</span> as the outer ring, and <span class="math inline">\(C_2\)</span> as the inner ring:</p>
+<p><span class="math display">\[\begin{align*}
+\oint_{C_1} F \cdot \hat{T} ds &amp;=
+\int_0^{2\pi} (1/2)(2)\langle -\sin(t), \cos(t)\rangle \cdot (2)\langle-\sin(t), \cos(t)\rangle dt \\
+&amp;= (1/2) (2\pi) 4 = 4\pi\\
+\oint_{C_2} F \cdot \hat{T} ds &amp;=
+\int_{0}^{2\pi}  (1/2) \langle \sin(t), \cos(t)\rangle \cdot \langle-\sin(t), -\cos(t)\rangle dt\\
+&amp;= -(1/2)(2\pi) = -\pi.
+\end{align*}\]</span></p>
+<p>(Using <span class="math inline">\(\vec{r}(t) = 2\langle \cos(t), \sin(t)\rangle\)</span> for the outer ring and <span class="math inline">\(\vec{r}(t) = 1\langle \cos(t), -\sin(t)\rangle\)</span> for the inner ring.)</p>
+<p>Adding the two gives <span class="math inline">\(4\pi - \pi = \pi \cdot(b^2 - a^2)\)</span>, with <span class="math inline">\(b=2\)</span> and <span class="math inline">\(a=1\)</span>.</p>
+</section>
+<section id="flow-not-flux" class="level4">
+<h4 class="anchored" data-anchor-id="flow-not-flux">Flow not flux</h4>
+<p>Green’s theorem has a complement in terms of flow across <span class="math inline">\(C\)</span>. As <span class="math inline">\(C\)</span> is positively oriented (so the bounded interior piece is on the left of <span class="math inline">\(\hat{T}\)</span> as the curve is traced), a normal comes by rotating <span class="math inline">\(90^\circ\)</span> clockwise. That is if <span class="math inline">\(\hat{T} = \langle a, b\rangle\)</span>, then <span class="math inline">\(\hat{N} = \langle b, -a\rangle\)</span>.</p>
+<p>Let <span class="math inline">\(F = \langle F_x, F_y \rangle\)</span> and <span class="math inline">\(G = \langle F_y, -F_x \rangle\)</span>, then <span class="math inline">\(G\cdot\hat{T} = -F\cdot\hat{N}\)</span>. The curl formula applied to <span class="math inline">\(G\)</span> becomes</p>
+<p><span class="math display">\[
+\frac{\partial{G_y}}{\partial{x}} - \frac{\partial{G_x}}{\partial{y}} =
+\frac{\partial{(-F_x)}}{\partial{x}}-\frac{\partial{(F_y)}}{\partial{y}}
+=
+-\left(\frac{\partial{F_x}}{\partial{x}} + \frac{\partial{F_y}}{\partial{y}}\right)=
+-\nabla\cdot{F}.
+\]</span></p>
+<p>Green’s theorem applied to <span class="math inline">\(G\)</span> then gives this formula for <span class="math inline">\(F\)</span>:</p>
+<p><span class="math display">\[
+\oint_C F\cdot\hat{N} ds =
+-\oint_C G\cdot\hat{T} ds =
+-\iint_D (-\nabla\cdot{F})dA =
+\iint_D \nabla\cdot{F}dA.
+\]</span></p>
+<p>The right hand side integral is the <span class="math inline">\(2\)</span>-dimensional divergence, so this has the interpretation that the flux through <span class="math inline">\(C\)</span> (<span class="math inline">\(\oint_C F\cdot\hat{N} ds\)</span>) is the integral of the divergence. (The divergence is defined in terms of a limit of this picture, so this theorem extends the microscopic view to a bigger view.)</p>
+<p>Rather than leave this as an algebraic consequence, we sketch out how this could be intuitively argued from a microscopic picture, the reason being similar to that for the curl, where we considered the small green boxes. In the generalization to dimension <span class="math inline">\(3\)</span> both arguments are needed for our discussion:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+## This isn't used
+r4(t) = cos(2t) + sqrt(1.5^4 - sin(2t)^2)
+ts = range(0, pi/2, length=100)
+f(t) = r4(t) * [cos(t),sin(t)]
+plot(unzip(f, 0, pi/2)..., xticks=nothing, yticks=nothing,  border=:none, legend=false, aspect_ratio=:equal)
+t0 = pi/6
+xs = f.(t0)
+ys = f'.(t0)
+plot!(unzip([f(t0)+1/5*ys, f(t0)-1/5*ys])..., color=:red)
+arrow!(f(t0),1/5*xs, color=:red)
+arrow!(f(t0), -1/10*[-ys[2],ys[1]], color=:black)
+arrow!(f(t0),-1/5*xs, color=:red, linestyle=:dash)
+arrow!(f(t0), 1/10*[-ys[2],ys[1]], color=:black, linestyle=:dash)
+nothing</code></pre>
+<p>Consider now a <span class="math inline">\(2\)</span>-dimensional region split into microscopic boxes; we focus now on two adjacent boxes, <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+a = 1
+ps = [[0,a],[0,0],[a,0],[a,a]]
+p = plot(; legend=false, aspect_ratio=:equal, xticks=nothing,  border=:none, yticks=nothing)
+apoly!(p, ps, linewidth=3, color=:blue)
+apoly!(p, ([1,0],) .+ ps, linewidth=3, color=:red)
+pt = [1, 1/4]
+scatter!(unzip([pt])..., markersize=4, color=:green)
+arrow!(pt, [1/2,1/4], linewidth=3, color=:green)
+arrow!(pt, [1/4,0], color=:blue )
+arrow!(pt, -[1/4, 0], color=:red)
+annotate!([(7/8, 1/8, "A"), (1+7/8, 1/8, "B")])
+p</code></pre>
+<p>The integrand <span class="math inline">\(F\cdot\hat{N}\)</span> for <span class="math inline">\(A\)</span> will differ from that for <span class="math inline">\(B\)</span> by a minus sign, as the field is the same, but the normal carries an opposite sign. Hence the contribution to the line integral around <span class="math inline">\(A\)</span> along this part of the box partition will cancel out with that around <span class="math inline">\(B\)</span>. The only part of the line integral that will not cancel out for such a partition will be the boundary pieces of the overall shape.</p>
+<p>This figure shows in red the parts of the line integrals that will cancel for a more refined grid.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+p = plot( legend=false, xticks=nothing, yticks=nothing,  border=:none)
+for i in 1:8
+
+    for j in 1:8
+        color = repeat([:red],4)
+        st = 1
+        if i == 1
+            color[1] = :black
+            st = 2
+        elseif i==8
+            color[3] = :black
+            st = 4
+        end
+        if j == 1
+            color[2] = :black
+            st = 3
+        elseif j == 8
+            color[4] = :black
+            st = 1
+        end
+    cpoly!(p, [i-1/2, j-1/2], .8*1/2,1, :ccw, linewidth=3,linealpha=0.5, color=color)
+    end
+end
+p</code></pre>
+<p>Again, the microscopic boundary integrals when added will give a macroscopic boundary integral due to cancellations.</p>
+<p>But, as seen in the derivation of the divergence, only modified for <span class="math inline">\(2\)</span> dimensions, we have <span class="math inline">\(\nabla\cdot{F} = \lim \frac{1}{\Delta S} \oint_C F\cdot\hat{N} ds\)</span>, so for each cell</p>
+<p><span class="math display">\[
+\oint_{C_i} F\cdot\hat{N} ds \approx \left(\nabla\cdot{F}\right)\Delta{x}\Delta{y},
+\]</span></p>
+<p>an approximating Riemann sum for <span class="math inline">\(\iint_D \nabla\cdot{F} dA\)</span>. This yields:</p>
+<p><span class="math display">\[
+\oint_C (F \cdot\hat{N}) ds =
+\sum_i \oint_{C_i}  (F \cdot\hat{N}) ds \approx
+\sum \left(\nabla\cdot{F}\right)\Delta{x}\Delta{y} \approx
+\iint_S \nabla\cdot{F}dA,
+\]</span></p>
+<p>the approximation signs becoming equals signs in the limit.</p>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>Let <span class="math inline">\(F(x,y) = \langle ax , by\rangle\)</span>, and <span class="math inline">\(D\)</span> be the square with side length <span class="math inline">\(2\)</span> centered at the origin. Verify that the flow form of Green’s theorem holds.</p>
+<p>We have the divergence is simply <span class="math inline">\(a + b\)</span> so <span class="math inline">\(\iint_D (a+b)dA = (a+b)A(D) = 4(a+b)\)</span>.</p>
+<p>The integral of the flow across <span class="math inline">\(C\)</span> consists of <span class="math inline">\(4\)</span> parts. By symmetry, they all should be similar. We consider the line segment connecting <span class="math inline">\((1,-1)\)</span> to <span class="math inline">\((1,1)\)</span> (which has the proper counterclockwise orientation):</p>
+<p><span class="math display">\[
+\int_C F \cdot \hat{N} ds=
+\int_{-1}^1 \langle F_x, F_y\rangle\cdot\langle 1, 0\rangle ds =
+\int_{-1}^1 a dy = 2a.
+\]</span></p>
+<p>Integrating across the top will give <span class="math inline">\(2b\)</span>, along the bottom <span class="math inline">\(2b\)</span>, and along the left side <span class="math inline">\(2a\)</span> totaling <span class="math inline">\(4(a+b)\)</span>.</p>
+<hr>
+<p>Next, let <span class="math inline">\(F(x,y) = \langle -y, x\rangle\)</span>. This field rotates, and we see has no divergence, as <span class="math inline">\(\partial{F_x}/\partial{x} = \partial{(-y)}/\partial{x} = 0\)</span> and <span class="math inline">\(\partial{F_y}/\partial{y} = \partial{x}/\partial{y} = 0\)</span>. As such, the area integral in Green’s theorem is <span class="math inline">\(0\)</span>. As well, <span class="math inline">\(F\)</span> is parallel to <span class="math inline">\(\hat{T}\)</span> so <em>orthogonal</em> to <span class="math inline">\(\hat{N}\)</span>, hence <span class="math inline">\(\oint F\cdot\hat{N}ds = \oint 0ds = 0\)</span>. For any region <span class="math inline">\(S\)</span> there is no net flow across the boundary and no source or sink of flow inside.</p>
+</section>
+<section id="example-stream-functions" class="level5">
+<h5 class="anchored" data-anchor-id="example-stream-functions">Example: stream functions</h5>
+<p>Strang compiles the following equivalencies (one implies the others) for when the total flux is <span class="math inline">\(0\)</span> for a vector field with continuous partial derivatives:</p>
+<ul>
+<li><span class="math display">\[
+\oint F\cdot\hat{N} ds = 0
+\]</span></li>
+<li>for all curves connecting <span class="math inline">\(P\)</span> to <span class="math inline">\(Q\)</span>, <span class="math inline">\(\int_C F\cdot\hat{N}\)</span> has the same value</li>
+<li>There is a <em>stream</em> function <span class="math inline">\(g(x,y)\)</span> for which <span class="math inline">\(F_x = \partial{g}/\partial{y}\)</span> and <span class="math inline">\(F_y = -\partial{g}/\partial{x}\)</span>. (This says <span class="math inline">\(\nabla{g}\)</span> is <em>orthogonal</em> to <span class="math inline">\(F\)</span>.)</li>
+<li>the components have zero divergence: <span class="math inline">\(\partial{F_x}/\partial{x} + \partial{F_y}/\partial{y} = 0\)</span>.</li>
+</ul>
+<p>Strang calls these fields <em>source</em> free as the divergence is <span class="math inline">\(0\)</span>.</p>
+<p>A <a href="https://en.wikipedia.org/wiki/Stream_function">stream</a> function plays the role of a scalar potential, but note the minus sign and order of partial derivatives. These are accounted for by saying <span class="math inline">\(\langle F_x, F_y, 0\rangle = \nabla\times\langle 0, 0, g\rangle\)</span>, in Cartesian coordinates. Streamlines are tangent to the flow of the velocity vector of the flow and in two dimensions are perpendicular to field lines formed by the gradient of a scalar function.</p>
+<p><a href="https://en.wikipedia.org/wiki/Potential_flow">Potential</a> flow uses a scalar potential function to describe the velocity field through <span class="math inline">\(\vec{v} = \nabla{f}\)</span>. As such, potential flow is irrotational due to the curl of a conservative field being the zero vector. Restricting to two dimensions, this says the partials satisfy <span class="math inline">\(\partial{v_y}/\partial{x} - \partial{v_x}/\partial{y} = 0\)</span>. For an incompressible flow (like water) the velocity will have <span class="math inline">\(0\)</span> divergence too. That is <span class="math inline">\(\nabla\cdot\nabla{f} = 0\)</span> - <span class="math inline">\(f\)</span> satisfies Laplace’s equation.</p>
+<p>By the equivalencies above, an incompressible potential flow means in addition to a potential function, <span class="math inline">\(f\)</span>, there is a stream function <span class="math inline">\(g\)</span> satisfying <span class="math inline">\(v_x = \partial{g}/\partial{y}\)</span> and <span class="math inline">\(v_y=-\partial{g}/\partial{x}\)</span>.</p>
+<p>The gradient of <span class="math inline">\(f=\langle v_x, v_y\rangle\)</span> is orthogonal to the contour lines of <span class="math inline">\(f\)</span>. The gradient of <span class="math inline">\(g=\langle -v_y, v_x\rangle\)</span> is orthogonal to the gradient of <span class="math inline">\(f\)</span>, so are tangents to the contour lines of <span class="math inline">\(f\)</span>. Reversing, the gradient of <span class="math inline">\(f\)</span> is tangent to the contour lines of <span class="math inline">\(g\)</span>. If the flow follows the velocity field, then the contour lines of <span class="math inline">\(g\)</span> indicate the flow of the fluid.</p>
+<p>As an <a href="https://en.wikipedia.org/wiki/Potential_flow#Examples_of_two-dimensional_flows">example</a> consider the following in polar coordinates:</p>
+<p><span class="math display">\[
+f(r, \theta) = A r^n \cos(n\theta),\quad
+g(r, \theta) = A r^n \sin(n\theta).
+\]</span></p>
+<p>The constant <span class="math inline">\(A\)</span> just sets the scale, the parameter <span class="math inline">\(n\)</span> has a qualitative effect on the contour lines. Consider <span class="math inline">\(n=2\)</span> visualized below:</p>
+<pre class="{julia}"><code>#| hold: true
+n = 2
+f(r,theta) = r^n * cos(n*theta)
+g(r, theta) = r^n * sin(n*theta)
+
+f(v) = f(v...); g(v)= g(v...)
+
+Φ(x,y) = [sqrt(x^2 + y^2), atan(y,x)]
+Φ(v) = Φ(v...)
+
+xs = ys = range(-2,2, length=50)
+p = contour(xs, ys, f∘Φ, color=:red, legend=false, aspect_ratio=:equal)
+contour!(p, xs, ys, g∘Φ, color=:blue, linewidth=3)
+p</code></pre>
+<p>The fluid would flow along the blue (stream) lines. The red lines have equal potential along the line.</p>
+</section>
+</section>
+</section>
+</section>
+<section id="stokes-theorem" class="level2" data-number="63.2">
+<h2 data-number="63.2" class="anchored" data-anchor-id="stokes-theorem"><span class="header-section-number">63.2</span> Stokes’ theorem</h2>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+# https://en.wikipedia.org/wiki/Jiffy_Pop#/media/File:JiffyPop.jpg
+imgfile ="figures/jiffy-pop.png"
+caption ="""
+The Jiffy Pop popcorn design has a top surface that is designed to expand to accommodate the popped popcorn. Viewed as a surface, the surface area grows, but the boundary - where the surface meets the pan - stays the same. This is an example that many different surfaces can have the same bounding curve. Stokes' theorem will relate a surface integral over the surface to a line integral about the bounding curve.
+"""
+# ImageFile(:integral_vector_calculus, imgfile, caption)
+nothing</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./figures/jiffy-pop.png" class="img-fluid figure-img"></p>
+<figcaption>The Jiffy Pop popcorn design has a top surface that is designed to expand to accommodate the popped popcorn. Viewed as a surface, the surface area grows, but the boundary - where the surface meets the pan - stays the same. This is an example that many different surfaces can have the same bounding curve. Stokes’ theorem will relate a surface integral over the surface to a line integral about the bounding curve.</figcaption>
+</figure>
+</div>
+<p>Were the figure of Jiffy Pop popcorn animated, the surface of foil would slowly expand due to pressure of popping popcorn until the popcorn was ready. However, the boundary would remain the same. Many different surfaces can have the same boundary. Take for instance the upper half unit sphere in <span class="math inline">\(R^3\)</span> it having the curve <span class="math inline">\(x^2 + y^2 = 1\)</span> as a boundary curve. This is the same curve as the surface of the cone <span class="math inline">\(z = 1 - (x^2 + y^2)\)</span> that lies above the <span class="math inline">\(x-y\)</span> plane. This would also be the same curve as the surface formed by a Mickey Mouse glove if the collar were scaled and positioned onto the unit circle.</p>
+<p>Imagine if instead of the retro labeling, a rectangular grid were drawn on the surface of the Jiffy Pop popcorn before popping. By Green’s theorem, the integral of the curl of a vector field <span class="math inline">\(F\)</span> over this surface reduces to just an accompanying line integral over the boundary, <span class="math inline">\(C\)</span>, where the orientation of <span class="math inline">\(C\)</span> is in the <span class="math inline">\(\hat{k}\)</span> direction. The intuitive derivation being that the curl integral over the grid will have cancellations due to adjacent cells having shared paths being traversed in both directions.</p>
+<p>Now imagine the popcorn expanding, but rather than worry about burning, focusing instead on what happens to the integral of the curl in the direction of the normal, we have</p>
+<p><span class="math display">\[
+\nabla\times{F} \cdot\hat{N} = \lim \frac{1}{\Delta{S}} \oint_C F\cdot\hat{T} ds
+\approx \frac{1}{\Delta{S}} F\cdot\hat{T} \Delta{s}.
+\]</span></p>
+<p>This gives the series of approximations:</p>
+<p><span class="math display">\[\begin{align*}
+\oint_C F\cdot\hat{T} ds &amp;=
+\sum \oint_{C_i} F\cdot\hat{T} ds \\
+&amp;\approx
+\sum F\cdot\hat{T} \Delta s \\
+&amp;\approx
+\sum \nabla\times{F}\cdot\hat{N} \Delta{S} \\
+&amp;\approx
+\iint_S \nabla\times{F}\cdot\hat{N} dS.
+\end{align*}\]</span></p>
+<p>In terms of our expanding popcorn, the boundary integral - after accounting for cancellations, as in Green’s theorem - can be seen as a microscopic sum of boundary integrals each of which is approximated by a term <span class="math inline">\(\nabla\times{F}\cdot\hat{N} \Delta{S}\)</span> which is viewed as a Riemann sum approximation for the the integral of the curl over the surface. The cancellation depends on a proper choice of orientation, but with that we have:</p>
+<blockquote class="blockquote">
+<p><strong>Stokes’ theorem</strong>: Let <span class="math inline">\(S\)</span> be an orientable smooth surface in <span class="math inline">\(R^3\)</span> with boundary <span class="math inline">\(C\)</span>, <span class="math inline">\(C\)</span> oriented so that the chosen normal for <span class="math inline">\(S\)</span> agrees with the right-hand rule for <span class="math inline">\(C\)</span>’s orientation. Then <em>if</em> <span class="math inline">\(F\)</span> has continuous partial derivatives</p>
+<p><span class="math display">\[
+\oint_C F \cdot\hat{T} ds = \iint_S (\nabla\times{F})\cdot\hat{N} dA.
+\]</span></p>
+</blockquote>
+<p>Green’s theorem is an immediate consequence upon viewing the region in <span class="math inline">\(R^2\)</span> as a surface in <span class="math inline">\(R^3\)</span> with normal <span class="math inline">\(\hat{k}\)</span>.</p>
+<section id="examples-1" class="level3" data-number="63.2.1">
+<h3 data-number="63.2.1" class="anchored" data-anchor-id="examples-1"><span class="header-section-number">63.2.1</span> Examples</h3>
+<section id="example-1" class="level5">
+<h5 class="anchored" data-anchor-id="example-1">Example</h5>
+<p>Our first example involves just an observation. For any simply connected surface <span class="math inline">\(S\)</span> without boundary (such as a sphere) the integral <span class="math inline">\(\oint_S \nabla\times{F}dS=0\)</span>, as the line integral around the boundary must be <span class="math inline">\(0\)</span>, as there is no boundary.</p>
+</section>
+<section id="example-2" class="level5">
+<h5 class="anchored" data-anchor-id="example-2">Example</h5>
+<p>Let <span class="math inline">\(F(x,y,z) = \langle x^2, 0, y^2\rangle\)</span> and <span class="math inline">\(C\)</span> be the circle <span class="math inline">\(x^2 + z^2 = 1\)</span> with <span class="math inline">\(y=0\)</span>. Find <span class="math inline">\(\oint_C F\cdot\hat{T}ds\)</span>.</p>
+<p>We can use Stoke’s theorem with the surface being just the disc, so that <span class="math inline">\(\hat{N} = \hat{j}\)</span>. This makes the computation easy:</p>
+<pre class="{julia}"><code>Fₛ(x,y,z) = [x^2, 0, y^2]
+CurlFₛ = curl(Fₛ(x,y,z), [x,y,z])</code></pre>
+<p>We have <span class="math inline">\(\nabla\times{F}\cdot\hat{N} = 0\)</span>, so the answer is <span class="math inline">\(0\)</span>.</p>
+<p>We could have directly computed this. Let <span class="math inline">\(r(t) = \langle \cos(t), 0, \sin(t)\rangle\)</span>. Then we have:</p>
+<pre class="{julia}"><code>rₛ(t) = [cos(t), 0, sin(t)]
+rpₛ = diff.(rₛ(t), t)
+integrandₛ = Fₛ(rₛ(t)...) ⋅ rpₛ</code></pre>
+<p>The integrand isn’t obviously going to yield <span class="math inline">\(0\)</span> for the integral, but through symmetry:</p>
+<pre class="{julia}"><code>integrate(integrandₛ, (t, 0, 2PI))</code></pre>
+</section>
+<section id="example-amperes-circuital-law" class="level5">
+<h5 class="anchored" data-anchor-id="example-amperes-circuital-law">Example: Ampere’s circuital law</h5>
+<p>(Schey) Suppose a current <span class="math inline">\(I\)</span> flows along a line and <span class="math inline">\(C\)</span> is a path encircling the current with orientation such that the right hand rule points in the direction of the current flow.</p>
+<p>Ampere’s circuital law relates the line integral of the magnetic field to the induced current through:</p>
+<p><span class="math display">\[
+\oint_C B\cdot\hat{T} ds = \mu_0 I.
+\]</span></p>
+<p>The goal here is to re-express this integral law to produce a law at each point of the field. Let <span class="math inline">\(S\)</span> be a surface with boundary <span class="math inline">\(C\)</span>, Let <span class="math inline">\(J\)</span> be the current density - <span class="math inline">\(J=\rho v\)</span>, with <span class="math inline">\(\rho\)</span> the density of the current (not time-varying) and <span class="math inline">\(v\)</span> the velocity. The current can be re-expressed as <span class="math inline">\(I = \iint_S J\cdot\hat{N}dA\)</span>. (If the current flows through a wire and <span class="math inline">\(S\)</span> is much bigger than the wire, this is still valid as <span class="math inline">\(\rho=0\)</span> outside of the wire.)</p>
+<p>We then have:</p>
+<p><span class="math display">\[
+\mu_0 \iint_S J\cdot\hat{N}dA =
+\mu_0 I =
+\oint_C B\cdot\hat{T} ds =
+\iint_S (\nabla\times{B})\cdot\hat{N}dA.
+\]</span></p>
+<p>As <span class="math inline">\(S\)</span> and <span class="math inline">\(C\)</span> are arbitrary, this implies the integrands of the surface integrals are equal, or:</p>
+<p><span class="math display">\[
+\nabla\times{B} = \mu_0 J.
+\]</span></p>
+</section>
+<section id="example-faradays-law" class="level5">
+<h5 class="anchored" data-anchor-id="example-faradays-law">Example: Faraday’s law</h5>
+<p>(Strang) Suppose <span class="math inline">\(C\)</span> is a wire and there is a time-varying magnetic field <span class="math inline">\(B(t)\)</span>. Then Faraday’s law says the <em>flux</em> passing within <span class="math inline">\(C\)</span> through a surface <span class="math inline">\(S\)</span> with boundary <span class="math inline">\(C\)</span> of the magnetic field, <span class="math inline">\(\phi = \iint B\cdot\hat{N}dS\)</span>, induces an electric field <span class="math inline">\(E\)</span> that does work:</p>
+<p><span class="math display">\[
+\oint_C E\cdot\hat{T}ds = -\frac{\partial{\phi}}{\partial{t}}.
+\]</span></p>
+<p>Faraday’s law is an empirical statement. Stokes’ theorem can be used to produce one of Maxwell’s equations. For any surface <span class="math inline">\(S\)</span>, as above with its boundary being <span class="math inline">\(C\)</span>, we have both:</p>
+<p><span class="math display">\[
+-\iint_S \left(\frac{\partial{B}}{\partial{t}}\cdot\hat{N}\right)dS =
+-\frac{\partial{\phi}}{\partial{t}} =
+\oint_C E\cdot\hat{T}ds =
+\iint_S (\nabla\times{E})\cdot\hat{N} dS.
+\]</span></p>
+<p>This is true for any capping surface for <span class="math inline">\(C\)</span>. Shrinking <span class="math inline">\(C\)</span> to a point means it will hold for each point in <span class="math inline">\(R^3\)</span>. That is:</p>
+<p><span class="math display">\[
+\nabla\times{E} = -\frac{\partial{B}}{\partial{t}}.
+\]</span></p>
+</section>
+<section id="example-conservative-fields" class="level5">
+<h5 class="anchored" data-anchor-id="example-conservative-fields">Example: Conservative fields</h5>
+<p>Green’s theorem gave a characterization of <span class="math inline">\(2\)</span>-dimensional conservative fields, Stokes’ theorem provides a characterization for <span class="math inline">\(3\)</span> dimensional conservative fields (with continuous derivatives):</p>
+<ul>
+<li>The work <span class="math inline">\(\oint_C F\cdot\hat{T} ds = 0\)</span> for every closed path</li>
+<li>The work <span class="math inline">\(\int_P^Q F\cdot\hat{T} ds\)</span> is independent of the path between <span class="math inline">\(P\)</span> and <span class="math inline">\(Q\)</span></li>
+<li>for a scalar potential function <span class="math inline">\(\phi\)</span>, <span class="math inline">\(F = \nabla{\phi}\)</span></li>
+<li>The curl satisfies: <span class="math inline">\(\nabla\times{F} = \vec{0}\)</span> (and the domain is simply connected).</li>
+</ul>
+<p>Stokes’s theorem can be used to show the first and fourth are equivalent.</p>
+<p>First, if <span class="math inline">\(0 = \oint_C F\cdot\hat{T} ds\)</span>, then by Stokes’ theorem <span class="math inline">\(0 = \iint_S \nabla\times{F}\cdot\hat{N} dS\)</span> for any orientable surface <span class="math inline">\(S\)</span> with boundary <span class="math inline">\(C\)</span>. For a given point, letting <span class="math inline">\(C\)</span> shrink to that point can be used to see that the cross product must be <span class="math inline">\(0\)</span> at that point.</p>
+<p>Conversely, if the cross product is zero in a simply connected region, then take any simple closed curve, <span class="math inline">\(C\)</span> in the region. If the region is <a href="http://math.mit.edu/~jorloff/suppnotes/suppnotes02/v14.pdf">simply connected</a> then there exists an orientable surface, <span class="math inline">\(S\)</span> in the region with boundary <span class="math inline">\(C\)</span> for which: <span class="math inline">\(\oint_C F\cdot\hat{T} ds = \iint_S (\nabla\times{F})\cdot\hat{N}dS=  \iint_S \vec{0}\cdot\hat{N}dS = 0\)</span>.</p>
+<p>The construction of a scalar potential function from the field can be done as illustrated in this next example.</p>
+<p>Take <span class="math inline">\(F = \langle yz^2, xz^2, 2xyz \rangle\)</span>. Verify <span class="math inline">\(F\)</span> is conservative and find a scalar potential <span class="math inline">\(\phi\)</span>.</p>
+<p>To verify that <span class="math inline">\(F\)</span> is conservative, we find its curl to see that it is <span class="math inline">\(\vec{0}\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+F(x,y,z) = [y*z^2, x*z^2, 2*x*y*z]
+curl(F(x,y,z), [x,y,z])</code></pre>
+<p>We need <span class="math inline">\(\phi\)</span> with <span class="math inline">\(\partial{\phi}/\partial{x} = F_x = yz^2\)</span>. To that end, we integrate in <span class="math inline">\(x\)</span>:</p>
+<p><span class="math display">\[
+\phi(x,y,z) = \int yz^2 dx = xyz^2 + g(y,z),
+\]</span></p>
+<p>the function <span class="math inline">\(g(y,z)\)</span> is a “constant” of integration (it doesn’t depend on <span class="math inline">\(x\)</span>). That <span class="math inline">\(\partial{\phi}/\partial{x} = F_x\)</span> is true is easy to verify. Now, consider the partial in <span class="math inline">\(y\)</span>:</p>
+<p><span class="math display">\[
+\frac{\partial{\phi}}{\partial{y}} = xz^2 + \frac{\partial{g}}{\partial{y}} = F_y = xz^2.
+\]</span></p>
+<p>So we have <span class="math inline">\(\frac{\partial{g}}{\partial{y}}=0\)</span> or <span class="math inline">\(g(y,z) = h(z)\)</span>, some constant in <span class="math inline">\(y\)</span>. Finally, we must have <span class="math inline">\(\partial{\phi}/\partial{z} = F_z\)</span>, or</p>
+<p><span class="math display">\[
+\frac{\partial{\phi}}{\partial{z}} = 2xyz + h'(z) = F_z = 2xyz,
+\]</span></p>
+<p>So <span class="math inline">\(h'(z) = 0\)</span>. This value can be any constant, even <span class="math inline">\(0\)</span> which we take, so that <span class="math inline">\(g(y,z) = 0\)</span> and <span class="math inline">\(\phi(x,y,z) = xyz^2\)</span> is a scalar potential for <span class="math inline">\(F\)</span>.</p>
+</section>
+<section id="example-3" class="level5">
+<h5 class="anchored" data-anchor-id="example-3">Example</h5>
+<p>Let <span class="math inline">\(F(x,y,z) = \nabla(xy^2z^3) = \langle y^2z^3, 2xyz^3, 3xy^2z^2\rangle\)</span>. Show that the line integrals around the unit circle in the <span class="math inline">\(x-y\)</span> plane and the <span class="math inline">\(y-z\)</span> planes are <span class="math inline">\(0\)</span>, as <span class="math inline">\(F\)</span> is conservative.</p>
+<pre class="{julia}"><code>Fxyz = ∇(x*y^2*z^3)</code></pre>
+<pre class="{julia}"><code>#| hold: true
+r(t) = [cos(t), sin(t), 0]
+rp = diff.(r(t), t)
+Ft = subs.(Fxyz, x .=&gt; r(t)[1], y.=&gt; r(t)[2], z .=&gt; r(t)[3])
+integrate(Ft ⋅ rp, (t, 0, 2PI))</code></pre>
+<p>(This is trivial, as <code>Ft</code> is <span class="math inline">\(0\)</span>, as each term has a <span class="math inline">\(z\)</span> factor of <span class="math inline">\(0\)</span>.)</p>
+<p>In the <span class="math inline">\(y-z\)</span> plane we have:</p>
+<pre class="{julia}"><code>#| hold: true
+r(t) = [0, cos(t), sin(t)]
+rp = diff.(r(t), t)
+Ft = subs.(Fxyz, x .=&gt; r(t)[1], y.=&gt; r(t)[2], z .=&gt; r(t)[3])
+integrate(Ft ⋅ rp, (t, 0, 2PI))</code></pre>
+<p>This is also easy, as <code>Ft</code> has only an <code>x</code> component and <code>rp</code> has only <code>y</code> and <code>z</code> components, so the two are orthogonal.</p>
+</section>
+<section id="example-4" class="level5">
+<h5 class="anchored" data-anchor-id="example-4">Example</h5>
+<p>In two dimensions the vector field <span class="math inline">\(F(x,y) = \langle -y, x\rangle/(x^2+y^2) = S(x,y)/\|R\|^2\)</span> is irrotational (<span class="math inline">\(0\)</span> curl) and has <span class="math inline">\(0\)</span> divergence, but is <em>not</em> conservative in <span class="math inline">\(R^2\)</span>, as with <span class="math inline">\(C\)</span> being the unit disk we have <span class="math inline">\(\oint_C F\cdot\hat{T}ds = \int_0^{2\pi} \langle -\sin(\theta),\cos(\theta)\rangle \cdot \langle-\sin(\theta), \cos(\theta)\rangle/1 d\theta = 2\pi\)</span>. This is because <span class="math inline">\(F\)</span> is not continuously differentiable at the origin, so the path <span class="math inline">\(C\)</span> is not in a simply connected domain where <span class="math inline">\(F\)</span> is continuously differentiable. (Were <span class="math inline">\(C\)</span> to avoid the origin, the integral would be <span class="math inline">\(0\)</span>.)</p>
+<p>In three dimensions, removing a single point in a domain does not change simple connectedness, but removing an entire line will. So the function <span class="math inline">\(F(x,y,z) =\langle -y,x,0\rangle/(x^2+y^2)\rangle\)</span> will have <span class="math inline">\(0\)</span> curl, <span class="math inline">\(0\)</span> divergence, but won’t be conservative in a domain that includes the <span class="math inline">\(z\)</span> axis.</p>
+<p>However, the function <span class="math inline">\(F(x,y,z) = \langle x, y,z\rangle/\sqrt{x^2+y^2+z^2}\)</span> has curl <span class="math inline">\(0\)</span>, except at the origin. However, <span class="math inline">\(R^3\)</span> less the origin, as a domain, is simply connected, so <span class="math inline">\(F\)</span> will be conservative.</p>
+</section>
+</section>
+</section>
+<section id="divergence-theorem" class="level2" data-number="63.3">
+<h2 data-number="63.3" class="anchored" data-anchor-id="divergence-theorem"><span class="header-section-number">63.3</span> Divergence theorem</h2>
+<p>The divergence theorem is a consequence of a simple observation. Consider two adjacent cubic regions that share a common face. The boundary integral, <span class="math inline">\(\oint_S F\cdot\hat{N} dA\)</span>, can be computed for each cube. The surface integral requires a choice of normal, and the convention is to use the outward pointing normal. The common face of the two cubes has <em>different</em> outward pointing normals, the difference being a minus sign. As such, the contribution of the surface integral over this face for one cube is <em>cancelled</em> out by the contribution of the surface integral over this face for the adjacent cube. As with Green’s theorem, this means for a cubic partition, that only the contribution over the boundary is needed to compute the boundary integral. In formulas, if <span class="math inline">\(V\)</span> is a <span class="math inline">\(3\)</span> dimensional cubic region with boundary <span class="math inline">\(S\)</span> and it is partitioned into smaller cubic subregions, <span class="math inline">\(V_i\)</span> with surfaces <span class="math inline">\(S_i\)</span>, we have:</p>
+<p><span class="math display">\[
+\oint_S F\cdot\hat{N} dA = \sum \oint_{S_i} F\cdot\hat{N} dA.
+\]</span></p>
+<p>If the partition provides a microscopic perspective, then the divergence approximation <span class="math inline">\(\nabla\cdot{F} \approx (1/\Delta{V_i}) \oint_{S_i} F\cdot\hat{N} dA\)</span> can be used to say:</p>
+<p><span class="math display">\[
+\oint_S F\cdot\hat{N} dA =
+\sum \oint_{S_i} F\cdot\hat{N} dA \approx
+\sum (\nabla\cdot{F})\Delta{V_i} \approx
+\iiint_V \nabla\cdot{F} dV,
+\]</span></p>
+<p>the last approximation through a Riemann sum approximation. This heuristic leads to:</p>
+<blockquote class="blockquote">
+<p><strong>The divergence theorem</strong>: Suppose <span class="math inline">\(V\)</span> is a <span class="math inline">\(3\)</span>-dimensional volume which is bounded (compact) and has a boundary, <span class="math inline">\(S\)</span>, that is piecewise smooth. If <span class="math inline">\(F\)</span> is a continuously differentiable vector field defined on an open set containing <span class="math inline">\(V\)</span>, then:</p>
+<p><span class="math display">\[
+\iiint_V (\nabla\cdot{F}) dV = \oint_S (F\cdot\hat{N})dS.
+\]</span></p>
+</blockquote>
+<p>That is, the volume integral of the divergence can be computed from the flux integral over the boundary of <span class="math inline">\(V\)</span>.</p>
+<section id="examples-of-the-divergence-theorem" class="level3" data-number="63.3.1">
+<h3 data-number="63.3.1" class="anchored" data-anchor-id="examples-of-the-divergence-theorem"><span class="header-section-number">63.3.1</span> Examples of the divergence theorem</h3>
+<section id="example-5" class="level5">
+<h5 class="anchored" data-anchor-id="example-5">Example</h5>
+<p>Verify the divergence theorem for the vector field <span class="math inline">\(F(x,y,z) = \langle xy, yz, zx\rangle\)</span> for the cubic box centered at the origin with side lengths <span class="math inline">\(2\)</span>.</p>
+<p>We need to compute two terms and show they are equal. We begin with the volume integral:</p>
+<pre class="{julia}"><code>F₁(x,y,z) = [x*y, y*z, z*x]
+DivF₁ = divergence(F₁(x,y,z), [x,y,z])
+integrate(DivF₁, (x, -1,1), (y,-1,1), (z, -1,1))</code></pre>
+<p>The total integral is <span class="math inline">\(0\)</span> by symmetry, not due to the divergence being <span class="math inline">\(0\)</span>, as it is <span class="math inline">\(x+y+z\)</span>.</p>
+<p>As for the surface integral, we have <span class="math inline">\(6\)</span> sides to consider. We take the sides with <span class="math inline">\(\hat{N}\)</span> being <span class="math inline">\(\pm\hat{i}\)</span>:</p>
+<pre class="{julia}"><code>#| hold :  true
+Nhat = [1,0,0]
+integrate((F₁(x,y,z) ⋅ Nhat), (y, -1, 1), (z, -1,1)) # at x=1</code></pre>
+<p>In fact, all <span class="math inline">\(6\)</span> sides will be <span class="math inline">\(0\)</span>, as in this case <span class="math inline">\(F \cdot \hat{i} = xy\)</span> and at <span class="math inline">\(x=1\)</span> the surface integral is just <span class="math inline">\(\int_{-1}^1\int_{-1}^1 y dy dz = 0\)</span>, as <span class="math inline">\(y\)</span> is an odd function.</p>
+<p>As such, the two sides of the Divergence theorem are both <span class="math inline">\(0\)</span>, so the theorem is verified.</p>
+</section>
+<section id="example-6" class="level5">
+<h5 class="anchored" data-anchor-id="example-6">Example</h5>
+<p>(From Strang) If the temperature inside the sun is <span class="math inline">\(T = \log(1/\rho)\)</span> find the <em>heat</em> flow <span class="math inline">\(F=-\nabla{T}\)</span>; the source, <span class="math inline">\(\nabla\cdot{F}\)</span>; and the flux, <span class="math inline">\(\iint F\cdot\hat{N}dS\)</span>. Model the sun as a ball of radius <span class="math inline">\(\rho_0\)</span>.</p>
+<p>We have the heat flow is simply:</p>
+<pre class="{julia}"><code>Rₗ(x,y,z) = norm([x,y,z])
+Tₗ(x,y,z) = log(1/Rₗ(x,y,z))
+HeatFlow = -diff.(Tₗ(x,y,z), [x,y,z])</code></pre>
+<p>We may recognize this as <span class="math inline">\(\rho/\|\rho\|^2 = \hat{\rho}/\|\rho\|\)</span>.</p>
+<p>The source is</p>
+<pre class="{julia}"><code>Divₗ = divergence(HeatFlow, [x,y,z]) |&gt; simplify</code></pre>
+<p>Which would simplify to <span class="math inline">\(1/\rho^2\)</span>.</p>
+<p>Finally, the surface integral over the surface of the sun is an integral over a sphere of radius <span class="math inline">\(\rho_0\)</span>. We could use spherical coordinates to compute this, but note instead that the normal is <span class="math inline">\(\hat{\rho}\)</span> so, <span class="math inline">\(F \cdot \hat{N} = 1/\rho = 1/\rho_0\)</span> over this surface. So the surface integral is simple the surface area times <span class="math inline">\(1/\rho_0\)</span>: <span class="math inline">\(4\pi\rho_0^2/\rho_0 = 4\pi\rho_0\)</span>.</p>
+<p>Finally, though <span class="math inline">\(F\)</span> is not continuous at the origin, the divergence theorem’s result holds. Using spherical coordinates we have:</p>
+<pre class="{julia}"><code>#| hold: true
+@syms rho::real rho_0::real phi::real theta::real
+Jac = rho^2 * sin(phi)
+integrate(1/rho^2 * Jac, (rho, 0, rho_0), (theta, 0, 2PI), (phi, 0, PI))</code></pre>
+</section>
+<section id="example-continuity-equation-schey" class="level5">
+<h5 class="anchored" data-anchor-id="example-continuity-equation-schey">Example: Continuity equation (Schey)</h5>
+<p>Imagine a venue with a strict cap on the number of persons at one time. Two ways to monitor this are: at given times, a count, or census, of all the people in the venue can be made. Or, when possible, a count of people coming in can be compared to a count of people coming out and the difference should yield the number within. Either works well when access is limited and the venue small, but the latter can also work well on a larger scale. For example, for the subway system of New York it would be impractical to attempt to count all the people at a given time using a census, but from turnstile data an accurate count can be had, as turnstiles can be used to track people coming in and going out. But turnstiles can be restricting and cause long(ish) lines. At some stores, new technology is allowing checkout-free shopping. Imagine if each customer had an app on their phone that can be used to track location. As they enter a store, they can be recorded, as they exit they can be recorded and if RFID tags are on each item in the store, their “purchases” can be tallied up and billed through the app. (As an added bonus to paying fewer cashiers, stores can also track on a step-by-step basis how a customer interacts with the store.) In any of these three scenarios, a simple thing applies: the total number of people in a confined region can be counted by counting how many crossed the boundary (and in which direction) and the change in time of the count can be related to the change in time of the people crossing.</p>
+<p>For a more real world example, the <a href="https://www.nytimes.com/interactive/2019/07/03/world/asia/hong-kong-protest-crowd-ai.html">New York Times</a> ran an article about estimating the size of a large protest in Hong Kong:</p>
+<blockquote class="blockquote">
+<p>Crowd estimates for Hong Kong’s large pro-democracy protests have been a point of contention for years. The organizers and the police often release vastly divergent estimates. This year’s annual pro-democracy protest on Monday, July 1, was no different. Organizers announced 550,000 people attended; the police said 190,000 people were there at the peak.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>But for the first time in the march’s history, a group of researchers combined artificial intelligence and manual counting techniques to estimate the size of the crowd, concluding that 265,000 people marched.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>On Monday, the A.I. team attached seven iPads to two major footbridges along the march route. Volunteers doing manual counts were also stationed next to the cameras, to help verify the computer count.</p>
+</blockquote>
+<p>The article describes some issues in counting such a large group:</p>
+<blockquote class="blockquote">
+<p>The high density of the crowd and the moving nature of these protests make estimating the turnout very challenging. For more than a decade, groups have stationed teams along the route and manually counted the rate of people passing through to derive the total number of participants.</p>
+</blockquote>
+<p>As there are no turnstiles to do an accurate count and too many points to come and go, this technique can be too approximate. The article describes how artificial intelligence was used to count the participants. The Times tried their own hand:</p>
+<blockquote class="blockquote">
+<p>Analyzing a short video clip recorded on Monday, The Times’s model tried to detect people based on color and shape, and then tracked the figures as they moved across the screen. This method helps avoid double counting because the crowd generally flowed in one direction.</p>
+</blockquote>
+<p>The divergence theorem provides two means to compute a value, the point here is to illustrate that there are (at least) two possible ways to compute crowd size. Which is better depends on the situation.</p>
+<hr>
+<p>Following Schey, we now consider a continuous analog to the crowd counting problem through a flow with a non-uniform density that may vary in time. Let <span class="math inline">\(\rho(x,y,z;t)\)</span> be the time-varying density and <span class="math inline">\(v(x,y,z;t)\)</span> be a vector field indicating the direction of flow. Consider some three-dimensional volume, <span class="math inline">\(V\)</span>, with boundary <span class="math inline">\(S\)</span> (though two-dimensional would also be applicable). Then these integrals have interpretations:</p>
+<p><span class="math display">\[\begin{align*}
+\iiint_V \rho dV &amp;&amp;\quad\text{Amount contained within }V\\
+\frac{\partial}{\partial{t}} \iiint_V \rho dV &amp;=
+\iiint_V \frac{\partial{\rho}}{\partial{t}} dV &amp;\quad\text{Change in time of amount contained within }V
+\end{align*}\]</span></p>
+<p>Moving the derivative inside the integral requires an assumption of continuity. Assume the material is <em>conserved</em>, meaning that if the amount in the volume <span class="math inline">\(V\)</span> changes it must flow in and out through the boundary. The flow out through <span class="math inline">\(S\)</span>, the boundary of <span class="math inline">\(V\)</span>, is</p>
+<p><span class="math display">\[
+\oint_S (\rho v)\cdot\hat{N} dS,
+\]</span></p>
+<p>using the customary outward pointing normal for the orientation of <span class="math inline">\(S\)</span>.</p>
+<p>So we have:</p>
+<p><span class="math display">\[
+\iiint_V \frac{\partial{\rho}}{\partial{t}} dV =
+-\oint_S (\rho v)\cdot\hat{N} dS = - \iiint_V \nabla\cdot\left(\rho v\right)dV.
+\]</span></p>
+<p>The last equality by the divergence theorem, the minus sign as a positive change in amount within <span class="math inline">\(V\)</span> means flow <em>opposite</em> the outward pointing normal for <span class="math inline">\(S\)</span>.</p>
+<p>The volume <span class="math inline">\(V\)</span> was arbitrary. While it isn’t the case that two integrals being equal implies the integrands are equal, it is the case that if the two integrals are equal for all volumes and the two integrands are continuous, then they are equal.</p>
+<p>That is, under the <em>assumptions</em> that material is conserved and density is continuous a continuity equation can be derived from the divergence theorem:</p>
+<p><span class="math display">\[
+\nabla\cdot(\rho v) = - \frac{\partial{\rho}}{dt}.
+\]</span></p>
+</section>
+<section id="example-the-divergence-theorem-can-fail-to-apply" class="level5">
+<h5 class="anchored" data-anchor-id="example-the-divergence-theorem-can-fail-to-apply">Example: The divergence theorem can fail to apply</h5>
+<p>The assumption of the divergence theorem that the vector field be <em>continuously</em> differentiable is important, as otherwise it may not hold. With <span class="math inline">\(R(x,y,z) = \langle x,y,z\rangle\)</span> take for example <span class="math inline">\(F = (R/\|R\|) / \|R\|^2)\)</span>. This has divergence</p>
+<pre class="{julia}"><code>#| hold: true
+R(x,y,z) = [x,y,z]
+F(x,y,z) = R(x,y,z) / norm(R(x,y,z))^3
+
+
+divergence(F(x,y,z), [x,y,z]) |&gt; simplify</code></pre>
+<p>The simplification done by SymPy masks the presence of <span class="math inline">\(R^{-5/2}\)</span> when taking the partial derivatives, which means the field is <em>not</em> continuously differentiable at the origin.</p>
+<p><em>Were</em> the divergence theorem applicable, then the integral of <span class="math inline">\(F\)</span> over the unit sphere would mean:</p>
+<p><span class="math display">\[
+0 = \iiint_V \nabla\cdot{F} dV =
+\oint_S F\cdot\hat{N}dS = \oint_S \frac{R}{\|R\|^3} \cdot{R} dS =
+\oint_S 1 dS = 4\pi.
+\]</span></p>
+<p>Clearly, as <span class="math inline">\(0\)</span> is not equal to <span class="math inline">\(4\pi\)</span>, the divergence theorem can not apply.</p>
+<p>However, it <em>does</em> apply to any volume not enclosing the origin. So without any calculation, if <span class="math inline">\(V\)</span> were shifted over by <span class="math inline">\(2\)</span> units the volume integral over <span class="math inline">\(V\)</span> would be <span class="math inline">\(0\)</span> and the surface integral over <span class="math inline">\(S\)</span> would be also.</p>
+<p>As already seen, the inverse square law here arises in the electrostatic force formula, and this same observation was made in the context of Gauss’s law.</p>
+</section>
+</section>
+</section>
+<section id="questions" class="level2" data-number="63.4">
+<h2 data-number="63.4" class="anchored" data-anchor-id="questions"><span class="header-section-number">63.4</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>(Schey) What conditions on <span class="math inline">\(F: R^2 \rightarrow R^2\)</span> imply <span class="math inline">\(\oint_C F\cdot d\vec{r} = A\)</span>? (<span class="math inline">\(A\)</span> is the area bounded by the simple, closed curve <span class="math inline">\(C\)</span>)</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"We must have $\text{curl}(F) = 1$",
+L"We must have $\text{curl}(F) = 0$",
+L"We must have $\text{curl}(F) = x$"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>For <span class="math inline">\(C\)</span>, a simple, closed curve parameterized by <span class="math inline">\(\vec{r}(t) = \langle x(t), y(t) \rangle\)</span>, <span class="math inline">\(a \leq t \leq b\)</span>. The area contained can be computed by <span class="math inline">\(\int_a^b x(t) y'(t) dt\)</span>. Let <span class="math inline">\(\vec{r}(t) = \sin(t) \cdot \langle \cos(t), \sin(t)\rangle\)</span>.</p>
+<p>Find the area inside <span class="math inline">\(C\)</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val, err = quadgk(t -&gt; (sin(t)*cos(t)* ForwardDiff.derivative(u-&gt;sin(u)^2, t)), 0, 2pi)
+numericq(val)</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>Let <span class="math inline">\(\hat{N} = \langle \cos(t), \sin(t) \rangle\)</span> and <span class="math inline">\(\hat{T} = \langle -\sin(t), \cos(t)\rangle\)</span>. Then polar coordinates can be viewed as the parametric curve <span class="math inline">\(\vec{r}(t) = r(t) \hat{N}\)</span>.</p>
+<p>Applying Green’s theorem to the vector field <span class="math inline">\(F = \langle -y, x\rangle\)</span> which along the curve is <span class="math inline">\(r(t) \hat{T}\)</span> we know the area formula <span class="math inline">\((1/2) (\int xdy - \int y dx)\)</span>. What is this in polar coordinates (using <span class="math inline">\(\theta=t\)</span>?) (Using <span class="math inline">\((r\hat{N})' = r'\hat{N} + r \hat{N}' = r'\hat{N} +r\hat{T}\)</span> is useful.)</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw" ``\int rd\theta``",
+raw" ``(1/2) \int r d\theta``",
+raw" ``\int r^2 d\theta``",
+raw" ``(1/2) \int r^2d\theta``"
+]
+answ=4
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>Let <span class="math inline">\(\vec{r}(t) = \langle \cos^3(t), \sin^3(t)\rangle\)</span>, <span class="math inline">\(0\leq t \leq 2\pi\)</span>. (This describes a hypocycloid.) Compute the area enclosed by the curve <span class="math inline">\(C\)</span> using Green’s theorem.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+r(t) = [cos(t)^3, sin(t)^3]
+F(x,y) = [-y,x]/2
+F_t = subs.(F(x,y), x.=&gt;r(t)[1], y.=&gt;r(t)[2])
+Tangent = diff.(r(t),t)
+integrate(F_t ⋅ Tangent, (t, 0, 2PI))
+choices = [
+raw" ``3\pi/8``",
+raw" ``\pi/4``",
+raw" ``\pi/2``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>Let <span class="math inline">\(F(x,y) = \langle y, x\rangle\)</span>. We verify Green’s theorem holds when <span class="math inline">\(S\)</span> is the unit square, <span class="math inline">\([0,1]\times[0,1]\)</span>.</p>
+<p>The curl of <span class="math inline">\(F\)</span> is</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw" ``0``",
+raw" ``1``",
+raw" ``2``"
+]
+answ =1
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>As the curl is a constant, say <span class="math inline">\(c\)</span>, we have <span class="math inline">\(\iint_S (\nabla\times{F}) dS = c \cdot 1\)</span>. This is?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw" ``0``",
+raw" ``1``",
+raw" ``2``"
+]
+answ =1
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>To integrate around the boundary we have <span class="math inline">\(4\)</span> terms: the path <span class="math inline">\(A\)</span> connecting <span class="math inline">\((0,0)\)</span> to <span class="math inline">\((1,0)\)</span> (on the <span class="math inline">\(x\)</span> axis), the path <span class="math inline">\(B\)</span> connecting <span class="math inline">\((1,0)\)</span> to <span class="math inline">\((1,1)\)</span>, the path <span class="math inline">\(C\)</span> connecting <span class="math inline">\((1,1)\)</span> to <span class="math inline">\((0,1)\)</span>, and the path <span class="math inline">\(D\)</span> connecting <span class="math inline">\((0,1)\)</span> to <span class="math inline">\((0,0)\)</span> (along the <span class="math inline">\(y\)</span> axis).</p>
+<p>Which path has tangent <span class="math inline">\(\hat{j}\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["`` A``","`` B``"," ``C``"," ``D``"]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>Along path <span class="math inline">\(C\)</span>, <span class="math inline">\(F(x,y) = [1,x]\)</span> and <span class="math inline">\(\hat{T}=-\hat{i}\)</span> so <span class="math inline">\(F\cdot\hat{T} = -1\)</span>. The path integral <span class="math inline">\(\int_C (F\cdot\hat{T})ds = -1\)</span>. What is the value of the path integral over <span class="math inline">\(B\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw" ``-1``",
+raw" ``0``",
+raw" ``1``"
+]
+answ = 3
+radioq(choices, answ, keep_order=true)</code></pre>
+<p>What is the integral over the oriented boundary of <span class="math inline">\(S\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw" ``0``",
+raw" ``1``",
+raw" ``2``"
+]
+answ =1
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>Suppose <span class="math inline">\(F: R^2 \rightarrow R^2\)</span> is a vector field such that <span class="math inline">\(\nabla\cdot{F}=0\)</span> <em>except</em> at the origin. Let <span class="math inline">\(C_1\)</span> and <span class="math inline">\(C_2\)</span> be the unit circle and circle with radius <span class="math inline">\(2\)</span> centered at the origin, both parameterized counterclockwise. What is the relationship between <span class="math inline">\(\oint_{C_2} F\cdot\hat{N}ds\)</span> and <span class="math inline">\(\oint_{C_1} F\cdot\hat{N}ds\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"They are the same, as Green's theorem applies to the area, $S$, between $C_1$ and $C_2$ so $\iint_S \nabla\cdot{F}dA = 0$."
+L"They  differ by a minus sign, as Green's theorem applies to the area, $S$, between $C_1$ and $C_2$ so $\iint_S \nabla\cdot{F}dA = 0$."
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>Let <span class="math inline">\(F(x,y) = \langle x, y\rangle/(x^2+y^2)\)</span>. Though this has divergence <span class="math inline">\(0\)</span> away from the origin, the flow integral around the unit circle, <span class="math inline">\(\oint_C (F\cdot\hat{N})ds\)</span>, is <span class="math inline">\(2\pi\)</span>, as Green’s theorem in divergence form does not apply. Consider the integral around the square centered at the origin, with side lengths <span class="math inline">\(2\)</span>. What is the flow integral around this closed curve?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"Also $2\pi$, as Green's theorem applies to the region formed by the square minus the circle and so the overall flow integral around the boundary is $0$, so the two will be the same.",
+L"It is $-2\pi$, as Green's theorem applies to the region formed by the square minus the circle and so the overall flow integral around the boundary is $0$, so the two will have opposite signs, but the same magnitude."
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>Using the divergence theorem, compute <span class="math inline">\(\iint F\cdot\hat{N} dS\)</span> where <span class="math inline">\(F(x,y,z) = \langle x, x, y \rangle\)</span> and <span class="math inline">\(V\)</span> is the unit sphere.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw" ``4/3 \pi``",
+raw" ``4\pi``",
+raw" ``\pi``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-8" class="level6">
+<h6 class="anchored" data-anchor-id="question-8">Question</h6>
+<p>Using the divergence theorem, compute <span class="math inline">\(\iint F\cdot\hat{N} dS\)</span> where <span class="math inline">\(F(x,y,z) = \langle y, y,x \rangle\)</span> and <span class="math inline">\(V\)</span> is the unit cube <span class="math inline">\([0,1]\times[0,1]\times[0,1]\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw" ``1``",
+raw" ``2``",
+raw" ``3``"
+]
+answ = 1
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-9" class="level6">
+<h6 class="anchored" data-anchor-id="question-9">Question</h6>
+<p>Let <span class="math inline">\(R(x,y,z) = \langle x, y, z\rangle\)</span> and <span class="math inline">\(\rho = \|R\|^2\)</span>. If <span class="math inline">\(F = 2R/\rho\)</span> then <span class="math inline">\(F\)</span> is the gradient of a potential. Which one?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw" ``\log(\rho)``",
+raw" ``1/\rho``",
+raw" ``\rho``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>Based on this information, for <span class="math inline">\(S\)</span> a surface not including the origin with boundary <span class="math inline">\(C\)</span>, a simple closed curve, what is <span class="math inline">\(\oint_C F\cdot\hat{T}ds\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"It is $0$, as, by Stoke's theorem, it is equivalent to $\iint_S (\nabla\times\nabla{\phi})dS = \iint_S 0 dS = 0$.",
+L"It is $2\pi$, as this is the circumference of the unit circle"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-10" class="level6">
+<h6 class="anchored" data-anchor-id="question-10">Question</h6>
+<p>Consider the circle, <span class="math inline">\(C\)</span> in <span class="math inline">\(R^3\)</span> parameterized by <span class="math inline">\(\langle \cos(t), \sin(t), 0\rangle\)</span>. The upper half sphere and the unit disc in the <span class="math inline">\(x-y\)</span> plane are both surfaces with this boundary. Let <span class="math inline">\(F(x,y,z) = \langle -y, x, z\rangle\)</span>. Compute <span class="math inline">\(\oint_C F\cdot\hat{T}ds\)</span> using Stokes’ theorem. The value is:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw" ``2\pi``",
+raw" ``2``",
+raw" ``0``"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-11" class="level6">
+<h6 class="anchored" data-anchor-id="question-11">Question</h6>
+<p>From <a href="https://faculty.math.illinois.edu/~franklan/Math241_165_ConservativeR3.pdf">Illinois</a> comes this advice to check if a vector field <span class="math inline">\(F:R^3 \rightarrow R^3\)</span> is conservative:</p>
+<ul>
+<li>If <span class="math inline">\(\nabla\times{F}\)</span> is non -zero the field is not conservative</li>
+<li>If <span class="math inline">\(\nabla\times{F}\)</span> is zero <em>and</em> the domain of <span class="math inline">\(F\)</span> is simply connected (e.g., all of <span class="math inline">\(R^3\)</span>, then <span class="math inline">\(F\)</span> is conservative</li>
+<li>If <span class="math inline">\(\nabla\times{F}\)</span> is zero <em>but</em> the domain of <span class="math inline">\(F\)</span> is <em>not</em> simply connected then …</li>
+</ul>
+<p>What should finish the last sentence?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"the field could be conservative or not. One must work harder to answer the question.",
+"the field is *not* conservative.",
+"the field *is* conservative"
+]
+answ=1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-12" class="level6">
+<h6 class="anchored" data-anchor-id="question-12">Question</h6>
+<p><a href="">Knill</a> provides the following chart showing what happens under the three main operations on vector-valued functions:</p>
+<pre class="{verbatim}"><code>                     1
+              1 -&gt; grad -&gt; 1
+       1 -&gt; grad -&gt; 2 -&gt; curl -&gt; 1
+1 -&gt; grad -&gt; 3 -&gt; curl -&gt; 3 -&gt; div -&gt; 1</code></pre>
+<p>In the first row, the gradient is just the regular derivative and takes a function <span class="math inline">\(f:R^1 \rightarrow R^1\)</span> into another such function, <span class="math inline">\(f':R \rightarrow R^1\)</span>.</p>
+<p>In the second row, the gradient is an operation that takes a function <span class="math inline">\(f:R^2 \rightarrow R\)</span> into one <span class="math inline">\(\nabla{f}:R^2 \rightarrow R^2\)</span>, whereas the curl takes <span class="math inline">\(F:R^2\rightarrow R^2\)</span> into <span class="math inline">\(\nabla\times{F}:R^2 \rightarrow R^1\)</span>.</p>
+<p>In the third row, the gradient is an operation that takes a function <span class="math inline">\(f:R^3 \rightarrow R\)</span> into one <span class="math inline">\(\nabla{f}:R^3 \rightarrow R^3\)</span>, whereas the curl takes <span class="math inline">\(F:R^3\rightarrow R^3\)</span> into <span class="math inline">\(\nabla\times{F}:R^3 \rightarrow R^3\)</span>, and the divergence takes <span class="math inline">\(F:R^3 \rightarrow R^3\)</span> into <span class="math inline">\(\nabla\cdot{F}:R^3 \rightarrow R\)</span>.</p>
+<p>The diagram emphasizes a few different things:</p>
+<ul>
+<li>The number of integral theorems is implied here. The ones for the gradient are the fundamental theorem of line integrals, namely <span class="math inline">\(\int_C \nabla{f}\cdot d\vec{r}=\int_{\partial{C}} f\)</span>, a short hand notation for <span class="math inline">\(f\)</span> evaluated at the end points.</li>
+</ul>
+<p>The one for the curl in <span class="math inline">\(n=2\)</span> is Green’s theorem: <span class="math inline">\(\iint_S \nabla\times{F}dA = \oint_{\partial{S}} F\cdot d\vec{r}\)</span>.</p>
+<p>The one for the curl in <span class="math inline">\(n=3\)</span> is Stoke’s theorem: <span class="math inline">\(\iint_S \nabla\times{F}dA = \oint_{\partial{S}} F\cdot d\vec{r}\)</span>. Finally, the divergence for <span class="math inline">\(n=3\)</span> is the divergence theorem <span class="math inline">\(\iint_V \nabla\cdot{F} dV = \iint_{\partial{V}} F dS\)</span>.</p>
+<ul>
+<li>Working left to right along a row of the diagram, applying two steps of these operations yields:</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"Zero, by the vanishing properties of these operations",
+"The maximum number in a row",
+"The row number plus 1"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-13" class="level6">
+<h6 class="anchored" data-anchor-id="question-13">Question</h6>
+<p><a href="https://www.jstor.org/stable/2690275">Katz</a> provides details on the history of Green, Gauss (divergence), and Stokes. The first paragraph says that each theorem was not original to the attributed name. Part of the reason being the origins dating back to the 17th century, their usage by Lagrange in Laplace in the 18th century, and their formalization in the 19th century. Other reasons are the applications were different “Gauss was interested in the theory of magnetic attraction, Ostrogradsky in the theory of heat, Green in electricity and magnetism, Poisson in elastic bodies, and Sarrus in floating bodies.” Finally, in nearly all the cases the theorems were thought of as tools toward some physical end.</p>
+<p>In 1846, Cauchy proved</p>
+<p><span class="math display">\[
+\int\left(p\frac{dx}{ds} + q \frac{dy}{ds}\right)ds =
+\pm\iint\left(\frac{\partial{p}}{\partial{y}} - \frac{\partial{q}}{\partial{x}}\right)dx dy.
+\]</span></p>
+<p>This is a form of:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"Green's theorem",
+"The divergence (Gauss') theorem",
+"Stokes' theorem"
+]
+answ = 1
+radioq(choices, answ, keep_order=true)</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../integral_vector_calculus/div_grad_curl.html" class="pagination-link" aria-label="The Gradient, Divergence, and Curl">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../integral_vector_calculus/review.html" class="pagination-link" aria-label="Quick Review of Vector Calculus">
+        <span class="nav-page-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/integral_vector_calculus/stokes_theorem.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

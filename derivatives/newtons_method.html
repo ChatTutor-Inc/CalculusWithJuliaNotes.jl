@@ -1,0 +1,2748 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>30&nbsp; Newton’s method – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../derivatives/more_zeros.html" rel="next">
+<link href="../derivatives/linearization.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+<script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../derivatives.html">Derivatives</a></li><li class="breadcrumb-item"><a href="../derivatives/newtons_method.html"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#newtons-generalization" id="toc-newtons-generalization" class="nav-link active" data-scroll-target="#newtons-generalization"><span class="header-section-number">30.1</span> Newton’s generalization</a></li>
+  <li><a href="#wrapping-in-a-function" id="toc-wrapping-in-a-function" class="nav-link" data-scroll-target="#wrapping-in-a-function"><span class="header-section-number">30.2</span> Wrapping in a function</a>
+  <ul class="collapse">
+  <li><a href="#functions-in-the-roots-package" id="toc-functions-in-the-roots-package" class="nav-link" data-scroll-target="#functions-in-the-roots-package"><span class="header-section-number">30.2.1</span> Functions in the Roots package</a></li>
+  </ul></li>
+  <li><a href="#convergence-rates" id="toc-convergence-rates" class="nav-link" data-scroll-target="#convergence-rates"><span class="header-section-number">30.3</span> Convergence rates</a>
+  <ul class="collapse">
+  <li><a href="#poor-initial-step" id="toc-poor-initial-step" class="nav-link" data-scroll-target="#poor-initial-step"><span class="header-section-number">30.3.1</span> Poor initial step</a></li>
+  <li><a href="#the-second-derivative-is-too-big" id="toc-the-second-derivative-is-too-big" class="nav-link" data-scroll-target="#the-second-derivative-is-too-big"><span class="header-section-number">30.3.2</span> The second derivative is too big</a></li>
+  <li><a href="#the-tangent-line-at-some-xᵢ-is-flat" id="toc-the-tangent-line-at-some-xᵢ-is-flat" class="nav-link" data-scroll-target="#the-tangent-line-at-some-xᵢ-is-flat"><span class="header-section-number">30.3.3</span> The tangent line at some xᵢ is flat</a></li>
+  </ul></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">30.4</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/derivatives/newtons_method.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../derivatives.html">Derivatives</a></li><li class="breadcrumb-item"><a href="../derivatives/newtons_method.html"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses these add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+plotly()
+using SymPy
+using Roots</code></pre>
+<hr>
+<p>The Babylonian method is an algorithm to find an approximate value for <span class="math inline">\(\sqrt{k}\)</span>. It was described by the first-century Greek mathematician Hero of <a href="http://en.wikipedia.org/wiki/Babylonian_method">Alexandria</a>.</p>
+<p>The method starts with some initial guess, called <span class="math inline">\(x_0\)</span>. This is usually some nearby value to the answer. The method then applies a formula to produce an improved guess. This is repeated until the improved guess is accurate enough or it is clear the algorithm fails to work.</p>
+<p>For the Babylonian method, the next guess, <span class="math inline">\(x_{i+1}\)</span>, is derived from the current guess, <span class="math inline">\(x_i\)</span>. In mathematical notation, this is the updating step:</p>
+<p><span class="math display">\[
+x_{i+1} = \frac{1}{2}(x_i + \frac{k}{x_i})
+\]</span></p>
+<p>We use this algorithm to approximate the square root of <span class="math inline">\(2\)</span>, a value known to the Babylonians.</p>
+<p>Start with <span class="math inline">\(x\)</span>, then form <span class="math inline">\(x/2 + 1/x\)</span>, from this again form <span class="math inline">\(x/2 + 1/x\)</span>, repeat.</p>
+<p>We represent this step using a function</p>
+<pre class="{julia}"><code>babylon(x) = x/2 + 1/x</code></pre>
+<p>Let’s look starting with <span class="math inline">\(x = 2\)</span> as a rational number:</p>
+<pre class="{julia}"><code>#| hold: true
+x₁ = babylon(2//1)
+x₁, x₁^2.0</code></pre>
+<p>Our estimate improved from something which squared to <span class="math inline">\(4\)</span> down to something which squares to <span class="math inline">\(2.25.\)</span> A big improvement, but there is still more to come. Had we done one more step:</p>
+<pre class="{julia}"><code>x₂ = (babylon ∘ babylon)(2//1)
+x₂, x₂^2.0</code></pre>
+<p>We now see accuracy until the third decimal point.</p>
+<pre class="{julia}"><code>x₃ = (babylon ∘ babylon ∘ babylon)(2//1)
+x₃, x₃^2.0</code></pre>
+<p>This is now accurate to the sixth decimal point. That is about as far as we, or the Bablyonians, would want to go by hand. Using rational numbers quickly grows out of hand. The next step shows the explosion.</p>
+<pre class="{julia}"><code>reduce((x,step) -&gt; babylon(x), 1:4, init=2//1)</code></pre>
+<p>(In the above, we used <code>reduce</code> to repeat a function call <span class="math inline">\(4\)</span> times, as an alternative to the composition operation. In this section we show a few styles to do this repetition before introducing a packaged function.)</p>
+<p>However, with the advent of floating point numbers, the method stays quite manageable:</p>
+<pre class="{julia}"><code>#| hold: true
+xₙ = reduce((x, step) -&gt; babylon(x), 1:6, init=2.0)
+xₙ, xₙ^2</code></pre>
+<p>We can see that the algorithm - to the precision offered by floating point numbers - has resulted in an answer <code>1.414213562373095</code>. This answer is an <em>approximation</em> to the actual answer. Approximation is necessary, as <span class="math inline">\(\sqrt{2}\)</span> is an irrational number and so can never be exactly represented in floating point. That being said, we can see that the value of <span class="math inline">\(f(x)\)</span> is accurate to the last decimal place, so our approximation is very close and is achieved in a few steps.</p>
+<section id="newtons-generalization" class="level2" data-number="30.1">
+<h2 data-number="30.1" class="anchored" data-anchor-id="newtons-generalization"><span class="header-section-number">30.1</span> Newton’s generalization</h2>
+<p>Let <span class="math inline">\(f(x) = x^3 - 2x -5\)</span>. The value of <span class="math inline">\(2\)</span> is almost a zero, but not quite, as <span class="math inline">\(f(2) = -1\)</span>. We can check that there are no <em>rational</em> roots. Though there is a method to solve the cubic it may be difficult to compute and will not be as generally applicable as some algorithm like the Babylonian method to produce an approximate answer.</p>
+<p>Is there some generalization to the Babylonian method?</p>
+<p>We know that the tangent line is a good approximation to the function at the point. Looking at this graph gives a hint as to an algorithm:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = x^3 - 2x - 5
+fp(x) = 3x^2 - 2
+c = 2
+p = plot(f, 1.75, 2.25, legend=false)
+plot!(x-&gt;f(2) + fp(2)*(x-2))
+plot!(zero)
+scatter!(p, [c], [f(c)], color=:orange, markersize=3)
+p</code></pre>
+<p>The tangent line and the function nearly agree near <span class="math inline">\(2\)</span>. So much so, that the intersection point of the tangent line with the <span class="math inline">\(x\)</span> axis nearly hides the actual zero of <span class="math inline">\(f(x)\)</span> that is near <span class="math inline">\(2.1\)</span>.</p>
+<p>That is, it seems that the intersection of the tangent line and the <span class="math inline">\(x\)</span> axis should be an improved approximation for the zero of the function.</p>
+<p>Let <span class="math inline">\(x_0\)</span> be <span class="math inline">\(2\)</span>, and <span class="math inline">\(x_1\)</span> be the intersection point of the tangent line at <span class="math inline">\((x_0, f(x_0))\)</span> with the <span class="math inline">\(x\)</span> axis. Then by the definition of the tangent line:</p>
+<p><span class="math display">\[
+f'(x_0) = \frac{\Delta y }{\Delta x} = \frac{f(x_0)}{x_0 - x_1}.
+\]</span></p>
+<p>This can be solved for <span class="math inline">\(x_1\)</span> to give <span class="math inline">\(x_1 = x_0 - f(x_0)/f'(x_0)\)</span>. In general, if we had <span class="math inline">\(x_i\)</span> and used the intersection point of the tangent line to produce <span class="math inline">\(x_{i+1}\)</span> we would have Newton’s method:</p>
+<p><span class="math display">\[
+x_{i+1} = x_i - \frac{f(x_i)}{f'(x_i)}.
+\]</span></p>
+<p>Using automatic derivatives, as brought in with the <code>CalculusWithJulia</code> package, we can implement this algorithm.</p>
+<p>The algorithm above starts at <span class="math inline">\(2\)</span> and then becomes:</p>
+<pre class="{julia}"><code>f(x) = x^3 - 2x - 5
+x0 = 2.0
+x1 = x0 - f(x0) / f'(x0)</code></pre>
+<p>We can see we are closer to a zero:</p>
+<pre class="{julia}"><code>f(x0), f(x1)</code></pre>
+<p>Trying again, we have</p>
+<pre class="{julia}"><code>x2 = x1 - f(x1)/ f'(x1)
+x2, f(x2), f(x1)</code></pre>
+<p>And again:</p>
+<pre class="{julia}"><code>x3 = x2 - f(x2)/ f'(x2)
+x3, f(x3), f(x2)</code></pre>
+<pre class="{julia}"><code>x4 = x3 - f(x3)/ f'(x3)
+x4, f(x4), f(x3)</code></pre>
+<p>We see now that <span class="math inline">\(f(x_4)\)</span> is within machine tolerance of <span class="math inline">\(0\)</span>, so we call <span class="math inline">\(x_4\)</span> an <em>approximate zero</em> of <span class="math inline">\(f(x)\)</span>.</p>
+<blockquote class="blockquote">
+<p><strong>Newton’s method:</strong> Let <span class="math inline">\(x_0\)</span> be an initial guess for a zero of <span class="math inline">\(f(x)\)</span>. Iteratively define <span class="math inline">\(x_{i+1}\)</span> in terms of the just generated <span class="math inline">\(x_i\)</span> by:</p>
+<p><span class="math display">\[
+x_{i+1} = x_i - f(x_i) / f'(x_i).
+\]</span></p>
+<p>Then for reasonable functions and reasonable initial guesses, the sequence of points converges to a zero of <span class="math inline">\(f\)</span>.</p>
+</blockquote>
+<p>On the computer, we know that actual convergence will likely never occur, but accuracy to a certain tolerance can often be achieved.</p>
+<p>In the example above, we kept track of the previous values. This is unnecessary if only the answer is sought. In that case, the update step could use the same variable. Here we use <code>reduce</code>:</p>
+<pre class="{julia}"><code>#| hold: true
+xₙ = reduce((x, step) -&gt; x - f(x)/f'(x), 1:4, init=2)
+xₙ, f(xₙ)</code></pre>
+<p>In practice, the algorithm is implemented not by repeating the update step a fixed number of times, rather by repeating the step until either we converge or it is clear we won’t converge. For good guesses and most functions, convergence happens quickly.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Newton looked at this same example in 1699 (B.T. Polyak, <em>Newton’s method and its use in optimization</em>, European Journal of Operational Research. 02/2007; 181(3):1086-1096.) though his technique was slightly different as he did not use the derivative, <em>per se</em>, but rather an approximation based on the fact that his function was a polynomial (though identical to the derivative). Raphson (1690) proposed the general form, hence the usual name of the Newton-Raphson method.</p>
+</div>
+</div>
+<section id="examples" class="level4">
+<h4 class="anchored" data-anchor-id="examples">Examples</h4>
+<section id="example-visualizing-convergence" class="level5">
+<h5 class="anchored" data-anchor-id="example-visualizing-convergence">Example: visualizing convergence</h5>
+<p>This graphic demonstrates the method and the rapid convergence:</p>
+<pre class="{julia}"><code>#| echo: false
+function newtons_method_graph(n, f, a, b, c)
+
+    xstars = [c]
+    xs = [c]
+    ys = [0.0]
+
+    plt = plot(f, a, b, legend=false, size=fig_size)
+    plot!(plt, [a, b], [0,0], color=:black)
+
+
+    ts = range(a, stop=b, length=50)
+    for i in 1:n
+        x0 = xs[end]
+        x1 = x0 - f(x0)/D(f)(x0)
+        push!(xstars, x1)
+            append!(xs, [x0, x1])
+        append!(ys, [f(x0), 0])
+    end
+    plot!(plt, xs, ys, color=:orange)
+    scatter!(plt, xstars, 0*xstars, color=:orange, markersize=5)
+    plt
+end
+nothing</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+### {{{newtons_method_example}}}
+gr()
+caption = """
+
+Illustration of Newton's Method converging to a zero of a function.
+
+"""
+n = 6
+
+fn, a, b, c = x-&gt;log(x), .15, 2, .2
+
+anim = @animate for i=1:n
+    newtons_method_graph(i-1, fn, a, b, c)
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<hr>
+<p>This interactive graphic (built using <a href="https://jsxgraph.uni-bayreuth.de/wp/index.html">JSXGraph</a>) allows the adjustment of the point <code>x0</code>, initially at <span class="math inline">\(0.85\)</span>. Five iterations of Newton’s method are illustrated. Different positions of <code>x0</code> clearly converge, others will not.</p>
+<div id="jsxgraph" style="width: 500px; height: 500px;"></div>
+<div class="cell hidden">
+<div class="sourceCode cell-code hidden" id="cb22" data-startfrom="288" data-source-offset="-1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 287;"><span id="cb22-288"><a href="#cb22-288" aria-hidden="true" tabindex="-1"></a>JXG <span class="op">=</span> <span class="pp">require</span>(<span class="st">"jsxgraph"</span>)<span class="op">;</span></span>
+<span id="cb22-289"><a href="#cb22-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-290"><a href="#cb22-290" aria-hidden="true" tabindex="-1"></a><span class="co">// newton's method</span></span>
+<span id="cb22-291"><a href="#cb22-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-292"><a href="#cb22-292" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> JXG<span class="op">.</span><span class="at">JSXGraph</span><span class="op">.</span><span class="fu">initBoard</span>(<span class="st">'jsxgraph'</span><span class="op">,</span> {</span>
+<span id="cb22-293"><a href="#cb22-293" aria-hidden="true" tabindex="-1"></a>    <span class="dt">boundingbox</span><span class="op">:</span> [<span class="op">-</span><span class="dv">3</span><span class="op">,</span><span class="dv">5</span><span class="op">,</span><span class="dv">3</span><span class="op">,-</span><span class="dv">5</span>]<span class="op">,</span> <span class="dt">axis</span><span class="op">:</span><span class="kw">true</span></span>
+<span id="cb22-294"><a href="#cb22-294" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb22-295"><a href="#cb22-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-296"><a href="#cb22-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-297"><a href="#cb22-297" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">function</span>(x) {<span class="cf">return</span> x<span class="op">*</span>x<span class="op">*</span>x<span class="op">*</span>x<span class="op">*</span>x <span class="op">-</span> x <span class="op">-</span> <span class="dv">1</span>}<span class="op">;</span></span>
+<span id="cb22-298"><a href="#cb22-298" aria-hidden="true" tabindex="-1"></a>fp <span class="op">=</span> <span class="kw">function</span>(x) { <span class="cf">return</span> <span class="dv">4</span><span class="op">*</span>x<span class="op">*</span>x<span class="op">*</span>x<span class="op">*</span>x <span class="op">-</span> <span class="dv">1</span>}<span class="op">;</span></span>
+<span id="cb22-299"><a href="#cb22-299" aria-hidden="true" tabindex="-1"></a>x0 <span class="op">=</span> <span class="fl">0.85</span><span class="op">;</span></span>
+<span id="cb22-300"><a href="#cb22-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-301"><a href="#cb22-301" aria-hidden="true" tabindex="-1"></a>nm <span class="op">=</span> <span class="kw">function</span>(x) { <span class="cf">return</span> x <span class="op">-</span> <span class="fu">f</span>(x)<span class="op">/</span><span class="fu">fp</span>(x)<span class="op">;</span>}<span class="op">;</span></span>
+<span id="cb22-302"><a href="#cb22-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-303"><a href="#cb22-303" aria-hidden="true" tabindex="-1"></a>l <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">'point'</span><span class="op">,</span> [<span class="op">-</span><span class="fl">1.5</span><span class="op">,</span><span class="dv">0</span>]<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span><span class="st">''</span><span class="op">,</span> <span class="dt">size</span><span class="op">:</span><span class="dv">0</span>})<span class="op">;</span></span>
+<span id="cb22-304"><a href="#cb22-304" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">'point'</span><span class="op">,</span> [<span class="fl">1.5</span><span class="op">,</span><span class="dv">0</span>]<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span><span class="st">''</span><span class="op">,</span> <span class="dt">size</span><span class="op">:</span><span class="dv">0</span>})<span class="op">;</span></span>
+<span id="cb22-305"><a href="#cb22-305" aria-hidden="true" tabindex="-1"></a>xaxis <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">'line'</span><span class="op">,</span> [l<span class="op">,</span>r])</span>
+<span id="cb22-306"><a href="#cb22-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-307"><a href="#cb22-307" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-308"><a href="#cb22-308" aria-hidden="true" tabindex="-1"></a>P0 <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">'glider'</span><span class="op">,</span> [x0<span class="op">,</span><span class="dv">0</span><span class="op">,</span>xaxis]<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span><span class="st">'x0'</span>})<span class="op">;</span></span>
+<span id="cb22-309"><a href="#cb22-309" aria-hidden="true" tabindex="-1"></a>P0a <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">'point'</span><span class="op">,</span> [<span class="kw">function</span>() {<span class="cf">return</span> P0<span class="op">.</span><span class="fu">X</span>()<span class="op">;</span>}<span class="op">,</span></span>
+<span id="cb22-310"><a href="#cb22-310" aria-hidden="true" tabindex="-1"></a>                 <span class="kw">function</span>() {<span class="cf">return</span> <span class="fu">f</span>(P0<span class="op">.</span><span class="fu">X</span>())<span class="op">;</span>}]<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span><span class="st">''</span>})<span class="op">;</span></span>
+<span id="cb22-311"><a href="#cb22-311" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-312"><a href="#cb22-312" aria-hidden="true" tabindex="-1"></a>P1 <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">'point'</span><span class="op">,</span> [<span class="kw">function</span>() {<span class="cf">return</span> <span class="fu">nm</span>(P0<span class="op">.</span><span class="fu">X</span>())<span class="op">;</span>}<span class="op">,</span></span>
+<span id="cb22-313"><a href="#cb22-313" aria-hidden="true" tabindex="-1"></a>                <span class="dv">0</span>]<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span><span class="st">''</span>})<span class="op">;</span></span>
+<span id="cb22-314"><a href="#cb22-314" aria-hidden="true" tabindex="-1"></a>P1a <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">'point'</span><span class="op">,</span> [<span class="kw">function</span>() {<span class="cf">return</span> P1<span class="op">.</span><span class="fu">X</span>()<span class="op">;</span>}<span class="op">,</span></span>
+<span id="cb22-315"><a href="#cb22-315" aria-hidden="true" tabindex="-1"></a>                 <span class="kw">function</span>() {<span class="cf">return</span> <span class="fu">f</span>(P1<span class="op">.</span><span class="fu">X</span>())<span class="op">;</span>}]<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span><span class="st">''</span>})<span class="op">;</span></span>
+<span id="cb22-316"><a href="#cb22-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-317"><a href="#cb22-317" aria-hidden="true" tabindex="-1"></a>P2 <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">'point'</span><span class="op">,</span> [<span class="kw">function</span>() {<span class="cf">return</span> <span class="fu">nm</span>(P1<span class="op">.</span><span class="fu">X</span>())<span class="op">;</span>}<span class="op">,</span></span>
+<span id="cb22-318"><a href="#cb22-318" aria-hidden="true" tabindex="-1"></a>                <span class="dv">0</span>]<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span><span class="st">''</span>})<span class="op">;</span></span>
+<span id="cb22-319"><a href="#cb22-319" aria-hidden="true" tabindex="-1"></a>P2a <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">'point'</span><span class="op">,</span> [<span class="kw">function</span>() {<span class="cf">return</span> P2<span class="op">.</span><span class="fu">X</span>()<span class="op">;</span>}<span class="op">,</span></span>
+<span id="cb22-320"><a href="#cb22-320" aria-hidden="true" tabindex="-1"></a>                 <span class="kw">function</span>() {<span class="cf">return</span> <span class="fu">f</span>(P2<span class="op">.</span><span class="fu">X</span>())<span class="op">;</span>}]<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span><span class="st">''</span>})<span class="op">;</span></span>
+<span id="cb22-321"><a href="#cb22-321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-322"><a href="#cb22-322" aria-hidden="true" tabindex="-1"></a>P3 <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">'point'</span><span class="op">,</span> [<span class="kw">function</span>() {<span class="cf">return</span> <span class="fu">nm</span>(P2<span class="op">.</span><span class="fu">X</span>())<span class="op">;</span>}<span class="op">,</span></span>
+<span id="cb22-323"><a href="#cb22-323" aria-hidden="true" tabindex="-1"></a>                <span class="dv">0</span>]<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span><span class="st">''</span>})<span class="op">;</span></span>
+<span id="cb22-324"><a href="#cb22-324" aria-hidden="true" tabindex="-1"></a>P3a <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">'point'</span><span class="op">,</span> [<span class="kw">function</span>() {<span class="cf">return</span> P3<span class="op">.</span><span class="fu">X</span>()<span class="op">;</span>}<span class="op">,</span></span>
+<span id="cb22-325"><a href="#cb22-325" aria-hidden="true" tabindex="-1"></a>                 <span class="kw">function</span>() {<span class="cf">return</span> <span class="fu">f</span>(P3<span class="op">.</span><span class="fu">X</span>())<span class="op">;</span>}]<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span><span class="st">''</span>})<span class="op">;</span></span>
+<span id="cb22-326"><a href="#cb22-326" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-327"><a href="#cb22-327" aria-hidden="true" tabindex="-1"></a>P4 <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">'point'</span><span class="op">,</span> [<span class="kw">function</span>() {<span class="cf">return</span> <span class="fu">nm</span>(P3<span class="op">.</span><span class="fu">X</span>())<span class="op">;</span>}<span class="op">,</span></span>
+<span id="cb22-328"><a href="#cb22-328" aria-hidden="true" tabindex="-1"></a>                <span class="dv">0</span>]<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span><span class="st">''</span>})<span class="op">;</span></span>
+<span id="cb22-329"><a href="#cb22-329" aria-hidden="true" tabindex="-1"></a>P4a <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">'point'</span><span class="op">,</span> [<span class="kw">function</span>() {<span class="cf">return</span> P4<span class="op">.</span><span class="fu">X</span>()<span class="op">;</span>}<span class="op">,</span></span>
+<span id="cb22-330"><a href="#cb22-330" aria-hidden="true" tabindex="-1"></a>                 <span class="kw">function</span>() {<span class="cf">return</span> <span class="fu">f</span>(P4<span class="op">.</span><span class="fu">X</span>())<span class="op">;</span>}]<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span><span class="st">''</span>})<span class="op">;</span></span>
+<span id="cb22-331"><a href="#cb22-331" aria-hidden="true" tabindex="-1"></a>P5 <span class="op">=</span> b<span class="op">.</span><span class="fu">create</span>(<span class="st">'point'</span><span class="op">,</span> [<span class="kw">function</span>() {<span class="cf">return</span> <span class="fu">nm</span>(P4<span class="op">.</span><span class="fu">X</span>())<span class="op">;</span>}<span class="op">,</span></span>
+<span id="cb22-332"><a href="#cb22-332" aria-hidden="true" tabindex="-1"></a>                <span class="dv">0</span>]<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span><span class="st">'x5'</span><span class="op">,</span> <span class="dt">strokeColor</span><span class="op">:</span><span class="st">'black'</span>})<span class="op">;</span></span>
+<span id="cb22-333"><a href="#cb22-333" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-334"><a href="#cb22-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-335"><a href="#cb22-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-336"><a href="#cb22-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-337"><a href="#cb22-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-338"><a href="#cb22-338" aria-hidden="true" tabindex="-1"></a>P0a<span class="op">.</span><span class="fu">setAttribute</span>({<span class="dt">fixed</span><span class="op">:</span><span class="kw">true</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-7" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-8" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-9" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-10" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-11" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-12" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-13" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-14" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-15" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-16" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-17" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-18" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-19" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-20" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-21" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb23" data-startfrom="339" data-source-offset="-1467"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 338;"><span id="cb23-339"><a href="#cb23-339" aria-hidden="true" tabindex="-1"></a>P1<span class="op">.</span><span class="fu">setAttribute</span>({<span class="dt">fixed</span><span class="op">:</span><span class="kw">true</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-22" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb24" data-startfrom="340" data-source-offset="-1498"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 339;"><span id="cb24-340"><a href="#cb24-340" aria-hidden="true" tabindex="-1"></a>P1a<span class="op">.</span><span class="fu">setAttribute</span>({<span class="dt">fixed</span><span class="op">:</span><span class="kw">true</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-23" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb25" data-startfrom="341" data-source-offset="-1530"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 340;"><span id="cb25-341"><a href="#cb25-341" aria-hidden="true" tabindex="-1"></a>P2<span class="op">.</span><span class="fu">setAttribute</span>({<span class="dt">fixed</span><span class="op">:</span><span class="kw">true</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-24" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb26" data-startfrom="342" data-source-offset="-1561"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 341;"><span id="cb26-342"><a href="#cb26-342" aria-hidden="true" tabindex="-1"></a>P2a<span class="op">.</span><span class="fu">setAttribute</span>({<span class="dt">fixed</span><span class="op">:</span><span class="kw">true</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-25" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb27" data-startfrom="343" data-source-offset="-1593"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 342;"><span id="cb27-343"><a href="#cb27-343" aria-hidden="true" tabindex="-1"></a>P3<span class="op">.</span><span class="fu">setAttribute</span>({<span class="dt">fixed</span><span class="op">:</span><span class="kw">true</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-26" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb28" data-startfrom="344" data-source-offset="-1624"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 343;"><span id="cb28-344"><a href="#cb28-344" aria-hidden="true" tabindex="-1"></a>P3a<span class="op">.</span><span class="fu">setAttribute</span>({<span class="dt">fixed</span><span class="op">:</span><span class="kw">true</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-27" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb29" data-startfrom="345" data-source-offset="-1656"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 344;"><span id="cb29-345"><a href="#cb29-345" aria-hidden="true" tabindex="-1"></a>P4<span class="op">.</span><span class="fu">setAttribute</span>({<span class="dt">fixed</span><span class="op">:</span><span class="kw">true</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-28" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb30" data-startfrom="346" data-source-offset="-1687"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 345;"><span id="cb30-346"><a href="#cb30-346" aria-hidden="true" tabindex="-1"></a>P4a<span class="op">.</span><span class="fu">setAttribute</span>({<span class="dt">fixed</span><span class="op">:</span><span class="kw">true</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-29" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb31" data-startfrom="347" data-source-offset="-1719"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 346;"><span id="cb31-347"><a href="#cb31-347" aria-hidden="true" tabindex="-1"></a>P5<span class="op">.</span><span class="fu">setAttribute</span>({<span class="dt">fixed</span><span class="op">:</span><span class="kw">true</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-30" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb32" data-startfrom="349" data-source-offset="-1751"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 348;"><span id="cb32-349"><a href="#cb32-349" aria-hidden="true" tabindex="-1"></a>sc <span class="op">=</span> <span class="st">'#000000'</span><span class="op">;</span></span>
+<span id="cb32-350"><a href="#cb32-350" aria-hidden="true" tabindex="-1"></a>b<span class="op">.</span><span class="fu">create</span>(<span class="st">'segment'</span><span class="op">,</span> [P0<span class="op">,</span>P0a]<span class="op">,</span> {<span class="dt">strokeColor</span><span class="op">:</span>sc<span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span><span class="dv">1</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-31" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-32" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb33" data-startfrom="351" data-source-offset="-1831"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 350;"><span id="cb33-351"><a href="#cb33-351" aria-hidden="true" tabindex="-1"></a>b<span class="op">.</span><span class="fu">create</span>(<span class="st">'segment'</span><span class="op">,</span> [P0a<span class="op">,</span> P1]<span class="op">,</span> {<span class="dt">strokeColor</span><span class="op">:</span>sc<span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span><span class="dv">1</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-33" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb34" data-startfrom="352" data-source-offset="-1896"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 351;"><span id="cb34-352"><a href="#cb34-352" aria-hidden="true" tabindex="-1"></a>b<span class="op">.</span><span class="fu">create</span>(<span class="st">'segment'</span><span class="op">,</span> [P1<span class="op">,</span>P1a]<span class="op">,</span> {<span class="dt">strokeColor</span><span class="op">:</span>sc<span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span><span class="dv">1</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-34" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb35" data-startfrom="353" data-source-offset="-1960"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 352;"><span id="cb35-353"><a href="#cb35-353" aria-hidden="true" tabindex="-1"></a>b<span class="op">.</span><span class="fu">create</span>(<span class="st">'segment'</span><span class="op">,</span> [P1a<span class="op">,</span> P2]<span class="op">,</span> {<span class="dt">strokeColor</span><span class="op">:</span>sc<span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span><span class="dv">1</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-35" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb36" data-startfrom="354" data-source-offset="-2025"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 353;"><span id="cb36-354"><a href="#cb36-354" aria-hidden="true" tabindex="-1"></a>b<span class="op">.</span><span class="fu">create</span>(<span class="st">'segment'</span><span class="op">,</span> [P2<span class="op">,</span>P2a]<span class="op">,</span> {<span class="dt">strokeColor</span><span class="op">:</span>sc<span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span><span class="dv">1</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-36" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb37" data-startfrom="355" data-source-offset="-2089"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 354;"><span id="cb37-355"><a href="#cb37-355" aria-hidden="true" tabindex="-1"></a>b<span class="op">.</span><span class="fu">create</span>(<span class="st">'segment'</span><span class="op">,</span> [P2a<span class="op">,</span> P3]<span class="op">,</span> {<span class="dt">strokeColor</span><span class="op">:</span>sc<span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span><span class="dv">1</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-37" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb38" data-startfrom="356" data-source-offset="-2154"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 355;"><span id="cb38-356"><a href="#cb38-356" aria-hidden="true" tabindex="-1"></a>b<span class="op">.</span><span class="fu">create</span>(<span class="st">'segment'</span><span class="op">,</span> [P3<span class="op">,</span>P3a]<span class="op">,</span> {<span class="dt">strokeColor</span><span class="op">:</span>sc<span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span><span class="dv">1</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-38" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb39" data-startfrom="357" data-source-offset="-2218"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 356;"><span id="cb39-357"><a href="#cb39-357" aria-hidden="true" tabindex="-1"></a>b<span class="op">.</span><span class="fu">create</span>(<span class="st">'segment'</span><span class="op">,</span> [P3a<span class="op">,</span> P4]<span class="op">,</span> {<span class="dt">strokeColor</span><span class="op">:</span>sc<span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span><span class="dv">1</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-39" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb40" data-startfrom="358" data-source-offset="-2283"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 357;"><span id="cb40-358"><a href="#cb40-358" aria-hidden="true" tabindex="-1"></a>b<span class="op">.</span><span class="fu">create</span>(<span class="st">'segment'</span><span class="op">,</span> [P4<span class="op">,</span>P4a]<span class="op">,</span> {<span class="dt">strokeColor</span><span class="op">:</span>sc<span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span><span class="dv">1</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-40" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb41" data-startfrom="359" data-source-offset="-2347"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 358;"><span id="cb41-359"><a href="#cb41-359" aria-hidden="true" tabindex="-1"></a>b<span class="op">.</span><span class="fu">create</span>(<span class="st">'segment'</span><span class="op">,</span> [P4a<span class="op">,</span> P5]<span class="op">,</span> {<span class="dt">strokeColor</span><span class="op">:</span>sc<span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span><span class="dv">1</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-41" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb42" data-startfrom="361" data-source-offset="-2413"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 360;"><span id="cb42-361"><a href="#cb42-361" aria-hidden="true" tabindex="-1"></a>b<span class="op">.</span><span class="fu">create</span>(<span class="st">'functiongraph'</span><span class="op">,</span> [f<span class="op">,</span> <span class="op">-</span><span class="fl">1.5</span><span class="op">,</span> <span class="fl">1.5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-42" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="example-numeric-not-algebraic" class="level5">
+<h5 class="anchored" data-anchor-id="example-numeric-not-algebraic">Example: numeric not algebraic</h5>
+<p>For the function <span class="math inline">\(f(x) = \cos(x) - x\)</span>, we see that SymPy can not solve symbolically for a zero:</p>
+<pre class="{julia}"><code>#| error: true
+@syms x::real
+solve(cos(x) - x, x)</code></pre>
+<p>We can find a numeric solution, even though there is no closed-form answer. Here we try Newton’s method:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = cos(x) - x
+x = .5
+x = x - f(x)/f'(x)  # 0.7552224171056364
+x = x - f(x)/f'(x)  # 0.7391416661498792
+x = x - f(x)/f'(x)  # 0.7390851339208068
+x = x - f(x)/f'(x)  # 0.7390851332151607
+x = x - f(x)/f'(x)
+x, f(x)</code></pre>
+<p>To machine tolerance the answer is a zero, even though the exact answer is irrational and all finite floating point values can be represented as rational numbers.</p>
+</section>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>Use Newton’s method to find the <em>largest</em> real solution to <span class="math inline">\(e^x = x^6\)</span>.</p>
+<p>A plot shows us roughly where the value lies:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = exp(x)
+g(x) = x^6
+plot(f, 0, 25; label="f")
+plot!(g; label="g")</code></pre>
+<p>Clearly by <span class="math inline">\(20\)</span> the two paths diverge. We know exponentials eventually grow faster than powers, and this is seen in the graph.</p>
+<p>To use Newton’s method to find the intersection point. Stop when the increment <span class="math inline">\(f(x)/f'(x)\)</span> is smaller than <code>1e-4</code>. We need to turn the solution to an equation into a value where a function is <span class="math inline">\(0\)</span>. Just moving the terms to one side of the equals sign gives <span class="math inline">\(e^x - x^6 = 0\)</span>, or the <span class="math inline">\(x\)</span> we seek is a solution to <span class="math inline">\(h(x)=0\)</span> with <span class="math inline">\(h(x) = e^x - x^6\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| term: true
+h(x) = exp(x) - x^6
+x = 20
+for step in 1:10
+    delta = h(x)/h'(x)
+    x = x - delta
+    @show step, x, delta
+end</code></pre>
+<p>So it takes <span class="math inline">\(8\)</span> steps to get an increment that small and about <code>10</code> steps to get to full convergence.</p>
+</section>
+<section id="example-division-as-multiplication" class="level5">
+<h5 class="anchored" data-anchor-id="example-division-as-multiplication">Example division as multiplication</h5>
+<p><a href="http://tinyurl.com/kjj9w92">Newton-Raphson Division</a> is a means to divide by multiplying.</p>
+<p>Why would you want to do that? Well, even for computers division is harder (read slower) than multiplying. The trick is that <span class="math inline">\(p/q\)</span> is simply <span class="math inline">\(p \cdot (1/q)\)</span>, so finding a means to compute a reciprocal by multiplying will reduce division to multiplication.</p>
+<p>Well suppose we have <span class="math inline">\(q\)</span>, we could try to use Newton’s method to find <span class="math inline">\(1/q\)</span>, as it is a solution to <span class="math inline">\(f(x) = x - 1/q\)</span>. The Newton update step simplifies to:</p>
+<p><span class="math display">\[
+x - f(x) / f'(x) \quad\text{or}\quad x - (x - 1/q)/ 1 = 1/q
+\]</span></p>
+<p>That doesn’t really help, as Newton’s method is just <span class="math inline">\(x_{i+1} = 1/q\)</span>. That is, it just jumps to the answer, the one we want to compute by some other means!</p>
+<p>Trying again, we simplify the update step for a related function: <span class="math inline">\(f(x) = 1/x - q\)</span> with <span class="math inline">\(f'(x) = -1/x^2\)</span> and then one step of the process is:</p>
+<p><span class="math display">\[
+x_{i+1} = x_i - (1/x_i - q)/(-1/x_i^2) = -qx^2_i + 2x_i.
+\]</span></p>
+<p>Now for <span class="math inline">\(q\)</span> in the interval <span class="math inline">\([1/2, 1]\)</span> we want to get a <em>good</em> initial guess. Here is a claim. We can use <span class="math inline">\(x_0=48/17 - 32/17 \cdot q\)</span>. Let’s check graphically that this is a reasonable initial approximation to <span class="math inline">\(1/q\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+
+plot(q -&gt; 1/q, 1/2, 1, label="1/q")
+plot!(q -&gt; 1/17 * (48 - 32q), label="linear approximation")</code></pre>
+<p>It can be shown that we have for any <span class="math inline">\(q\)</span> in <span class="math inline">\([1/2, 1]\)</span> with initial guess <span class="math inline">\(x_0 = 48/17 - 32/17\cdot q\)</span> that Newton’s method will converge to <span class="math inline">\(16\)</span> digits in no more than this many steps:</p>
+<p><span class="math display">\[
+\log_2(\frac{53 + 1}{\log_2(17)}).
+\]</span></p>
+<pre class="{julia}"><code>a = log2((53 + 1)/log2(17))
+ceil(Integer, a)</code></pre>
+<p>That is <span class="math inline">\(4\)</span> steps suffices.</p>
+<p>For <span class="math inline">\(q = 0.80\)</span>, to find <span class="math inline">\(1/q\)</span> using the above we have</p>
+<pre class="{julia}"><code>#| hold: true
+q = 0.80
+x = (48/17) - (32/17)*q
+x = -q*x*x + 2*x
+x = -q*x*x + 2*x
+x = -q*x*x + 2*x
+x = -q*x*x + 2*x</code></pre>
+<p>This method has basically <span class="math inline">\(18\)</span> multiplication and addition operations for one division, so it naively would seem slower, but timing this shows the method is competitive with a regular division.</p>
+</section>
+</section>
+</section>
+<section id="wrapping-in-a-function" class="level2" data-number="30.2">
+<h2 data-number="30.2" class="anchored" data-anchor-id="wrapping-in-a-function"><span class="header-section-number">30.2</span> Wrapping in a function</h2>
+<p>In the previous examples, we saw fast convergence, guaranteed converge in <span class="math inline">\(4\)</span> steps, and an example where <span class="math inline">\(8\)</span> steps were needed to get the requested level of approximation. Newton’s method usually converges quickly, but may converge slowly, and may not converge at all. Automating the task to avoid repeatedly running the update step is a task best done by the computer.</p>
+<p>The <code>while</code> loop is a good way to repeat commands until some condition is met. With this, we present a simple function implementing Newton’s method, we iterate until the update step gets really small (the <code>atol</code>) or the convergence takes more than <span class="math inline">\(50\)</span> steps. (There are other, better choices that could be used to determine when the algorithm should stop, these are just easy to understand.)</p>
+<pre class="{julia}"><code>function nm(f, fp, x0)
+  atol = 1e-14
+  ctr = 0
+  delta = Inf
+  while (abs(delta) &gt; atol) &amp;&amp; (ctr &lt; 50)
+    delta = f(x0)/fp(x0)
+    x0 = x0 - delta
+    ctr = ctr + 1
+  end
+
+  ctr &lt; 50 ? x0 : NaN
+end</code></pre>
+<section id="examples-1" class="level5">
+<h5 class="anchored" data-anchor-id="examples-1">Examples</h5>
+<ul>
+<li>Find a zero of <span class="math inline">\(\sin(x)\)</span> starting at <span class="math inline">\(x_0=3\)</span>:</li>
+</ul>
+<pre class="{julia}"><code>nm(sin, cos, 3)</code></pre>
+<p>This is an approximation for <span class="math inline">\(\pi\)</span>, that historically found use, as the convergence is fast.</p>
+<ul>
+<li>Find a solution to <span class="math inline">\(x^5 =  5^x\)</span> near <span class="math inline">\(2\)</span>:</li>
+</ul>
+<p>Writing a function to handle this, we have:</p>
+<pre class="{julia}"><code>k(x) = x^5 - 5^x</code></pre>
+<p>We could find the derivative by hand, but use the automatic one instead:</p>
+<pre class="{julia}"><code>alpha = nm(k, k', 2)
+alpha, k(alpha)</code></pre>
+</section>
+<section id="functions-in-the-roots-package" class="level3" data-number="30.2.1">
+<h3 data-number="30.2.1" class="anchored" data-anchor-id="functions-in-the-roots-package"><span class="header-section-number">30.2.1</span> Functions in the Roots package</h3>
+<p>Typing in the <code>nm</code> function might be okay once, but would be tedious if it was needed each time. Besides, it isn’t as robust to different inputs as possible. The <code>Roots</code> package provides a <code>Newton</code> method for <code>find_zero</code>.</p>
+<p>To use a different method with <code>find_zero</code>, the calling pattern is <code>find_zero(f, x, M)</code> where <code>f</code> represent the function(s), <code>x</code> the initial point(s), and <code>M</code> the method. Here we have:</p>
+<pre class="{julia}"><code>find_zero((sin, cos), 3, Roots.Newton())</code></pre>
+<p>Or, if a derivative is not specified, one can be computed using automatic differentiation:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = sin(x)
+find_zero((f, f'), 2, Roots.Newton())</code></pre>
+<p>The argument <code>verbose=true</code> will force a print out of a message summarizing the convergence and showing each step.</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = exp(x) - x^4
+find_zero((f,f'), 8, Roots.Newton(); verbose=true)</code></pre>
+<section id="example-intersection-of-two-graphs" class="level5">
+<h5 class="anchored" data-anchor-id="example-intersection-of-two-graphs">Example: intersection of two graphs</h5>
+<p>Find the intersection point between <span class="math inline">\(f(x) = \cos(x)\)</span> and <span class="math inline">\(g(x) = 5x\)</span> near <span class="math inline">\(0\)</span>.</p>
+<p>We have Newton’s method to solve for zeros of <span class="math inline">\(f(x)\)</span>, i.e.&nbsp;when <span class="math inline">\(f(x) = 0\)</span>. Here we want to solve for <span class="math inline">\(x\)</span> with <span class="math inline">\(f(x) = g(x)\)</span>. To do so, we make a new function <span class="math inline">\(h(x) = f(x) - g(x)\)</span>, that is <span class="math inline">\(0\)</span> when <span class="math inline">\(f(x)\)</span> equals <span class="math inline">\(g(x)\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x) = cos(x)
+g(x) = 5x
+h(x) = f(x) - g(x)
+x0 = find_zero((h,h'), 0, Roots.Newton())
+x0, h(x0), f(x0), g(x0)</code></pre>
+<hr>
+<p>We redo the above using a <em>parameter</em> for the <span class="math inline">\(5\)</span>, as there are some options on how it would be done. We let <code>f(x,p) = cos(x) - p*x</code>. Then we can use <code>Roots.Newton</code> by also defining a derivative:</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,p) = cos(x) - p*x
+fp(x,p) = -sin(x) - p
+xn = find_zero((f,fp), pi/4, Roots.Newton(); p=5)
+xn, f(xn, 5)</code></pre>
+<p>To use automatic differentiation is not straightforward, as we must hold the <code>p</code> fixed. For this, we introduce a closure that fixes <code>p</code> and differentiates in the <code>x</code> variable (called <code>u</code> below):</p>
+<pre class="{julia}"><code>#| hold: true
+f(x,p) = cos(x) - p*x
+fp(x,p) = (u -&gt; f(u,p))'(x)
+xn = find_zero((f,fp), pi/4, Roots.Newton(); p=5)</code></pre>
+</section>
+<section id="example-finding-c-in-rolles-theorem" class="level5">
+<h5 class="anchored" data-anchor-id="example-finding-c-in-rolles-theorem">Example: Finding <span class="math inline">\(c\)</span> in Rolle’s Theorem</h5>
+<p>The function <span class="math inline">\(r(x) = \sqrt{1 - \cos(x^2)^2}\)</span> has a zero at <span class="math inline">\(0\)</span> and one at <span class="math inline">\(a\)</span> near <span class="math inline">\(1.77\)</span>.</p>
+<pre class="{julia}"><code>r(x) = sqrt(1 - cos(x^2)^2)
+plot(r, 0, 1.77)</code></pre>
+<p>As <span class="math inline">\(f(x)\)</span> is differentiable between <span class="math inline">\(0\)</span> and <span class="math inline">\(a\)</span>, Rolle’s theorem says there will be value where the derivative is <span class="math inline">\(0\)</span>. Find that value.</p>
+<p>This value will be a zero of the derivative. A graph shows it should be near <span class="math inline">\(1.2\)</span>, so we use that as a starting value to get the answer:</p>
+<pre class="{julia}"><code>find_zero((r',r''), 1.2, Roots.Newton())</code></pre>
+</section>
+</section>
+</section>
+<section id="convergence-rates" class="level2" data-number="30.3">
+<h2 data-number="30.3" class="anchored" data-anchor-id="convergence-rates"><span class="header-section-number">30.3</span> Convergence rates</h2>
+<p>Newton’s method is famously known to have “quadratic convergence.” What does this mean? Let the error in the <span class="math inline">\(i\)</span>th step be called <span class="math inline">\(e_i = x_i - \alpha\)</span>. Then Newton’s method satisfies a bound of the type:</p>
+<p><span class="math display">\[
+\lvert e_{i+1} \rvert \leq M_i \cdot e_i^2.
+\]</span></p>
+<p>If <span class="math inline">\(M\)</span> were just a constant and we suppose <span class="math inline">\(e_0 = 10^{-1}\)</span> then <span class="math inline">\(e_1\)</span> would be less than <span class="math inline">\(M 10^{-2}\)</span> and <span class="math inline">\(e_2\)</span> less than <span class="math inline">\(M^2 10^{-4}\)</span>, <span class="math inline">\(e_3\)</span> less than <span class="math inline">\(M^3 10^{-8}\)</span> and <span class="math inline">\(e_4\)</span> less than <span class="math inline">\(M^4 10^{-16}\)</span> which for <span class="math inline">\(M=1\)</span> is basically the machine precision when values are near <span class="math inline">\(1\)</span>. That is for some problems, with a good initial guess it will take around <span class="math inline">\(4\)</span> or so steps to converge.</p>
+<p>To identify <span class="math inline">\(M\)</span>, let <span class="math inline">\(\alpha\)</span> be the zero of <span class="math inline">\(f\)</span> to be approximated. Assume</p>
+<ul>
+<li>The function <span class="math inline">\(f\)</span> has at continuous second derivative in a neighborhood of <span class="math inline">\(\alpha\)</span>.</li>
+<li>The value <span class="math inline">\(f'(\alpha)\)</span> is <em>non-zero</em> in the neighborhood of <span class="math inline">\(\alpha\)</span>.</li>
+</ul>
+<p>Then this linearization holds at each <span class="math inline">\(x_i\)</span> in the above neighborhood:</p>
+<p><span class="math display">\[
+f(x) = f(x_i) + f'(x_i) \cdot (x - x_i) + \frac{1}{2} f''(\xi) \cdot (x-x_i)^2.
+\]</span></p>
+<p>The value <span class="math inline">\(\xi\)</span> is from the mean value theorem and is between <span class="math inline">\(x\)</span> and <span class="math inline">\(x_i\)</span>.</p>
+<p>Dividing by <span class="math inline">\(f'(x_i)\)</span> and setting <span class="math inline">\(x=\alpha\)</span> (as <span class="math inline">\(f(\alpha)=0\)</span>) leaves</p>
+<p><span class="math display">\[
+0 = \frac{f(x_i)}{f'(x_i)} + (\alpha-x_i) + \frac{1}{2}\cdot \frac{f''(\xi)}{f'(x_i)} \cdot (\alpha-x_i)^2.
+\]</span></p>
+<p>For this value, we have</p>
+<p><span class="math display">\[\begin{align*}
+x_{i+1} - \alpha
+&amp;= \left(x_i  - \frac{f(x_i)}{f'(x_i)}\right) - \alpha\\
+&amp;= \left(x_i - \alpha \right) - \frac{f(x_i)}{f'(x_i)}\\
+&amp;= (x_i - \alpha) + \left(
+(\alpha - x_i) + \frac{1}{2}\frac{f''(\xi) \cdot(\alpha - x_i)^2}{f'(x_i)}
+\right)\\
+&amp;=  \frac{1}{2}\frac{f''(\xi)}{f'(x_i)} \cdot(x_i - \alpha)^2.
+\end{align*}\]</span></p>
+<p>That is</p>
+<p><span class="math display">\[
+e_{i+1} = \frac{1}{2}\frac{f''(\xi)}{f'(x_i)} e_i^2.
+\]</span></p>
+<p>This convergence to <span class="math inline">\(\alpha\)</span> will be quadratic <em>if</em>:</p>
+<ul>
+<li>The initial guess <span class="math inline">\(x_0\)</span> is not too far from <span class="math inline">\(\alpha\)</span>, so <span class="math inline">\(e_0\)</span> is managed.</li>
+<li>The derivative at <span class="math inline">\(\alpha\)</span> is not too close to <span class="math inline">\(0\)</span>, hence, by continuity <span class="math inline">\(f'(x_i)\)</span> is not too close to <span class="math inline">\(0\)</span>. (As it appears in the denominator). That is, the function can’t be too flat, which should make sense, as then the tangent line is nearly parallel to the <span class="math inline">\(x\)</span> axis and would intersect far away.</li>
+<li>The function <span class="math inline">\(f\)</span> has a continuous second derivative at <span class="math inline">\(\alpha\)</span>.</li>
+<li>The second derivative is not too big (in absolute value) near <span class="math inline">\(\alpha\)</span>. A large second derivative means the function is very concave, which means it is “turning” a lot. In this case, the function turns away from the tangent line quickly, so the tangent line’s zero is not necessarily a good approximation to the actual zero, <span class="math inline">\(\alpha\)</span>.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The basic tradeoff: methods like Newton’s are faster than the bisection method in terms of function calls, but are not guaranteed to converge, as the bisection method is.</p>
+</div>
+</div>
+<p>What can go wrong when one of these isn’t the case is illustrated next:</p>
+<section id="poor-initial-step" class="level3" data-number="30.3.1">
+<h3 data-number="30.3.1" class="anchored" data-anchor-id="poor-initial-step"><span class="header-section-number">30.3.1</span> Poor initial step</h3>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+### {{{newtons_method_poor_x0}}}
+gr()
+caption = """
+
+Illustration of Newton's Method converging to a zero of a function,
+but slowly as the initial guess, is very poor, and not close to the
+zero. The algorithm does converge in this illustration, but not quickly and not to the nearest root from
+the initial guess.
+
+"""
+
+fn, a, b, c = x -&gt;  sin(x) - x/4, -15, 20, 2pi
+
+n = 20
+anim = @animate for i=1:n
+    newtons_method_graph(i-1, fn, a, b, c)
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 2)
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+# {{{newtons_method_flat}}}
+gr()
+caption = L"""
+
+Illustration of Newton's method failing to converge as for some $x_i$,
+$f'(x_i)$ is too close to ``0``. In this instance after a few steps, the
+algorithm just cycles around the local minimum near $0.66$. The values
+of $x_i$ repeat in the pattern: $1.0002, 0.7503, -0.0833, 1.0002,
+\dots$. This is also an illustration of a poor initial guess. If there
+is a local minimum or maximum between the guess and the zero, such
+cycles can occur.
+
+"""
+
+fn, a, b, c = x -&gt; x^5 - x + 1, -1.5, 1.4, 0.0
+
+n=7
+anim = @animate for i=1:n
+    newtons_method_graph(i-1, fn, a, b, c)
+end
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+</section>
+<section id="the-second-derivative-is-too-big" class="level3" data-number="30.3.2">
+<h3 data-number="30.3.2" class="anchored" data-anchor-id="the-second-derivative-is-too-big"><span class="header-section-number">30.3.2</span> The second derivative is too big</h3>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+# {{{newtons_method_cycle}}}
+gr()
+fn, a, b, c, = x -&gt; abs(x)^(0.49),  -2, 2, 1.0
+caption = L"""
+
+Illustration of Newton's Method not converging. Here the second
+derivative is too big near the zero - it blows up near $0$ - and the
+convergence does not occur. Rather the iterates increase in their
+distance from the zero.
+
+"""
+
+n=10
+anim = @animate for i=1:n
+    newtons_method_graph(i-1, fn, a, b, c)
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 2)
+
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+</section>
+<section id="the-tangent-line-at-some-xᵢ-is-flat" class="level3" data-number="30.3.3">
+<h3 data-number="30.3.3" class="anchored" data-anchor-id="the-tangent-line-at-some-xᵢ-is-flat"><span class="header-section-number">30.3.3</span> The tangent line at some xᵢ is flat</h3>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+# {{{newtons_method_wilkinson}}}
+gr()
+caption = L"""
+
+The function $f(x) = x^{20} - 1$ has two bad behaviours for Newton's
+method: for $x &lt; 1$ the derivative is nearly $0$ and for $x&gt;1$ the
+second derivative is very big. In this illustration, we have an
+initial guess of $x_0=8/9$. As the tangent line is fairly flat, the
+next approximation is far away, $x_1 = 1.313\dots$. As this guess is
+is much bigger than $1$, the ratio $f(x)/f'(x) \approx
+x^{20}/(20x^{19}) = x/20$, so $x_i - f(x_i)/f'(x_i) \approx (19/20)x_i$
+yielding slow, linear convergence until $f''(x_i)$ is moderate. For
+this function, starting at $x_0=8/9$ takes 11 steps, at $x_0=7/8$
+takes 13 steps, at $x_0=3/4$ takes ``55`` steps, and at $x_0=1/2$ it takes
+$204$ steps.
+
+"""
+
+
+fn,a,b,c = x -&gt; x^20 - 1,  .7, 1.4, 8/9
+n = 10
+
+anim = @animate for i=1:n
+    newtons_method_graph(i-1, fn, a, b, c)
+end
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<section id="example-1" class="level6">
+<h6 class="anchored" data-anchor-id="example-1">Example</h6>
+<p>Suppose <span class="math inline">\(\alpha\)</span> is a simple zero for <span class="math inline">\(f(x)\)</span>. (The value <span class="math inline">\(\alpha\)</span> is a zero of multiplicity <span class="math inline">\(k\)</span> if <span class="math inline">\(f(x) = (x-\alpha)^kg(x)\)</span> where <span class="math inline">\(g(\alpha)\)</span> is not zero. A simple zero has multiplicity <span class="math inline">\(1\)</span>. If <span class="math inline">\(f'(\alpha) \neq 0\)</span> and the second derivative exists, then a zero <span class="math inline">\(\alpha\)</span> will be simple.) Around <span class="math inline">\(\alpha\)</span>, quadratic convergence should apply. However, consider the function <span class="math inline">\(g(x) = f(x)^k\)</span> for some integer <span class="math inline">\(k \geq 2\)</span>. Then <span class="math inline">\(\alpha\)</span> is still a zero, but the derivative of <span class="math inline">\(g\)</span> at <span class="math inline">\(\alpha\)</span> is zero, so the tangent line is basically flat. This will slow the convergence up. We can see that the update step <span class="math inline">\(g(x)/g'(x)\)</span> becomes <span class="math inline">\((1/k) f(x)/f'(x)\)</span>, so an extra factor is introduced.</p>
+<p>The calculation that produces the quadratic convergence now becomes:</p>
+<p><span class="math display">\[
+\begin{align*}
+x_{i+1} - \alpha &amp;= (x_i - \alpha) - \frac{1}{k}(x_i-\alpha - \frac{f''(\xi)}{2f'(x_i)}(x_i-\alpha)^2)
+&amp;= \frac{k-1}{k} (x_i-\alpha) + \frac{f''(\xi)}{2kf'(x_i)}(x_i-\alpha)^2.
+\end{align*}
+\]</span></p>
+<p>As <span class="math inline">\(k &gt; 1\)</span>, the <span class="math inline">\((x_i - \alpha)\)</span> term dominates, and we see the convergence is linear with <span class="math inline">\(\lvert e_{i+1}\rvert \approx (k-1)/k \lvert e_i\rvert\)</span>.</p>
+</section>
+</section>
+</section>
+<section id="questions" class="level2" data-number="30.4">
+<h2 data-number="30.4" class="anchored" data-anchor-id="questions"><span class="header-section-number">30.4</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>Look at this graph with <span class="math inline">\(x_0\)</span> marked with a point:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+import SpecialFunctions: airyai
+p = plot(airyai, -3.3, 0, legend=false);
+plot!(p, zero, -3.3, 0);
+scatter!(p, [-2.8], [0], color=:orange, markersize=5);
+annotate!(p, [(-2.8, 0.2, "x₀")])
+p</code></pre>
+<p>If one step of Newton’s method was used, what would be the value of <span class="math inline">\(x_1\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["``-2.224``", "``-2.80``",  "``-0.020``", "``0.355``"]
+answ = 1
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>Look at this graph of some increasing, concave up <span class="math inline">\(f(x)\)</span> with initial point <span class="math inline">\(x_0\)</span> marked. Let <span class="math inline">\(\alpha\)</span> be the zero.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+p = plot(x -&gt; x^2 - 2, .75, 2.2, legend=false);
+plot!(p, zero,                   color=:green);
+scatter!(p, [1],[0],             color=:orange, markersize=5);
+annotate!(p, [(1,.25, "x₀"), (sqrt(2), .2, "α")]);
+p</code></pre>
+<p>What can be said about <span class="math inline">\(x_1\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"It must be $x_1 &gt; \alpha$",
+L"It must be $x_1 &lt; x_0$",
+L"It must be $x_0 &lt; x_1 &lt; \alpha$"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<hr>
+<p>Look at this graph of some increasing, concave up <span class="math inline">\(f(x)\)</span> with initial point <span class="math inline">\(x_0\)</span> marked. Let <span class="math inline">\(\alpha\)</span> be the zero.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+p = plot(x -&gt; x^2 - 2, .75, 2.2, legend=false);
+plot!(p, zero, .75, 2.2, color=:green);
+scatter!(p, [2],[0], color=:orange, markersize=5);
+annotate!(p, [(2,.25, "x₀"), (sqrt(2), .2, "α")]);
+p</code></pre>
+<p>What can be said about <span class="math inline">\(x_1\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"It must be $x_1 &lt; \alpha$",
+L"It must be $x_1 &gt; x_0$",
+L"It must be $\alpha &lt; x_1 &lt; x_0$"
+]
+answ = 3
+radioq(choices, answ)</code></pre>
+<hr>
+<p>Suppose <span class="math inline">\(f(x)\)</span> is increasing and concave up. From the tangent line representation: <span class="math inline">\(f(x) = f(c) + f'(c)\cdot(x-c) + f''(\xi)/2 \cdot(x-c)^2\)</span>, explain why it must be that the graph of <span class="math inline">\(f(x)\)</span> lies on or <em>above</em> the tangent line.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"As $f''(\xi)/2 \cdot(x-c)^2$ is non-negative, we must have $f(x) - (f(c) + f'(c)\cdot(x-c)) \geq 0$.",
+L"As $f''(\xi) &lt; 0$ it must be that $f(x) - (f(c) + f'(c)\cdot(x-c)) \geq 0$.",
+L"This isn't true. The function $f(x) = x^3$ at $x=0$ provides a counterexample"
+]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>This question can be used to give a proof for the previous two questions, which can be answered by considering the graphs alone. Combined, they say that if a function is increasing and concave up and <span class="math inline">\(\alpha\)</span> is a zero, then if <span class="math inline">\(x_0 &lt; \alpha\)</span> it will be <span class="math inline">\(x_1 &gt; \alpha\)</span>, and for any <span class="math inline">\(x_i &gt; \alpha\)</span>, <span class="math inline">\(\alpha \le x_{i+1} \le x_i\)</span>, so the sequence in Newton’s method is decreasing and bounded below; conditions for which it is guaranteed mathematically there will be convergence.</p>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>Let <span class="math inline">\(f(x) = x^2 - 3^x\)</span>. This has derivative <span class="math inline">\(2x - 3^x \cdot \log(3)\)</span>. Starting with <span class="math inline">\(x_0=0\)</span>, what does Newton’s method converge on?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = x^2 - 3^x;
+fp(x) = 2x - 3^x*log(3);
+val = Roots.newton(f, fp, 0);
+numericq(val, 1e-14)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>Let <span class="math inline">\(f(x) = \exp(x) - x^4\)</span>. There are 3 zeros for this function. Which one does Newton’s method converge to when <span class="math inline">\(x_0=2\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = exp(x) - x^4;
+fp(x) = exp(x) - 4x^3;
+xstar= Roots.newton(f, fp, 2);
+numericq(xstar, 1e-1)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>Let <span class="math inline">\(f(x) = \exp(x) - x^4\)</span>. As mentioned, there are 3 zeros for this function. Which one does Newton’s method converge to when <span class="math inline">\(x_0=8\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = exp(x) - x^4;
+fp(x) = exp(x) - 4x^3;
+xstar = Roots.newton(f, fp, 8);
+numericq(xstar, 1e-1)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>Let <span class="math inline">\(f(x) = \sin(x) - \cos(4\cdot x)\)</span>.</p>
+<p>Starting at <span class="math inline">\(\pi/8\)</span>, solve for the root returned by Newton’s method</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+k1=4
+f(x)  = sin(x) - cos(k1*x);
+fp(x) = cos(x) + k1*sin(k1*x);
+val = Roots.newton(f, fp, pi/(2k1));
+numericq(val)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>Using Newton’s method find a root to <span class="math inline">\(f(x) = \cos(x) - x^3\)</span> starting at <span class="math inline">\(x_0 = 1/2\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = cos(x) - x^3
+val = Roots.newton(f,f', 1/2)
+numericq(val)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>Use Newton’s method to find a root of <span class="math inline">\(f(x) = x^5 + x -1\)</span>. Make a quick graph to find a reasonable starting point.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = x^5 + x - 1
+val = Roots.newton(f,f', -1)
+numericq(val)</code></pre>
+</section>
+<section id="question-8" class="level6">
+<h6 class="anchored" data-anchor-id="question-8">Question</h6>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+##Consider the following illustration of Newton's method:
+caption = """
+Illustration of Newton's method. Moving the point ``x_0`` shows different behaviours of the algorithm.
+"""
+## JSXGraph(:derivatives, "newtons-method.js", caption)
+nothing</code></pre>
+<p>For the following graph, graphically consider the algorithm for a few different starting points.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+# placeholder until CWJ bumps up a version?
+plot(x -&gt; x^5 - x - 1, -1, 2)</code></pre>
+<p>If <span class="math inline">\(x_0\)</span> is <span class="math inline">\(1\)</span> what occurs?</p>
+<pre class="{julia}"><code>#| echo: false
+nm_choices = [
+"The algorithm converges very quickly. A good initial point was chosen.",
+"The algorithm converges, but slowly. The initial point is close enough to the answer to ensure decreasing errors.",
+"The algorithm fails to converge, as it cycles about"
+]
+radioq(nm_choices, 1, keep_order=true)</code></pre>
+<p>When <span class="math inline">\(x_0 = 1.0\)</span> the following values are true for <span class="math inline">\(f\)</span>:</p>
+<pre class="{julia}"><code>#| echo: false
+ff(x) = x^5 - x - 1
+α = find_zero(ff, 1)
+function error_terms(x)
+    (e₀=x-α, f₀′= ff'(x), f̄₀′′=ff''(α), ē₁ = 1/2*ff''(α)/ff'(x)*(x-α)^2)
+end
+error_terms(1.0)</code></pre>
+<p>Where the values <code>f̄₀′′</code> and <code>ē₁</code> are worst-case estimates when <span class="math inline">\(\xi\)</span> is between <span class="math inline">\(x_0\)</span> and the zero.</p>
+<p>Does the magnitude of the error increase or decrease in the first step?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+radioq(["Appears to increase", "It decreases"],2,keep_order=true)</code></pre>
+<p>If <span class="math inline">\(x_0\)</span> is set near <span class="math inline">\(0.50\)</span> what happens?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+radioq(nm_choices, 3, keep_order=true)</code></pre>
+<p>When <span class="math inline">\(x_0 = 0.5\)</span> the following values are true for <span class="math inline">\(f\)</span>:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+error_terms(0.5)</code></pre>
+<p>Where the values <code>f̄₀′′</code> and <code>ē₁</code> are worst-case estimates when <span class="math inline">\(\xi\)</span> is between <span class="math inline">\(x_0\)</span> and the zero.</p>
+<p>Does the magnitude of the error increase or decrease in the first step?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+radioq(["Appears to increase", "It decreases"],1,keep_order=true)</code></pre>
+<p>If <span class="math inline">\(x_0\)</span> is set near <span class="math inline">\(0.75\)</span> what happens?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+radioq(nm_choices, 2, keep_order=true)</code></pre>
+</section>
+<section id="question-9" class="level6">
+<h6 class="anchored" data-anchor-id="question-9">Question</h6>
+<p>Will Newton’s method converge for the function <span class="math inline">\(f(x) = x^5 - x + 1\)</span> starting at <span class="math inline">\(x=1\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"Yes",
+"No. The initial guess is not close enough",
+"No. The second derivative is too big",
+L"No. The first derivative gets too close to $0$ for one of the $x_i$"]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-10" class="level6">
+<h6 class="anchored" data-anchor-id="question-10">Question</h6>
+<p>Will Newton’s method converge for the function <span class="math inline">\(f(x) = 4x^5 - x + 1\)</span> starting at <span class="math inline">\(x=1\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"Yes",
+"No. The initial guess is not close enough",
+"No. The second derivative is too big, or does not exist",
+L"No. The first derivative gets too close to $0$ for one of the $x_i$"]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-11" class="level6">
+<h6 class="anchored" data-anchor-id="question-11">Question</h6>
+<p>Will Newton’s method converge for the function <span class="math inline">\(f(x) = x^{10} - 2x^3 - x + 1\)</span> starting from <span class="math inline">\(0.25\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"Yes",
+"No. The initial guess is not close enough",
+"No. The second derivative is too big, or does not exist",
+L"No. The first derivative gets too close to $0$ for one of the $x_i$"]
+answ = 1
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-12" class="level6">
+<h6 class="anchored" data-anchor-id="question-12">Question</h6>
+<p>Will Newton’s method converge for <span class="math inline">\(f(x) = 20x/(100 x^2 + 1)\)</span> starting at <span class="math inline">\(0.1\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"Yes",
+"No. The initial guess is not close enough",
+"No. The second derivative is too big, or does not exist",
+L"No. The first derivative gets too close to $0$ for one of the $x_i$"]
+answ = 4
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-13" class="level6">
+<h6 class="anchored" data-anchor-id="question-13">Question</h6>
+<p>Will Newton’s method converge to a zero for <span class="math inline">\(f(x) = \sqrt{(1 - x^2)^2}\)</span> starting at <span class="math inline">\(1.0\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+"Yes",
+"No. The initial guess is not close enough",
+"No. The second derivative is too big, or does not exist",
+L"No. The first derivative gets too close to $0$ for one of the $x_i$"]
+answ = 3
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-14" class="level6">
+<h6 class="anchored" data-anchor-id="question-14">Question</h6>
+<p>Use Newton’s method to find a root of <span class="math inline">\(f(x) = 4x^4 - 5x^3 + 4x^2 -20x -6\)</span> starting at <span class="math inline">\(x_0 = 0\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = 4x^4 - 5x^3 + 4x^2 -20x -6
+val = find_zero((f,f') , 0, Roots.Newton())
+numericq(val)</code></pre>
+</section>
+<section id="question-15" class="level6">
+<h6 class="anchored" data-anchor-id="question-15">Question</h6>
+<p>Use Newton’s method to find a zero of <span class="math inline">\(f(x) = \sin(x) - x/2\)</span> that is <em>bigger</em> than <span class="math inline">\(0\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = sin(x) - x/2
+val = find_zero((f,f'), 2, Roots.Newton())
+numericq(val)</code></pre>
+</section>
+<section id="question-16" class="level6">
+<h6 class="anchored" data-anchor-id="question-16">Question</h6>
+<p>The Newton baffler (defined below) is so named, as Newton’s method will fail to find the root for most starting points.</p>
+<pre class="{julia}"><code>function newton_baffler(x)
+    if ( x - 0.0 ) &lt; -0.25
+        0.75 * ( x - 0 ) - 0.3125
+    elseif  ( x - 0 ) &lt; 0.25
+        2.0 * ( x - 0 )
+    else
+        0.75 * ( x - 0 ) + 0.3125
+    end
+end</code></pre>
+<p>Will Newton’s method find the zero at <span class="math inline">\(0.0\)</span> starting at <span class="math inline">\(1\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq("no")</code></pre>
+<p>Considering this plot:</p>
+<pre class="{julia}"><code>#| hold: true
+plot(newton_baffler, -1.1, 1.1)</code></pre>
+<p>Starting with <span class="math inline">\(x_0=1\)</span>, you can see why Newton’s method will fail. Why?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"It doesn't fail, it converges to $0$",
+L"The tangent lines for $|x| &gt; 0.25$ intersect at $x$ values with $|x| &gt; 0.25$",
+L"The first derivative is $0$ at $1$"
+]
+answ = 2
+radioq(choices, answ)</code></pre>
+<p>This function does not have a small first derivative; or a large second derivative; and the bump up can be made as close to the origin as desired, so the starting point can be very close to the zero. However, even though the conditions of the error term are satisfied, the error term does not apply, as <span class="math inline">\(f\)</span> is not continuously differentiable.</p>
+</section>
+<section id="question-17" class="level6">
+<h6 class="anchored" data-anchor-id="question-17">Question</h6>
+<p>Let <span class="math inline">\(f(x) = \sin(x) - x/4\)</span>. Starting at <span class="math inline">\(x_0 = 2\pi\)</span> Newton’s method will converge to a value, but it will take many steps. Using the argument <code>verbose=true</code> for <code>find_zero</code>, how many steps does it take:</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+f(x) = sin(x) - x/4
+x₀ = 2π
+tracks = Roots.Tracks()
+find_zero((f,f'), x₀, Roots.Newton(); tracks=tracks)
+val = tracks.steps
+numericq(val, 2)</code></pre>
+<p>What is the zero that is found?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = Roots.newton(f,f', 2pi)
+numericq(val)</code></pre>
+<p>Is this the closest zero to the starting point, <span class="math inline">\(x_0\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq("no")</code></pre>
+</section>
+<section id="question-18" class="level6">
+<h6 class="anchored" data-anchor-id="question-18">Question</h6>
+<p>Quadratic convergence of Newton’s method only applies to <em>simple</em> roots. For example, we can see (using the <code>verbose=true</code> argument to the <code>Roots</code> package’s <code>newton</code> method, that it only takes <span class="math inline">\(4\)</span> steps to find a zero to <span class="math inline">\(f(x) = \cos(x) - x\)</span> starting at <span class="math inline">\(x_0 = 1\)</span>. But it takes many more steps to find the same zero for <span class="math inline">\(f(x) = (\cos(x) - x)^2\)</span>.</p>
+<p>How many?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = 24
+numericq(val, 2)</code></pre>
+</section>
+<section id="question-implicit-equations" class="level6">
+<h6 class="anchored" data-anchor-id="question-implicit-equations">Question: Implicit equations</h6>
+<p>The equation <span class="math inline">\(x^2 + x\cdot y + y^2 = 1\)</span> is a rotated ellipse.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+
+f(x,y) = x^2 + x * y + y^2 - 1
+implicit_plot(f, xlims=(-2,2), ylims=(-2,2), legend=false)</code></pre>
+<p>Can we find which point on its graph has the largest <span class="math inline">\(y\)</span> value?</p>
+<p>This would be straightforward <em>if</em> we could write <span class="math inline">\(y(x) = \dots\)</span>, for then we would simply find the critical points and investiate. But we can’t so easily solve for <span class="math inline">\(y\)</span> interms of <span class="math inline">\(x\)</span>. However, we can use Newton’s method to do so:</p>
+<pre class="{julia}"><code>function findy(x)
+  fn = y -&gt; (x^2 + x*y + y^2) - 1
+  fp = y -&gt; (x + 2y)
+  find_zero((fn, fp), sqrt(1 - x^2), Roots.Newton())
+end</code></pre>
+<p>For a <em>fixed</em> x, this solves for <span class="math inline">\(y\)</span> in the equation: <span class="math inline">\(F(y) = x^2 + x \cdot y + y^2 - 1 = 0\)</span>. It should be that <span class="math inline">\((x,y)\)</span> is a solution:</p>
+<pre class="{julia}"><code>#| hold: true
+x = .75
+y = findy(x)
+x^2 + x*y + y^2  ## is this 1?</code></pre>
+<p>So we have a means to find <span class="math inline">\(y(x)\)</span>, but it is implicit.</p>
+<p>Using <code>find_zero</code>, find the value <span class="math inline">\(x\)</span> which maximizes <code>y</code> by finding a zero of <code>y'</code>. Use this to find the point <span class="math inline">\((x,y)\)</span> with largest <span class="math inline">\(y\)</span> value.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+xstar = find_zero(findy', 0.5)
+ystar = findy(xstar)
+choices = ["``(-0.57735, 1.15470)``",
+           "``(0,0)``",
+           "``(0, -0.57735)``",
+           "``(0.57735, 0.57735)``"]
+answ = 1
+radioq(choices, answ)</code></pre>
+<p>(Using automatic derivatives works for values identified with <code>find_zero</code> <em>as long as</em> the initial point has its type the same as that of <code>x</code>.)</p>
+</section>
+<section id="question-19" class="level6">
+<h6 class="anchored" data-anchor-id="question-19">Question</h6>
+<p>In the last problem we used an <em>approximate</em> derivative (forward difference) in place of the derivative. This can introduce an error due to the approximation. Would Newton’s method still converge if the derivative in the algorithm were replaced with an approximate derivative? In general, this can often be done <em>but</em> the convergence can be <em>slower</em> and the sensitivity to a poor initial guess even greater.</p>
+<p>Three common approximations are given by the difference quotient for a fixed <span class="math inline">\(h\)</span>: <span class="math inline">\(f'(x_i) \approx (f(x_i+h)-f(x_i))/h\)</span>; the secant line approximation: <span class="math inline">\(f'(x_i) \approx (f(x_i) - f(x_{i-1})) / (x_i - x_{i-1})\)</span>; and the Steffensen approximation <span class="math inline">\(f'(x_i) \approx (f(x_i + f(x_i)) - f(x_i)) / f(x_i)\)</span> (using <span class="math inline">\(h=f(x_i)\)</span>).</p>
+<p>Let’s revisit the <span class="math inline">\(4\)</span>-step convergence of Newton’s method to the root of <span class="math inline">\(f(x) = 1/x - q\)</span> when <span class="math inline">\(q=0.8\)</span>. Will these methods be as fast?</p>
+<p>Let’s define the above approximations for a given <code>f</code>:</p>
+<pre class="{julia}"><code>q₀ = 0.8
+fq(x) = 1/x - q₀
+secant_approx(x0,x1) = (fq(x1) - fq(x0)) / (x1 - x0)
+diffq_approx(x0, h) = secant_approx(x0, x0+h)
+steff_approx(x0) = diffq_approx(x0, fq(x0))</code></pre>
+<p>Then using the difference quotient would look like:</p>
+<pre class="{julia}"><code>#| hold: true
+Δ = 1e-6
+x1 = 48/17 - 32/17 * q₀
+x1 = x1 - fq(x1) / diffq_approx(x1, Δ)   # |x1 - xstar| = 0.003660953777242959
+x1 = x1 - fq(x1) / diffq_approx(x1, Δ)   # |x1 - xstar| = 1.0719137523373945e-5; etc</code></pre>
+<p>The Steffensen method would look like:</p>
+<pre class="{julia}"><code>#| hold: true
+x1 = 48/17 - 32/17 * q₀
+x1 = x1 - fq(x1) / steff_approx(x1)   # |x1 - xstar| = 0.0014382105783488086
+x1 = x1 - fq(x1) / steff_approx(x1)   # |x1 - xstar| = 5.944935954627084e-7; etc.</code></pre>
+<p>And the secant method like:</p>
+<pre class="{julia}"><code>#| hold: true
+Δ = 1e-6
+x1 = 48/17 - 32/17 * q₀
+x0 = x1 - Δ # we need two initial values
+x0, x1 = x1, x1 - fq(x1) / secant_approx(x0, x1)   # |x1 - xstar| = 0.00366084553494872
+x0, x1 = x1, x1 - fq(x1) / secant_approx(x0, x1)   # |x1 - xstar| = 0.00019811634659716582; etc.</code></pre>
+<p>Repeat each of the above algorithms until <code>abs(x1 - 1.25)</code> is <code>0</code> (which will happen for this problem, though not in general). Record the steps.</p>
+<ul>
+<li>Does the difference quotient need <em>more</em> than <span class="math inline">\(4\)</span> steps?</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(false)</code></pre>
+<ul>
+<li>Does the secant method need <em>more</em> than <span class="math inline">\(4\)</span> steps?</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(true)</code></pre>
+<ul>
+<li>Does the Steffensen method need <em>more</em> than 4 steps?</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(false)</code></pre>
+<p>All methods work quickly with this well-behaved problem. In general the convergence rates are slightly different for each, with the Steffensen method matching Newton’s method and the difference quotient method being slower in general. All can be more sensitive to the initial guess.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlxuSlhHID0gcmVxdWlyZShcImpzeGdyYXBoXCIpO1xuXG4vLyBuZXd0b24ncyBtZXRob2RcblxuYiA9IEpYRy5KU1hHcmFwaC5pbml0Qm9hcmQoJ2pzeGdyYXBoJywge1xuICAgIGJvdW5kaW5nYm94OiBbLTMsNSwzLC01XSwgYXhpczp0cnVlXG59KTtcblxuXG5mID0gZnVuY3Rpb24oeCkge3JldHVybiB4KngqeCp4KnggLSB4IC0gMX07XG5mcCA9IGZ1bmN0aW9uKHgpIHsgcmV0dXJuIDQqeCp4KngqeCAtIDF9O1xueDAgPSAwLjg1O1xuXG5ubSA9IGZ1bmN0aW9uKHgpIHsgcmV0dXJuIHggLSBmKHgpL2ZwKHgpO307XG5cbmwgPSBiLmNyZWF0ZSgncG9pbnQnLCBbLTEuNSwwXSwge25hbWU6JycsIHNpemU6MH0pO1xuciA9IGIuY3JlYXRlKCdwb2ludCcsIFsxLjUsMF0sIHtuYW1lOicnLCBzaXplOjB9KTtcbnhheGlzID0gYi5jcmVhdGUoJ2xpbmUnLCBbbCxyXSlcblxuXG5QMCA9IGIuY3JlYXRlKCdnbGlkZXInLCBbeDAsMCx4YXhpc10sIHtuYW1lOid4MCd9KTtcblAwYSA9IGIuY3JlYXRlKCdwb2ludCcsIFtmdW5jdGlvbigpIHtyZXR1cm4gUDAuWCgpO30sXG5cdFx0XHQgICAgIGZ1bmN0aW9uKCkge3JldHVybiBmKFAwLlgoKSk7fV0sIHtuYW1lOicnfSk7XG5cblAxID0gYi5jcmVhdGUoJ3BvaW50JywgW2Z1bmN0aW9uKCkge3JldHVybiBubShQMC5YKCkpO30sXG5cdFx0XHQgICAgMF0sIHtuYW1lOicnfSk7XG5QMWEgPSBiLmNyZWF0ZSgncG9pbnQnLCBbZnVuY3Rpb24oKSB7cmV0dXJuIFAxLlgoKTt9LFxuXHRcdFx0ICAgICBmdW5jdGlvbigpIHtyZXR1cm4gZihQMS5YKCkpO31dLCB7bmFtZTonJ30pO1xuXG5QMiA9IGIuY3JlYXRlKCdwb2ludCcsIFtmdW5jdGlvbigpIHtyZXR1cm4gbm0oUDEuWCgpKTt9LFxuXHRcdFx0ICAgIDBdLCB7bmFtZTonJ30pO1xuUDJhID0gYi5jcmVhdGUoJ3BvaW50JywgW2Z1bmN0aW9uKCkge3JldHVybiBQMi5YKCk7fSxcblx0XHRcdCAgICAgZnVuY3Rpb24oKSB7cmV0dXJuIGYoUDIuWCgpKTt9XSwge25hbWU6Jyd9KTtcblxuUDMgPSBiLmNyZWF0ZSgncG9pbnQnLCBbZnVuY3Rpb24oKSB7cmV0dXJuIG5tKFAyLlgoKSk7fSxcblx0XHRcdCAgICAwXSwge25hbWU6Jyd9KTtcblAzYSA9IGIuY3JlYXRlKCdwb2ludCcsIFtmdW5jdGlvbigpIHtyZXR1cm4gUDMuWCgpO30sXG5cdFx0XHQgICAgIGZ1bmN0aW9uKCkge3JldHVybiBmKFAzLlgoKSk7fV0sIHtuYW1lOicnfSk7XG5cblA0ID0gYi5jcmVhdGUoJ3BvaW50JywgW2Z1bmN0aW9uKCkge3JldHVybiBubShQMy5YKCkpO30sXG5cdFx0XHQgICAgMF0sIHtuYW1lOicnfSk7XG5QNGEgPSBiLmNyZWF0ZSgncG9pbnQnLCBbZnVuY3Rpb24oKSB7cmV0dXJuIFA0LlgoKTt9LFxuXHRcdFx0ICAgICBmdW5jdGlvbigpIHtyZXR1cm4gZihQNC5YKCkpO31dLCB7bmFtZTonJ30pO1xuUDUgPSBiLmNyZWF0ZSgncG9pbnQnLCBbZnVuY3Rpb24oKSB7cmV0dXJuIG5tKFA0LlgoKSk7fSxcblx0XHRcdCAgICAwXSwge25hbWU6J3g1Jywgc3Ryb2tlQ29sb3I6J2JsYWNrJ30pO1xuXG5cblxuXG5cblAwYS5zZXRBdHRyaWJ1dGUoe2ZpeGVkOnRydWV9KTtcblAxLnNldEF0dHJpYnV0ZSh7Zml4ZWQ6dHJ1ZX0pO1xuUDFhLnNldEF0dHJpYnV0ZSh7Zml4ZWQ6dHJ1ZX0pO1xuUDIuc2V0QXR0cmlidXRlKHtmaXhlZDp0cnVlfSk7XG5QMmEuc2V0QXR0cmlidXRlKHtmaXhlZDp0cnVlfSk7XG5QMy5zZXRBdHRyaWJ1dGUoe2ZpeGVkOnRydWV9KTtcblAzYS5zZXRBdHRyaWJ1dGUoe2ZpeGVkOnRydWV9KTtcblA0LnNldEF0dHJpYnV0ZSh7Zml4ZWQ6dHJ1ZX0pO1xuUDRhLnNldEF0dHJpYnV0ZSh7Zml4ZWQ6dHJ1ZX0pO1xuUDUuc2V0QXR0cmlidXRlKHtmaXhlZDp0cnVlfSk7XG5cbnNjID0gJyMwMDAwMDAnO1xuYi5jcmVhdGUoJ3NlZ21lbnQnLCBbUDAsUDBhXSwge3N0cm9rZUNvbG9yOnNjLCBzdHJva2VXaWR0aDoxfSk7XG5iLmNyZWF0ZSgnc2VnbWVudCcsIFtQMGEsIFAxXSwge3N0cm9rZUNvbG9yOnNjLCBzdHJva2VXaWR0aDoxfSk7XG5iLmNyZWF0ZSgnc2VnbWVudCcsIFtQMSxQMWFdLCB7c3Ryb2tlQ29sb3I6c2MsIHN0cm9rZVdpZHRoOjF9KTtcbmIuY3JlYXRlKCdzZWdtZW50JywgW1AxYSwgUDJdLCB7c3Ryb2tlQ29sb3I6c2MsIHN0cm9rZVdpZHRoOjF9KTtcbmIuY3JlYXRlKCdzZWdtZW50JywgW1AyLFAyYV0sIHtzdHJva2VDb2xvcjpzYywgc3Ryb2tlV2lkdGg6MX0pO1xuYi5jcmVhdGUoJ3NlZ21lbnQnLCBbUDJhLCBQM10sIHtzdHJva2VDb2xvcjpzYywgc3Ryb2tlV2lkdGg6MX0pO1xuYi5jcmVhdGUoJ3NlZ21lbnQnLCBbUDMsUDNhXSwge3N0cm9rZUNvbG9yOnNjLCBzdHJva2VXaWR0aDoxfSk7XG5iLmNyZWF0ZSgnc2VnbWVudCcsIFtQM2EsIFA0XSwge3N0cm9rZUNvbG9yOnNjLCBzdHJva2VXaWR0aDoxfSk7XG5iLmNyZWF0ZSgnc2VnbWVudCcsIFtQNCxQNGFdLCB7c3Ryb2tlQ29sb3I6c2MsIHN0cm9rZVdpZHRoOjF9KTtcbmIuY3JlYXRlKCdzZWdtZW50JywgW1A0YSwgUDVdLCB7c3Ryb2tlQ29sb3I6c2MsIHN0cm9rZVdpZHRoOjF9KTtcblxuYi5jcmVhdGUoJ2Z1bmN0aW9uZ3JhcGgnLCBbZiwgLTEuNSwgMS41XSlcblxuIn1dfQ==
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../derivatives";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../derivatives/linearization.html" class="pagination-link" aria-label="Linearization">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../derivatives/more_zeros.html" class="pagination-link" aria-label="Derivative-free alternatives to Newton's method">
+        <span class="nav-page-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/derivatives/newtons_method.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

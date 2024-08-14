@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>16&nbsp; Trigonometric functions – Calculus with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../precalc/julia_overview.html" rel="next">
+<link href="../precalc/exp_log_functions.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Calculus with Julia</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/tree/main/quarto/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Calculus-with-Julia.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../precalc.html">Precalculus Concepts</a></li><li class="breadcrumb-item"><a href="../precalc/trig_functions.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../precalc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Precalculus Concepts</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/calculator.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">From calculator to computer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/numbers_types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Number systems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/logical_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Inequalities, Logical expressions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/ranges.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ranges and Sets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The Graph of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Function manipulations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/inversefunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">The Inverse of a Function</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Polynomials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomial_roots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Roots of a polynomial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/polynomials_package.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Polynomials package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/rational_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rational functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/exp_log_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/trig_functions.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../precalc/julia_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Limits</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Limits</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/limits_extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Limits, issues, extensions of the concept</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/continuity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Continuity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../limits/intermediate_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Implications of continuity</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Derivatives</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/numeric_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Numeric derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/symbolic_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Symbolic derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The mean value theorem for differentiable functions.</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Optimization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/first_second_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The first and second derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/curve_sketching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Curve Sketching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/linearization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Linearization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/newtons_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/more_zeros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Derivative-free alternatives to Newton’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/lhospitals_rule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’Hospital’s Rule</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/implicit_differentiation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Implicit Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/related_rates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Related rates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../derivatives/taylor_series_polynomials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Taylor Polynomials and other Approximating Polynomials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integrals</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Area under a curve</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/ftc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Fundamental Theorem of Calculus</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/substitution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Substitution</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/integration_by_parts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Integration By Parts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/partial_fractions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Partial Fractions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/improper_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Improper Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/mean_value_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mean value theorem for integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/area_between_curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Area between two curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/center_of_mass.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Center of Mass</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/volumes_slice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Volumes by slicing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/arc_length.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Arc length</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/surface_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Surface Area</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integrals/twelve-qs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">A dozen minima for a parabola</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../ODEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/odes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">ODEs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/euler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Euler’s method</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/solve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">The problem-algorithm-solve interface</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ODEs/differential_equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">The <code>DifferentialEquations</code> suite</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../differentiable_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/polar_coordinates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Polar Coordinates and Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vectors and matrices</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_valued_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vector-valued functions, <span class="math inline">\(f:R \rightarrow R^n\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/scalar_functions_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Applications with scalar functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/vector_fields.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Functions <span class="math inline">\(R^n \rightarrow R^m\)</span></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../differentiable_vector_calculus/plots_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">2D and 3D plots in Julia with Plots</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../integral_vector_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integral vector calculus</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/double_triple_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Multi-dimensional integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/line_integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Line and Surface Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/div_grad_curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">The Gradient, Divergence, and Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/stokes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Green’s Theorem, Stokes’ Theorem, and the Divergence Theorem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../integral_vector_calculus/review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Quick Review of Vector Calculus</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative packages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/symbolics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Symbolics.jl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/SciML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">The SciML suite of packages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/plotly_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">JavaScript based plotting libraries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../alternatives/makie_plotting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Calculus plots with Makie</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/getting_started_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Getting started with Julia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/julia_interfaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Julia interfaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/calculus_with_julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">The <code>CalculusWithJulia</code> package</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/unicode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Usages of Unicode symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../misc/quick_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Quick introduction to Calculus with Julia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#the-6-basic-trigonometric-functions" id="toc-the-6-basic-trigonometric-functions" class="nav-link active" data-scroll-target="#the-6-basic-trigonometric-functions"><span class="header-section-number">16.1</span> The 6 basic trigonometric functions</a>
+  <ul class="collapse">
+  <li><a href="#the-trigonometric-functions-in-julia" id="toc-the-trigonometric-functions-in-julia" class="nav-link" data-scroll-target="#the-trigonometric-functions-in-julia"><span class="header-section-number">16.1.1</span> The trigonometric functions in Julia</a></li>
+  <li><a href="#basic-properties" id="toc-basic-properties" class="nav-link" data-scroll-target="#basic-properties"><span class="header-section-number">16.1.2</span> Basic properties</a></li>
+  <li><a href="#functions-using-degrees" id="toc-functions-using-degrees" class="nav-link" data-scroll-target="#functions-using-degrees"><span class="header-section-number">16.1.3</span> Functions using degrees</a></li>
+  </ul></li>
+  <li><a href="#the-sum-and-difference-formulas" id="toc-the-sum-and-difference-formulas" class="nav-link" data-scroll-target="#the-sum-and-difference-formulas"><span class="header-section-number">16.2</span> The sum-and-difference formulas</a></li>
+  <li><a href="#inverse-trigonometric-functions" id="toc-inverse-trigonometric-functions" class="nav-link" data-scroll-target="#inverse-trigonometric-functions"><span class="header-section-number">16.3</span> Inverse trigonometric functions</a>
+  <ul class="collapse">
+  <li><a href="#implications-of-a-restricted-domain" id="toc-implications-of-a-restricted-domain" class="nav-link" data-scroll-target="#implications-of-a-restricted-domain"><span class="header-section-number">16.3.1</span> Implications of a restricted domain</a></li>
+  </ul></li>
+  <li><a href="#hyperbolic-trigonometric-functions" id="toc-hyperbolic-trigonometric-functions" class="nav-link" data-scroll-target="#hyperbolic-trigonometric-functions"><span class="header-section-number">16.4</span> Hyperbolic trigonometric functions</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">16.5</span> Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/precalc/trig_functions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../precalc.html">Precalculus Concepts</a></li><li class="breadcrumb-item"><a href="../precalc/trig_functions.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Trigonometric functions</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+## Formatting options are included here; not in CalculusWithJulia.WeaveSupport
+using QuizQuestions
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+fig_size=(800, 600)
+nothing</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+
+import Logging
+Logging.disable_logging(Logging.Info) # or e.g. Logging.Info
+Logging.disable_logging(Logging.Warn)
+nothing</code></pre>
+<pre class="{julia}"><code>#| eval: false
+#| echo: false
+import SymPy
+function Base.show(io::IO, ::MIME"text/html", x::T) where {T &lt;: SymPy.SymbolicObject}
+    println(io, "&lt;span class=\"math-left-align\" style=\"padding-left: 4px; width:0; float:left;\"&gt; ")
+    println(io, "\\[")
+    println(io, sympy.latex(x))
+    println(io, "\\]")
+    println(io, "&lt;/span&gt;")
+end
+</code></pre>
+<pre class="{julia}"><code>#| output: false
+#| echo: false
+# ImageFile
+## WeaveSupport from CalculusWithJulia package
+## moved here to lighten up CwJ package
+import Base64: base64encode
+import Markdown
+using Mustache
+using Tables
+
+# q and L
+using LaTeXStrings
+macro q_str(x)
+    "`$x`"
+end
+
+"""
+
+Take an image file and encode it
+
+## Examples
+
+ImageFile("http://...", "caption")
+ImageFile("/fullpath/to_file/", "caption")
+ImageFile(:integrals, "figures/pic.png", "caption")
+ImageFile(p, "caption") # p a Plot object
+
+
+
+"""
+mutable struct ImageFile
+    f
+    caption
+    alt
+    width
+    content
+end
+# 2 args f, caption
+ImageFile(f,caption=""; alt="A Figure", width=nothing) = ImageFile(f, caption, alt, width)
+
+# 3 args dir, f, caption
+function ImageFile(dir::Symbol, f::AbstractString, caption;
+                   alt="A Figure", width=nothing)
+
+
+    basedir = replace(dirname(@__DIR__), "/src" =&gt; "")
+    #fname = joinpath(basedir, "CwJ", string(dir), f)
+    fname = joinpath(basedir, string(dir), f)
+
+    ImageFile(fname, caption, alt, width)
+end
+# plot -&gt; string for file
+function ImageFile(f, caption, alt, width)
+    imgfile = tempname() * ".gif"
+    io = open(imgfile, "w")
+    show(io, "image/png", f)
+    close(io)
+    ImageFile(imgfile, caption, alt, width)
+end
+
+gif_to_img_tpl = Mustache.mt"""
+  &lt;img src="data:image/gif;base64,{{{:data}}}" class="card-img-top" alt="{{{:alt}}}"&gt;
+"""
+
+
+function ImageFile(f::AbstractString, caption, alt, width)
+    fcontent = occursin(r"^http", f) ? read(download(f), String) : read(f, String)
+    data = base64encode(fcontent)
+    content = Mustache.render(gif_to_img_tpl, data=data, alt=alt)
+    ImageFile(f, caption, alt, width, content)
+end
+
+
+function Base.show(io::IO, m::MIME"text/html", x::ImageFile)
+    content = x.content
+    if content == nothing
+        data = (read(x.f, String))
+        content = gif_to_image(data=data, alt="figure")
+    end
+    caption = (Markdown.html ∘ Markdown.parse)(x.caption)
+    print(io, """&lt;div class="d-flex justify-content-center"&gt;""")
+    print(io, "  &lt;figure&gt;")
+    print(io, content)
+    print(io, "    &lt;figcaption&gt;")
+    print(io, caption)
+    print(io, """
+    &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+""")
+end
+
+import TextWrap
+function Base.show(io::IO, m::MIME"text/plain", x::ImageFile)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, """
+---------------------------------
+|
+|     see online version for    |
+|           image               |
+|                               |
+--------------------------------
+""")
+    println(io, caption)
+    return nothing
+end
+
+
+
+# hack to work around issue
+# import Markdown
+# import CalculusWithJulia
+# function CalculusWithJulia.WeaveSupport.ImageFile(d::Symbol, f::AbstractString, caption; kwargs...)
+#     nm = joinpath("..", string(d), f)
+#     u = "![$caption]($nm)"
+#     Markdown.parse(u)
+# end
+
+
+
+# Table
+#| echo: false
+#https://github.com/TheRoniOne/MDTable.jl/blob/master/src/write.jl
+function MDTable(io::IO, df)
+    rows = Tables.rows(df)
+    sch = Tables.schema(rows)
+    names = Tables.columnnames(rows)
+    header = true
+
+    headers::String = ""
+    for i in 1:length(names)
+        if i != length(names)
+            headers = headers * "| $(names[i]) "
+        else
+            headers = headers * "| $(names[i]) " * "|\n"
+        end
+    end
+    print(io, headers)
+
+    println(io, "| --- " ^ length(names) * "|")
+    for row in rows
+        line::String = ""
+        Tables.eachcolumn(sch, row) do val, i, nm
+            print(io, "| ", chomp(string(val)))
+        end
+        println(io, "|")
+    end
+end
+Table(d) = Markdown.parse(sprint(io -&gt; MDTable(io, d)))
+table(d) = Table(d)
+
+# HTMLoutput
+struct HTMLoutput
+    x
+    centered::Bool
+    caption::String
+    HTMLoutput(x; centered::Bool=false, caption::String="") = new(x, centered, caption)
+end
+function Base.show(io::IO, ::MIME"text/html", x::HTMLoutput)
+    if !x.centered
+        txt = x.x
+    else
+        centered_content_tpl = """
+&lt;div class="d-flex justify-content-center"&gt;
+&lt;div class="card border-light mx-3 px-3 my-3 py-3" style="{{#:width}}width={{:width}}px{{/:width}}{{^:width}} max-width: 560px;{{/:width}}"&gt;
+  {{{:content}}}
+  &lt;div class="card-footer text-muted"&gt;
+      {{{:caption}}}
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+"""
+        txt = Mustache.render(centered_content_tpl; content=x.x, caption=x.caption)
+    end
+    print(io, txt)
+end
+
+function Base.show(io::IO, m::MIME"text/plain", x::HTMLoutput)
+
+    caption = (TextWrap.wrap ∘ Markdown.plain ∘ Markdown.parse)(x.caption)
+    println(io, "Content available in online version")
+    println(io, caption)
+    return nothing
+end
+
+nothing</code></pre>
+<p>This section uses the following add-on packages:</p>
+<pre class="{julia}"><code>using CalculusWithJulia
+using Plots
+plotly()
+using SymPy</code></pre>
+<hr>
+<p>We have informally used some of the trigonometric functions in examples so far. In this section we quickly review their definitions and some basic properties.</p>
+<p>The trigonometric functions are used to describe relationships between triangles and circles as well as oscillatory motions. With such a wide range of utility it is no wonder that they pop up in many places and their <a href="https://en.wikipedia.org/wiki/Trigonometric_functions#History">origins</a> date to Hipparcus and Ptolemy over <span class="math inline">\(2000\)</span> years ago.</p>
+<section id="the-6-basic-trigonometric-functions" class="level2" data-number="16.1">
+<h2 data-number="16.1" class="anchored" data-anchor-id="the-6-basic-trigonometric-functions"><span class="header-section-number">16.1</span> The 6 basic trigonometric functions</h2>
+<p>We measure angles in radians, where <span class="math inline">\(360\)</span> degrees is <span class="math inline">\(2\pi\)</span> radians. By proportions, <span class="math inline">\(180\)</span> degrees is <span class="math inline">\(\pi\)</span> radian, <span class="math inline">\(90\)</span> degrees is <span class="math inline">\(\pi/2\)</span> radians, <span class="math inline">\(60\)</span> degrees is <span class="math inline">\(\pi/3\)</span> radians, etc. In general, <span class="math inline">\(x\)</span> degrees is <span class="math inline">\(2\pi \cdot x / 360\)</span> radians (or, with cancellation, <span class="math inline">\(x \cdot \frac{\pi}{180}\)</span>).</p>
+<p>For a right triangle with angles <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\pi/2 - \theta\)</span>, and <span class="math inline">\(\pi/2\)</span> (<span class="math inline">\(0 &lt; \theta &lt; \pi/2\)</span>) we call the side opposite <span class="math inline">\(\theta\)</span> the “opposite” side, the shorter adjacent side the “adjacent” side and the longer adjacent side the hypotenuse.</p>
+<pre class="{julia}"><code>#| hide: true
+#| echo: false
+p = plot(legend=false, xlim=(-1/4,5), ylim=(-1/2, 3),
+         xticks=nothing, yticks=nothing, border=:none)
+plot!([0,4,4,0],[0,0,3,0], linewidth=3)
+del = .25
+plot!([4-del, 4-del,4], [0, del, del], color=:black, linewidth=3)
+annotate!([(.75, .25, "θ"), (4.0, 1.25, "opposite"), (2, -.25, "adjacent"), (1.5, 1.25, "hypotenuse")])</code></pre>
+<p>With these, the basic definitions for the primary trigonometric functions are</p>
+<p><span class="math display">\[\begin{align*}
+\sin(\theta) &amp;= \frac{\text{opposite}}{\text{hypotenuse}} &amp;\quad(\text{the sine function})\\
+\cos(\theta) &amp;= \frac{\text{adjacent}}{\text{hypotenuse}} &amp;\quad(\text{the cosine function})\\
+\tan(\theta) &amp;= \frac{\text{opposite}}{\text{adjacent}}.  &amp;\quad(\text{the tangent function})
+\end{align*}\]</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Many students remember these through <a href="http://mathworld.wolfram.com/SOHCAHTOA.html">SOH-CAH-TOA</a>.</p>
+</div>
+</div>
+<p>Some algebra shows that <span class="math inline">\(\tan(\theta) = \sin(\theta)/\cos(\theta)\)</span>. There are also <span class="math inline">\(3\)</span> reciprocal functions, the cosecant, secant and cotangent.</p>
+<p>These definitions in terms of sides only apply for <span class="math inline">\(0 \leq \theta \leq \pi/2\)</span>. More generally, if we relate any angle taken in the counter clockwise direction for the <span class="math inline">\(x\)</span>-axis with a point <span class="math inline">\((x,y)\)</span> on the <em>unit</em> circle, then we can extend these definitions - the point <span class="math inline">\((x,y)\)</span> is also <span class="math inline">\((\cos(\theta), \sin(\theta))\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+## {{{radian_to_trig}}}
+
+gr()
+
+function plot_angle(m)
+    r = m*pi
+
+    ts = range(0, stop=2pi, length=100)
+    tit = "$m ⋅ pi -&gt; ($(round(cos(r), digits=2)), $(round(sin(r), digits=2)))"
+    p = plot(cos.(ts), sin.(ts), legend=false, aspect_ratio=:equal,title=tit)
+    plot!(p, [-1,1], [0,0], color=:gray30)
+    plot!(p,  [0,0], [-1,1], color=:gray30)
+
+    if r &gt; 0
+        ts = range(0, stop=r, length=100)
+    else
+        ts = range(r, stop=0, length=100)
+    end
+
+    plot!(p, (1/2 .+ abs.(ts)/10pi).* cos.(ts), (1/2 .+ abs.(ts)/10pi) .* sin.(ts), color=:red, linewidth=3)
+    l = 1 #1/2 + abs(r)/10pi
+    plot!(p, [0,l*cos(r)], [0,l*sin(r)], color=:green, linewidth=4)
+
+    scatter!(p, [cos(r)], [sin(r)], markersize=5)
+    annotate!(p, [(1/4+cos(r), sin(r), "(x,y)")])
+
+    p
+end
+
+
+
+## different linear graphs
+anim = @animate for m in  -4//3:1//6:10//3
+    plot_angle(m)
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 1)
+caption = "An angle in radian measure corresponds to a point on the unit circle, whose coordinates define the sine and cosine of the angle. That is ``(x,y) = (\\cos(\\theta), \\sin(\\theta))``."
+
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<section id="the-trigonometric-functions-in-julia" class="level3" data-number="16.1.1">
+<h3 data-number="16.1.1" class="anchored" data-anchor-id="the-trigonometric-functions-in-julia"><span class="header-section-number">16.1.1</span> The trigonometric functions in Julia</h3>
+<p>Julia has the <span class="math inline">\(6\)</span> basic trigonometric functions defined through the functions <code>sin</code>, <code>cos</code>, <code>tan</code>, <code>csc</code>, <code>sec</code>, and <code>cot</code>.</p>
+<p>Two right triangles - the one with equal, <span class="math inline">\(\pi/4\)</span>, angles; and the one with angles <span class="math inline">\(\pi/6\)</span> and <span class="math inline">\(\pi/3\)</span> can have the ratio of their sides computed from basic geometry. In particular, this leads to the following values, which are usually committed to memory:</p>
+<p><span class="math display">\[\begin{align*}
+\sin(0) &amp;= 0, \quad \sin(\pi/6) = \frac{1}{2}, \quad \sin(\pi/4) = \frac{\sqrt{2}}{2}, \quad\sin(\pi/3) = \frac{\sqrt{3}}{2},\text{ and } \sin(\pi/2) = 1\\
+\cos(0) &amp;= 1, \quad \cos(\pi/6) =  \frac{\sqrt{3}}{2}, \quad \cos(\pi/4) = \frac{\sqrt{2}}{2}, \quad\cos(\pi/3) = \frac{1}{2},\text{ and } \cos(\pi/2) = 0.
+\end{align*}\]</span></p>
+<p>Using the circle definition allows these basic values to inform us of values throughout the unit circle.</p>
+<p>These all follow from the definition involving the unit circle:</p>
+<ul>
+<li>If the angle <span class="math inline">\(\theta\)</span> corresponds to a point <span class="math inline">\((x,y)\)</span> on the unit circle, then the angle <span class="math inline">\(-\theta\)</span> corresponds to <span class="math inline">\((x, -y)\)</span>. So <span class="math inline">\(\sin(\theta) = - \sin(-\theta)\)</span> (an odd function), but <span class="math inline">\(\cos(\theta) = \cos(-\theta)\)</span> (an even function).</li>
+<li>If the angle <span class="math inline">\(\theta\)</span> corresponds to a point <span class="math inline">\((x,y)\)</span> on the unit circle, then rotating by <span class="math inline">\(\pi\)</span> moves the points to <span class="math inline">\((-x, -y)\)</span>. So <span class="math inline">\(\cos(\theta) = x = - \cos(\theta + \pi)\)</span>, and <span class="math inline">\(\sin(\theta) = y = -\sin(\theta + \pi)\)</span>.</li>
+<li>If the angle <span class="math inline">\(\theta\)</span> corresponds to a point <span class="math inline">\((x,y)\)</span> on the unit circle, then rotating by <span class="math inline">\(\pi/2\)</span> moves the points to <span class="math inline">\((-y, x)\)</span>. So <span class="math inline">\(\cos(\theta) = x = \sin(\theta + \pi/2)\)</span>.</li>
+</ul>
+<p>The fact that <span class="math inline">\(x^2 + y^2 = 1\)</span> for the unit circle leads to the “Pythagorean identity” for trigonometric functions:</p>
+<p><span class="math display">\[
+\sin(\theta)^2 + \cos(\theta)^2 = 1.
+\]</span></p>
+<p>This basic fact can be manipulated many ways. For example, dividing through by <span class="math inline">\(\cos(\theta)^2\)</span> gives the related identity: <span class="math inline">\(\tan(\theta)^2 + 1 = \sec(\theta)^2\)</span>.</p>
+<p><code>Julia</code>’s functions can compute values for any angles, including these fundamental ones:</p>
+<pre class="{julia}"><code>[cos(theta) for theta in [0, pi/6, pi/4, pi/3, pi/2]]</code></pre>
+<p>These are floating point approximations, as can be seen clearly in the last value. Symbolic math can be used if exactness matters:</p>
+<pre class="{julia}"><code>cos.([0, PI/6, PI/4, PI/3, PI/2])</code></pre>
+<p>The <code>sincos</code> function computes both <code>sin</code> and <code>cos</code> simultaneously, which can be more performant when both values are needed.</p>
+<pre class="{juila}"><code>sincos(pi/3)</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For really large values, round off error can play a big role. For example, the <em>exact</em> value of <span class="math inline">\(\sin(1000000 \pi)\)</span> is <span class="math inline">\(0\)</span>, but the returned value is not quite <span class="math inline">\(0\)</span> <code>sin(1_000_000 * pi) = -2.231912181360871e-10</code>. For exact multiples of <span class="math inline">\(\pi\)</span> with large multiples the <code>sinpi</code> and <code>cospi</code> functions are useful.</p>
+<p>(Both functions are computed by first employing periodicity to reduce the problem to a smaller angle. However, for large multiples the floating-point roundoff becomes a problem with the usual functions.)</p>
+</div>
+</div>
+<section id="example" class="level5">
+<h5 class="anchored" data-anchor-id="example">Example</h5>
+<p>Measuring the height of a <a href="https://lifehacker.com/5875184/is-there-an-easy-way-to-measure-the-height-of-a-tree">tree</a> may be a real-world task for some, but a typical task for nearly all trigonometry students. How might it be done? If a right triangle can be formed where the angle and adjacent side length are known, then the opposite side (the height of the tree) can be solved for with the tangent function. For example, if standing <span class="math inline">\(100\)</span> feet from the base of the tree the tip makes a <span class="math inline">\(15\)</span> degree angle the height is given by:</p>
+<pre class="{julia}"><code>#| hold: true
+theta = 15 * pi / 180
+adjacent = 100
+opposite = adjacent * tan(theta)</code></pre>
+<p>Having some means to compute an angle and then a tangent of that angle handy is not a given, so the linked to article provides a few other methods taking advantage of similar triangles.</p>
+<p>You can also measure distance with your <a href="http://www.vendian.org/mncharity/dir3/bodyruler_angle/">thumb</a> or fist. How? The fist takes up about <span class="math inline">\(10\)</span> degrees of view when held straight out. So, pacing off backwards until the fist completely occludes the tree will give the distance of the adjacent side of a right triangle. If that distance is <span class="math inline">\(30\)</span> paces what is the height of the tree? Well, we need some facts. Suppose your pace is <span class="math inline">\(3\)</span> feet. Then the adjacent length is <span class="math inline">\(90\)</span> feet. The multiplier is the tangent of <span class="math inline">\(10\)</span> degrees, or:</p>
+<pre class="{julia}"><code>tan(10 * pi/180)</code></pre>
+<p>Which for sake of memory we will say is <span class="math inline">\(1/6\)</span> (a <span class="math inline">\(5\)</span> percent error). So that answer is <em>roughly</em> <span class="math inline">\(15\)</span> feet:</p>
+<pre class="{julia}"><code>30 * 3 / 6</code></pre>
+<p>Similarly, you can use your thumb instead of your fist. To use your fist you can multiply by <span class="math inline">\(1/6\)</span> the adjacent side, to use your thumb about <span class="math inline">\(1/30\)</span> as this approximates the tangent of <span class="math inline">\(2\)</span> degrees:</p>
+<pre class="{julia}"><code>1/30, tan(2*pi/180)</code></pre>
+<p>This could be reversed. If you know the height of something a distance away that is covered by your thumb or fist, then you would multiply that height by the appropriate amount to find your distance.</p>
+</section>
+</section>
+<section id="basic-properties" class="level3" data-number="16.1.2">
+<h3 data-number="16.1.2" class="anchored" data-anchor-id="basic-properties"><span class="header-section-number">16.1.2</span> Basic properties</h3>
+<p>The sine function is defined for all real <span class="math inline">\(\theta\)</span> and has a range of <span class="math inline">\([-1,1]\)</span>. Clearly as <span class="math inline">\(\theta\)</span> winds around the <span class="math inline">\(x\)</span>-axis, the position of the <span class="math inline">\(y\)</span> coordinate begins to repeat itself. We say the sine function is <em>periodic</em> with period <span class="math inline">\(2\pi\)</span>. A graph will illustrate:</p>
+<pre class="{julia}"><code>plot(sin, 0, 4pi)</code></pre>
+<p>The graph shows two periods. The wavy aspect of the graph is why this function is used to model periodic motions, such as the amount of sunlight in a day, or the alternating current powering a computer.</p>
+<p>From this graph - or considering when the <span class="math inline">\(y\)</span> coordinate is <span class="math inline">\(0\)</span> - we see that the sine function has zeros at any integer multiple of <span class="math inline">\(\pi\)</span>, or <span class="math inline">\(k\pi\)</span>, <span class="math inline">\(k\)</span> in <span class="math inline">\(\dots,-2,-1, 0, 1, 2, \dots\)</span>.</p>
+<p>The cosine function is similar, in that it has the same domain and range, but is “out of phase” with the sine curve. A graph of both shows the two are related:</p>
+<pre class="{julia}"><code>plot(sin, 0, 4pi, label="sin")
+plot!(cos, 0, 4pi, label="cos")</code></pre>
+<p>The cosine function is just a shift of the sine function (or vice versa). We see that the zeros of the cosine function happen at points of the form <span class="math inline">\(\pi/2 + k\pi\)</span>, <span class="math inline">\(k\)</span> in <span class="math inline">\(\dots,-2,-1, 0, 1, 2, \dots.\)</span></p>
+<p>The tangent function does not have all <span class="math inline">\(\theta\)</span> for its domain, rather those points where division by <span class="math inline">\(0\)</span> occurs are excluded. These occur when the cosine is <span class="math inline">\(0\)</span>, or, again, at <span class="math inline">\(\pi/2 + k\pi\)</span>, <span class="math inline">\(k\)</span> in <span class="math inline">\(\dots,-2,-1, 0, 1, 2, \dots.\)</span> The range of the tangent function will be all real <span class="math inline">\(y\)</span>.</p>
+<p>The tangent function is also periodic, but not with period <span class="math inline">\(2\pi\)</span>, but rather just <span class="math inline">\(\pi\)</span>. A graph will show this. Here we avoid the vertical asymptotes using <code>rangeclamp</code>:</p>
+<pre class="{julia}"><code>plot(rangeclamp(tan), -10, 10, label="tan")</code></pre>
+<section id="example-sums-of-sines" class="level5">
+<h5 class="anchored" data-anchor-id="example-sums-of-sines">Example sums of sines</h5>
+<p>For the function <span class="math inline">\(f(x) = \sin(x)\)</span> we have an understanding of the related family of functions defined by linear transformations:</p>
+<p><span class="math display">\[
+g(x) = a + b \sin((2\pi n)x)
+\]</span></p>
+<p>That is <span class="math inline">\(g\)</span> is shifted up by <span class="math inline">\(a\)</span> units, scaled vertically by <span class="math inline">\(b\)</span> units and has a period of <span class="math inline">\(1/n\)</span>. We see a simple plot here where we can verify the transformation:</p>
+<pre class="{julia}"><code>g(x;  b=1,n=1) = b*sin(2pi*n*x)
+g1(x) = 1 + g(x, b=2, n=3)
+plot(g1, 0, 1)</code></pre>
+<p>We can consider the sum of such functions, for example</p>
+<pre class="{julia}"><code>g2(x) = 1 + g(x, b=2, n=3) + g(x, b=4, n=5)
+plot(g2, 0, 1)</code></pre>
+<p>Though still periodic, we can see with this simple example that sums of different sine functions can have somewhat complicated graphs.</p>
+<p>Sine functions can be viewed as the <code>x</code> position of a point traveling around a circle so <code>g(x, b=2, n=3)</code> is the <code>x</code> position of point traveling around a circle of radius <span class="math inline">\(2\)</span> that completes a circuit in <span class="math inline">\(1/3\)</span> units of time.</p>
+<p>The superposition of the two sine functions that <code>g2</code> represents could be viewed as the position of a circle moving around a point that is moving around another circle. The following graphic, with <span class="math inline">\(b_1=1/3, n_1=3, b_2=1/4\)</span>, and <span class="math inline">\(n_2=4\)</span>, shows an example that produces the related cosine sum (moving right along the <span class="math inline">\(x\)</span> axis), the sine sum (moving down along the <span class="math inline">\(y\)</span> axis, <em>and</em> the trace of the position of the point generating these two plots.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+#| cache: true
+gr()
+
+function makegraph(t, b₁,n₁, b₂=0, n₂=1)
+
+    f₁ = x -&gt; b₁*[sin(2pi*n₁*x), cos(2pi*n₁*x)]
+    f₂ = x -&gt; b₂*[sin(2pi*n₂*x), cos(2pi*n₂*x)]
+    h = x -&gt; f₁(x) + f₂(x)
+
+    ts = range(0, 2pi, length=1000)
+
+
+    ylims = (-b₁-b₂-2, b₁ + b₂)
+    xlims = (-b₁-b₂, b₁ + b₂ + 2)
+
+    p = plot(; xlim=xlims, ylim=ylims,
+             legend=false,
+             aspect_ratio=:equal)
+
+    α = 0.3
+    # circle 1
+    plot!(p, unzip(f₁.(range(0, 2pi/n₁, length=100))), alpha=α)
+    scatter!(p, unzip([f₁(t)]), markersize=1, alpha=α)
+
+    # circle 2
+    us, vs = unzip(f₂.(range(0, 2pi/n₂, length=100)))
+    a,b = f₁(t)
+    plot!(p, a .+ us, b .+ vs, alpha=α)
+    scatter!(p, unzip([h(t)]), markersize=5)
+
+    # graph of (x,y) over [0,t]
+    ts = range(0, t, length=200)
+    plot!(p, unzip(h.(ts)), linewidth=1, alpha=0.5, linestyle=:dash)
+
+    # graph of x over [0,t]
+    ys′ = -ts
+    xs′ = unzip(h.(ts))[1]
+    plot!(p, xs′, ys′, linewidth=2)
+
+    # graph of y over [0,t]
+    xs′ = ts
+    ys′ = unzip(h.(ts))[2]
+    plot!(p, xs′, ys′, linewidth=2)
+
+
+    p
+end
+
+# create animoation
+b₁=1/3; n₁=3; b₂=1/4; n₂=4
+
+anim = @animate for t ∈ range(0, 2.5, length=50)
+    makegraph(t, b₁, n₁, b₂, n₂)
+end
+
+imgfile = tempname() * ".gif"
+gif(anim, imgfile, fps = 5)
+
+caption = "Superposition of sines and cosines represented by an epicycle"
+plotly()
+ImageFile(imgfile, caption)</code></pre>
+<p>As can be seen, even a somewhat simple combination can produce complicated graphs (a fact known to <a href="https://en.wikipedia.org/wiki/Deferent_and_epicycle">Ptolemy</a>) . How complicated can such a graph get? This won’t be answered here, but for fun enjoy this video produced by the same technique using more moving parts from the <a href="https://github.com/Wikunia/Javis.jl/blob/master/examples/fourier.jl"><code>Javis.jl</code></a> package:</p>
+<pre class="{julia}"><code>#| echo: false
+txt ="""
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/rrmx2Q3sO1Y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;  picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;
+"""
+
+HTMLoutput(txt; centered=true, caption="Julia logo animated")</code></pre>
+</section>
+</section>
+<section id="functions-using-degrees" class="level3" data-number="16.1.3">
+<h3 data-number="16.1.3" class="anchored" data-anchor-id="functions-using-degrees"><span class="header-section-number">16.1.3</span> Functions using degrees</h3>
+<p>Trigonometric function are functions of angles which have two common descriptions: in terms of degrees or radians. Degrees are common when right triangles are considered, radians much more common in general, as the relationship with arc-length holds in that <span class="math inline">\(r\theta = l\)</span>, where <span class="math inline">\(r\)</span> is the radius of a circle and <span class="math inline">\(l\)</span> the length of the arc formed by angle <span class="math inline">\(\theta\)</span>.</p>
+<p>The two are related, as a circle has both <span class="math inline">\(2\pi\)</span> radians and <span class="math inline">\(360\)</span> degrees. So to convert from degrees into radians it takes multiplying by <span class="math inline">\(2\pi/360\)</span> and to convert from radians to degrees it takes multiplying by <span class="math inline">\(360/(2\pi)\)</span>. The <code>deg2rad</code> and <code>rad2deg</code> functions are available for this task.</p>
+<p>In <code>Julia</code>, the functions <code>sind</code>, <code>cosd</code>, <code>tand</code>, <code>cscd</code>, <code>secd</code>, and <code>cotd</code> are available to simplify the task of composing the two operations (that is <code>sin(deg2rad(x))</code> is the essentially same as <code>sind(x)</code>).</p>
+</section>
+</section>
+<section id="the-sum-and-difference-formulas" class="level2" data-number="16.2">
+<h2 data-number="16.2" class="anchored" data-anchor-id="the-sum-and-difference-formulas"><span class="header-section-number">16.2</span> The sum-and-difference formulas</h2>
+<p>Consider the point on the unit circle <span class="math inline">\((x,y) = (\cos(\theta), \sin(\theta))\)</span>. In terms of <span class="math inline">\((x,y)\)</span> (or <span class="math inline">\(\theta\)</span>) is there a way to represent the angle found by rotating an additional <span class="math inline">\(\theta\)</span>, that is what is <span class="math inline">\((\cos(2\theta), \sin(2\theta))\)</span>?</p>
+<p>More generally, suppose we have two angles <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>, can we represent the values of <span class="math inline">\((\cos(\alpha + \beta), \sin(\alpha + \beta))\)</span> using the values just involving <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\alpha\)</span> separately?</p>
+<p>According to <a href="https://en.wikipedia.org/wiki/Trigonometric_functions#Identities">Wikipedia</a> the following figure (from <a href="http://www.mathalino.com/reviewer/derivation-of-formulas/derivation-of-sum-and-difference-of-two-angles">mathalino.com</a>) has ideas that date to Ptolemy:</p>
+<pre class="{julia}"><code>#| echo: false
+# ImageFile(:precalc, "figures/summary-sum-and-difference-of-two-angles.jpg", "Relations between angles")
+nothing</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/summary-sum-and-difference-of-two-angles.jpg" class="img-fluid figure-img"></p>
+<figcaption>Relations between angles</figcaption>
+</figure>
+</div>
+<p>To read this, there are three triangles: the bigger (green with pink part) has hypotenuse <span class="math inline">\(1\)</span> (and adjacent and opposite sides that form the hypotenuses of the other two); the next biggest (yellow) hypotenuse <span class="math inline">\(\cos(\beta)\)</span>, adjacent side (of angle <span class="math inline">\(\alpha\)</span>) <span class="math inline">\(\cos(\beta)\cdot \cos(\alpha)\)</span>, and opposite side <span class="math inline">\(\cos(\beta)\cdot\sin(\alpha)\)</span>; and the smallest (pink) hypotenuse <span class="math inline">\(\sin(\beta)\)</span>, adjacent side (of angle <span class="math inline">\(\alpha\)</span>) <span class="math inline">\(\sin(\beta)\cdot \cos(\alpha)\)</span>, and opposite side <span class="math inline">\(\sin(\beta)\sin(\alpha)\)</span>.</p>
+<p>This figure shows the following sum formula for sine and cosine:</p>
+<p><span class="math display">\[\begin{align*}
+\sin(\alpha + \beta) &amp;= \sin(\alpha)\cos(\beta) + \cos(\alpha)\sin(\beta), &amp; (\overline{CE} + \overline{DF})\\
+\cos(\alpha + \beta) &amp;= \cos(\alpha)\cos(\beta) - \sin(\alpha)\sin(\beta). &amp; (\overline{AC} - \overline{DE})
+\end{align*}\]</span></p>
+<p>Using the fact that <span class="math inline">\(\sin\)</span> is an odd function and <span class="math inline">\(\cos\)</span> an even function, related formulas for the difference <span class="math inline">\(\alpha - \beta\)</span> can be derived.</p>
+<p>Taking <span class="math inline">\(\alpha = \beta\)</span> we immediately get the “double-angle” formulas:</p>
+<p><span class="math display">\[\begin{align*}
+\sin(2\alpha) &amp;= 2\sin(\alpha)\cos(\alpha)\\
+\cos(2\alpha) &amp;= \cos(\alpha)^2 - \sin(\alpha)^2.
+\end{align*}\]</span></p>
+<p>The latter looks like the Pythagorean identify, but has a minus sign. In fact, the Pythagorean identify is often used to rewrite this, for example <span class="math inline">\(\cos(2\alpha) = 2\cos(\alpha)^2 - 1\)</span> or <span class="math inline">\(1 - 2\sin(\alpha)^2\)</span>.</p>
+<p>Applying the above with <span class="math inline">\(\alpha = \beta/2\)</span>, we get that <span class="math inline">\(\cos(\beta) = 2\cos(\beta/2)^2 -1\)</span>, which rearranged yields the “half-angle” formula: <span class="math inline">\(\cos(\beta/2)^2 = (1 + \cos(\beta))/2\)</span>.</p>
+<section id="example-1" class="level5">
+<h5 class="anchored" data-anchor-id="example-1">Example</h5>
+<p>Consider the expressions <span class="math inline">\(\cos((n+1)\theta)\)</span> and <span class="math inline">\(\cos((n-1)\theta)\)</span>. These can be re-expressed as:</p>
+<p><span class="math display">\[\begin{align*}
+\cos((n+1)\theta) &amp;= \cos(n\theta + \theta) = \cos(n\theta) \cos(\theta) - \sin(n\theta)\sin(\theta), \text{ and}\\
+\cos((n-1)\theta) &amp;= \cos(n\theta - \theta) = \cos(n\theta) \cos(-\theta) - \sin(n\theta)\sin(-\theta).
+\end{align*}\]</span></p>
+<p>But <span class="math inline">\(\cos(-\theta) = \cos(\theta)\)</span>, whereas <span class="math inline">\(\sin(-\theta) = -\sin(\theta)\)</span>. Using this, we add the two formulas above to get:</p>
+<p><span class="math display">\[
+\cos((n+1)\theta) = 2\cos(n\theta) \cos(\theta)  - \cos((n-1)\theta).
+\]</span></p>
+<p>That is the angle for a multiple of <span class="math inline">\(n+1\)</span> can be expressed in terms of the angle with a multiple of <span class="math inline">\(n\)</span> and <span class="math inline">\(n-1\)</span>. This can be used recursively to find expressions for <span class="math inline">\(\cos(n\theta)\)</span> in terms of polynomials in <span class="math inline">\(\cos(\theta)\)</span>.</p>
+</section>
+</section>
+<section id="inverse-trigonometric-functions" class="level2" data-number="16.3">
+<h2 data-number="16.3" class="anchored" data-anchor-id="inverse-trigonometric-functions"><span class="header-section-number">16.3</span> Inverse trigonometric functions</h2>
+<p>The trigonometric functions are all periodic. In particular they are not monotonic over their entire domain. This means there is no <em>inverse</em> function applicable. However, by restricting the domain to where the functions are monotonic, inverse functions can be defined:</p>
+<ul>
+<li>For <span class="math inline">\(\sin(x)\)</span>, the restricted domain of <span class="math inline">\([-\pi/2, \pi/2]\)</span> allows for the arcsine function to be defined. In <code>Julia</code> this is implemented with <code>asin</code>.</li>
+<li>For <span class="math inline">\(\cos(x)\)</span>, the restricted domain of <span class="math inline">\([0,\pi]\)</span> allows for the arccosine function to be defined. In <code>Julia</code> this is implemented with <code>acos</code>.</li>
+<li>For <span class="math inline">\(\tan(x)\)</span>, the restricted domain of <span class="math inline">\((-\pi/2, \pi/2)\)</span> allows for the arctangent function to be defined. In <code>Julia</code> this is implemented with <code>atan</code>.</li>
+</ul>
+<p>For example, the arcsine function is defined for <span class="math inline">\(-1 \leq x \leq 1\)</span> and has a range of <span class="math inline">\(-\pi/2\)</span> to <span class="math inline">\(\pi/2\)</span>:</p>
+<pre class="{julia}"><code>plot(asin, -1, 1)</code></pre>
+<p>The arctangent has domain of all real <span class="math inline">\(x\)</span>. It has shape given by:</p>
+<pre class="{julia}"><code>plot(atan, -10, 10)</code></pre>
+<p>The horizontal asymptotes are <span class="math inline">\(y=\pi/2\)</span> and <span class="math inline">\(y=-\pi/2\)</span>.</p>
+<section id="implications-of-a-restricted-domain" class="level3" data-number="16.3.1">
+<h3 data-number="16.3.1" class="anchored" data-anchor-id="implications-of-a-restricted-domain"><span class="header-section-number">16.3.1</span> Implications of a restricted domain</h3>
+<p>Notice that <span class="math inline">\(\sin(\arcsin(x)) = x\)</span> for any <span class="math inline">\(x\)</span> in <span class="math inline">\([-1,1]\)</span>, but, of course, not for all <span class="math inline">\(x\)</span>, as the output of the sine function can’t be arbitrarily large.</p>
+<p>However, <span class="math inline">\(\arcsin(\sin(x))\)</span> is defined for all <span class="math inline">\(x\)</span>, but only equals <span class="math inline">\(x\)</span> when <span class="math inline">\(x\)</span> is in <span class="math inline">\([-\pi/2, \pi/2]\)</span>. The output, or range, of the <span class="math inline">\(\arcsin\)</span> function is restricted to that interval.</p>
+<p>This can be limiting at times. A common case is to find the angle in <span class="math inline">\([0, 2\pi)\)</span> corresponding to a point <span class="math inline">\((x,y)\)</span>. In the simplest case (the first and fourth quadrants) this is just given by <span class="math inline">\(\arctan(y/x)\)</span>. But with some work, the correct angle can be found for any pair <span class="math inline">\((x,y)\)</span>. As this is a common desire, the <code>atan</code> function with two arguments, <code>atan(y,x)</code>, is available. This function returns a value in <span class="math inline">\((-\pi, \pi]\)</span>.</p>
+<p>For example, this will not give back <span class="math inline">\(\theta\)</span> without more work to identify the quadrant:</p>
+<pre class="{julia}"><code>theta = 3pi/4                     # 2.35619...
+x,y = (cos(theta), sin(theta))    # -0.7071..., 0.7071...
+atan(y/x)</code></pre>
+<p>But,</p>
+<pre class="{julia}"><code>atan(y, x)</code></pre>
+<section id="example-2" class="level5">
+<h5 class="anchored" data-anchor-id="example-2">Example</h5>
+<p>A (white) light shining through a <a href="http://tinyurl.com/y8sczg4t">prism</a> will be deflected depending on the material of the prism and the angles involved (refer to the link for a figure). The relationship can be analyzed by tracing a ray through the figure and utilizing Snell’s law. If the prism has index of refraction <span class="math inline">\(n\)</span> then the ray will deflect by an amount <span class="math inline">\(\delta\)</span> that depends on the angle, <span class="math inline">\(\alpha\)</span> of the prism and the initial angle (<span class="math inline">\(\theta_0\)</span>) according to:</p>
+<p><span class="math display">\[
+\delta = \theta_0 - \alpha  + \arcsin(n \sin(\alpha - \arcsin(\frac{1}{n}\sin(\theta_0)))).
+\]</span></p>
+<p>If <span class="math inline">\(n=1.5\)</span> (glass), <span class="math inline">\(\alpha = \pi/3\)</span> and <span class="math inline">\(\theta_0=\pi/6\)</span>, find the deflection (in radians).</p>
+<p>We have:</p>
+<pre class="{julia}"><code>#| hold: true
+n, alpha, theta0 = 1.5, pi/3, pi/6
+delta = theta0 - alpha + asin(n * sin(alpha - asin(sin(theta0)/n)))</code></pre>
+<p>For small <span class="math inline">\(\theta_0\)</span> and <span class="math inline">\(\alpha\)</span> the deviation is approximated by <span class="math inline">\((n-1)\alpha\)</span>. Compare this approximation to the actual value when <span class="math inline">\(\theta_0 = \pi/10\)</span> and <span class="math inline">\(\alpha=\pi/15\)</span>.</p>
+<p>We have:</p>
+<pre class="{julia}"><code>#| hold: true
+n, alpha, theta0 = 1.5, pi/15, pi/10
+delta = theta0 - alpha + asin(n * sin(alpha - asin(sin(theta0)/n)))
+delta, (n-1)*alpha</code></pre>
+<p>The approximation error is about <span class="math inline">\(2.7\)</span> percent.</p>
+</section>
+<section id="example-3" class="level5">
+<h5 class="anchored" data-anchor-id="example-3">Example</h5>
+<p>The AMS has an interesting column on <a href="http://www.ams.org/publicoutreach/feature-column/fcarc-rainbows">rainbows</a> the start of which uses some formulas from the previous example. Click through to see a ray of light passing through a spherical drop of water, as analyzed by Descartes. The deflection of the ray occurs when the incident light hits the drop of water, then there is an <em>internal</em> deflection of the light, and finally when the light leaves, there is another deflection. The total deflection (in radians) is <span class="math inline">\(D = (i-r) + (\pi - 2r) + (i-r) = \pi + 2i - 4r\)</span>. However, the incident angle <span class="math inline">\(i\)</span> and the refracted angle <span class="math inline">\(r\)</span> are related by Snell’s law: <span class="math inline">\(\sin(i) = n \sin(r)\)</span>. The value <span class="math inline">\(n\)</span> is the index of refraction and is <span class="math inline">\(4/3\)</span> for water. (It was <span class="math inline">\(3/2\)</span> for glass in the previous example.) This gives</p>
+<p><span class="math display">\[
+D = \pi + 2i - 4 \arcsin(\frac{1}{n} \sin(i)).
+\]</span></p>
+<p>Graphing this for incident angles between <span class="math inline">\(0\)</span> and <span class="math inline">\(\pi/2\)</span> we have:</p>
+<pre class="{julia}"><code>#| hold: true
+n = 4/3
+D(i) = pi + 2i - 4 * asin(sin(i)/n)
+plot(D, 0, pi/2)</code></pre>
+<p>Descartes was interested in the minimum value of this graph, as it relates to where the light concentrates. This is roughly at <span class="math inline">\(1\)</span> radian or about <span class="math inline">\(57\)</span> degrees:</p>
+<pre class="{julia}"><code>rad2deg(1.0)</code></pre>
+<p>(Using calculus it can be seen to be <span class="math inline">\(\arccos(((n^2-1)/3)^{1/2})\)</span>.)</p>
+</section>
+<section id="example-the-chebyshev-polynomials" class="level5">
+<h5 class="anchored" data-anchor-id="example-the-chebyshev-polynomials">Example: The Chebyshev Polynomials</h5>
+<p>Consider again this equation derived with the sum-and-difference formula:</p>
+<p><span class="math display">\[
+\cos((n+1)\theta) = 2\cos(n\theta) \cos(\theta)  - \cos((n-1)\theta).
+\]</span></p>
+<p>Let <span class="math inline">\(T_n(x) = \cos(n \arccos(x))\)</span>. Calling <span class="math inline">\(\theta = \arccos(x)\)</span> for <span class="math inline">\(-1 \leq x \leq 1\)</span> we get a relation between these functions:</p>
+<p><span class="math display">\[
+T_{n+1}(x) = 2x T_n(x) - T_{n-1}(x).
+\]</span></p>
+<p>We can simplify a few: For example, when <span class="math inline">\(n=0\)</span> we see immediately that <span class="math inline">\(T_0(x) = 1\)</span>, the constant function. Whereas with <span class="math inline">\(n=1\)</span> we get <span class="math inline">\(T_1(x) = \cos(\arccos(x)) = x\)</span>. Things get more interesting as we get bigger <span class="math inline">\(n\)</span>, for example using the equation above we get <span class="math inline">\(T_2(x) = 2xT_1(x) - T_0(x) = 2x\cdot x - 1 = 2x^2 - 1\)</span>. Continuing, we’d get <span class="math inline">\(T_3(x) = 2 x T_2(x) - T_1(x) = 2x(2x^2 - 1) - x = 4x^3 -3x\)</span>.</p>
+<p>A few things become clear from the above two representations:</p>
+<ul>
+<li>Starting from <span class="math inline">\(T_0(x) = 1\)</span> and <span class="math inline">\(T_1(x)=x\)</span> and using the recursive definition of <span class="math inline">\(T_{n+1}\)</span> we get a family of polynomials where <span class="math inline">\(T_n(x)\)</span> is a degree <span class="math inline">\(n\)</span> polynomial. These are defined for all <span class="math inline">\(x\)</span>, not just <span class="math inline">\(-1 \leq x \leq 1\)</span>.</li>
+<li>Using the initial definition, we see that the zeros of <span class="math inline">\(T_n(x)\)</span> all occur within <span class="math inline">\([-1,1]\)</span> and happen when <span class="math inline">\(n\arccos(x) = k\pi + \pi/2\)</span>, or <span class="math inline">\(x=\cos((2k+1)/n \cdot \pi/2)\)</span> for <span class="math inline">\(k=0, 1, \dots, n-1\)</span>.</li>
+</ul>
+<p>Other properties of this polynomial family are not at all obvious. One is that amongst all polynomials of degree <span class="math inline">\(n\)</span> with roots in <span class="math inline">\([-1,1]\)</span>, <span class="math inline">\(T_n(x)\)</span> will be the smallest in magnitude (after we divide by the leading coefficient to make all polynomials considered to be monic). We check this for one case. Take <span class="math inline">\(n=4\)</span>, then we have: <span class="math inline">\(T_4(x) = 8x^4 - 8x^2 + 1\)</span>. Compare this with <span class="math inline">\(q(x) = (x+3/5)(x+1/5)(x-1/5)(x-3/5)\)</span> (evenly spaced zeros):</p>
+<pre class="{julia}"><code>T4(x) = (8x^4 - 8x^2 + 1) / 8
+q(x) = (x+3/5)*(x+1/5)*(x-1/5)*(x-3/5)
+plot(abs ∘ T4, -1,1, label="|T₄|")
+plot!(abs ∘ q, -1,1, label="|q|")</code></pre>
+</section>
+</section>
+</section>
+<section id="hyperbolic-trigonometric-functions" class="level2" data-number="16.4">
+<h2 data-number="16.4" class="anchored" data-anchor-id="hyperbolic-trigonometric-functions"><span class="header-section-number">16.4</span> Hyperbolic trigonometric functions</h2>
+<p>Related to the trigonometric functions are the hyperbolic trigonometric functions. Instead of associating a point <span class="math inline">\((x,y)\)</span> on the unit circle with an angle <span class="math inline">\(\theta\)</span>, we associate a point <span class="math inline">\((x,y)\)</span> on the unit <em>hyperbola</em> (<span class="math inline">\(x^2 - y^2 = 1\)</span>). We define the hyperbolic sine (<span class="math inline">\(\sinh\)</span>) and hyperbolic cosine (<span class="math inline">\(\cosh\)</span>) through <span class="math inline">\((\cosh(\theta), \sinh(\theta)) = (x,y)\)</span>.</p>
+<pre class="{julia}"><code>#| echo: false
+let
+    ## inspired by https://en.wikipedia.org/wiki/Hyperbolic_function
+    # y^2 = x^2 - 1
+    top(x) = sqrt(x^2 - 1)
+
+    p = plot(; legend=false, aspect_ratio=:equal)
+
+    x₀ = 2
+    xs = range(1, x₀, length=100)
+    ys = top.(xs)
+    plot!(p, xs,  ys, color=:red)
+    plot!(p, xs, -ys, color=:red)
+
+    xs = -reverse(xs)
+    ys = top.(xs)
+    plot!(p, xs,  ys, color=:red)
+    plot!(p, xs, -ys, color=:red)
+
+    xs = range(-x₀, x₀, length=3)
+    plot!(p, xs, xs, linestyle=:dash, color=:blue)
+    plot!(p, xs, -xs, linestyle=:dash, color=:blue)
+
+    a = 1.2
+    plot!(p, [0,cosh(a)], [sinh(a), sinh(a)])
+    annotate!(p, [(sinh(a)/2, sinh(a)+0.25,"cosh(a)")])
+    plot!(p, [cosh(a),cosh(a)], [sinh(a), 0])
+    annotate!(p, [(sinh(a) + 1, cosh(a)/2,"sinh(a)")])
+    scatter!(p, [cosh(a)], [sinh(a)], markersize=5)
+
+
+    ts = range(0, a, length=100)
+    xs′ = cosh.(ts)
+    ys′ = sinh.(ts)
+
+    xs = [0, 1, xs′..., 0]
+    ys = [0, 0, ys′..., 0]
+    plot!(p, xs, ys, fillcolor=:red, fill=true, alpha=.3)
+
+    p
+end</code></pre>
+<p>These values are more commonly expressed using the exponential function as:</p>
+<p><span class="math display">\[\begin{align*}
+\sinh(x) &amp;= \frac{e^x - e^{-x}}{2}\\
+\cosh(x) &amp;= \frac{e^x + e^{-x}}{2}.
+\end{align*}\]</span></p>
+<p>The hyperbolic tangent is then the ratio of <span class="math inline">\(\sinh\)</span> and <span class="math inline">\(\cosh\)</span>. As well, three inverse hyperbolic functions can be defined.</p>
+<p>The <code>Julia</code> functions to compute these values are named <code>sinh</code>, <code>cosh</code>, and <code>tanh</code>.</p>
+</section>
+<section id="questions" class="level2" data-number="16.5">
+<h2 data-number="16.5" class="anchored" data-anchor-id="questions"><span class="header-section-number">16.5</span> Questions</h2>
+<section id="question" class="level6">
+<h6 class="anchored" data-anchor-id="question">Question</h6>
+<p>What is bigger <span class="math inline">\(\sin(1.23456)\)</span> or <span class="math inline">\(\cos(6.54321)\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+a = sin(1.23456) &gt; cos(6.54321)
+choices = [raw"``\sin(1.23456)``", raw"``\cos(6.54321)``"]
+answ = a ? 1 : 2
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-1" class="level6">
+<h6 class="anchored" data-anchor-id="question-1">Question</h6>
+<p>Let <span class="math inline">\(x=\pi/4\)</span>. What is bigger <span class="math inline">\(\cos(x)\)</span> or <span class="math inline">\(x\)</span>?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+x = pi/4
+a = cos(x) &gt; x
+choices = [raw"``\cos(x)``", "``x``"]
+answ = a ? 1 : 2
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-2" class="level6">
+<h6 class="anchored" data-anchor-id="question-2">Question</h6>
+<p>The cosine function is a simple transformation of the sine function. Which one?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+raw"``\cos(x) = \sin(x - \pi/2)``",
+raw"``\cos(x) = \sin(x + \pi/2)``",
+raw"``\cos(x) = \pi/2 \cdot \sin(x)``"]
+answ = 2
+radioq(choices, answ)</code></pre>
+</section>
+<section id="question-3" class="level6">
+<h6 class="anchored" data-anchor-id="question-3">Question</h6>
+<p>Graph the secant function. The vertical asymptotes are at?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = [
+L"The values $k\pi$ for $k$ in $\dots, -2, -1, 0, 1, 2, \dots$",
+L"The values $\pi/2 + k\pi$ for $k$ in $\dots, -2, -1, 0, 1, 2, \dots$",
+L"The values $2k\pi$ for $k$ in $\dots, -2, -1, 0, 1, 2, \dots$"]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-4" class="level6">
+<h6 class="anchored" data-anchor-id="question-4">Question</h6>
+<p>A formula due to <a href="http://tinyurl.com/k89ux5q">Bhaskara I</a> dates to around 650AD and gives a rational function approximation to the sine function. In degrees, we have</p>
+<p><span class="math display">\[
+\sin(x^\circ) \approx \frac{4x(180-x)}{40500 - x(180-x)}, \quad 0 \leq x \leq 180.
+\]</span></p>
+<p>Plot both functions over <span class="math inline">\([0, 180]\)</span>. What is the maximum difference between the two to two decimal points? (You may need to plot the difference of the functions to read off an approximate answer.)</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+numericq(.0015, .01)</code></pre>
+</section>
+<section id="question-5" class="level6">
+<h6 class="anchored" data-anchor-id="question-5">Question</h6>
+<p>Solve the following equation for a value of <span class="math inline">\(x\)</span> using <code>acos</code>:</p>
+<p><span class="math display">\[
+\cos(x/3) = 1/3.
+\]</span></p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = 3*acos(1/3)
+numericq(val)</code></pre>
+</section>
+<section id="question-6" class="level6">
+<h6 class="anchored" data-anchor-id="question-6">Question</h6>
+<p>For any positive integer <span class="math inline">\(n\)</span> the equation <span class="math inline">\(\cos(x) - nx = 0\)</span> has a solution in <span class="math inline">\([0, \pi/2]\)</span>. Graphically estimate the value when <span class="math inline">\(n=10\)</span>.</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+val = 0.1
+numericq(val)</code></pre>
+</section>
+<section id="question-7" class="level6">
+<h6 class="anchored" data-anchor-id="question-7">Question</h6>
+<p>The sine function is an <em>odd</em> function.</p>
+<ul>
+<li>The hyperbolic sine is:</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["odd", "even", "neither"]
+answ = 1
+radioq(choices, answ, keep_order=true)</code></pre>
+<ul>
+<li>The hyperbolic cosine is:</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["odd", "even", "neither"]
+answ = 2
+radioq(choices, answ, keep_order=true)</code></pre>
+<ul>
+<li>The hyperbolic tangent is:</li>
+</ul>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+choices = ["odd", "even", "neither"]
+answ = 1
+radioq(choices, answ, keep_order=true)</code></pre>
+</section>
+<section id="question-8" class="level6">
+<h6 class="anchored" data-anchor-id="question-8">Question</h6>
+<p>The hyperbolic sine satisfies this formula:</p>
+<p><span class="math display">\[
+\sinh(\theta + \beta) = \sinh(\theta)\cosh(\beta) + \sinh(\beta)\cosh(\theta).
+\]</span></p>
+<p>Is this identical to the pattern for the regular sine function?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(true)</code></pre>
+<p>The hyperbolic cosine satisfies this formula:</p>
+<p><span class="math display">\[
+\cosh(\theta + \beta) = \cosh(\theta)\cosh(\beta) + \sinh(\beta)\sinh(\theta).
+\]</span></p>
+<p>Is this identical to the pattern for the regular sine function?</p>
+<pre class="{julia}"><code>#| hold: true
+#| echo: false
+yesnoq(false)</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../precalc/exp_log_functions.html" class="pagination-link" aria-label="Exponential and logarithmic functions">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Exponential and logarithmic functions</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../precalc/julia_overview.html" class="pagination-link" aria-label="Overview of Julia commands">
+        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Overview of Julia commands</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2022-24, John Verzani</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/edit/main/quarto/precalc/trig_functions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jverzani/CalculusWithJuliaNotes.jl/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
